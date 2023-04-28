@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build:superstore
+RUN npm run build:app
 
 
 FROM nginx:alpine
