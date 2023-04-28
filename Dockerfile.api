@@ -4,12 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 
-COPY . .
-
 RUN npm install
+
+COPY . .
 
 RUN npm run build:api
 
-EXPOSE 3000
-
 CMD ["node", "dist/apps/api/main.js"]
+
+EXPOSE 3000
