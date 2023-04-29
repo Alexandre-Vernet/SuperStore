@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start:app": "nx serve superstore",
+    "start:api": "nx serve api",
     "build:app": "nx build superstore",
     "build:api": "nx build api"
   },
