@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 const {
@@ -21,12 +18,9 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [],
             ssl: true,
         }),
     ],
-    controllers: [AppController],
-    providers: [AppService],
 })
 export class AppModule {
 }
