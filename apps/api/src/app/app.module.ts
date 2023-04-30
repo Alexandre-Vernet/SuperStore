@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProductModule } from "./product/product.module";
+import { Product } from "./product/entities/product.entity";
 
 const {
     POSTGRES_HOST,
@@ -18,8 +20,10 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
+            entities: [Product],
             ssl: true,
         }),
+        ProductModule
     ],
 })
 export class AppModule {
