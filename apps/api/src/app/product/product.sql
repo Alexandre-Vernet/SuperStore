@@ -3,5 +3,7 @@ CREATE TABLE products (
     name TEXT,
     description TEXT,
     price INTEGER,
-    category TEXT
+    category TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

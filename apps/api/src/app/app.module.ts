@@ -2,6 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProductModule } from "./product/product.module";
 import { Product } from "./product/entities/product.entity";
+import { Order } from "./order/entities/order.entity";
+import { Cart } from "./cart/entities/cart.entity";
+import { User } from "./users/entities/user.entity";
+import { OrderModule } from "./order/order.module";
+import { CartModule } from "./cart/cart.module";
+import { UsersModule } from "./users/users.module";
 
 const {
     POSTGRES_HOST,
@@ -20,10 +26,13 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product],
+            entities: [Product, Order, Cart, User],
             ssl: true,
         }),
-        ProductModule
+        ProductModule,
+        OrderModule,
+        CartModule,
+        UsersModule
     ],
 })
 export class AppModule {
