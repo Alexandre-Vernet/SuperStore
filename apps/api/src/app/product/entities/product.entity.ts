@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'products', schema: 'public' })
 export class Product {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id: number;
 
     @Column({ type: 'text' })
@@ -14,6 +14,6 @@ export class Product {
     @Column({ type: 'integer' })
     price: number;
 
-    @Column({ type: 'json' })
-    category: string[];
+    @Column({ type: 'text' })
+    category: string;
 }
