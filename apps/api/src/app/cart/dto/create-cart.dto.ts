@@ -1,1 +1,4 @@
-export class CreateCartDto {}
+export class CreateCartDto {
+    productId: number;
+    userId: number;
+}
