@@ -8,8 +8,8 @@ export class Cart {
     id: number;
 
     @OneToMany(type => Product, product => product.id)
-    product: Product[];
+    productId: number;
 
     @OneToOne(type => User, user => user.id)
-    user: Product;
+    userId: number;
 }

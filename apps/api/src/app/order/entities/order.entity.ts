@@ -8,10 +8,10 @@ export class Order {
     id: number;
 
     @OneToMany(type => User, user => user.id)
-    user: User;
+    userId: number;
 
     @OneToOne(type => Cart, cart => cart.id)
-    cart: Cart;
+    cartId: number;
 
     @Column({ type: 'text' })
     state: string;
