@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from "../product.service";
 import { Product } from "../product";
+import { ProductProductPipe } from "../product.pipe";
 
 @Component({
     selector: 'superstore-list-products',
@@ -28,6 +29,6 @@ export class ListProductsComponent implements OnInit {
     }
 
     convertProductNameToSlug(name: string): string {
-        return name.toLowerCase().replace(/ /g, '-');
+        return new ProductProductPipe().convertProductNameToSlug(name);
     }
 }
