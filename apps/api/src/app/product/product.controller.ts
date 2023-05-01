@@ -31,6 +31,11 @@ export class ProductController {
         return this.productService.findOne(+id);
     }
 
+    @Get('slug/:id')
+    findBySlug(@Param('id') slug: string) {
+        return this.productService.findBySlug(slug);
+    }
+
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
         return this.productService.update(+id, updateProductDto);
