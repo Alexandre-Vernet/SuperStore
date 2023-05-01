@@ -34,7 +34,7 @@ export class ViewCartComponent implements OnInit {
     }
 
     shippingCost(): number {
-        return this.subTotalPrice() * 0.5;
+        return 20;
     }
 
     taxes(): number {
