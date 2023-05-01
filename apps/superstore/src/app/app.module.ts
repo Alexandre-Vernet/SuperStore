@@ -4,13 +4,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { NavbarComponent } from './navbar/navbar.component';
-import { ListProductsComponent } from "./list-products/list-products.component";
+import { ProductModule } from "./product/product.module";
 
 @NgModule({
-    declarations: [AppComponent, NavbarComponent, ListProductsComponent],
+    declarations: [AppComponent, NavbarComponent],
     imports: [
         BrowserModule,
         RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
+        ProductModule
     ],
     providers: [],
     bootstrap: [AppComponent],

@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './list-products.component.html',
   styleUrls: ['./list-products.component.scss'],
 })
-export class ListProductsComponent {}
+export class ListProductsComponent {
+  constructor() {
+  }
+}
