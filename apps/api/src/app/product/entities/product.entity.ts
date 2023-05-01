@@ -15,5 +15,5 @@ export class Product {
     price: number;
 
     @Column({ type: 'text' })
-    category: string;
+    category: string[];
 }
