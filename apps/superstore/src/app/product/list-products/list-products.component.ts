@@ -26,4 +26,8 @@ export class ListProductsComponent implements OnInit {
                 this.products = products
             });
     }
+
+    convertProductNameToSlug(name: string): string {
+        return name.toLowerCase().replace(/ /g, '-');
+    }
 }

@@ -20,12 +20,14 @@ export class ViewProductComponent implements OnInit {
 
     ngOnInit() {
         // Get the product ID from the URL
-        const productId = this.route.snapshot.paramMap.get('id');
-        this.getProduct(productId)
-            .subscribe(product => this.product = product)
+        const productSlug = this.route.snapshot.paramMap.get('id');
+        this.getProductFromSlug(productSlug)
+            .subscribe(product => {
+                this.product = product;
+            });
     }
 
-    getProduct(id: string): Observable<Product> {
-        return this.productService.getProduct(id);
+    getProductFromSlug(productSlug: string): Observable<Product> {
+        return this.productService.getProductFromSlug(productSlug);
     }
 }

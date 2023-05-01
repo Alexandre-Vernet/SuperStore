@@ -20,7 +20,7 @@ export class ProductService {
         return this.http.get<Product[]>(this.productUri);
     }
 
-    getProduct(id: string): Observable<Product> {
-        return this.http.get<Product>(`${ this.productUri }/${ id }`);
+    getProductFromSlug(slug: string): Observable<Product> {
+        return this.http.get<Product>(`${ this.productUri }/slug/${ slug }`);
     }
 }

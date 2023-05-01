@@ -36,4 +36,14 @@ export class ProductService {
     remove(id: number) {
         return this.productRepository.delete(id);
     }
+
+    findBySlug(slug: string) {
+        // Remove all the '-' from the slug
+        slug = slug.replace(/-/g, ' ');
+
+        // Find in DB where name is like slug
+        return this.productRepository.createQueryBuilder('products')
+            .where('LOWER(products.name) LIKE LOWER(:slug)', { slug: `%${slug}%` })
+            .getOne();
+    }
 }
