@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { Product } from "./product";
 import { environment } from "../environments/environment";
 
@@ -18,5 +18,9 @@ export class ProductService {
 
     getProducts(): Observable<Product[]> {
         return this.http.get<Product[]>(this.productUri);
+    }
+
+    getProduct(id: string): Observable<Product> {
+        return this.http.get<Product>(`${ this.productUri }/${ id }`);
     }
 }
