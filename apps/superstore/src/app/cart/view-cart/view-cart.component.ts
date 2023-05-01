@@ -24,7 +24,11 @@ export class ViewCartComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.cart = this.cartService.cart;
+        this.cart = this.cartService.cart;
+    }
+
+    removeFromCart(product: Product) {
+        this.cart = this.cartService.removeFromCart(product);
     }
 
     subTotalPrice(): number {
