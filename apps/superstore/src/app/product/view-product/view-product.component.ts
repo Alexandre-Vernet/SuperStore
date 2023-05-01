@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { Product } from "../product";
+import { CartService } from "../../cart/cart.service";
 
 @Component({
     selector: 'superstore-view-product',
@@ -15,6 +16,7 @@ export class ViewProductComponent implements OnInit {
     constructor(
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
+        private readonly cartService: CartService
     ) {
     }
 
@@ -29,5 +31,9 @@ export class ViewProductComponent implements OnInit {
 
     getProductFromSlug(productSlug: string): Observable<Product> {
         return this.productService.getProductFromSlug(productSlug);
+    }
+
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
     }
 }
