@@ -15,10 +15,10 @@ export class ViewCartComponent implements OnInit {
     constructor(
         private readonly cartService: CartService,
     ) {
-       const localStorageCart: Product[] = JSON.parse(localStorage.getItem('cart'));
-         if (localStorageCart) {
-                this.cartService.cart = localStorageCart;
-         }
+        const localStorageCart: Product[] = JSON.parse(localStorage.getItem('cart'));
+        if (localStorageCart) {
+            this.cartService.cart = localStorageCart;
+        }
     }
 
     ngOnInit() {
