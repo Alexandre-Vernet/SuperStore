@@ -10,17 +10,15 @@ import { ProductProductPipe } from "../../product/product.pipe";
 })
 export class ViewCartComponent implements OnInit {
 
-    cart: Product[] = [{
-        id: 1,
-        name: 'Test Product',
-        description: 'This is a test product',
-        price: 10,
-        category: ['test'],
-    }];
+    cart: Product[] = [];
 
     constructor(
         private readonly cartService: CartService,
     ) {
+       const localStorageCart: Product[] = JSON.parse(localStorage.getItem('cart'));
+         if (localStorageCart) {
+                this.cartService.cart = localStorageCart;
+         }
     }
 
     ngOnInit() {
