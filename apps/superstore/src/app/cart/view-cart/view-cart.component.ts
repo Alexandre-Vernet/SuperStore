@@ -24,6 +24,9 @@ export class ViewCartComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+        this.cart.map(item => {
+            item.price = Product.convertCentToEuro(item.price);
+        });
     }
 
     removeFromCart(product: Product) {
@@ -32,26 +35,26 @@ export class ViewCartComponent implements OnInit {
 
     subTotalPrice(): number {
         let total = 0;
-        this.cart.forEach(item => {
+        this.cart.map(item => {
             total += item.price * item.quantity;
         });
-        return total;
+        return Cart.convertTwoDecimals(total);
     }
 
     shippingCost(): number {
         if (this.subTotalPrice()) {
-            return 20;
+            return Cart.convertTwoDecimals(20);
         } else {
-            return 0;
+            return Cart.convertTwoDecimals(0);
         }
     }
 
     taxes(): number {
-        return this.subTotalPrice() * 0.25;
+        return Cart.convertTwoDecimals(this.subTotalPrice() * 0.25);
     }
 
     totalPrice(): number {
-        return this.shippingCost() + this.taxes() + this.subTotalPrice();
+        return Cart.convertTwoDecimals(this.shippingCost() + this.taxes() + this.subTotalPrice());
     }
 
     convertProductNameToSlug(name: string): string {
@@ -60,7 +63,6 @@ export class ViewCartComponent implements OnInit {
 
     updateQuantity(item: Cart, event) {
         const quantityUpdated: number = event.target.value;
-        console.log(quantityUpdated)
         this.cartService.updateQuantity(item, quantityUpdated);
     }
 }

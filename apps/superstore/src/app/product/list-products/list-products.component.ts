@@ -24,7 +24,10 @@ export class ListProductsComponent implements OnInit {
     getProducts() {
         return this.productService.getProducts()
             .subscribe(products => {
-                this.products = products
+                products.map(product => {
+                    product.price =  Product.convertCentToEuro(product.price);
+                });
+                this.products = products;
             });
     }
 
