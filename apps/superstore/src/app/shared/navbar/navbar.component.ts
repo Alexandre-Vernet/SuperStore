@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Product } from "../product/product";
-import { CartService } from "../cart/cart.service";
+import { CartService } from "../../cart/cart.service";
+import { Cart } from "../../cart/cart";
 
 @Component({
     selector: 'superstore-navbar',
@@ -9,7 +9,7 @@ import { CartService } from "../cart/cart.service";
 })
 export class NavbarComponent  {
 
-    cart: Product[] = [];
+    cart: Cart[] = [];
 
     constructor(
         private readonly cartService: CartService,
