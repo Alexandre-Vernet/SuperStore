@@ -4,7 +4,6 @@ import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { Product } from "../product";
 import { CartService } from "../../cart/cart.service";
-import { Cart } from "../../cart/cart";
 
 @Component({
     selector: 'superstore-view-product',

@@ -9,15 +9,11 @@ export class CartService {
 
     cart: Cart[] = [];
 
-    constructor() {
-    }
-
     addToCart(product: Product) {
         // Check if the product is already in the cart
         const productInCart = this.cart.find(cartProduct => cartProduct.id === product.id);
         if (productInCart) {
             productInCart.quantity++;
-            console.log(this.cart);
             this.updateCartLocalStorage();
             return;
         }

@@ -39,7 +39,11 @@ export class ViewCartComponent implements OnInit {
     }
 
     shippingCost(): number {
-        return 20;
+        if (this.subTotalPrice()) {
+            return 20;
+        } else {
+            return 0;
+        }
     }
 
     taxes(): number {
