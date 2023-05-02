@@ -29,6 +29,11 @@ export class ViewCartComponent implements OnInit {
         });
     }
 
+    getPricePerItem(item: Cart): number {
+        console.log(Cart.convertTwoDecimals(item.price * item.quantity))
+        return Cart.convertTwoDecimals(item.price * item.quantity);
+    }
+
     removeFromCart(product: Product) {
         this.cart = this.cartService.removeFromCart(product);
     }
