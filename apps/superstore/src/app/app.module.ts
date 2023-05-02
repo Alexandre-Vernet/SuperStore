@@ -6,17 +6,19 @@ import { appRoutes } from './app.routes';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductModule } from './product/product.module';
 import { HttpClientModule } from '@angular/common/http';
+import { CartModule } from './cart/cart.module';
+import { ProductProductPipe } from './product/product.pipe';
 
 @NgModule({
-    declarations: [AppComponent, NavbarComponent],
-    imports: [
-        BrowserModule,
-        RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
-        ProductModule,
-        HttpClientModule,
-    ],
-    providers: [],
-    bootstrap: [AppComponent],
+  declarations: [AppComponent, NavbarComponent, ProductProductPipe],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
+    HttpClientModule,
+    ProductModule,
+    CartModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
