@@ -7,7 +7,7 @@ import { ProductModule } from './product/product.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CartModule } from './cart/cart.module';
 import { ProductProductPipe } from './product/product.pipe';
-import { SharedModule } from "./shared/shared.module";
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
     declarations: [AppComponent, ProductProductPipe],
