@@ -31,17 +31,19 @@
 
                                             <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">Large</p>
                                         </div>
-                                        <p class="mt-1 text-sm font-medium text-gray-900">{{item?.price}} €</p>
+                                        <p class="mt-1 text-sm font-medium text-gray-900">{{item?.price}}
+                                            € {{item?.quantity}}</p>
                                     </div>
 
                                     <div class="mt-4 sm:mt-0 sm:pr-9">
                                         <label for="quantity-1" class="sr-only">Quantity, Basic Tee</label>
-                                        <select id="quantity-1" name="quantity-1"
+                                        <select [(ngModel)]="item.quantity"
+                                                (change)="updateQuantity(item, $event)"
+                                                id="quantity-1" name="quantity-1"
                                                 class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                            <ng-container *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
-                                                <option [value]="i">{{i}}</option>
-                                            </ng-container>
+                                            <option *ngFor="let value of [1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="value">{{value}}</option>
                                         </select>
+
 
                                         <div class="absolute top-0 right-0">
                                             <button type="button"
