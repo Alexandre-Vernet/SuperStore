@@ -24,13 +24,9 @@ export class ViewCartComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
-        this.cart.map(item => {
-            item.price = Product.convertCentToEuro(item.price);
-        });
     }
 
     getPricePerItem(item: Cart): number {
-        console.log(Cart.convertTwoDecimals(item.price * item.quantity))
         return Cart.convertTwoDecimals(item.price * item.quantity);
     }
 

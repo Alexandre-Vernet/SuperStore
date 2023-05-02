@@ -25,7 +25,6 @@ export class ViewProductComponent implements OnInit {
         const productSlug = this.route.snapshot.paramMap.get('id');
         this.getProductFromSlug(productSlug)
             .subscribe(product => {
-                product.price =  Product.convertCentToEuro(product.price);
                 this.product = product;
             });
     }
