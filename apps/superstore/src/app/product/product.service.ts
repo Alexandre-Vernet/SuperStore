@@ -24,6 +24,9 @@ export class ProductService {
                     products.map(product => {
                         product.price = Product.convertCentToEuro(product.price);
                     });
+
+                    // Shuffling the products
+                    products.sort(() => Math.random() - 0.5);
                 })
             );
     }
