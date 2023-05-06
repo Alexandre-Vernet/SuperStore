@@ -24,12 +24,12 @@ export class ProductController {
 
     @Get()
     findAll(
-        @Query('page') page = '1',
-        @Query('limit') limit = '10',
+        @Query('page') page = 1,
+        @Query('limit') limit = 10,
     ) {
         const pagination = {
-            page: parseInt(page, 10),
-            limit: parseInt(limit, 10),
+            page,
+            limit,
         };
 
         return this.productService.findAll(pagination);
