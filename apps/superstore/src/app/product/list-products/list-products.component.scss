@@ -1,5 +1,32 @@
+.home-banner {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    select {
+        width: 140px;
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 0 10px;
+        font-size: 16px;
+        color: #333;
+        background-color: #fff;
+    }
+}
+
 @media (min-width: 640px) {
     .sm\:py-24 {
         padding-top: 4em;
+    }
+}
+
+
+@media (max-width: 400px) {
+    .home-banner {
+        flex-direction: column;
+        gap: 1.5em;
     }
 }
