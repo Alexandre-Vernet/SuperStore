@@ -18,8 +18,12 @@ export class ProductService {
         return this.productRepository.save(createProductDto);
     }
 
-    findAll(): Promise<Product[]> {
-        return this.productRepository.find();
+    findAll(pagination): Promise<Product[]> {
+        const { limit, page } = pagination;
+        return this.productRepository.find({
+            skip: limit * (page - 1),
+            take: limit,
+        });
     }
 
     findOne(id: number) {
