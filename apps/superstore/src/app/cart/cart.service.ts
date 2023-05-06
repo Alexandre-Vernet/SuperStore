@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Product } from "../product/product";
-import { Cart } from "./cart";
+import { CartDto, ProductDto } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CartService {
 
-    cart: Cart[] = [];
+    cart: CartDto[] = [];
 
-    addToCart(product: Product) {
+    addToCart(product: ProductDto) {
         // Check if the product is already in the cart
         const productInCart = this.cart.find(cartProduct => cartProduct.id === product.id);
         if (productInCart) {
@@ -24,7 +23,7 @@ export class CartService {
         this.updateCartLocalStorage();
     }
 
-    removeFromCart(product: Product): Cart[] {
+    removeFromCart(product: CartDto): CartDto[] {
         this.cart = this.cart.filter(cartProduct => cartProduct.id !== product.id);
         this.updateCartLocalStorage();
         return this.cart;
@@ -34,7 +33,7 @@ export class CartService {
         localStorage.setItem('cart', JSON.stringify(this.cart));
     }
 
-    updateQuantity(item: Cart, quantityUpdated: number) {
+    updateQuantity(item: CartDto, quantityUpdated: number) {
         this.cart.find(cartProduct => cartProduct.id === item.id).quantity = quantityUpdated;
         this.updateCartLocalStorage();
     }

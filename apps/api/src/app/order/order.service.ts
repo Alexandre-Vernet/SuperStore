@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
 import { Order } from "./entities/order.entity";
-import { CreateOrderDto } from "./dto/create-order.dto";
-import { UpdateOrderDto } from "./dto/update-order.dto";
+import { CreateOrderDto } from "@superstore/libs";
+import { OrderDto } from "@superstore/libs";
 
 @Injectable()
 export class OrderService {
@@ -28,7 +28,7 @@ export class OrderService {
         return this.productRepository.findOne(options);
     }
 
-    update(id: number, updateOrderDto: UpdateOrderDto) {
+    update(id: number, updateOrderDto: OrderDto) {
         return this.productRepository.update(id, updateOrderDto);
     }
 

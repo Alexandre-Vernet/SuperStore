@@ -8,8 +8,8 @@ import {
     Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from '@superstore/libs';
+import { ProductDto } from '@superstore/libs';
 
 @Controller('product')
 export class ProductController {
@@ -37,7 +37,7 @@ export class ProductController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
         return this.productService.update(+id, updateProductDto);
     }
 

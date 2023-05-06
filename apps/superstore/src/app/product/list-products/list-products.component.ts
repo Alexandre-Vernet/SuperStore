@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from "../product.service";
-import { Product } from "../product";
 import { ProductProductPipe } from "../product.pipe";
+import { ProductDto } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-list-products',
@@ -10,7 +10,7 @@ import { ProductProductPipe } from "../product.pipe";
 })
 export class ListProductsComponent implements OnInit {
 
-    products: Product[] = [];
+    products: ProductDto[] = [];
 
     constructor(
         private readonly productService: ProductService

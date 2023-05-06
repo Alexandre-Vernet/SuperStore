@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from "../cart.service";
-import { Product } from "../../product/product";
 import { ProductProductPipe } from "../../product/product.pipe";
 import { Cart } from "../cart";
+import { CartDto } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-view-cart',
@@ -11,12 +11,12 @@ import { Cart } from "../cart";
 })
 export class ViewCartComponent implements OnInit {
 
-    cart: Cart[] = [];
+    cart: CartDto[] = [];
 
     constructor(
         private readonly cartService: CartService,
     ) {
-        const localStorageCart: Cart[] = JSON.parse(localStorage.getItem('cart'));
+        const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
         if (localStorageCart) {
             this.cartService.cart = localStorageCart;
         }
@@ -26,11 +26,11 @@ export class ViewCartComponent implements OnInit {
         this.cart = this.cartService.cart;
     }
 
-    getPricePerItem(item: Cart): number {
+    getPricePerItem(item: CartDto): number {
         return Cart.convertTwoDecimals(item.price * item.quantity);
     }
 
-    removeFromCart(product: Product) {
+    removeFromCart(product: CartDto) {
         this.cart = this.cartService.removeFromCart(product);
     }
 
@@ -62,7 +62,7 @@ export class ViewCartComponent implements OnInit {
         return new ProductProductPipe().convertProductNameToSlug(name);
     }
 
-    updateQuantity(item: Cart, event) {
+    updateQuantity(item: CartDto, event) {
         const quantityUpdated: number = event.target.value;
         this.cartService.updateQuantity(item, quantityUpdated);
     }
