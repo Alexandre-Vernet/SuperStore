@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { CreateCartDto } from '@superstore/libs';
+import { CartDto } from '@superstore/libs';
 
 @Controller('cart')
 export class CartController {
@@ -31,7 +31,7 @@ export class CartController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
+  update(@Param('id') id: string, @Body() updateCartDto: CartDto) {
     return this.cartService.update(+id, updateCartDto);
   }
 

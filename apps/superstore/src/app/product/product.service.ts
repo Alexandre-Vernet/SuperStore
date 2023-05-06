@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, tap } from "rxjs";
 import { Product } from "./product";
 import { environment } from "../../environments/environment";
+import { ProductDto } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,8 @@ export class ProductService {
     ) {
     }
 
-    getProducts(): Observable<Product[]> {
-        return this.http.get<Product[]>(this.productUri)
+    getProducts(): Observable<ProductDto[]> {
+        return this.http.get<ProductDto[]>(this.productUri)
             .pipe(
                 tap((products) => {
                     products.map(product => {
@@ -27,8 +28,8 @@ export class ProductService {
             );
     }
 
-    getProductFromSlug(slug: string): Observable<Product> {
-        return this.http.get<Product>(`${ this.productUri }/slug/${ slug }`)
+    getProductFromSlug(slug: string): Observable<ProductDto> {
+        return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`)
             .pipe(
                 tap((product) => {
                     product.price = Product.convertCentToEuro(product.price);

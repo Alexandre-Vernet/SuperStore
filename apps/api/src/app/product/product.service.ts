@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from '@superstore/libs';
+import { ProductDto } from '@superstore/libs';
 import { FindOneOptions, Repository } from "typeorm";
 import { Product } from "./entities/product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -29,7 +29,7 @@ export class ProductService {
         return this.productRepository.findOne(options);
     }
 
-    update(id: number, updateProductDto: UpdateProductDto) {
+    update(id: number, updateProductDto: ProductDto) {
         return this.productRepository.update(id, updateProductDto);
     }
 
