@@ -18,8 +18,12 @@ export class ProductService {
         return this.productRepository.save(createProductDto);
     }
 
-    findAll(): Promise<Product[]> {
-        return this.productRepository.find();
+    findAll(pagination): Promise<{ products: Product[], total: number }> {
+        const { limit, page } = pagination;
+        return this.productRepository.findAndCount({
+            skip: limit * (page - 1),
+            take: limit,
+        }).then(([products, total]) => ({ products, total }));
     }
 
     findOne(id: number) {
@@ -43,7 +47,7 @@ export class ProductService {
 
         // Find in DB where name is like slug
         return this.productRepository.createQueryBuilder('products')
-            .where('LOWER(products.name) LIKE LOWER(:slug)', { slug: `%${slug}%` })
+            .where('LOWER(products.name) LIKE LOWER(:slug)', { slug: `%${ slug }%` })
             .getOne();
     }
 }

@@ -18,9 +18,16 @@ export class ViewProductComponent implements OnInit {
         private readonly productService: ProductService,
         private readonly cartService: CartService
     ) {
+        route.params.subscribe(() => {
+            this.getProduct();
+        });
     }
 
     ngOnInit() {
+        this.getProduct();
+    }
+
+    getProduct() {
         // Get the product ID from the URL
         const productSlug = this.route.snapshot.paramMap.get('id');
         this.getProductFromSlug(productSlug)
