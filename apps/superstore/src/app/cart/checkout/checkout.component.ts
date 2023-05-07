@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from "../cart.service";
-import { ProductPipe } from "../../product/product.pipe";
-import { Cart } from "../cart";
 import { CartDto } from "@superstore/libs";
+import { Cart } from "../cart";
+import { CartService } from "../cart.service";
 
 @Component({
-    selector: 'superstore-view-cart',
-    templateUrl: './view-cart.component.html',
-    styleUrls: ['./view-cart.component.scss'],
+    selector: 'superstore-checkout',
+    templateUrl: './checkout.component.html',
+    styleUrls: ['./checkout.component.scss'],
 })
-export class ViewCartComponent implements OnInit {
+export class CheckoutComponent implements OnInit{
 
     cart: CartDto[] = [];
 
@@ -26,8 +25,9 @@ export class ViewCartComponent implements OnInit {
         this.cart = this.cartService.cart;
     }
 
-    getPricePerItem(item: CartDto): number {
-        return Cart.convertTwoDecimals(item.price * item.quantity);
+    updateQuantity(item: CartDto, event) {
+        const quantityUpdated: number = event.target.value;
+        this.cartService.updateQuantity(item, quantityUpdated);
     }
 
     removeFromCart(product: CartDto) {
@@ -56,14 +56,5 @@ export class ViewCartComponent implements OnInit {
 
     totalPrice(): number {
         return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
-    }
-
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
-    }
-
-    updateQuantity(item: CartDto, event) {
-        const quantityUpdated: number = event.target.value;
-        this.cartService.updateQuantity(item, quantityUpdated);
     }
 }

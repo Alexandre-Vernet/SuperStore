@@ -10,7 +10,7 @@
                     <ng-container *ngFor="let item of cart">
                         <li class="flex py-6 sm:py-10">
                             <div class="flex-shrink-0">
-                                <a routerLink="/product/{{convertProductNameToSlug(item?.name)}}">
+                                <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}">
                                     <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg"
                                          alt="Front of men&#039;s Basic Tee in black."
                                          class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
@@ -30,7 +30,8 @@
                                             <p class="text-gray-500">Black</p>
                                             <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">Large</p>
                                         </div>
-                                        <p class="mt-1 text-sm font-medium text-gray-900">{{ getPricePerItem(item) }} €</p>
+                                        <p class="mt-1 text-sm font-medium text-gray-900">{{ getPricePerItem(item) }}
+                                            €</p>
                                     </div>
 
                                     <div class="mt-4 sm:mt-0 sm:pr-9">
@@ -39,7 +40,8 @@
                                                 (change)="updateQuantity(item, $event)"
                                                 id="quantity-1" name="quantity-1"
                                                 class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                            <option *ngFor="let value of [1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="value">{{ value }}</option>
+                                            <option *ngFor="let value of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+                                                    [value]="value">{{ value }}</option>
                                         </select>
 
 
@@ -94,33 +96,33 @@
                 <dl class="mt-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <dt class="text-sm text-gray-600">Subtotal</dt>
-                        <dd class="text-sm font-medium text-gray-900">{{subTotalPrice()}} €</dd>
+                        <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() }} €</dd>
                     </div>
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                         <dt class="flex items-center text-sm text-gray-600">
                             <span>Shipping estimate</span>
                         </dt>
-                        <dd class="text-sm font-medium text-gray-900">{{shippingCost()}} €</dd>
+                        <dd class="text-sm font-medium text-gray-900">{{ shippingPrice() }} €</dd>
                     </div>
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                         <dt class="flex text-sm text-gray-600">
                             <span>Tax estimate</span>
                         </dt>
-                        <dd class="text-sm font-medium text-gray-900">{{taxes()}} €</dd>
+                        <dd class="text-sm font-medium text-gray-900">{{ taxes() }} €</dd>
                     </div>
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                         <dt class="text-base font-medium text-gray-900">Total</dt>
-                        <dd class="text-base font-medium text-gray-900">{{totalPrice()}} €</dd>
+                        <dd class="text-base font-medium text-gray-900">{{ totalPrice() }} €</dd>
                     </div>
                 </dl>
 
                 <div class="mt-6">
-                    <button type="submit"
-                            class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
-                        <a routerLink="/checkout">
+                    <a routerLink="/checkout">
+                        <button type="submit"
+                                class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                             Checkout
-                        </a>
-                    </button>
+                        </button>
+                    </a>
                 </div>
             </section>
         </form>
