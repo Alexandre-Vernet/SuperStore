@@ -18,7 +18,6 @@ export class ProductService {
     }
 
     getProducts(limit: number, page: number): Observable<{ products: ProductDto[], total: number }> {
-
         return this.http.get<{ products: ProductDto[], total: number }>(this.productUri, {
             params: {
                 limit,

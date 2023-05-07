@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from "../cart.service";
-import { ProductProductPipe } from "../../product/product.pipe";
+import { ProductPipe } from "../../product/product.pipe";
 import { Cart } from "../cart";
 import { CartDto } from "@superstore/libs";
 
@@ -59,7 +59,7 @@ export class ViewCartComponent implements OnInit {
     }
 
     convertProductNameToSlug(name: string): string {
-        return new ProductProductPipe().convertProductNameToSlug(name);
+        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     updateQuantity(item: CartDto, event) {

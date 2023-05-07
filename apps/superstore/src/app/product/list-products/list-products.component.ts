@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from "../product.service";
-import { ProductProductPipe } from "../product.pipe";
+import { ProductPipe } from "../product.pipe";
 import { ProductDto } from "@superstore/libs";
 
 @Component({
@@ -68,7 +68,7 @@ export class ListProductsComponent implements OnInit {
     }
 
     convertProductNameToSlug(name: string): string {
-        return new ProductProductPipe().convertProductNameToSlug(name);
+        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     updateOrderBy($event: Event) {
