@@ -15,4 +15,37 @@ export class Order {
 
     @Column({ type: 'text' })
     state: string;
+
+    @Column({ type: 'text', nullable: true })
+    company: string;
+
+    @Column({ type: 'text' })
+    address: string;
+
+    @Column({ type: 'text', nullable: true })
+    apartment: string;
+
+    @Column({ type: 'text' })
+    country: string;
+
+    @Column({ type: 'text' })
+    city: string;
+
+    @Column({ name: 'post_code', type: 'text' })
+    postalCode: string;
+
+    @Column({ type: 'integer' })
+    phone: string;
+
+    @Column({ name: 'delivery_method', type: 'text' })
+    deliveryMethod: string;
+
+    @Column({ name: 'payment_method', type: 'text' })
+    paymentMethod: string;
+
+    @Column({ name: 'updated_at', type: 'timestamp' })
+    updatedAt: Date;
+
+    @Column({ name: 'created_at', type: 'timestamp' })
+    createdAt: Date;
 }

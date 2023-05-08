@@ -10,7 +10,7 @@ import { ProductDto } from "@superstore/libs";
 })
 export class ProductService {
 
-    productUri = `${ environment.backendUrl }/product`;
+    productUri = environment.productUri();
 
     constructor(
         private readonly http: HttpClient,

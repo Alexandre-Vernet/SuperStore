@@ -1,16 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { CartDto } from "@superstore/libs";
+import { CartDto, CreateOrderDto, State } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
     selector: 'superstore-checkout',
     templateUrl: './checkout.component.html',
     styleUrls: ['./checkout.component.scss'],
 })
-export class CheckoutComponent implements OnInit{
+export class CheckoutComponent implements OnInit {
 
     cart: CartDto[] = [];
+    form = new FormGroup({
+        // email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
+        // firstName: new FormControl('test', [Validators.required]),
+        // lastName: new FormControl('test', [Validators.required]),
+        company: new FormControl(),
+        address: new FormControl('test', [Validators.required]),
+        apartment: new FormControl(),
+        country: new FormControl('test', [Validators.required]),
+        city: new FormControl('test', [Validators.required]),
+        postalCode: new FormControl('test', [Validators.required]),
+        phone: new FormControl('test', [Validators.required]),
+        deliveryMethod: new FormControl('test', [Validators.required]),
+        paymentMethod: new FormControl('CB', [Validators.required]),
+    })
 
     constructor(
         private readonly cartService: CartService,
@@ -56,5 +71,36 @@ export class CheckoutComponent implements OnInit{
 
     totalPrice(): number {
         return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
+    }
+
+    confirmOrder() {
+        const {
+            company,
+            address,
+            apartment,
+            country,
+            city,
+            postalCode,
+            phone,
+            deliveryMethod,
+            paymentMethod
+        } = this.form.value;
+
+        const order: CreateOrderDto = {
+            state: 'pending' as State,
+            company,
+            address,
+            apartment,
+            country,
+            city,
+            postalCode,
+            phone,
+            deliveryMethod,
+            paymentMethod
+        }
+        return this.cartService.confirmOrder(order)
+            .subscribe(() => {
+                console.log('Order confirmed');
+            })
     }
 }
