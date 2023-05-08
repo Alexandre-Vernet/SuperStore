@@ -107,8 +107,7 @@ export class CheckoutComponent implements OnInit {
         return this.cartService.confirmOrder(order)
             .subscribe({
                 next: () => {
-                    this.cartService.cart = [];
-                    localStorage.removeItem('cart');
+                    this.cartService.clearCart();
                     this.toggleNotification(true);
                 }
             });
