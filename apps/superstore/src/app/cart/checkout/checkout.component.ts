@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartDto, CreateOrderDto, State } from "@superstore/libs";
+import { CartDto, CreateOrderDto, NotificationsDto, State } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -25,7 +25,13 @@ export class CheckoutComponent implements OnInit {
         phone: new FormControl('test', [Validators.required]),
         deliveryMethod: new FormControl('test', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
-    })
+    });
+
+    checkoutMessage: NotificationsDto = {
+        title: '',
+        description: '',
+        orderCompleted: false
+    }
 
     constructor(
         private readonly cartService: CartService,
@@ -99,8 +105,22 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         }
         return this.cartService.confirmOrder(order)
-            .subscribe(() => {
-                console.log('Order confirmed');
-            })
+            .subscribe({
+                next: () => {
+                    this.cartService.cart = [];
+                    localStorage.removeItem('cart');
+                    this.toggleNotification(true);
+                }
+            });
+    }
+
+    toggleNotification(orderCompleted?: boolean): NotificationsDto {
+        const message = {
+            title: 'Order confirmed',
+            description: 'An email has been sent to you with the order details',
+            orderCompleted
+        } as NotificationsDto;
+        this.checkoutMessage = message;
+        return message;
     }
 }

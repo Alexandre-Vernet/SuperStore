@@ -374,3 +374,8 @@
         </div>
     </main>
 </div>
+
+
+<ng-container *ngIf="checkoutMessage.orderCompleted">
+    <superstore-notifications [message]="checkoutMessage"></superstore-notifications>
+</ng-container>
