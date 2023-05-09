@@ -3,6 +3,7 @@ import { CartDto, CreateOrderDto, NotificationsDto, State } from "@superstore/li
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ProductPipe } from "../../product/product.pipe";
 
 @Component({
     selector: 'superstore-checkout',
@@ -44,6 +45,10 @@ export class CheckoutComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+    }
+
+    convertProductNameToSlug(name: string): string {
+        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     updateQuantity(item: CartDto, event) {

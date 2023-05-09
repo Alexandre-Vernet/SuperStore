@@ -8,45 +8,45 @@
                     <div>
                         <h2 class="text-lg font-medium text-gray-900">Contact information</h2>
 
-<!--                        <div class="mt-4">-->
-<!--                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email-->
-<!--                                address</label>-->
-<!--                            <div class="mt-1">-->
-<!--                                <input-->
-<!--                                        formControlName="email"-->
-<!--                                        type="email" id="email-address" name="email-address" autocomplete="email"-->
-<!--                                        required-->
-<!--                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <!--                        <div class="mt-4">-->
+                        <!--                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email-->
+                        <!--                                address</label>-->
+                        <!--                            <div class="mt-1">-->
+                        <!--                                <input-->
+                        <!--                                        formControlName="email"-->
+                        <!--                                        type="email" id="email-address" name="email-address" autocomplete="email"-->
+                        <!--                                        required-->
+                        <!--                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
 
                     <div class="mt-10 border-t border-gray-200 pt-10">
                         <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 
                         <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-<!--                            <div>-->
-<!--                                <label for="firstName" class="block text-sm font-medium text-gray-700">First-->
-<!--                                    name</label>-->
-<!--                                <div class="mt-1">-->
-<!--                                    <input-->
-<!--                                            formControlName="firstName"-->
-<!--                                            type="text" id="firstName" name="firstName" autocomplete="given-name"-->
-<!--                                            required-->
-<!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <!--                            <div>-->
+                            <!--                                <label for="firstName" class="block text-sm font-medium text-gray-700">First-->
+                            <!--                                    name</label>-->
+                            <!--                                <div class="mt-1">-->
+                            <!--                                    <input-->
+                            <!--                                            formControlName="firstName"-->
+                            <!--                                            type="text" id="firstName" name="firstName" autocomplete="given-name"-->
+                            <!--                                            required-->
+                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
 
-<!--                            <div>-->
-<!--                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>-->
-<!--                                <div class="mt-1">-->
-<!--                                    <input-->
-<!--                                            formControlName="lastName"-->
-<!--                                            type="text" id="lastName" autocomplete="family-name"-->
-<!--                                            required-->
-<!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <!--                            <div>-->
+                            <!--                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>-->
+                            <!--                                <div class="mt-1">-->
+                            <!--                                    <input-->
+                            <!--                                            formControlName="lastName"-->
+                            <!--                                            type="text" id="lastName" autocomplete="family-name"-->
+                            <!--                                            required-->
+                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
 
 
                             <div class="sm:col-span-2">
@@ -281,15 +281,17 @@
                             <ng-container *ngFor="let item of cart">
                                 <li class="flex py-6 px-4 sm:px-6">
                                     <div class="flex-shrink-0">
-                                        <img src="https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg"
-                                             alt="Front of men&#039;s Basic Tee in black." class="w-20 rounded-md">
+                                        <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}">
+                                            <img src="https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg"
+                                                 alt="Front of men&#039;s Basic Tee in black." class="w-20 rounded-md">
+                                        </a>
                                     </div>
 
                                     <div class="ml-6 flex flex-1 flex-col">
                                         <div class="flex">
                                             <div class="min-w-0 flex-1">
                                                 <h4 class="text-sm">
-                                                    <a href="#"
+                                                    <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}"
                                                        class="font-medium text-gray-700 hover:text-gray-800">{{ item?.name }}</a>
                                                 </h4>
                                                 <p class="mt-1 text-sm text-gray-500">Black</p>
