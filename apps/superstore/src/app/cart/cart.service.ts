@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartDto, ProductDto } from "@superstore/libs";
+import { CartDto, NotificationsDto, ProductDto } from "@superstore/libs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
@@ -52,7 +52,7 @@ export class CartService {
         this.updateCartLocalStorage();
     }
 
-    confirmOrder(order): Observable<void> {
-        return this.http.post<void>(this.orderUri, order);
+    confirmOrder(order): Observable<NotificationsDto> {
+        return this.http.post<NotificationsDto>(this.orderUri, order);
     }
 }

@@ -106,19 +106,17 @@ export class CheckoutComponent implements OnInit {
         }
         return this.cartService.confirmOrder(order)
             .subscribe({
-                next: () => {
+                next: (res) => {
                     this.cartService.clearCart();
-                    this.toggleNotification(true);
+                    this.toggleNotification(res);
+                },
+                error :(error) => {
+                    this.toggleNotification(error.error);
                 }
             });
     }
 
-    toggleNotification(orderCompleted?: boolean): NotificationsDto {
-        const message = {
-            title: 'Order confirmed',
-            description: 'An email has been sent to you with the order details',
-            orderCompleted
-        } as NotificationsDto;
+    toggleNotification(message: NotificationsDto): NotificationsDto {
         this.checkoutMessage = message;
         return message;
     }
