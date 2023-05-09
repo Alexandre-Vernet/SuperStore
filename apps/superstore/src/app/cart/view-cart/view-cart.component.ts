@@ -42,7 +42,7 @@ export class ViewCartComponent implements OnInit {
         return Cart.convertTwoDecimals(total);
     }
 
-    shippingCost(): number {
+    shippingPrice(): number {
         if (this.subTotalPrice()) {
             return Cart.convertTwoDecimals(20);
         } else {
@@ -55,7 +55,7 @@ export class ViewCartComponent implements OnInit {
     }
 
     totalPrice(): number {
-        return Cart.convertTwoDecimals(this.shippingCost() + this.taxes() + this.subTotalPrice());
+        return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
     }
 
     convertProductNameToSlug(name: string): string {

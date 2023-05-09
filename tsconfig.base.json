@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@superstore/libs": ["libs/model/src/index.ts"],
+      "@superstore/libs": ["libs/model/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
