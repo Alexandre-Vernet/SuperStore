@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ViewCartComponent } from "./view-cart/view-cart.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
+import { CheckoutGuard } from "./checkout/checkout.guard";
 
 const routes: Routes = [
     {
@@ -10,7 +11,9 @@ const routes: Routes = [
     },
     {
         path: 'checkout',
-        component: CheckoutComponent
+        component: CheckoutComponent,
+        canActivate: [CheckoutGuard]
+
     }
 ];
 
