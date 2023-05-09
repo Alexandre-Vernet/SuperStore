@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
-import { Order } from "./entities/order.entity";
+import { Order } from "./order.entity";
 import { CreateOrderDto, NotificationsDto } from "@superstore/libs";
 import { OrderDto } from "@superstore/libs";
 

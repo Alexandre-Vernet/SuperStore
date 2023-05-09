@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../../users/entities/user.entity";
-import { Cart } from "../../cart/entities/cart.entity";
+import { User } from "../users/user.entity";
+import { Cart } from "../cart/cart.entity";
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {

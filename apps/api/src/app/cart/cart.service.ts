@@ -3,7 +3,7 @@ import { CreateCartDto } from '@superstore/libs';
 import { CartDto } from '@superstore/libs';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
-import { Cart } from "./entities/cart.entity";
+import { Cart } from "./cart.entity";
 
 @Injectable()
 export class CartService {
