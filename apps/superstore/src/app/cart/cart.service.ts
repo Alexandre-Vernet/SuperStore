@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CartDto, NotificationsDto, ProductDto } from "@superstore/libs";
+import { CartDto, OrderDto, ProductDto } from "@superstore/libs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
+import { Router } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,8 @@ export class CartService {
     cart: CartDto[] = [];
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private router: Router
     ) {
     }
 
@@ -52,7 +54,14 @@ export class CartService {
         this.updateCartLocalStorage();
     }
 
-    confirmOrder(order): Observable<NotificationsDto> {
-        return this.http.post<NotificationsDto>(this.orderUri, order);
+    confirmOrder(order): Observable<OrderDto> {
+        return this.http.post<OrderDto>(this.orderUri, order)
+            .pipe(
+                tap((order) => {
+                    console.log(order)
+                    this.clearCart();
+                    this.router.navigate(['/confirmation']);
+                })
+            )
     }
 }

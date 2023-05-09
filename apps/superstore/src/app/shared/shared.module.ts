@@ -6,22 +6,19 @@ import { ResponsiveNavbarComponent } from './responsive-navbar/responsive-navbar
 import { FooterComponent } from './footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
-import { NotificationsComponent } from "./notifications/notifications.component";
 
 @NgModule({
     declarations: [
         NavbarComponent,
         ResponsiveNavbarComponent,
         FooterComponent,
-        ProductPipe,
-        NotificationsComponent,
+        ProductPipe
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
         NavbarComponent,
         ResponsiveNavbarComponent,
-        FooterComponent,
-        NotificationsComponent
+        FooterComponent
     ],
 })
 export class SharedModule {

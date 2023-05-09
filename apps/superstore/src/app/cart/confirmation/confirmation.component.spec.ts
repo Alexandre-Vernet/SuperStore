@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NotificationsComponent } from './notifications.component';
+import { ConfirmationComponent } from './confirmation.component';
 
-describe('NotificationsComponent', () => {
-  let component: NotificationsComponent;
-  let fixture: ComponentFixture<NotificationsComponent>;
+describe('ConfirmationComponent', () => {
+  let component: ConfirmationComponent;
+  let fixture: ComponentFixture<ConfirmationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NotificationsComponent],
+      declarations: [ConfirmationComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NotificationsComponent);
+    fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
