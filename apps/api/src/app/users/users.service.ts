@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '@superstore/libs';
 import { UserDto } from '@superstore/libs';
 import { User } from "./user.entity";
@@ -9,30 +9,35 @@ import { FindOneOptions, Repository } from "typeorm";
 export class UsersService {
     constructor(
         @InjectRepository(User)
-        private readonly productRepository: Repository<User>
+        private readonly userRepository: Repository<User>
     ) {
     }
 
     create(createUserDto: CreateUserDto): Promise<User> {
-        return this.productRepository.save(createUserDto);
+        const existingUser = this.userRepository.findOne({ where: { email: createUserDto.email } });
+        if (existingUser) {
+            throw new ConflictException('This email is already taken');
+        }
+
+        return this.userRepository.save(createUserDto);
     }
 
     findAll(): Promise<User[]> {
-        return this.productRepository.find();
+        return this.userRepository.find();
     }
 
     findOne(id: number) {
         const options: FindOneOptions = {
             where: { id }
         };
-        return this.productRepository.findOne(options);
+        return this.userRepository.findOne(options);
     }
 
     update(id: number, updateUserDto: UserDto) {
-        return this.productRepository.update(id, updateUserDto);
+        return this.userRepository.update(id, updateUserDto);
     }
 
     remove(id: number) {
-        return this.productRepository.delete(id);
+        return this.userRepository.delete(id);
     }
 }
