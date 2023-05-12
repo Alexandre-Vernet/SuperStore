@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
+import { CreateUserDto } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-sign-up',
@@ -15,6 +16,7 @@ export class SignUpComponent {
         email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
         password: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
         confirmPassword: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
+        address: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
     });
 
     constructor(
@@ -23,12 +25,27 @@ export class SignUpComponent {
     }
 
     signUp() {
-        const { firstName, lastName, email, password, confirmPassword } = this.formSignUp.value;
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            confirmPassword,
+            address
+        } = this.formSignUp.value;
+
+        const user: CreateUserDto = {
+            firstName,
+            lastName,
+            email,
+            password,
+            address
+        }
         if (password !== confirmPassword) {
             this.formSignUp.setErrors({ passwordNotMatch: true });
             return;
         }
-        this.authService.signUp(firstName, lastName, email, password)
+        this.authService.signUp(user)
             .subscribe({
                 next: () => {
                     console.log('ok');

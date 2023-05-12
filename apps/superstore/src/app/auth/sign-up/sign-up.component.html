@@ -50,8 +50,20 @@
                     <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm
                         password</label>
                     <div class="mt-1">
-                        <input formControlName="confirmPassword" id="confirm-password" type="password"
-                               autocomplete="current-password" required
+                        <input formControlName="confirmPassword" id="confirm-password" type="password" required
+                               class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <span *ngIf="formSignUp.hasError('passwordNotMatch')"
+                          class="text-red-600 text-xs">
+                        Passwords do not match
+                    </span>
+                </div>
+
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Confirm
+                        password</label>
+                    <div class="mt-1">
+                        <input formControlName="address" id="address" type="password" required
                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <span *ngIf="formSignUp.hasError('passwordNotMatch')"
