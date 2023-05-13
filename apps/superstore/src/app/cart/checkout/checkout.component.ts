@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CartDto, CreateOrderDto, State } from "@superstore/libs";
+import { CartDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductPipe } from "../../product/product.pipe";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -13,10 +14,11 @@ import { ProductPipe } from "../../product/product.pipe";
 export class CheckoutComponent implements OnInit {
 
     cart: CartDto[] = [];
+    user: UserDto;
     form = new FormGroup({
-        // email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
-        // firstName: new FormControl('test', [Validators.required]),
-        // lastName: new FormControl('test', [Validators.required]),
+        email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
+        firstName: new FormControl('test', [Validators.required]),
+        lastName: new FormControl('test', [Validators.required]),
         company: new FormControl(),
         address: new FormControl('test', [Validators.required]),
         apartment: new FormControl(),
@@ -30,6 +32,7 @@ export class CheckoutComponent implements OnInit {
 
     constructor(
         private readonly cartService: CartService,
+        private readonly authService: AuthService,
     ) {
         const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
         if (localStorageCart) {
@@ -39,6 +42,19 @@ export class CheckoutComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+        this.user = this.authService.user;
+        this.form.patchValue({
+            email: this.user.email,
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            address: this.user.address,
+        });
+
+        // Get addresses of user
+        this.authService.getAddresses()
+            .subscribe(addresses => {
+                console.log(addresses);
+            });
     }
 
     convertProductNameToSlug(name: string): string {
@@ -108,7 +124,7 @@ export class CheckoutComponent implements OnInit {
                 next: (res) => {
                     this.cartService.clearCart();
                 },
-                error :(error) => {
+                error: (error) => {
                 }
             });
     }

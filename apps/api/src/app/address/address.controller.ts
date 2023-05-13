@@ -20,9 +20,9 @@ export class AddressController {
         return this.addressService.create(createAddressDto);
     }
 
-    @Get()
-    findAll() {
-        return this.addressService.findAll();
+    @Post('/find-all')
+    findAll(@Body() { userId }: { userId: number }) {
+        return this.addressService.findAll(userId);
     }
 
     @Get(':id')

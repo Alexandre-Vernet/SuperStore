@@ -18,8 +18,11 @@ export class AddressService {
 
     }
 
-    findAll(): Promise<AddressDto[]> {
-        return this.addressRepository.find();
+    findAll(userId: number): Promise<AddressDto[]> {
+        const options = {
+            where: { id: userId }
+        }
+        return this.addressRepository.find(options);
     }
 
     findOne(id: number) {
