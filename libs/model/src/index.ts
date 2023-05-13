@@ -15,3 +15,4 @@ export * from './lib/product/create-product.dto';
 
 export * from './lib/user/user.dto';
 export * from './lib/user/create-user.dto';
+export * from './lib/user/sign-in-user.dto';

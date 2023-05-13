@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from '@superstore/libs';
+import { CreateUserDto, SignInUserDto } from '@superstore/libs';
 import { UserDto } from '@superstore/libs';
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -39,5 +39,22 @@ export class UsersService {
 
     remove(id: number) {
         return this.userRepository.delete(id);
+    }
+
+    signIn(signInUserDto: SignInUserDto) {
+        const options: FindOneOptions = {
+            where: {
+                email: signInUserDto.email,
+                password: signInUserDto.password,
+            }
+        };
+        return this.userRepository.findOne(options)
+            .then((user) => {
+                if (!user) {
+                    throw new ConflictException('Invalid credentials');
+                }
+                delete user.password;
+                return user;
+            });
     }
 }
