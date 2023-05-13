@@ -10,13 +10,15 @@ import { CartModule } from "./cart/cart.module";
 import { UserModule } from "./user/user.module";
 import { AddressModule } from "./address/address.module";
 import { Address } from "./address/address.entity";
+import { JwtModule } from "@nestjs/jwt";
 
 const {
     POSTGRES_HOST,
     POSTGRES_PORT,
     POSTGRES_USERNAME,
     POSTGRES_PASSWORD,
-    POSTGRES_DATABASE
+    POSTGRES_DATABASE,
+    JWT_SECRET
 } = process.env;
 
 @Module({
@@ -35,7 +37,12 @@ const {
         OrderModule,
         CartModule,
         UserModule,
-        AddressModule
+        AddressModule,
+        JwtModule.register({
+            global: true,
+            secret: JWT_SECRET,
+            signOptions: { expiresIn: '1d' },
+        })
     ],
 })
 export class AppModule {

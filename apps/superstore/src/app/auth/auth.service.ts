@@ -18,15 +18,26 @@ export class AuthService {
     ) {
     }
 
-    signIn(user: SignInUserDto): Observable<UserDto> {
-        return this.http.post<UserDto>(`${ this.authUrl }/sign-in`, user)
+    signIn(user: SignInUserDto): Observable<{ user: UserDto, accessToken: string }> {
+        return this.http.post<{ user: UserDto, accessToken: string }>(`${ this.authUrl }/sign-in`, user)
             .pipe(
-                tap(user => this.user = user)
+                tap(res => {
+                    this.user = res.user;
+                    localStorage.setItem('accessToken', res.accessToken);
+                })
             );
     }
 
     signUp(user: CreateUserDto): Observable<UserDto> {
         return this.http.post<UserDto>(this.authUrl, user)
+            .pipe(
+                tap(user => this.user = user)
+            );
+    }
+
+    signInWithAccessToken(): Observable<UserDto> {
+        const accessToken = localStorage.getItem('accessToken');
+        return this.http.post<UserDto>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
             .pipe(
                 tap(user => this.user = user)
             );
@@ -38,6 +49,6 @@ export class AuthService {
 
     getAddresses(): Observable<AddressDto> {
         const userId = this.user.id;
-        return this.http.post<AddressDto>(`${this.addressUrl}/find-all`, { userId });
+        return this.http.post<AddressDto>(`${ this.addressUrl }/find-all`, { userId });
     }
 }

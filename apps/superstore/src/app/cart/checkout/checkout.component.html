@@ -5,122 +5,104 @@
 
             <form [formGroup]="form" (ngSubmit)="confirmOrder()" class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
                 <div>
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900">Contact information</h2>
+                    <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 
-                        <!--                        <div class="mt-4">-->
-                        <!--                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email-->
-                        <!--                                address</label>-->
-                        <!--                            <div class="mt-1">-->
-                        <!--                                <input-->
-                        <!--                                        formControlName="email"-->
-                        <!--                                        type="email" id="email-address" name="email-address" autocomplete="email"-->
-                        <!--                                        required-->
-                        <!--                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                    <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                        <!--                            <div>-->
+                        <!--                                <label for="firstName" class="block text-sm font-medium text-gray-700">First-->
+                        <!--                                    name</label>-->
+                        <!--                                <div class="mt-1">-->
+                        <!--                                    <input-->
+                        <!--                                            formControlName="firstName"-->
+                        <!--                                            type="text" id="firstName" name="firstName" autocomplete="given-name"-->
+                        <!--                                            required-->
+                        <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                        <!--                                </div>-->
                         <!--                            </div>-->
-                        <!--                        </div>-->
-                    </div>
 
-                    <div class="mt-10 border-t border-gray-200 pt-10">
-                        <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
-
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                            <!--                            <div>-->
-                            <!--                                <label for="firstName" class="block text-sm font-medium text-gray-700">First-->
-                            <!--                                    name</label>-->
-                            <!--                                <div class="mt-1">-->
-                            <!--                                    <input-->
-                            <!--                                            formControlName="firstName"-->
-                            <!--                                            type="text" id="firstName" name="firstName" autocomplete="given-name"-->
-                            <!--                                            required-->
-                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
-
-                            <!--                            <div>-->
-                            <!--                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>-->
-                            <!--                                <div class="mt-1">-->
-                            <!--                                    <input-->
-                            <!--                                            formControlName="lastName"-->
-                            <!--                                            type="text" id="lastName" autocomplete="family-name"-->
-                            <!--                                            required-->
-                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
+                        <!--                            <div>-->
+                        <!--                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>-->
+                        <!--                                <div class="mt-1">-->
+                        <!--                                    <input-->
+                        <!--                                            formControlName="lastName"-->
+                        <!--                                            type="text" id="lastName" autocomplete="family-name"-->
+                        <!--                                            required-->
+                        <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
 
 
-                            <div class="sm:col-span-2">
-                                <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="company"
-                                            type="text" name="company" id="company"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div class="sm:col-span-2">
+                            <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="company"
+                                        type="text" name="company" id="company"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
-                            <div class="sm:col-span-2">
-                                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="address"
-                                            type="text" name="address" id="address" autocomplete="street-address"
-                                            required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div class="sm:col-span-2">
+                            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="address"
+                                        type="text" name="address" id="address" autocomplete="street-address"
+                                        required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
-                            <div class="sm:col-span-2">
-                                <label for="apartment" class="block text-sm font-medium text-gray-700">Apartment, suite,
-                                    etc.</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="apartment"
-                                            type="text" name="apartment" id="apartment"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div class="sm:col-span-2">
+                            <label for="apartment" class="block text-sm font-medium text-gray-700">Apartment, suite,
+                                etc.</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="apartment"
+                                        type="text" name="apartment" id="apartment"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
-                            <div>
-                                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="country"
-                                            type="text" name="country" id="country" autocomplete="country" required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div>
+                            <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="country"
+                                        type="text" name="country" id="country" autocomplete="country" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
-                            <div>
-                                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="city"
-                                            type="text" name="city" id="city" autocomplete="address-level2" required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div>
+                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="city"
+                                        type="text" name="city" id="city" autocomplete="address-level2" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
 
-                            <div>
-                                <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal
-                                    code</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="postalCode"
-                                            type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div>
+                            <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal
+                                code</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="postalCode"
+                                        type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
 
-                            <div class="sm:col-span-2">
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="phone"
-                                            type="text" name="phone" id="phone" autocomplete="tel"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                        <div class="sm:col-span-2">
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="phone"
+                                        type="text" name="phone" id="phone" autocomplete="tel"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                     </div>

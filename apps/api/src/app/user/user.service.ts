@@ -5,12 +5,14 @@ import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
 import bcrypt from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        private jwtService: JwtService
     ) {
     }
 
@@ -67,7 +69,29 @@ export class UserService {
                 }
 
                 delete user.password;
-                return user;
+                return {
+                    accessToken: await this.jwtService.signAsync({ user }),
+                    user
+                }
+            });
+    }
+
+    signInWithAccessToken(accessToken: string) {
+        return this.jwtService.verifyAsync(accessToken)
+            .then(async (decoded) => {
+                const user = await this.userRepository.findOne({
+                    where: {
+                        id: decoded.user.id
+                    }
+                });
+                if (!user) {
+                    throw new ConflictException('Invalid credentials');
+                }
+                delete user.password;
+                return {
+                    accessToken: await this.jwtService.signAsync({ user }),
+                    user
+                }
             });
     }
 }

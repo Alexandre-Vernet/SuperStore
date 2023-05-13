@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService } from "./shared/notifications/notifications.service";
 import { NotificationsDto } from "@superstore/libs";
+import { AuthService } from "./auth/auth.service";
 
 @Component({
     selector: 'superstore-root',
@@ -14,10 +15,17 @@ export class AppComponent implements OnInit {
 
     constructor(
         private readonly notificationsService: NotificationsService,
+        private readonly authService: AuthService,
     ) {
     }
 
     ngOnInit(): void {
+        // Check for access token
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            this.authService.signInWithAccessToken().subscribe();
+        }
+
         window.addEventListener('resize', () => {
             AppComponent.displayResponsiveMenu = window.innerWidth < 768;
         });
