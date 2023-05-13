@@ -30,14 +30,6 @@ export class SignInComponent {
             email,
             password,
         }
-        this.authService.signIn(user)
-            .subscribe({
-                next: () => {
-                    console.log('ok');
-                },
-                error: (err) => {
-                    console.error(err);
-                }
-            });
+        this.authService.signIn(user).subscribe();
     }
 }
