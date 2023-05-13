@@ -8,6 +8,8 @@ import { User } from "./user/user.entity";
 import { OrderModule } from "./order/order.module";
 import { CartModule } from "./cart/cart.module";
 import { UserModule } from "./user/user.module";
+import { AddressModule } from "./address/address.module";
+import { Address } from "./address/address.entity";
 
 const {
     POSTGRES_HOST,
@@ -26,13 +28,14 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, Cart, User],
+            entities: [Product, Order, Cart, User, Address],
             ssl: true,
         }),
         ProductModule,
         OrderModule,
         CartModule,
-        UserModule
+        UserModule,
+        AddressModule
     ],
 })
 export class AppModule {
