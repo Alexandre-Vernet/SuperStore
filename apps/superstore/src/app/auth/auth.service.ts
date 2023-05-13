@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
-import { AddressDto, CreateUserDto, SignInUserDto, UserDto } from "@superstore/libs";
+import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +11,6 @@ export class AuthService {
 
     user: UserDto;
     authUrl = environment.authUrl();
-    addressUrl = environment.addressUrl();
 
     constructor(
         private http: HttpClient,
@@ -45,10 +44,5 @@ export class AuthService {
 
     signOut(): void {
         this.user = null;
-    }
-
-    getAddresses(): Observable<AddressDto> {
-        const userId = this.user.id;
-        return this.http.post<AddressDto>(`${ this.addressUrl }/find-all`, { userId });
     }
 }

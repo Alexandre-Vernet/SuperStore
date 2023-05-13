@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CartDto, NotificationsDto, ProductDto } from "@superstore/libs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -53,6 +53,9 @@ export class CartService {
     }
 
     confirmOrder(order): Observable<NotificationsDto> {
-        return this.http.post<NotificationsDto>(this.orderUri, order);
+        return this.http.post<NotificationsDto>(this.orderUri, order)
+            .pipe(
+                tap(() => this.clearCart())
+            )
     }
 }
