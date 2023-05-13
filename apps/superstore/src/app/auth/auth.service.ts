@@ -26,4 +26,8 @@ export class AuthService {
     signUp(user: CreateUserDto): Observable<void> {
         return this.http.post<void>(environment.authUrl(), user);
     }
+
+    signOut(): void {
+        this.user = null;
+    }
 }
