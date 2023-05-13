@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
-import { CreateOrderDto, NotificationsDto } from "@superstore/libs";
-import { OrderDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto } from "@superstore/libs";
 
 @Injectable()
 export class OrderService {
@@ -13,24 +12,8 @@ export class OrderService {
     ) {
     }
 
-    create(createOrderDto: CreateOrderDto): Promise<NotificationsDto> {
-        return this.productRepository.save(createOrderDto)
-            .then(() => {
-                const message: NotificationsDto = {
-                    title: 'Success',
-                    description: 'An email has been sent to you with the order details',
-                    orderCompleted: true
-                };
-                return message;
-            })
-            .catch(() => {
-                const message: NotificationsDto = {
-                    title: 'Error',
-                    description: 'An error has occurred',
-                    orderCompleted: false
-                };
-                return message;
-            });
+    create(createOrderDto: CreateOrderDto) {
+        return this.productRepository.save(createOrderDto);
     }
 
     findAll(): Promise<Order[]> {
