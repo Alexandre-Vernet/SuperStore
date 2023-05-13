@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartDto, CreateOrderDto, NotificationsDto, State } from "@superstore/libs";
+import { CartDto, CreateOrderDto, State } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -27,12 +27,6 @@ export class CheckoutComponent implements OnInit {
         deliveryMethod: new FormControl('test', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
     });
-
-    checkoutMessage: NotificationsDto = {
-        title: '',
-        description: '',
-        orderCompleted: false
-    }
 
     constructor(
         private readonly cartService: CartService,
@@ -113,16 +107,9 @@ export class CheckoutComponent implements OnInit {
             .subscribe({
                 next: (res) => {
                     this.cartService.clearCart();
-                    this.toggleNotification(res);
                 },
                 error :(error) => {
-                    this.toggleNotification(error.error);
                 }
             });
-    }
-
-    toggleNotification(message: NotificationsDto): NotificationsDto {
-        this.checkoutMessage = message;
-        return message;
     }
 }

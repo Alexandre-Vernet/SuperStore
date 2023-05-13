@@ -1,5 +1,12 @@
 export class NotificationsDto {
+    icon: NotificationType;
     title: string;
     description: string;
-    orderCompleted: boolean;
+    show: boolean;
+}
+
+export enum NotificationType {
+    success = 'success',
+    error = 'error',
+    warning = 'warning',
 }
