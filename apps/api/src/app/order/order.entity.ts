@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../users/user.entity";
+import { User } from "../user/user.entity";
 import { Cart } from "../cart/cart.entity";
 
 @Entity({ name: 'orders', schema: 'public' })

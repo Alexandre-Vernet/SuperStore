@@ -7,7 +7,7 @@ import { FindOneOptions, Repository } from "typeorm";
 import bcrypt from "bcrypt";
 
 @Injectable()
-export class UsersService {
+export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>

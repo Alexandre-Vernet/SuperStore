@@ -4,10 +4,10 @@ import { ProductModule } from "./product/product.module";
 import { Product } from "./product/product.entity";
 import { Order } from "./order/order.entity";
 import { Cart } from "./cart/cart.entity";
-import { User } from "./users/user.entity";
+import { User } from "./user/user.entity";
 import { OrderModule } from "./order/order.module";
 import { CartModule } from "./cart/cart.module";
-import { UsersModule } from "./users/users.module";
+import { UserModule } from "./user/user.module";
 
 const {
     POSTGRES_HOST,
@@ -32,7 +32,7 @@ const {
         ProductModule,
         OrderModule,
         CartModule,
-        UsersModule
+        UserModule
     ],
 })
 export class AppModule {
