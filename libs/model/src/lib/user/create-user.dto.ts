@@ -1,4 +1,5 @@
 export class CreateUserDto {
+    addressesId?: number[];
     firstName: string;
     lastName: string;
     email: string;
