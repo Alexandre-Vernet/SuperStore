@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateAddressDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
+import {
+    AddressDto,
+    CartDto,
+    CreateAddressDto,
+    CreateOrderDto,
+    DeliveryMethod,
+    State,
+    UserDto
+} from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -17,7 +25,21 @@ export class CheckoutComponent implements OnInit {
     cart: CartDto[] = [];
     user: UserDto;
     addresses: AddressDto[] = [];
+    deliveryMethods: DeliveryMethod[] = [
+        {
+            name: 'Standard',
+            expectedDelivery: '3-5 business days',
+            price: 5,
+        },
+        {
+            name: 'Express',
+            expectedDelivery: '1-2 business days',
+            price: 16,
+        },
+    ]
     selectedAddress: AddressDto;
+    selectedDeliveryMethod: DeliveryMethod;
+
     formAddress = new FormGroup({
         company: new FormControl(),
         address: new FormControl('', [Validators.required]),
@@ -26,7 +48,7 @@ export class CheckoutComponent implements OnInit {
         city: new FormControl('', [Validators.required]),
         postalCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
-        deliveryMethod: new FormControl('standard', [Validators.required]),
+        deliveryMethod: new FormControl('', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
     });
 
@@ -50,6 +72,7 @@ export class CheckoutComponent implements OnInit {
             .subscribe(addresses => {
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
+                this.selectedDeliveryMethod = this.deliveryMethods[0];
 
                 this.formAddress.patchValue({
                     company: addresses[0].company,
@@ -59,6 +82,7 @@ export class CheckoutComponent implements OnInit {
                     city: addresses[0].city,
                     postalCode: addresses[0].postalCode,
                     phone: addresses[0].phone,
+                    deliveryMethod: this.deliveryMethods[0].name,
                 });
             });
     }
@@ -76,11 +100,17 @@ export class CheckoutComponent implements OnInit {
         });
     }
 
+    changeDeliveryMethod(deliveryMethod: DeliveryMethod) {
+        this.selectedDeliveryMethod = deliveryMethod;
+        this.formAddress.patchValue({
+            deliveryMethod: deliveryMethod.name,
+        });
+    }
+
     clearFormAddress() {
         this.formAddress.reset();
         this.formAddress.patchValue({
             paymentMethod: 'CB',
-            deliveryMethod: 'standard',
         });
         this.selectedAddress = null;
     }
@@ -131,7 +161,6 @@ export class CheckoutComponent implements OnInit {
             city,
             postalCode,
             phone,
-            deliveryMethod,
             paymentMethod
         } = this.formAddress.value;
 
@@ -160,7 +189,7 @@ export class CheckoutComponent implements OnInit {
             city,
             postalCode,
             phone,
-            deliveryMethod,
+            deliveryMethod: this.selectedDeliveryMethod,
             paymentMethod
         }
         return this.cartService.confirmOrder(order).subscribe();

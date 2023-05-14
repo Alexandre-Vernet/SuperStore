@@ -9,6 +9,12 @@ export class CreateOrderDto {
     city: string;
     postalCode: string;
     phone: string;
-    deliveryMethod: string;
+    deliveryMethod: DeliveryMethod;
     paymentMethod: string;
+}
+
+export class DeliveryMethod {
+    name: string;
+    expectedDelivery: string;
+    price: number;
 }
