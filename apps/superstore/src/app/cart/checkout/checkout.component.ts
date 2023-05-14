@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
+import { AddressDto, CartDto, CreateAddressDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -26,7 +26,7 @@ export class CheckoutComponent implements OnInit {
         city: new FormControl('', [Validators.required]),
         postalCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
-        deliveryMethod: new FormControl('', [Validators.required]),
+        deliveryMethod: new FormControl('standard', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
     });
 
@@ -59,7 +59,6 @@ export class CheckoutComponent implements OnInit {
                     city: addresses[0].city,
                     postalCode: addresses[0].postalCode,
                     phone: addresses[0].phone,
-
                 });
             });
     }
@@ -79,10 +78,11 @@ export class CheckoutComponent implements OnInit {
 
     clearFormAddress() {
         this.formAddress.reset();
+        this.formAddress.patchValue({
+            paymentMethod: 'CB',
+            deliveryMethod: 'standard',
+        });
         this.selectedAddress = null;
-        // Navigate to top with scroll smooth
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => document.getElementById('address').focus(), 1000);
     }
 
     convertProductNameToSlug(name: string): string {
@@ -135,6 +135,22 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         } = this.formAddress.value;
 
+
+        // Store new address if not exist
+        if (!this.selectedAddress) {
+            const newAddress: CreateAddressDto = {
+                company,
+                address,
+                apartment,
+                country,
+                city,
+                postalCode,
+                phone,
+            }
+            this.userService.createAddress(newAddress).subscribe();
+        }
+
+        // Create order
         const order: CreateOrderDto = {
             state: 'pending' as State,
             company,
