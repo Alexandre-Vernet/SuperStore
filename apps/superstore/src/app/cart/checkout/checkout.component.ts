@@ -18,7 +18,7 @@ export class CheckoutComponent implements OnInit {
     user: UserDto;
     addresses: AddressDto[] = [];
     selectedAddress: AddressDto;
-    form = new FormGroup({
+    formAddress = new FormGroup({
         company: new FormControl(),
         address: new FormControl('', [Validators.required]),
         apartment: new FormControl(),
@@ -51,7 +51,7 @@ export class CheckoutComponent implements OnInit {
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
 
-                this.form.patchValue({
+                this.formAddress.patchValue({
                     company: addresses[0].company,
                     address: addresses[0].address,
                     apartment: addresses[0].apartment,
@@ -66,7 +66,7 @@ export class CheckoutComponent implements OnInit {
 
     changeAddress(address: AddressDto) {
         this.selectedAddress = address;
-        this.form.patchValue({
+        this.formAddress.patchValue({
             company: address.company,
             address: address.address,
             apartment: address.apartment,
@@ -75,6 +75,14 @@ export class CheckoutComponent implements OnInit {
             postalCode: address.postalCode,
             phone: address.phone,
         });
+    }
+
+    clearFormAddress() {
+        this.formAddress.reset();
+        this.selectedAddress = null;
+        // Navigate to top with scroll smooth
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => document.getElementById('address').focus(), 1000);
     }
 
     convertProductNameToSlug(name: string): string {
@@ -125,7 +133,7 @@ export class CheckoutComponent implements OnInit {
             phone,
             deliveryMethod,
             paymentMethod
-        } = this.form.value;
+        } = this.formAddress.value;
 
         const order: CreateOrderDto = {
             state: 'pending' as State,
