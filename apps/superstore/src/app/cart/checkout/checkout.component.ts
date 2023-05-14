@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, State, UserDto } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -16,18 +16,17 @@ export class CheckoutComponent implements OnInit {
 
     cart: CartDto[] = [];
     user: UserDto;
+    addresses: AddressDto[] = [];
+    selectedAddress: AddressDto;
     form = new FormGroup({
-        email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
-        firstName: new FormControl('test', [Validators.required]),
-        lastName: new FormControl('test', [Validators.required]),
         company: new FormControl(),
-        address: new FormControl('test', [Validators.required]),
+        address: new FormControl('', [Validators.required]),
         apartment: new FormControl(),
-        country: new FormControl('test', [Validators.required]),
-        city: new FormControl('test', [Validators.required]),
-        postalCode: new FormControl('test', [Validators.required]),
-        phone: new FormControl('test', [Validators.required]),
-        deliveryMethod: new FormControl('test', [Validators.required]),
+        country: new FormControl('', [Validators.required]),
+        city: new FormControl('', [Validators.required]),
+        postalCode: new FormControl('', [Validators.required]),
+        phone: new FormControl('', [Validators.required]),
+        deliveryMethod: new FormControl('', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
     });
 
@@ -45,18 +44,37 @@ export class CheckoutComponent implements OnInit {
     ngOnInit() {
         this.cart = this.cartService.cart;
         this.user = this.authService.user;
-        this.form.patchValue({
-            email: this.user.email,
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            address: this.user.address,
-        });
 
         // Get addresses of user
         this.userService.getAddresses()
             .subscribe(addresses => {
-                console.log(addresses);
+                this.addresses = addresses;
+                this.selectedAddress = addresses[0];
+
+                this.form.patchValue({
+                    company: addresses[0].company,
+                    address: addresses[0].address,
+                    apartment: addresses[0].apartment,
+                    country: addresses[0].country,
+                    city: addresses[0].city,
+                    postalCode: addresses[0].postalCode,
+                    phone: addresses[0].phone,
+
+                });
             });
+    }
+
+    changeAddress(address: AddressDto) {
+        this.selectedAddress = address;
+        this.form.patchValue({
+            company: address.company,
+            address: address.address,
+            apartment: address.apartment,
+            country: address.country,
+            city: address.city,
+            postalCode: address.postalCode,
+            phone: address.phone,
+        });
     }
 
     convertProductNameToSlug(name: string): string {
