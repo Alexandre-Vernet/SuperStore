@@ -19,8 +19,15 @@ export class AuthGuard {
 
     canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return new Promise((resolve, reject) => {
-            if (this.authService.user) {
-                resolve(true);
+            // Check for access token
+            const accessToken = localStorage.getItem('accessToken');
+            if (accessToken) {
+                this.authService
+                    .signInWithAccessToken()
+                    .subscribe({
+                        next: () => resolve(true),
+                        error: () => reject(false)
+                    });
             } else {
                 this.notificationsService.message
                     .emit({
@@ -33,5 +40,6 @@ export class AuthGuard {
                 reject(false);
             }
         });
+
     }
 }
