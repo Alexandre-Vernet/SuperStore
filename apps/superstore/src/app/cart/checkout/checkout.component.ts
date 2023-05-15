@@ -169,22 +169,20 @@ export class CheckoutComponent implements OnInit {
                 phone,
             };
 
-            this.userService.createAddress(newAddress).subscribe();
+            this.userService.createAddress(newAddress)
+                .subscribe({
+                    next: (address) => {
+                        // Create order
+                        const order: CreateOrderDto = {
+                            userId: this.authService.user.id,
+                            state: 'pending' as State,
+                            addressId: address.id,
+                            deliveryMethod: this.selectedDeliveryMethod.name,
+                            paymentMethod
+                        };
+                        this.cartService.confirmOrder(order).subscribe();
+                    },
+                });
         }
-
-        // Create order
-        const order: CreateOrderDto = {
-            state: 'pending' as State,
-            company,
-            address,
-            apartment,
-            country,
-            city,
-            postalCode,
-            phone,
-            deliveryMethod: this.selectedDeliveryMethod,
-            paymentMethod
-        }
-        return this.cartService.confirmOrder(order).subscribe();
     }
 }

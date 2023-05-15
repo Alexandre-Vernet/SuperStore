@@ -1,15 +1,10 @@
 import { State } from './state.dto';
 
 export class CreateOrderDto {
+    userId: number;
     state: State;
-    company?: string;
-    address: string;
-    apartment?: string;
-    country: string;
-    city: string;
-    postalCode: string;
-    phone: string;
-    deliveryMethod: DeliveryMethod;
+    addressId: number;
+    deliveryMethod: string;
     paymentMethod: string;
 }
 

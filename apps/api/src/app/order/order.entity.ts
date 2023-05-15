@@ -7,35 +7,17 @@ export class Order {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToMany(type => User, user => user.id)
+    @Column({ name: 'user_id' })
     userId: number;
+
+    @Column({ name: 'address_id' })
+    addressId: number;
 
     @OneToOne(type => Cart, cart => cart.id)
     cartId: number;
 
     @Column({ type: 'text' })
     state: string;
-
-    @Column({ type: 'text', nullable: true })
-    company: string;
-
-    @Column({ type: 'text' })
-    address: string;
-
-    @Column({ type: 'text', nullable: true })
-    apartment: string;
-
-    @Column({ type: 'text' })
-    country: string;
-
-    @Column({ type: 'text' })
-    city: string;
-
-    @Column({ name: 'post_code', type: 'text' })
-    postalCode: string;
-
-    @Column({ type: 'integer' })
-    phone: string;
 
     @Column({ name: 'delivery_method', type: 'text' })
     deliveryMethod: string;

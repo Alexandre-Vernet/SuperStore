@@ -5,7 +5,7 @@ import {
     Body,
     Patch,
     Param,
-    Delete,
+    Delete, HttpCode,
 } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { AddressDto, CreateAddressDto } from "@superstore/libs";
@@ -20,6 +20,7 @@ export class AddressController {
         return this.addressService.create(createAddressDto);
     }
 
+    @HttpCode(200)
     @Post('/find-all')
     findAll(@Body() { userId }: { userId: number }) {
         return this.addressService.findAll(userId);
