@@ -92,6 +92,9 @@ export class UserService {
                     accessToken: await this.jwtService.signAsync({ user }),
                     user
                 }
+            })
+            .catch(() => {
+                throw new ConflictException('Your session has expired. Please sign in again.');
             });
     }
 }

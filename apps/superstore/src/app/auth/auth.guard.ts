@@ -26,7 +26,10 @@ export class AuthGuard {
                     .signInWithAccessToken()
                     .subscribe({
                         next: () => resolve(true),
-                        error: () => reject(false)
+                        error: () => {
+                            this.router.navigate(['/sign-in']);
+                            reject(false);
+                        }
                     });
             } else {
                 this.notificationsService.message
