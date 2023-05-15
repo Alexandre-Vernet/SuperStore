@@ -1,5 +1,6 @@
 CREATE TABLE public.addresses (
     id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
     company VARCHAR(255) NULL,
     address VARCHAR(255) NOT NULL,
     apartment VARCHAR(255) NULL,

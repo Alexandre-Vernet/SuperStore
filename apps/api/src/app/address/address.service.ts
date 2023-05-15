@@ -19,7 +19,7 @@ export class AddressService {
 
     findAll(userId: number): Promise<AddressDto[]> {
         const options = {
-            where: { id: userId }
+            where: { userId }
         }
         return this.addressRepository.find(options);
     }

@@ -34,11 +34,17 @@ export class AuthService {
             );
     }
 
-    signInWithAccessToken(): Observable<UserDto> {
+    signInWithAccessToken(): Observable<{ user: UserDto, accessToken: string }> {
         const accessToken = localStorage.getItem('accessToken');
-        return this.http.post<UserDto>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
+        return this.http.post<{
+            user: UserDto,
+            accessToken: string
+        }>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
             .pipe(
-                tap(user => this.user = user)
+                tap(res => {
+                    this.user = res.user;
+                    localStorage.setItem('accessToken', res.accessToken);
+                })
             );
     }
 
