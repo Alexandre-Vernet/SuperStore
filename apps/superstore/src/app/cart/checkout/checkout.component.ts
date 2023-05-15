@@ -1,13 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-    AddressDto,
-    CartDto,
-    CreateAddressDto,
-    CreateOrderDto,
-    DeliveryMethod,
-    State,
-    UserDto
-} from "@superstore/libs";
+import { AddressDto, CartDto, CreateAddressDto, CreateOrderDto, DeliveryMethod, State } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -23,7 +15,6 @@ import { UserService } from "../../user/user.service";
 export class CheckoutComponent implements OnInit {
 
     cart: CartDto[] = [];
-    user: UserDto;
     addresses: AddressDto[] = [];
     deliveryMethods: DeliveryMethod[] = [
         {
@@ -65,7 +56,6 @@ export class CheckoutComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
-        this.user = this.authService.user;
 
         // Get addresses of user
         this.userService.getAddresses()
@@ -111,6 +101,7 @@ export class CheckoutComponent implements OnInit {
         this.formAddress.reset();
         this.formAddress.patchValue({
             paymentMethod: 'CB',
+            deliveryMethod: this.deliveryMethods[0].name,
         });
         this.selectedAddress = null;
     }
@@ -168,6 +159,7 @@ export class CheckoutComponent implements OnInit {
         // Store new address if not exist
         if (!this.selectedAddress) {
             const newAddress: CreateAddressDto = {
+                userId: this.authService.user.id,
                 company,
                 address,
                 apartment,
@@ -175,7 +167,8 @@ export class CheckoutComponent implements OnInit {
                 city,
                 postalCode,
                 phone,
-            }
+            };
+
             this.userService.createAddress(newAddress).subscribe();
         }
 
