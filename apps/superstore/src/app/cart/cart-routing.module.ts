@@ -14,6 +14,7 @@ const routes: Routes = [
         path: 'checkout',
         component: CheckoutComponent,
         canActivate: [CheckoutGuard]
+
     },
     {
         path: 'confirmation',

@@ -16,4 +16,10 @@ export class Product {
 
     @Column({ type: 'text' })
     category: string[];
+
+    @Column({ name: 'updated_at', type: 'timestamp' })
+    updatedAt: Date;
+
+    @Column({ name: 'created_at', type: 'timestamp' })
+    createdAt: Date;
 }
