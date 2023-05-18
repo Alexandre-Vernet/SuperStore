@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateAddressDto, CreateOrderDto, DeliveryMethod, State } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, State } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -56,23 +56,25 @@ export class CheckoutComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+        this.selectedDeliveryMethod = this.deliveryMethods[0];
+        this.formAddress.patchValue({
+            deliveryMethod: this.selectedDeliveryMethod.name,
+        });
 
         // Get addresses of user
         this.userService.getAddresses()
             .subscribe(addresses => {
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
-                this.selectedDeliveryMethod = this.deliveryMethods[0];
 
                 this.formAddress.patchValue({
-                    company: addresses[0].company,
-                    address: addresses[0].address,
-                    apartment: addresses[0].apartment,
-                    country: addresses[0].country,
-                    city: addresses[0].city,
-                    postalCode: addresses[0].postalCode,
-                    phone: addresses[0].phone,
-                    deliveryMethod: this.deliveryMethods[0].name,
+                    company: addresses[0]?.company,
+                    address: addresses[0]?.address,
+                    apartment: addresses[0]?.apartment,
+                    country: addresses[0]?.country,
+                    city: addresses[0]?.city,
+                    postalCode: addresses[0]?.postalCode,
+                    phone: addresses[0]?.phone,
                 });
             });
     }
@@ -155,34 +157,34 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         } = this.formAddress.value;
 
+        const userId = this.authService.user.id;
 
-        // Store new address if not exist
+        const order: CreateOrderDto = {
+            userId,
+            state: 'pending' as State,
+            addressId: this.selectedAddress?.id,
+            deliveryMethod: this.selectedDeliveryMethod.name,
+            paymentMethod
+        };
+
         if (!this.selectedAddress) {
-            const newAddress: CreateAddressDto = {
-                userId: this.authService.user.id,
-                company,
-                address,
-                apartment,
-                country,
-                city,
-                postalCode,
-                phone,
-            };
-
-            this.userService.createAddress(newAddress)
-                .subscribe({
-                    next: (address) => {
-                        // Create order
-                        const order: CreateOrderDto = {
-                            userId: this.authService.user.id,
-                            state: 'pending' as State,
-                            addressId: address.id,
-                            deliveryMethod: this.selectedDeliveryMethod.name,
-                            paymentMethod
-                        };
-                        this.cartService.confirmOrder(order).subscribe();
-                    },
+            this.userService
+                .createAddress({
+                    userId,
+                    company,
+                    address,
+                    apartment,
+                    country,
+                    city,
+                    postalCode,
+                    phone
+                })
+                .subscribe((address) => {
+                    order.addressId = address.id;
+                    this.cartService.confirmOrder(order).subscribe();
                 });
+        } else {
+            this.cartService.confirmOrder(order).subscribe();
         }
     }
 }

@@ -1,12 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete, HttpCode,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { AddressDto, CreateAddressDto } from "@superstore/libs";
 
@@ -16,7 +8,7 @@ export class AddressController {
     }
 
     @Post()
-    create(@Body() createAddressDto: CreateAddressDto) {
+    create(@Body() createAddressDto: CreateAddressDto): Promise<AddressDto> {
         return this.addressService.create(createAddressDto);
     }
 

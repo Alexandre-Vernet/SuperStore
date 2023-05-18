@@ -13,7 +13,7 @@ export class AddressService {
     ) {
     }
 
-    create(createOrderDto: CreateAddressDto) {
+    create(createOrderDto: CreateAddressDto): Promise<Address> {
         // If address already exists, don't create it
         const options = {
             where: {
@@ -27,11 +27,16 @@ export class AddressService {
                 phone: createOrderDto.phone,
             }
         };
-        this.addressRepository.findOne(options)
+
+        return this.addressRepository.findOne(options)
             .then(address => {
                 if (!address) {
-                    this.addressRepository.save(createOrderDto);
+                    return this.addressRepository.save(createOrderDto)
+                        .then(createdAddress => {
+                            return createdAddress;
+                        });
                 }
+                return address;
             });
     }
 
