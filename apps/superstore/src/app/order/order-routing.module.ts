@@ -4,7 +4,7 @@ import { ConfirmOrderComponent } from "./confirm-order/confirm-order.component";
 
 const routes: Routes = [
     {
-        path: '',
+        path: ':orderId',
         component: ConfirmOrderComponent
     }
 ];

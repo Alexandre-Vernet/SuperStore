@@ -58,4 +58,15 @@ export class ProductService {
                 })
             );
     }
+
+    getProductFromIds(ids: number[]): Observable<ProductDto[]> {
+        return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids })
+            .pipe(
+                tap((product) => {
+                    product.map((product) => {
+                        product.price = Product.convertCentToEuro(product.price);
+                    });
+                })
+            );
+    }
 }

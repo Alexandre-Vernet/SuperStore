@@ -35,6 +35,11 @@ export class ProductController {
         return this.productService.findAll(pagination);
     }
 
+    @Post('get-by-ids')
+    getProductsByIds(@Body('ids') ids: string) {
+        return this.productService.getProductsByIds(ids);
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.productService.findOne(+id);

@@ -24,4 +24,8 @@ export class OrderService {
                 tap(() => this.cartService.clearCart())
             )
     }
+
+    getOrder(orderId: string): Observable<OrderDto> {
+        return this.http.get<OrderDto>(`${this.orderUri}/${orderId}`);
+    }
 }
