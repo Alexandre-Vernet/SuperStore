@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { NotificationsDto } from "@superstore/libs";
+import { NotificationsService } from "./notifications.service";
+import { NotificationsDto, NotificationType } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-notifications',
@@ -11,18 +12,27 @@ export class NotificationsComponent {
     @Input() message = {
         title: '',
         description: '',
-        orderCompleted: false
+        show: false
     } as NotificationsDto;
 
-    showNotification = true;
-
-    constructor() {
+    constructor(
+        private readonly notificationsService: NotificationsService,
+    ) {
         this.hideNotificationAfterDelay();
+    }
+
+    hideNotification() {
+        this.message.show = false;
     }
 
     hideNotificationAfterDelay() {
         setTimeout(() => {
-            this.showNotification = false;
+            this.notificationsService.message.next({
+                icon: 'success' as NotificationType,
+                title: '',
+                description: '',
+                show: false,
+            })
         }, 5000);
     }
 }

@@ -3,126 +3,147 @@
         <div class="mx-auto max-w-2xl lg:max-w-none">
             <h1 class="sr-only">Checkout</h1>
 
-            <form [formGroup]="form" (ngSubmit)="confirmOrder()" class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+            <form [formGroup]="formAddress" (ngSubmit)="submitForm()"
+                  class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
                 <div>
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900">Contact information</h2>
+                    <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 
-                        <!--                        <div class="mt-4">-->
-                        <!--                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email-->
-                        <!--                                address</label>-->
-                        <!--                            <div class="mt-1">-->
-                        <!--                                <input-->
-                        <!--                                        formControlName="email"-->
-                        <!--                                        type="email" id="email-address" name="email-address" autocomplete="email"-->
-                        <!--                                        required-->
-                        <!--                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
+                    <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                        <div class="sm:col-span-2">
+                            <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="company"
+                                        type="text" name="company" id="company"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="address"
+                                        type="text" name="address" id="address" autocomplete="street-address"
+                                        required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="apartment" class="block text-sm font-medium text-gray-700">Apartment, suite,
+                                etc.</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="apartment"
+                                        type="text" name="apartment" id="apartment"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="country"
+                                        type="text" name="country" id="country" autocomplete="country" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="city"
+                                        type="text" name="city" id="city" autocomplete="address-level2" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal
+                                code</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="postalCode"
+                                        type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <div class="mt-1">
+                                <input
+                                        formControlName="phone"
+                                        type="text" name="phone" id="phone" autocomplete="tel"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mt-10 border-t border-gray-200 pt-10">
-                        <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
+                        <fieldset>
+                            <legend class="text-lg font-medium text-gray-900">Addresses</legend>
 
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                            <!--                            <div>-->
-                            <!--                                <label for="firstName" class="block text-sm font-medium text-gray-700">First-->
-                            <!--                                    name</label>-->
-                            <!--                                <div class="mt-1">-->
-                            <!--                                    <input-->
-                            <!--                                            formControlName="firstName"-->
-                            <!--                                            type="text" id="firstName" name="firstName" autocomplete="given-name"-->
-                            <!--                                            required-->
-                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
+                            <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 
-                            <!--                            <div>-->
-                            <!--                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last name</label>-->
-                            <!--                                <div class="mt-1">-->
-                            <!--                                    <input-->
-                            <!--                                            formControlName="lastName"-->
-                            <!--                                            type="text" id="lastName" autocomplete="family-name"-->
-                            <!--                                            required-->
-                            <!--                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
+                                <!--List addresses-->
+                                <label
+                                        (click)="changeAddress(address)"
+                                        *ngFor="let address of addresses"
+                                        class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
+                                        [ngClass]="{'border-transparent ring-2 ring-indigo-500': address.id === selectedAddress?.id, 'border-gray-300': address.id !== selectedAddress?.id}">
+                                    <input type="radio" name="delivery-method" value="Standard" class="sr-only"
+                                           aria-labelledby="delivery-method-0-label"
+                                           aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
+                                    <span class="flex flex-1">
+                                        <span class="flex flex-col">
+                                          <span class="block text-sm font-medium text-gray-900">{{ address.country }}</span>
+                                          <span class="mt-1 flex items-center text-sm text-gray-500">{{ address.address }}</span>
+                                          <span class="mt-1 flex items-center text-sm text-gray-400">{{ address.city }}</span>
+                                          <span class="mt-1 flex items-center text-sm text-gray-400">{{ address.postalCode }}</span>
+                                          <span class="mt-6 text-sm font-medium text-gray-900">{{ address.phone }}</span>
+                                        </span>
+                                    </span>
+                                    <svg
+                                            *ngIf="address.id === selectedAddress?.id"
+                                            class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                          aria-hidden="true"></span>
+                                </label>
 
-
-                            <div class="sm:col-span-2">
-                                <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="company"
-                                            type="text" name="company" id="company"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
+                                <!--Add new address-->
+                                <label
+                                        (click)="clearFormAddress()"
+                                        class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
+                                        [ngClass]="{'border-transparent ring-2 ring-indigo-500': !selectedAddress, 'border-gray-300': selectedAddress}">
+                                    <input type="radio" name="delivery-method" value="Standard" class="sr-only"
+                                           aria-labelledby="delivery-method-0-label"
+                                           aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
+                                    <span class="flex flex-1 justify-center items-center">
+                                          <span class="block text-sm font-medium">Add a new address</span>
+                                    </span>
+                                    <svg
+                                            *ngIf="!selectedAddress"
+                                            class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                          aria-hidden="true"></span>
+                                </label>
                             </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="address"
-                                            type="text" name="address" id="address" autocomplete="street-address"
-                                            required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="apartment" class="block text-sm font-medium text-gray-700">Apartment, suite,
-                                    etc.</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="apartment"
-                                            type="text" name="apartment" id="apartment"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="country"
-                                            type="text" name="country" id="country" autocomplete="country" required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="city"
-                                            type="text" name="city" id="city" autocomplete="address-level2" required
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-
-                            <div>
-                                <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal
-                                    code</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="postalCode"
-                                            type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <div class="mt-1">
-                                    <input
-                                            formControlName="phone"
-                                            type="text" name="phone" id="phone" autocomplete="tel"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                        </div>
+                        </fieldset>
                     </div>
 
                     <div class="mt-10 border-t border-gray-200 pt-10">
@@ -130,72 +151,32 @@
                             <legend class="text-lg font-medium text-gray-900">Delivery method</legend>
 
                             <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                                <!--
-                                  Checked: "border-transparent", Not Checked: "border-gray-300"
-                                  Active: "ring-2 ring-indigo-500"
-                                -->
-                                <label class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
+                                <label
+                                        *ngFor="let deliveryMethod of deliveryMethods"
+                                        (click)="changeDeliveryMethod(deliveryMethod)"
+                                        [ngClass]="{'border-transparent ring-2 ring-indigo-500': deliveryMethod.name === selectedDeliveryMethod?.name, 'border-gray-300': deliveryMethod.name !== selectedDeliveryMethod?.name}"
+                                        class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
                                     <input type="radio" name="delivery-method" value="Standard" class="sr-only"
                                            aria-labelledby="delivery-method-0-label"
                                            aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
                                     <span class="flex flex-1">
-                    <span class="flex flex-col">
-                      <span id="delivery-method-0-label" class="block text-sm font-medium text-gray-900">Standard</span>
-                      <span id="delivery-method-0-description-0" class="mt-1 flex items-center text-sm text-gray-500">4–10 business days</span>
-                      <span id="delivery-method-0-description-1"
-                            class="mt-6 text-sm font-medium text-gray-900">$5.00</span>
-                    </span>
-                  </span>
-                                    <!--
-                                      Not Checked: "hidden"
-
-                                      Heroicon name: mini/check-circle
-                                    -->
-                                    <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
+                                        <span class="flex flex-col">
+                                          <span id="delivery-method-0-label"
+                                                class="block text-sm font-medium text-gray-900">{{ deliveryMethod.name }}</span>
+                                          <span id="delivery-method-0-description-0"
+                                                class="mt-1 flex items-center text-sm text-gray-500">{{ deliveryMethod.expectedDelivery }}</span>
+                                          <span id="delivery-method-0-description-1"
+                                                class="mt-6 text-sm font-medium text-gray-900">{{ deliveryMethod.price }} €</span>
+                                        </span>
+                                    </span>
+                                    <svg
+                                            *ngIf="deliveryMethod.name === selectedDeliveryMethod?.name"
+                                            class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
                                               clip-rule="evenodd"/>
                                     </svg>
-                                    <!--
-                                      Active: "border", Not Active: "border-2"
-                                      Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                    -->
-                                    <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
-                                          aria-hidden="true"></span>
-                                </label>
-
-                                <!--
-                                  Checked: "border-transparent", Not Checked: "border-gray-300"
-                                  Active: "ring-2 ring-indigo-500"
-                                -->
-                                <label class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
-                                    <input type="radio" name="delivery-method" value="Express" class="sr-only"
-                                           aria-labelledby="delivery-method-1-label"
-                                           aria-describedby="delivery-method-1-description-0 delivery-method-1-description-1">
-                                    <span class="flex flex-1">
-                    <span class="flex flex-col">
-                      <span id="delivery-method-1-label" class="block text-sm font-medium text-gray-900">Express</span>
-                      <span id="delivery-method-1-description-0" class="mt-1 flex items-center text-sm text-gray-500">2–5 business days</span>
-                      <span id="delivery-method-1-description-1"
-                            class="mt-6 text-sm font-medium text-gray-900">$16.00</span>
-                    </span>
-                  </span>
-                                    <!--
-                                      Not Checked: "hidden"
-
-                                      Heroicon name: mini/check-circle
-                                    -->
-                                    <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                    <!--
-                                      Active: "border", Not Active: "border-2"
-                                      Checked: "border-indigo-500", Not Checked: "border-transparent"
-                                    -->
                                     <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
                                           aria-hidden="true"></span>
                                 </label>
@@ -364,8 +345,8 @@
 
                         <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
                             <button type="submit"
-                                    [disabled]="form.invalid"
-                                    [ngClass]="{ 'cursor-not-allowed opacity-50': form.invalid }"
+                                    [disabled]="formAddress.invalid"
+                                    [ngClass]="{ 'cursor-not-allowed opacity-50': formAddress.invalid }"
                                     class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                                 Confirm order
                             </button>
@@ -376,8 +357,3 @@
         </div>
     </main>
 </div>
-
-
-<ng-container *ngIf="checkoutMessage.orderCompleted">
-    <superstore-notifications [message]="checkoutMessage"></superstore-notifications>
-</ng-container>

@@ -1,21 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CartDto, NotificationsDto, ProductDto } from "@superstore/libs";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../environments/environment";
-import { Observable } from "rxjs";
+import { CartDto, ProductDto } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CartService {
 
-    orderUri = environment.orderUri();
     cart: CartDto[] = [];
-
-    constructor(
-        private http: HttpClient
-    ) {
-    }
 
     addToCart(product: ProductDto) {
         // Check if the product is already in the cart
@@ -50,9 +41,5 @@ export class CartService {
     updateQuantity(item: CartDto, quantityUpdated: number) {
         this.cart.find(cartProduct => cartProduct.id === item.id).quantity = quantityUpdated;
         this.updateCartLocalStorage();
-    }
-
-    confirmOrder(order): Observable<NotificationsDto> {
-        return this.http.post<NotificationsDto>(this.orderUri, order);
     }
 }

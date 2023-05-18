@@ -1,10 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CartService } from "../../cart/cart.service";
 import { AppComponent } from "../../app.component";
-import { CartDto, ProductDto } from "@superstore/libs";
+import { CartDto, ProductDto, UserDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { Router } from "@angular/router";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
     selector: 'superstore-navbar',
@@ -16,10 +17,12 @@ export class NavbarComponent implements OnInit {
     cart: CartDto[] = [];
     searchBar = '';
     searchResults: ProductDto[] = [];
+    user: UserDto;
 
     constructor(
         private readonly cartService: CartService,
         private readonly productService: ProductService,
+        private readonly authService: AuthService,
         private router: Router
     ) {
     }
@@ -33,6 +36,19 @@ export class NavbarComponent implements OnInit {
 
     toggleResponsiveMenu(): void {
         AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;
+    }
+
+    getUserConnected(): UserDto {
+        return this.authService.user;
+    }
+
+    getFirstNameAndLastName(): string {
+        return `${ this.getUserConnected().firstName } ${ this.getUserConnected().lastName }`;
+    }
+
+    signOut(): void {
+        this.authService.signOut();
+        this.router.navigate(['/']);
     }
 
     getTotalItemsInCart(): number {

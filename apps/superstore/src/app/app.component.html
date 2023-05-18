@@ -1,6 +1,14 @@
+<!--Navbar-->
 <superstore-navbar></superstore-navbar>
 <ng-container *ngIf="displayResponsiveMenu">
     <superstore-responsive-navbar></superstore-responsive-navbar>
 </ng-container>
+
+<!--Router-->
 <router-outlet></router-outlet>
+
+<!--Footer-->
 <superstore-footer></superstore-footer>
+
+<!--Notifications-->
+<superstore-notifications *ngIf="notificationMessage?.show" [message]="notificationMessage"></superstore-notifications>
