@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConfirmationComponent } from "./confirmation/confirmation.component";
+import { ConfirmOrderComponent } from "./confirm-order/confirm-order.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: ConfirmationComponent
+        component: ConfirmOrderComponent
     }
 ];
 

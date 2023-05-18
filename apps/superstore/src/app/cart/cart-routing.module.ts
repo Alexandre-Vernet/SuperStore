@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ViewCartComponent } from "./view-cart/view-cart.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
 import { CheckoutGuard } from "./checkout/checkout.guard";
-import { ConfirmationComponent } from "../order/confirmation/confirmation.component";
+import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.component";
 import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
@@ -18,8 +18,8 @@ const routes: Routes = [
 
     },
     {
-        path: 'confirmation',
-        component: ConfirmationComponent
+        path: 'confirm-order',
+        component: ConfirmOrderComponent
     }
 ];
 

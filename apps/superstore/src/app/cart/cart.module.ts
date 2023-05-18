@@ -7,14 +7,14 @@ import { ViewCartComponent } from './view-cart/view-cart.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { SharedModule } from '../shared/shared.module';
-import { ConfirmationComponent } from "../order/confirmation/confirmation.component";
+import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.component";
 
 @NgModule({
     declarations: [
         CartComponent,
         ViewCartComponent,
         CheckoutComponent,
-        ConfirmationComponent,
+        ConfirmOrderComponent,
     ],
     imports: [
         CommonModule,
