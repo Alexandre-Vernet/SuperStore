@@ -17,5 +17,9 @@ export const appRoutes: Route[] = [
     {
         path: 'auth',
         loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    },
+    {
+        path: 'confirm-order',
+        loadChildren: () => import('./order/order.module').then(m => m.OrderModule)
     }
 ];

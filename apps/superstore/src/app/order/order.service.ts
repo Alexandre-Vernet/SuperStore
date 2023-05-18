@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, NotificationsDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto } from "@superstore/libs";
 import { Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
@@ -18,8 +18,8 @@ export class OrderService {
     ) {
     }
 
-    confirmOrder(order: CreateOrderDto): Observable<NotificationsDto> {
-        return this.http.post<NotificationsDto>(this.orderUri, order)
+    confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
+        return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => this.cartService.clearCart())
             )
