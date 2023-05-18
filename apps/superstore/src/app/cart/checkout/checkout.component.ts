@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductPipe } from "../../product/product.pipe";
 import { AuthService } from "../../auth/auth.service";
 import { UserService } from "../../user/user.service";
+import { OrderService } from "../../order/order.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -47,6 +48,7 @@ export class CheckoutComponent implements OnInit {
         private readonly cartService: CartService,
         private readonly authService: AuthService,
         private readonly userService: UserService,
+        private readonly orderService: OrderService,
     ) {
         const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
         if (localStorageCart) {
@@ -181,10 +183,10 @@ export class CheckoutComponent implements OnInit {
                 })
                 .subscribe((address) => {
                     order.addressId = address.id;
-                    this.cartService.confirmOrder(order).subscribe();
+                    this.orderService.confirmOrder(order).subscribe();
                 });
         } else {
-            this.cartService.confirmOrder(order).subscribe();
+            this.orderService.confirmOrder(order).subscribe();
         }
     }
 }
