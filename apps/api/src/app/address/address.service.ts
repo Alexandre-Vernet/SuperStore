@@ -14,7 +14,25 @@ export class AddressService {
     }
 
     create(createOrderDto: CreateAddressDto) {
-        return this.addressRepository.save(createOrderDto)
+        // If address already exists, don't create it
+        const options = {
+            where: {
+                userId: createOrderDto.userId,
+                company: createOrderDto?.company,
+                address: createOrderDto.address,
+                apartment: createOrderDto?.apartment,
+                country: createOrderDto.country,
+                city: createOrderDto.city,
+                postalCode: createOrderDto.postalCode,
+                phone: createOrderDto.phone,
+            }
+        };
+        this.addressRepository.findOne(options)
+            .then(address => {
+                if (!address) {
+                    this.addressRepository.save(createOrderDto);
+                }
+            });
     }
 
     findAll(userId: number): Promise<AddressDto[]> {
