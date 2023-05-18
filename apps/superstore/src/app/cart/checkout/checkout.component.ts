@@ -147,7 +147,7 @@ export class CheckoutComponent implements OnInit {
         return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
     }
 
-    confirmOrder() {
+    submitForm() {
         const {
             company,
             address,
@@ -186,6 +186,30 @@ export class CheckoutComponent implements OnInit {
                     this.orderService.confirmOrder(order).subscribe();
                 });
         } else {
+            // If form address is different from addresses, create new address
+            if (this.selectedAddress.address !== address ||
+                this.selectedAddress.apartment !== apartment ||
+                this.selectedAddress.country !== country ||
+                this.selectedAddress.city !== city ||
+                this.selectedAddress.postalCode !== postalCode ||
+                this.selectedAddress.phone !== phone) {
+                this.userService
+                    .createAddress({
+                        userId,
+                        company,
+                        address,
+                        apartment,
+                        country,
+                        city,
+                        postalCode,
+                        phone
+                    })
+                    .subscribe((address) => {
+                        order.addressId = address.id;
+                        this.orderService.confirmOrder(order).subscribe();
+                    });
+                return;
+            }
             this.orderService.confirmOrder(order).subscribe();
         }
     }
