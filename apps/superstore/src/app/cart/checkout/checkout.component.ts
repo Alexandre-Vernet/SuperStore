@@ -167,8 +167,10 @@ export class CheckoutComponent implements OnInit {
             userId,
             state: 'pending' as State,
             addressId: this.selectedAddress?.id,
+            productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name,
-            paymentMethod
+            paymentMethod,
+            totalPrice: this.totalPrice(),
         };
 
         if (!this.selectedAddress) {
@@ -221,8 +223,7 @@ export class CheckoutComponent implements OnInit {
             .confirmOrder(order)
             .subscribe({
                 next: (order) => {
-                    console.log(order)
-                    this.router.navigate(['/confirm-order', order]);
+                    this.router.navigate(['/confirm-order', order.id]);
                 },
                 error: (err) => {
                     console.log(err);
