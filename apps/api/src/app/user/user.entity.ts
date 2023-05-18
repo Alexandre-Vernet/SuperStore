@@ -17,6 +17,9 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
-    address: string;
+    @Column({ name: 'updated_at', type: 'timestamp' })
+    updatedAt: Date;
+
+    @Column({ name: 'created_at', type: 'timestamp' })
+    createdAt: Date;
 }

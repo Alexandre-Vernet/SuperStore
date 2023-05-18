@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsDto } from "@superstore/libs";
+import { NotificationsService } from "./shared/notifications/notifications.service";
 
 @Component({
     selector: 'superstore-root',
@@ -7,12 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-   static displayResponsiveMenu = false;
+    static displayResponsiveMenu = false;
+    notificationMessage: NotificationsDto;
+
+    constructor(
+        private readonly notificationsService: NotificationsService,
+    ) {
+    }
 
     ngOnInit(): void {
         window.addEventListener('resize', () => {
             AppComponent.displayResponsiveMenu = window.innerWidth < 768;
         });
+
+        // Listen for notifications
+        this.notificationsService
+            .message
+            .subscribe((message) => this.notificationMessage = message);
     }
 
     get displayResponsiveMenu(): boolean {
