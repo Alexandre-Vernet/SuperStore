@@ -4,11 +4,11 @@
         <div class="max-w-xl">
             <h1 class="text-base font-medium text-indigo-600">Thank you!</h1>
             <p class="mt-2 text-4xl font-bold tracking-tight">It's on the way!</p>
-            <p class="mt-2 text-base text-gray-500">Your order #{{ confirmOrder.order?.id }} has shipped and will be with you soon.</p>
+            <p class="mt-2 text-base text-gray-500">Your order #{{ confirmOrder?.order.id }} has shipped and will be with you soon.</p>
 
             <dl class="mt-12 text-sm font-medium">
                 <dt class="text-gray-900">Tracking number</dt>
-                <dd class="mt-2 text-indigo-600">{{ confirmOrder.order?.id }}</dd>
+                <dd class="mt-2 text-indigo-600">{{ confirmOrder?.order?.id }}</dd>
             </dl>
         </div>
 
@@ -17,7 +17,7 @@
 
             <h3 class="sr-only">Items</h3>
 
-            <ng-container *ngFor="let product of confirmOrder.products">
+            <ng-container *ngFor="let product of confirmOrder?.products">
                 <div class="flex space-x-6 border-b border-gray-200 py-10">
                     <img src="https://tailwindui.com/img/ecommerce-images/confirmation-page-05-product-01.jpg"
                          alt="Glass bottle with black plastic pour top and mesh insert."
@@ -50,11 +50,11 @@
                         <dt class="font-medium text-gray-900">Shipping address</dt>
                         <dd class="mt-2 text-gray-700">
                             <address class="not-italic">
-                                <span class="block">{{ confirmOrder.address?.country }}</span>
-                                <span class="block">{{ confirmOrder.address?.address }}</span>
-                                <span class="block">{{ confirmOrder.address?.apartment }}</span>
-                                <span class="block">{{ confirmOrder.address?.city }}</span>
-                                <span class="block">{{ confirmOrder.address?.postalCode }}</span>
+                                <span class="block">{{ confirmOrder?.address.country }}</span>
+                                <span class="block">{{ confirmOrder?.address.address }}</span>
+                                <span class="block">{{ confirmOrder?.address.apartment }}</span>
+                                <span class="block">{{ confirmOrder?.address.city }}</span>
+                                <span class="block">{{ confirmOrder?.address.postalCode }}</span>
                             </address>
                         </dd>
                     </div>
@@ -62,11 +62,11 @@
                         <dt class="font-medium text-gray-900">Billing address</dt>
                         <dd class="mt-2 text-gray-700">
                             <address class="not-italic">
-                                <span class="block">{{ confirmOrder.address?.country }}</span>
-                                <span class="block">{{ confirmOrder.address?.address }}</span>
-                                <span class="block">{{ confirmOrder.address?.apartment }}</span>
-                                <span class="block">{{ confirmOrder.address?.city }}</span>
-                                <span class="block">{{ confirmOrder.address?.postalCode }}</span>
+                                <span class="block">{{ confirmOrder?.address.country }}</span>
+                                <span class="block">{{ confirmOrder?.address.address }}</span>
+                                <span class="block">{{ confirmOrder?.address.apartment }}</span>
+                                <span class="block">{{ confirmOrder?.address.city }}</span>
+                                <span class="block">{{ confirmOrder?.address.postalCode }}</span>
                             </address>
                         </dd>
                     </div>
@@ -77,7 +77,7 @@
                     <div>
                         <dt class="font-medium text-gray-900">Payment method</dt>
                         <dd class="mt-2 text-gray-700">
-                            <p>{{ confirmOrder.order?.paymentMethod }}</p>
+                            <p>{{ confirmOrder?.order.paymentMethod }}</p>
                             <p>Mastercard</p>
                             <p><span aria-hidden="true">•••• •••• ••••</span><span class="sr-only">Ending in </span>1545
                             </p>
@@ -87,7 +87,7 @@
                         <dt class="font-medium text-gray-900">Shipping method</dt>
                         <dd class="mt-2 text-gray-700">
                             <p>DHL</p>
-                            <p>{{ confirmOrder.order?.deliveryMethod }}</p>
+                            <p>{{ confirmOrder?.order.deliveryMethod }}</p>
                         </dd>
                     </div>
                 </dl>

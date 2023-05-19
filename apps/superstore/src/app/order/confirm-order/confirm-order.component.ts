@@ -56,9 +56,10 @@ export class ConfirmOrderComponent implements OnInit {
 
     subTotalPrice(): number {
         let total = 0;
-        this.confirmOrder.products.map(item => {
-            total += item.price;
-        });
+        this.confirmOrder?.products
+            .map(item => {
+                total += item.price;
+            });
         return Cart.convertTwoDecimals(total);
     }
 
