@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { OrderRoutingModule } from './order-routing.module';
 import { AuthGuard } from '../auth/auth.guard';
-import { ViewOrdersComponent } from './view-orders/view-orders.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 @NgModule({
-  declarations: [ViewOrdersComponent],
+  declarations: [OrderHistoryComponent],
   imports: [CommonModule, OrderRoutingModule],
   providers: [AuthGuard],
 })
