@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsService } from "./shared/notifications/notifications.service";
 import { NotificationsDto } from "@superstore/libs";
+import { NotificationsService } from "./shared/notifications/notifications.service";
 
 @Component({
     selector: 'superstore-root',

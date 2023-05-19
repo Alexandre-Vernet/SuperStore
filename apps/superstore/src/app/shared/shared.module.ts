@@ -13,15 +13,15 @@ import { NotificationsComponent } from "./notifications/notifications.component"
         NavbarComponent,
         ResponsiveNavbarComponent,
         FooterComponent,
-        ProductPipe,
         NotificationsComponent,
+        ProductPipe
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
         NavbarComponent,
         ResponsiveNavbarComponent,
         FooterComponent,
-        NotificationsComponent
+        NotificationsComponent,
     ],
 })
 export class SharedModule {

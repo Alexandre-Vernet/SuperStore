@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, NotificationsDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto } from "@superstore/libs";
 import { Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "../cart/cart.service";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,14 +15,24 @@ export class OrderService {
 
     constructor(
         private http: HttpClient,
-        private readonly cartService: CartService
+        private readonly cartService: CartService,
+        private readonly authService: AuthService
     ) {
     }
 
-    confirmOrder(order: CreateOrderDto): Observable<NotificationsDto> {
-        return this.http.post<NotificationsDto>(this.orderUri, order)
+    confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
+        return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => this.cartService.clearCart())
             )
+    }
+
+    getOrder(orderId: number): Observable<OrderDto> {
+        return this.http.get<OrderDto>(`${ this.orderUri }/${ orderId }`);
+    }
+
+    getLastOrder(): Observable<OrderDto> {
+        const userId = this.authService.user.id;
+        return this.http.post<OrderDto>(`${ this.orderUri }/last`, { userId });
     }
 }

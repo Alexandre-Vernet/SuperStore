@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from '@superstore/libs';
 import { ProductDto } from '@superstore/libs';
-import { FindOneOptions, Repository } from "typeorm";
+import { FindOneOptions, In, Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 
@@ -49,5 +49,13 @@ export class ProductService {
         return this.productRepository.createQueryBuilder('products')
             .where('LOWER(products.name) LIKE LOWER(:slug)', { slug: `%${ slug }%` })
             .getOne();
+    }
+
+    getProductsByIds(ids: number[]) {
+        return this.productRepository.find({
+            where: {
+                id: In(ids),
+            },
+        });
     }
 }

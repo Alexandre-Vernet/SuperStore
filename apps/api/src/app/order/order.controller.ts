@@ -18,13 +18,18 @@ export class OrderController {
     }
 
     @Post()
-    create(@Body() createOrderDto: CreateOrderDto) {
+    create(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
         return this.orderService.create(createOrderDto);
     }
 
     @Get()
     findAll() {
         return this.orderService.findAll();
+    }
+
+    @Post('last')
+    findLast(@Body() body: { userId: number }) {
+        return this.orderService.findLast(body.userId);
     }
 
     @Get(':id')

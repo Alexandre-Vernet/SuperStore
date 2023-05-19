@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { NotificationsService } from "./notifications.service";
 import { NotificationsDto, NotificationType } from "@superstore/libs";
+import { NotificationsService } from "./notifications.service";
 
 @Component({
     selector: 'superstore-notifications',

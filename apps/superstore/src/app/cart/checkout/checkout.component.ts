@@ -7,6 +7,7 @@ import { ProductPipe } from "../../product/product.pipe";
 import { AuthService } from "../../auth/auth.service";
 import { UserService } from "../../user/user.service";
 import { OrderService } from "../../order/order.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'superstore-checkout',
@@ -49,6 +50,7 @@ export class CheckoutComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly orderService: OrderService,
+        private router: Router
     ) {
         const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
         if (localStorageCart) {
@@ -165,8 +167,10 @@ export class CheckoutComponent implements OnInit {
             userId,
             state: 'pending' as State,
             addressId: this.selectedAddress?.id,
+            productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name,
-            paymentMethod
+            paymentMethod,
+            totalPrice: this.totalPrice(),
         };
 
         if (!this.selectedAddress) {
@@ -206,11 +210,24 @@ export class CheckoutComponent implements OnInit {
                     })
                     .subscribe((address) => {
                         order.addressId = address.id;
-                        this.orderService.confirmOrder(order).subscribe();
+                        this.confirmOrder(order);
                     });
                 return;
             }
-            this.orderService.confirmOrder(order).subscribe();
+            this.confirmOrder(order);
         }
+    }
+
+    confirmOrder(order: CreateOrderDto) {
+        this.orderService
+            .confirmOrder(order)
+            .subscribe({
+                next: () => {
+                    this.router.navigateByUrl('/confirm-order')
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
     }
 }

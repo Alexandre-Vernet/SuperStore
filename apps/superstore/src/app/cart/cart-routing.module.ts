@@ -15,7 +15,7 @@ const routes: Routes = [
         component: CheckoutComponent,
         canActivate: [CheckoutGuard, AuthGuard]
 
-    }
+    },
 ];
 
 @NgModule({

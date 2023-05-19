@@ -18,12 +18,16 @@ export class UserService {
     ) {
     }
 
+    createAddress(address: CreateAddressDto): Observable<AddressDto> {
+        return this.http.post<AddressDto>(this.addressUrl, address);
+    }
+
     getAddresses(): Observable<AddressDto[]> {
         const userId = this.authService.user.id;
         return this.http.post<AddressDto[]>(`${ this.addressUrl }/find-all`, { userId });
     }
 
-    createAddress(address: CreateAddressDto): Observable<AddressDto> {
-        return this.http.post<AddressDto>(this.addressUrl, address);
+    getAddress(addressId: number): Observable<AddressDto> {
+        return this.http.get<AddressDto>(`${ this.addressUrl }/${ addressId }`);
     }
 }

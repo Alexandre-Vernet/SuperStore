@@ -1,6 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../user/user.entity";
-import { Cart } from "../cart/cart.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {
@@ -13,17 +11,20 @@ export class Order {
     @Column({ name: 'address_id' })
     addressId: number;
 
-    @OneToOne(type => Cart, cart => cart.id)
-    cartId: number;
+    @Column({ name: 'products_id', type: 'integer' })
+    productsId: number[];
 
-    @Column({ type: 'text' })
+    @Column()
     state: string;
 
-    @Column({ name: 'delivery_method', type: 'text' })
+    @Column({ name: 'delivery_method' })
     deliveryMethod: string;
 
-    @Column({ name: 'payment_method', type: 'text' })
+    @Column({ name: 'payment_method' })
     paymentMethod: string;
+
+    @Column({ name: 'total_price' })
+    totalPrice: number;
 
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;
