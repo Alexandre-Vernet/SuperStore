@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../user/user.service";
 import { AddressDto, OrderDto, ProductDto } from "@superstore/libs";
 import { OrderService } from "../order.service";
@@ -21,7 +20,6 @@ export class ConfirmOrderComponent implements OnInit {
     };
 
     constructor(
-        private activatedRoute: ActivatedRoute,
         private readonly userService: UserService,
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
@@ -29,25 +27,25 @@ export class ConfirmOrderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe((params: { orderId: string }) => {
+        this.orderService.getLastOrder()
+            .subscribe((order: OrderDto) => {
+                this.orderService.getOrder(order.id)
+                    .subscribe((order: OrderDto) => {
 
-            this.orderService.getOrder(params.orderId)
-                .subscribe((order: OrderDto) => {
+                        this.productService.getProductFromIds(order.productsId)
+                            .subscribe((products) => {
 
-                    this.productService.getProductFromIds(order.productsId)
-                        .subscribe((products) => {
-
-                            this.userService.getAddress(order.addressId)
-                                .subscribe((address: AddressDto) => {
-                                    this.confirmOrder = {
-                                        order,
-                                        address,
-                                        products,
-                                    }
-                                });
-                        });
-                });
-        });
+                                this.userService.getAddress(order.addressId)
+                                    .subscribe((address: AddressDto) => {
+                                        this.confirmOrder = {
+                                            order,
+                                            address,
+                                            products,
+                                        }
+                                    });
+                            });
+                    });
+            });
     }
 
     convertProductNameToSlug(name: string): string {

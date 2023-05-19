@@ -34,4 +34,12 @@ export class OrderService {
     remove(id: number) {
         return this.orderRepository.delete(id);
     }
+
+    findLast(userId: number) {
+        const options: FindOneOptions = {
+            where: { userId },
+            order: { id: 'DESC' }
+        };
+        return this.orderRepository.findOne(options);
+    }
 }

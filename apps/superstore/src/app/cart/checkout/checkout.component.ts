@@ -222,8 +222,8 @@ export class CheckoutComponent implements OnInit {
         this.orderService
             .confirmOrder(order)
             .subscribe({
-                next: (order) => {
-                    this.router.navigate(['/confirm-order', order.id]);
+                next: () => {
+                    this.router.navigateByUrl('/confirm-order')
                 },
                 error: (err) => {
                     console.log(err);
