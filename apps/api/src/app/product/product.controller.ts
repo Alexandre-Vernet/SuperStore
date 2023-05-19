@@ -36,7 +36,7 @@ export class ProductController {
     }
 
     @Post('get-by-ids')
-    getProductsByIds(@Body('ids') ids: string) {
+    getProductsByIds(@Body('ids') ids: number[]) {
         return this.productService.getProductsByIds(ids);
     }
 
