@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
-import { NotificationType, OrderDto, OrderState, ProductDto } from "@superstore/libs";
+import { NotificationType, OrderState, OrderWithProductsDto, ProductDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
@@ -13,8 +13,7 @@ import { NotificationsService } from "../../shared/notifications/notifications.s
 })
 export class OrderHistoryComponent implements OnInit {
 
-    orders: OrderDto[];
-    products: ProductDto[];
+    orders: OrderWithProductsDto[];
 
     constructor(
         private readonly orderService: OrderService,
@@ -27,23 +26,15 @@ export class OrderHistoryComponent implements OnInit {
     ngOnInit() {
         this.orderService.getOrders()
             .subscribe((orders) => {
-                this.orders = orders;
-                this.orders.forEach((order) => {
-                    order.productsId.forEach((product) => {
-                        this.getProductFromProductId(product)
-                            .subscribe((product) => {
-                                if (!this.products) {
-                                    this.products = [];
-                                }
-                                this.products.push(product);
-                            });
-                    });
+                orders.map((order) => {
+                    this.productService.getProductFromIds(order.productsId)
+                        .subscribe((products) => {
+                            order.products = products;
+                            delete order.productsId;
+                        });
                 });
+                this.orders = orders;
             });
-    }
-
-    getProductFromProductId(productId: number) {
-        return this.productService.getProduct(productId);
     }
 
     convertProductNameToSlug(name: string): string {

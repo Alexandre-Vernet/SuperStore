@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, OrderDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto, OrderWithProductsDto } from "@superstore/libs";
 import { Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
@@ -27,9 +27,9 @@ export class OrderService {
             )
     }
 
-    getOrders(): Observable<OrderDto[]> {
+    getOrders(): Observable<OrderWithProductsDto[]> {
         const userId = this.authService.user.id;
-        return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
+        return this.http.get<OrderWithProductsDto[]>(`${ this.orderUri }/user/${ userId }`)
             .pipe(
                 tap((orders) => {
                         orders.map(order => order.createdAt = new Date(order.createdAt));
