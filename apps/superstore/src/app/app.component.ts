@@ -18,10 +18,6 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window.addEventListener('resize', () => {
-            AppComponent.displayResponsiveMenu = window.innerWidth < 768;
-        });
-
         // Listen for notifications
         this.notificationsService
             .message
