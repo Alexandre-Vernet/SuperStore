@@ -56,25 +56,24 @@ export class NavbarComponent implements OnInit {
     }
 
     // Keyboard shortcut CTRL + / to focus on searchBar input
+    convertProductNameToSlug(name: string): string {
+        return new ProductPipe().convertProductNameToSlug(name);
+    }
+
     @HostListener('window:keydown.control.:', ['$event'])
     focusSearchInput(event: KeyboardEvent): void {
         event.preventDefault();
         document.getElementById('searchBar').focus();
     }
-
     // Keyboard shortcut ESC to close searchBar results
+
     @HostListener('window:keydown.escape', ['$event'])
     closeSearchResults(): void {
         this.searchBar = '';
     }
 
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
-    }
-
     searchProducts($event: Event): void {
-        const search = ($event.target as HTMLInputElement).value;
-        this.searchBar = search;
+        this.searchBar = ($event.target as HTMLInputElement).value;
     }
 
     viewProduct(product: ProductDto): void {
