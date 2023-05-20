@@ -7,7 +7,7 @@ import { ProductDto } from "@superstore/libs";
 export class ProductPipe implements PipeTransform {
     transform(search: string, products: ProductDto[]): ProductDto[] {
         return products.filter(product => {
-            return product.name.toLowerCase().includes(search.toLowerCase());
+            return product.name?.toLowerCase().includes(search.toLowerCase());
         });
     }
 
