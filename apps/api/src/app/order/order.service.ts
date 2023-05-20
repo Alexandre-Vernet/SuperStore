@@ -46,6 +46,7 @@ export class OrderService {
     findByUser(userId: number) {
         const options: FindManyOptions = {
             where: { userId },
+            order: { createdAt: 'DESC' }
         };
         return this.orderRepository.find(options);
     }
