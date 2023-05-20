@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map, Observable, tap } from "rxjs";
-import { Product } from "./product";
+import { map, Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 import { ProductDto } from "@superstore/libs";
 
@@ -26,10 +25,7 @@ export class ProductService {
         })
             .pipe(
                 map(({ products, total }) => ({
-                    products: products.map(product => ({
-                        ...product,
-                        price: Product.convertCentToEuro(product.price)
-                    })),
+                    products,
                     total
                 }))
             );
@@ -51,22 +47,14 @@ export class ProductService {
     }
 
     getProductFromSlug(slug: string): Observable<ProductDto> {
-        return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`)
-            .pipe(
-                tap((product) => {
-                    product.price = Product.convertCentToEuro(product.price);
-                })
-            );
+        return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`);
     }
 
     getProductFromIds(ids: number[]): Observable<ProductDto[]> {
-        return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids })
-            .pipe(
-                tap((product) => {
-                    product.map((product) => {
-                        product.price = Product.convertCentToEuro(product.price);
-                    });
-                })
-            );
+        return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids });
+    }
+
+    getProduct(productId: number): Observable<ProductDto> {
+        return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`);
     }
 }

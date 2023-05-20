@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Repository } from "typeorm";
+import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
 import { CreateOrderDto, OrderDto } from "@superstore/libs";
 
@@ -41,5 +41,12 @@ export class OrderService {
             order: { id: 'DESC' }
         };
         return this.orderRepository.findOne(options);
+    }
+
+    findByUser(userId: number) {
+        const options: FindManyOptions = {
+            where: { userId },
+        };
+        return this.orderRepository.find(options);
     }
 }

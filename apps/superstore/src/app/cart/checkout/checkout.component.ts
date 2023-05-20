@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, State } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -52,10 +52,6 @@ export class CheckoutComponent implements OnInit {
         private readonly orderService: OrderService,
         private router: Router
     ) {
-        const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
-        if (localStorageCart) {
-            this.cartService.cart = localStorageCart;
-        }
     }
 
     ngOnInit() {
@@ -165,10 +161,10 @@ export class CheckoutComponent implements OnInit {
 
         const order: CreateOrderDto = {
             userId,
-            state: 'pending' as State,
+            state: 'PENDING' as OrderState,
             addressId: this.selectedAddress?.id,
             productsId: this.cart.map(item => item.id),
-            deliveryMethod: this.selectedDeliveryMethod.name,
+            deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
             totalPrice: this.totalPrice(),
         };
@@ -223,7 +219,7 @@ export class CheckoutComponent implements OnInit {
             .confirmOrder(order)
             .subscribe({
                 next: () => {
-                    this.router.navigateByUrl('/confirm-order')
+                    this.router.navigateByUrl('/order/confirm-order')
                 },
                 error: (err) => {
                     console.log(err);

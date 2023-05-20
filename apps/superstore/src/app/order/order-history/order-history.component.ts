@@ -1,0 +1,57 @@
+import { Component, OnInit } from '@angular/core';
+import { OrderService } from "../order.service";
+import { NotificationType, OrderState, OrderWithProductsDto, ProductDto } from "@superstore/libs";
+import { ProductService } from "../../product/product.service";
+import { ProductPipe } from "../../product/product.pipe";
+import { CartService } from "../../cart/cart.service";
+import { NotificationsService } from "../../shared/notifications/notifications.service";
+
+@Component({
+    selector: 'superstore-order-history',
+    templateUrl: './order-history.component.html',
+    styleUrls: ['./order-history.component.scss'],
+})
+export class OrderHistoryComponent implements OnInit {
+
+    orders: OrderWithProductsDto[];
+
+    constructor(
+        private readonly orderService: OrderService,
+        private readonly productService: ProductService,
+        private readonly cartService: CartService,
+        private readonly notificationService: NotificationsService
+    ) {
+    }
+
+    ngOnInit() {
+        this.orderService.getOrders()
+            .subscribe((orders) => {
+                orders.map((order) => {
+                    this.productService.getProductFromIds(order.productsId)
+                        .subscribe((products) => {
+                            order.products = products;
+                            delete order.productsId;
+                        });
+                });
+                this.orders = orders;
+            });
+    }
+
+    convertProductNameToSlug(name: string): string {
+        return new ProductPipe().convertProductNameToSlug(name);
+    }
+
+    getOrderStateImageFileName(state: OrderState): string {
+        return `assets/order-state/${ state.toLowerCase() }.png`;
+    }
+
+    addToCart(product: ProductDto) {
+        this.cartService.addToCart(product);
+        this.notificationService.message.emit({
+            icon: 'success' as NotificationType,
+            title: 'Product added to cart',
+            description: `${ product.name } has been added to your cart`,
+            show: true
+        });
+    }
+}
