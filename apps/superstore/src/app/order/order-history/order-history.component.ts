@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
-import { OrderDto, ProductDto } from "@superstore/libs";
+import { NotificationType, OrderDto, OrderState, ProductDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
+import { CartService } from "../../cart/cart.service";
+import { NotificationsService } from "../../shared/notifications/notifications.service";
 
 @Component({
     selector: 'superstore-order-history',
@@ -17,6 +19,8 @@ export class OrderHistoryComponent implements OnInit {
     constructor(
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
+        private readonly cartService: CartService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -44,5 +48,19 @@ export class OrderHistoryComponent implements OnInit {
 
     convertProductNameToSlug(name: string): string {
         return new ProductPipe().convertProductNameToSlug(name);
+    }
+
+    getOrderStateImageFileName(state: OrderState): string {
+        return `assets/order-state/${ state.toLowerCase() }.png`;
+    }
+
+    addToCart(product: ProductDto) {
+        this.cartService.addToCart(product);
+        this.notificationService.message.emit({
+            icon: 'success' as NotificationType,
+            title: 'Product added to cart',
+            description: `${ product.name } has been added to your cart`,
+            show: true
+        });
     }
 }

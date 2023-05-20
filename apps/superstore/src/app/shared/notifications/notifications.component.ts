@@ -10,6 +10,7 @@ import { NotificationsService } from "./notifications.service";
 export class NotificationsComponent {
 
     @Input() message = {
+        icon: '' as NotificationType,
         title: '',
         description: '',
         show: false
@@ -28,7 +29,7 @@ export class NotificationsComponent {
     hideNotificationAfterDelay() {
         setTimeout(() => {
             this.notificationsService.message.next({
-                icon: 'success' as NotificationType,
+                icon: '' as NotificationType,
                 title: '',
                 description: '',
                 show: false,

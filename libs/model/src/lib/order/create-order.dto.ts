@@ -1,8 +1,8 @@
-import { State } from './state.dto';
+import { OrderState } from './state.dto';
 
 export class CreateOrderDto {
     userId: number;
-    state: State;
+    state: OrderState;
     addressId: number;
     productsId: number[];
     deliveryMethod: string;
