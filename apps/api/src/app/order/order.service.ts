@@ -3,17 +3,23 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
 import { CreateOrderDto, OrderDto } from "@superstore/libs";
+import { EmailService } from "../email/email.service";
 
 @Injectable()
 export class OrderService {
     constructor(
         @InjectRepository(Order)
-        private readonly orderRepository: Repository<Order>
+        private readonly orderRepository: Repository<Order>,
+        private readonly emailService: EmailService,
     ) {
     }
 
-    create(createOrderDto: CreateOrderDto) {
-        return this.orderRepository.save(createOrderDto);
+    create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
+        return this.orderRepository.save(createOrderDto)
+            .then((order) => {
+                this.emailService.sendEmailConfirmationOrder(order);
+                return order;
+            });
     }
 
     findAll(): Promise<Order[]> {
