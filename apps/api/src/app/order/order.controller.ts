@@ -1,15 +1,6 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from '@superstore/libs';
-import { OrderDto } from '@superstore/libs';
+import { CreateOrderDto, OrderDto } from '@superstore/libs';
 
 @Controller('order')
 export class OrderController {
