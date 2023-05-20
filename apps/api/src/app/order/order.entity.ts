@@ -23,7 +23,7 @@ export class Order {
     @Column({ name: 'payment_method' })
     paymentMethod: string;
 
-    @Column({ name: 'total_price' })
+    @Column({ name: 'total_price', type: 'decimal' })
     totalPrice: number;
 
     @Column({ name: 'updated_at', type: 'timestamp' })
