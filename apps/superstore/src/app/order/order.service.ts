@@ -32,13 +32,10 @@ export class OrderService {
         return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
             .pipe(
                 tap((orders) => {
-                    // Convert date
-                    orders.forEach(order => {
-                        order.createdAt = new Date(order.createdAt);
-                    });
-                }
-            )
-        );
+                        orders.map(order => order.createdAt = new Date(order.createdAt));
+                    }
+                )
+            );
     }
 
     getOrder(orderId: number): Observable<OrderDto> {
@@ -47,6 +44,6 @@ export class OrderService {
 
     getLastOrder(): Observable<OrderDto> {
         const userId = this.authService.user.id;
-        return this.http.post<OrderDto>(`${ this.orderUri }/last`, { userId });
+        return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);
     }
 }

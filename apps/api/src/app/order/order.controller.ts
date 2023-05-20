@@ -32,9 +32,9 @@ export class OrderController {
         return this.orderService.findByUser(userId);
     }
 
-    @Post('last')
-    findLast(@Body() body: { userId: number }) {
-        return this.orderService.findLast(body.userId);
+    @Get(':userId/last')
+    findLast(@Param('userId') userId: number) {
+        return this.orderService.findLast(userId);
     }
 
     @Get(':id')
