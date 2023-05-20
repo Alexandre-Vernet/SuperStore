@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto, CreateAddressDto, OrderDto } from "@superstore/libs";
+import { AddressDto, CreateAddressDto } from "@superstore/libs";
 import { FindOneOptions, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Address } from "./address.entity";
@@ -54,8 +54,8 @@ export class AddressService {
         return this.addressRepository.findOne(options);
     }
 
-    update(id: number, updateOrderDto: OrderDto) {
-        return this.addressRepository.update(id, updateOrderDto);
+    update(id: number, updateAddress: AddressDto) {
+        return this.addressRepository.update(id, updateAddress);
     }
 
     remove(id: number) {
