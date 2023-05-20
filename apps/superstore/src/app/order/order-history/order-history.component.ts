@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
 import { NotificationType, OrderState, OrderWithProductsDto, ProductDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
@@ -14,6 +14,7 @@ import { NotificationsService } from "../../shared/notifications/notifications.s
 export class OrderHistoryComponent implements OnInit {
 
     orders: OrderWithProductsDto[];
+    displayOrderOptions = false;
 
     constructor(
         private readonly orderService: OrderService,
@@ -35,6 +36,20 @@ export class OrderHistoryComponent implements OnInit {
                 });
                 this.orders = orders;
             });
+    }
+
+    toggleOrderOption() {
+        this.displayOrderOptions = !this.displayOrderOptions;
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        const clickedElement = event.target as HTMLElement;
+        const menuElement = document.getElementById('menu');
+
+        if (menuElement && !menuElement.contains(clickedElement)) {
+            this.displayOrderOptions = false;
+        }
     }
 
     convertProductNameToSlug(name: string): string {
