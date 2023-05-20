@@ -18,9 +18,6 @@ export class ViewProductComponent implements OnInit {
         private readonly productService: ProductService,
         private readonly cartService: CartService
     ) {
-        route.params.subscribe(() => {
-            this.getProduct();
-        });
     }
 
     ngOnInit() {

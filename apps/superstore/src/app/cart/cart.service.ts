@@ -8,6 +8,13 @@ export class CartService {
 
     cart: CartDto[] = [];
 
+    constructor() {
+        const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
+        if (localStorageCart) {
+            this.cart = localStorageCart;
+        }
+    }
+
     addToCart(product: ProductDto) {
         // Check if the product is already in the cart
         const productInCart = this.cart.find(cartProduct => cartProduct.id === product.id);

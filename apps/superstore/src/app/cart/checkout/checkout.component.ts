@@ -52,10 +52,6 @@ export class CheckoutComponent implements OnInit {
         private readonly orderService: OrderService,
         private router: Router
     ) {
-        const localStorageCart: CartDto[] = JSON.parse(localStorage.getItem('cart'));
-        if (localStorageCart) {
-            this.cartService.cart = localStorageCart;
-        }
     }
 
     ngOnInit() {
