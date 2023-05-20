@@ -69,4 +69,13 @@ export class ProductService {
                 })
             );
     }
+
+    getProduct(productId: number): Observable<ProductDto> {
+        return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`)
+            .pipe(
+                tap((product) => {
+                    product.price = Product.convertCentToEuro(product.price);
+                })
+            );
+    }
 }
