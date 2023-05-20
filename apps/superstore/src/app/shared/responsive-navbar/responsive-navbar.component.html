@@ -31,10 +31,10 @@
 
                 <div class="space-y-6 border-t border-gray-200 py-6 px-4">
                     <div class="flow-root">
-                        <a href="#" class="-m-2 block p-2 font-medium text-gray-900">Sign in</a>
+                        <a (click)="redirectTo('/sign-in')" class="-m-2 block p-2 font-medium text-gray-900 hover:cursor-pointer">Sign in</a>
                     </div>
                     <div class="flow-root">
-                        <a href="#" class="-m-2 block p-2 font-medium text-gray-900">Create account</a>
+                        <a (click)="redirectTo('/sign-up')" class="-m-2 block p-2 font-medium text-gray-900 hover:cursor-pointer">Create account</a>
                     </div>
                 </div>
 
