@@ -167,6 +167,7 @@ export class CheckoutComponent implements OnInit {
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
             totalPrice: this.totalPrice(),
+            createdAt: null,
         };
 
         if (!this.selectedAddress) {

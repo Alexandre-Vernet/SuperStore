@@ -15,6 +15,8 @@ export class OrderService {
     }
 
     create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
+        createOrderDto.createdAt = new Date();
+
         return this.orderRepository.save(createOrderDto)
             .then((order) => {
                 this.emailService.sendEmailConfirmationOrder(order);
