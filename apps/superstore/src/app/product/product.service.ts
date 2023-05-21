@@ -54,7 +54,7 @@ export class ProductService {
         return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids });
     }
 
-    getProduct(productId: number): Observable<ProductDto> {
-        return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`);
+    deleteProduct(id: number): Observable<void> {
+        return this.http.delete<void>(`${ this.productUri }/${ id }`);
     }
 }

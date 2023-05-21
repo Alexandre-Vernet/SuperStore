@@ -3,7 +3,6 @@ import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from "./auth.service";
 import { NotificationsService } from "../shared/notifications/notifications.service";
-import { NotificationType } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
@@ -32,17 +31,10 @@ export class AuthGuard {
                         }
                     });
             } else {
-                this.notificationsService.message
-                    .emit({
-                        icon: 'error' as NotificationType,
-                        title: 'Unauthorized',
-                        description: 'You must be logged in to access this page.',
-                        show: true
-                    });
+                this.notificationsService.showErrorNotification('Unauthorized', 'You must be logged in to access this page.');
                 this.router.navigate(['/sign-in']);
                 reject(false);
             }
         });
-
     }
 }
