@@ -234,8 +234,9 @@ export class CheckoutComponent implements OnInit {
                     this.notificationService.message.emit({
                         icon: 'error' as NotificationType,
                         title: 'An error occurred',
-                        description: `Please try again later. ${err.message}`,
+                        description: `Please try again later. \n${ err.message }`,
                         show: true,
+                        duration: 7000,
                     })
                 }
             });
