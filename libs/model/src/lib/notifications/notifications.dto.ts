@@ -3,6 +3,7 @@ export class NotificationsDto {
     title: string;
     description: string;
     show: boolean;
+    duration?: number;
 }
 
 export enum NotificationType {

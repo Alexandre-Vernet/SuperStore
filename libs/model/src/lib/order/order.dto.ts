@@ -4,7 +4,6 @@ import { ProductDto } from "../product/product.dto";
 
 export class OrderDto extends PartialType(CreateOrderDto) {
     id: number;
-    createdAt: Date;
 }
 
 export class OrderWithProductsDto extends OrderDto  {
