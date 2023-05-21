@@ -13,22 +13,15 @@ export class EmailService {
     }
 
     sendEmailConfirmationOrder(order: CreateOrderDto) {
-        this.userService.findOne(order.userId)
+        return this.userService.findOne(order.userId)
             .then(user => {
                 delete user.password;
 
                 const { EMAIL_SERVICE_URL } = process.env;
 
-                this.httpService
+                return this.httpService
                     .post(EMAIL_SERVICE_URL, { order, user })
-                    .subscribe({
-                        next: () => {
-                            console.log({ order, user });
-                        },
-                        error: (error) => {
-                            console.error(error);
-                        }
-                    });
+                    .subscribe();
             });
     }
 }

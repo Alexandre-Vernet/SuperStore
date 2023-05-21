@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, NotificationType, OrderState } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -8,6 +8,7 @@ import { AuthService } from "../../auth/auth.service";
 import { UserService } from "../../user/user.service";
 import { OrderService } from "../../order/order.service";
 import { Router } from "@angular/router";
+import { NotificationsService } from "../../shared/notifications/notifications.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -50,6 +51,7 @@ export class CheckoutComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly orderService: OrderService,
+        private readonly notificationService: NotificationsService,
         private router: Router
     ) {
     }
@@ -220,10 +222,21 @@ export class CheckoutComponent implements OnInit {
             .confirmOrder(order)
             .subscribe({
                 next: () => {
+                    this.notificationService.message.emit({
+                        icon: 'success' as NotificationType,
+                        title: 'Email sent',
+                        description: 'An email has been sent to confirm your order.',
+                        show: true,
+                    });
                     this.router.navigateByUrl('/order/confirm-order')
                 },
                 error: (err) => {
-                    console.log(err);
+                    this.notificationService.message.emit({
+                        icon: 'error' as NotificationType,
+                        title: 'An error occurred',
+                        description: `Please try again later. ${err.message}`,
+                        show: true,
+                    })
                 }
             });
     }
