@@ -21,5 +21,9 @@ export const appRoutes: Route[] = [
     {
         path: 'order',
         loadChildren: () => import('./order/order.module').then(m => m.OrderModule)
+    },
+    {
+        path: 'admin',
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
     }
 ];
