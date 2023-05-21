@@ -17,11 +17,13 @@ export class EmailService {
             .then(user => {
                 delete user.password;
 
+                const { EMAIL_SERVICE_URL } = process.env;
+
                 this.httpService
-                    .post('http://localhost:3333/api/superstore', { order, user })
+                    .post(EMAIL_SERVICE_URL, { order, user })
                     .subscribe({
                         next: () => {
-                            console.log('success');
+                            console.log({ order, user });
                         },
                         error: (error) => {
                             console.error(error);
