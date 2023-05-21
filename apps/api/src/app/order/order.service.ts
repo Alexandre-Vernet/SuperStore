@@ -17,11 +17,21 @@ export class OrderService {
     create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
         createOrderDto.createdAt = new Date();
 
-        return this.orderRepository.save(createOrderDto)
-            .then((order) => {
-                this.emailService.sendEmailConfirmationOrder(order);
-                return order;
-            });
+        return new Promise<OrderDto>((resolve, reject) => {
+            this.orderRepository.save(createOrderDto)
+                .then((order) => {
+                    this.emailService.sendEmailConfirmationOrder(order)
+                        .then(() => {
+                            resolve(order);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 
     findAll(): Promise<Order[]> {

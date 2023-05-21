@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NotificationsDto, NotificationType } from "@superstore/libs";
 import { NotificationsService } from "./notifications.service";
 
@@ -7,33 +7,37 @@ import { NotificationsService } from "./notifications.service";
     templateUrl: './notifications.component.html',
     styleUrls: ['./notifications.component.scss'],
 })
-export class NotificationsComponent {
+export class NotificationsComponent implements OnInit{
 
-    @Input() message = {
-        icon: '' as NotificationType,
-        title: '',
-        description: '',
-        show: false
-    } as NotificationsDto;
+    notificationMessage: NotificationsDto;
 
     constructor(
         private readonly notificationsService: NotificationsService,
     ) {
-        this.hideNotificationAfterDelay();
+    }
+
+    ngOnInit(): void {
+        // Listen for notifications
+        this.notificationsService
+            .message
+            .subscribe((message) => {
+                this.notificationMessage = message;
+                this.hideNotificationAfterDelay(message.duration);
+            });
     }
 
     hideNotification() {
-        this.message.show = false;
+        this.notificationMessage.show = false;
     }
 
-    hideNotificationAfterDelay() {
+    hideNotificationAfterDelay(delay: number = 5000) {
         setTimeout(() => {
             this.notificationsService.message.next({
+                show: false,
                 icon: '' as NotificationType,
                 title: '',
                 description: '',
-                show: false,
             })
-        }, 5000);
+        }, delay);
     }
 }
