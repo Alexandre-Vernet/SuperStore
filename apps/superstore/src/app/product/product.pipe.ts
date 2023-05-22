@@ -12,6 +12,6 @@ export class ProductPipe implements PipeTransform {
     }
 
     convertProductNameToSlug(name: string): string {
-        return name.toLowerCase().replace(/ /g, '-');
+        return name?.toLowerCase().replace(/ /g, '-');
     }
 }
