@@ -50,5 +50,6 @@ export class AuthService {
 
     signOut(): void {
         this.user = null;
+        localStorage.removeItem('accessToken');
     }
 }
