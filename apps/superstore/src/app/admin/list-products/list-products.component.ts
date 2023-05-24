@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
+import { AdminService } from "../admin.service";
 
 @Component({
     selector: 'superstore-list-products',
@@ -14,7 +15,8 @@ export class ListProductsComponent implements OnInit {
 
     constructor(
         private readonly productService: ProductService,
-        private readonly notificationService: NotificationsService
+        private readonly notificationService: NotificationsService,
+        public adminService: AdminService
     ) {
     }
 
@@ -27,6 +29,10 @@ export class ListProductsComponent implements OnInit {
             })
     }
 
+    displayModalAddProduct() {
+        this.adminService.openModal();
+    }
+
     deleteProduct(product: ProductDto) {
         this.productService.deleteProduct(product.id)
             .subscribe({
@@ -36,6 +42,6 @@ export class ListProductsComponent implements OnInit {
                 error: (err) => {
                     this.notificationService.showErrorNotification('Error', err.message);
                 }
-            })
+            });
     }
 }

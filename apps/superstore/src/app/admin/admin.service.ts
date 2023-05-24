@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AdminService {
 
-  constructor() { }
+    showModalAddProduct: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    openModal() {
+        this.showModalAddProduct.next(true);
+    }
+
+    closeModal() {
+        this.showModalAddProduct.next(false);
+    }
 }

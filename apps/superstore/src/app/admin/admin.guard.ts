@@ -28,11 +28,12 @@ export class AdminGuard {
                         next: ({ user }) => {
                             if (user.isAdmin) {
                                 resolve(true);
+                            } else {
+                                console.warn('Unauthorized')
+                                this.notificationsService.showErrorNotification('Unauthorized', 'You must be an admin to access this page.');
+                                this.router.navigateByUrl('/');
+                                reject(false);
                             }
-                            console.warn('Unauthorized')
-                            this.notificationsService.showErrorNotification('Unauthorized', 'You must be an admin to access this page.');
-                            this.router.navigateByUrl('/');
-                            reject(false);
                         },
                         error: () => {
                             this.router.navigate(['/sign-in']);
