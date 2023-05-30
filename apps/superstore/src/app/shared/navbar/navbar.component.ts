@@ -17,7 +17,6 @@ export class NavbarComponent implements OnInit {
     cart: CartDto[] = [];
     searchBar = '';
     searchResults: ProductDto[] = [];
-    user: UserDto;
 
     constructor(
         private readonly cartService: CartService,
@@ -44,6 +43,10 @@ export class NavbarComponent implements OnInit {
 
     getFirstNameAndLastName(): string {
         return `${ this.getUserConnected().firstName } ${ this.getUserConnected().lastName }`;
+    }
+
+    userIsAdmin(): boolean {
+        return this.authService.user.isAdmin;
     }
 
     signOut(): void {
