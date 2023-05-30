@@ -58,8 +58,8 @@ export class ViewCartComponent implements OnInit {
         return new ProductPipe().convertProductNameToSlug(name);
     }
 
-    updateQuantity(item: CartDto, event) {
-        const quantityUpdated: number = event.target.value;
+    updateQuantity(item: CartDto, event: Event) {
+        const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
     }
 }
