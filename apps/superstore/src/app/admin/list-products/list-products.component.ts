@@ -12,6 +12,7 @@ import { AdminService } from "../admin.service";
 export class ListProductsComponent implements OnInit {
 
     products: ProductDto[];
+    editedProduct: ProductDto;
 
     constructor(
         private readonly productService: ProductService,
@@ -30,6 +31,11 @@ export class ListProductsComponent implements OnInit {
     }
 
     displayModalAddProduct() {
+        this.adminService.openModal();
+    }
+
+    editProduct(product: ProductDto) {
+        this.editedProduct = product;
         this.adminService.openModal();
     }
 

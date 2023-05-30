@@ -1,15 +1,18 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "../../product/product.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
 import { AdminService } from "../admin.service";
+import { ProductDto } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-add-product',
     templateUrl: './add-product.component.html',
     styleUrls: ['./add-product.component.scss'],
 })
-export class AddProductComponent {
+export class AddProductComponent implements OnInit {
+
+    @Input() editProduct = {} as ProductDto;
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required]),
@@ -23,6 +26,25 @@ export class AddProductComponent {
         private readonly notificationService: NotificationsService,
         private readonly adminService: AdminService
     ) {
+    }
+
+    ngOnInit() {
+        if (this.editProduct?.id) {
+            this.formAddProduct.setValue({
+                name: this.editProduct.name,
+                description: this.editProduct.description,
+                price: this.editProduct.price,
+                category: this.editProduct.category.join(', ')
+            });
+        }
+    }
+
+    submitForm() {
+        if (this.editProduct?.id) {
+            return this.updateProduct();
+        } else {
+            return this.addProduct();
+        }
     }
 
     addProduct() {
@@ -57,6 +79,43 @@ export class AddProductComponent {
                     this.notificationService.showErrorNotification('Error', err.message);
                 }
             })
+        this.closeModal();
+    }
+
+    updateProduct() {
+        const {
+            name,
+            description,
+            price,
+            category
+        } = this.formAddProduct.value;
+
+        // Check if category is valid
+        const isCategoryValid = this.checkCategory(category);
+        if (!isCategoryValid) {
+            return;
+        }
+
+        // Get all categories separated by comma
+        const categories = category.split(',').map(c => c.trim());
+
+        this.productService.updateProduct(this.editProduct.id, {
+            name,
+            description,
+            price,
+            category: categories
+        })
+            .subscribe({
+                next: () => {
+                    this.formAddProduct.reset();
+                    this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
+                    this.closeModal()
+                },
+                error: (err) => {
+                    this.notificationService.showErrorNotification('Error', err.message);
+                }
+            });
+        this.closeModal();
     }
 
     checkCategory(category: string): boolean {

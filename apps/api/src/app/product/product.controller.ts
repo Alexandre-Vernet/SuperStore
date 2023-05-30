@@ -1,16 +1,6 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from '@superstore/libs';
-import { ProductDto } from '@superstore/libs';
+import { CreateProductDto, ProductDto } from '@superstore/libs';
 
 @Controller('product')
 export class ProductController {
@@ -50,9 +40,9 @@ export class ProductController {
         return this.productService.findBySlug(slug);
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
-        return this.productService.update(+id, updateProductDto);
+    @Put(':id')
+    update(@Param('id') id: number, @Body() updateProductDto: ProductDto) {
+        return this.productService.update(id, updateProductDto);
     }
 
     @Delete(':id')

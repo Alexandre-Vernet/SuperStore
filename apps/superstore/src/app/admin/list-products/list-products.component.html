@@ -43,10 +43,12 @@
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ product.price }} €</td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ product.category }}</td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900 hover:cursor-pointer">
+                                <a (click)="editProduct(product)"
+                                   class="text-indigo-600 hover:text-indigo-900 hover:cursor-pointer">
                                     Edit
                                 </a>
-                                <a (click)="deleteProduct(product)" class="text-red-600 hover:text-red-900 hover:cursor-pointer">
+                                <a (click)="deleteProduct(product)"
+                                   class="text-red-600 hover:text-red-900 hover:cursor-pointer">
                                     Delete
                                 </a>
                             </td>
@@ -59,5 +61,5 @@
     </div>
 </div>
 
-<superstore-add-product *ngIf="adminService.showModalAddProduct.value"></superstore-add-product>
+<superstore-add-product *ngIf="adminService.showModalAddProduct.value" [editProduct]="editedProduct"></superstore-add-product>
 
