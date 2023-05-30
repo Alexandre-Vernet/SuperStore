@@ -1,8 +1,8 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ProductService } from "../../product/product.service";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { AdminService } from "../admin.service";
+import { ProductService } from "../../../product/product.service";
+import { NotificationsService } from "../../../shared/notifications/notifications.service";
+import { AdminService } from "../../admin.service";
 import { ProductDto } from "@superstore/libs";
 
 @Component({

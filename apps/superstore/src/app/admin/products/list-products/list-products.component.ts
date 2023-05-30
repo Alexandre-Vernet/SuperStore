@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/libs";
-import { ProductService } from "../../product/product.service";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { AdminService } from "../admin.service";
+import { ProductService } from "../../../product/product.service";
+import { NotificationsService } from "../../../shared/notifications/notifications.service";
+import { AdminService } from "../../admin.service";
 
 @Component({
     selector: 'superstore-list-products',
