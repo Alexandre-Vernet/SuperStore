@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListProductsComponent } from "./products/list-products/list-products.component";
 import { AdminComponent } from "./admin.component";
-import { UsersComponent } from "./users/users.component";
+import { ListUsersComponent } from "./users/list-users/list-users.component";
 import { OrdersComponent } from "./orders/orders.component";
 
 const routes: Routes = [
@@ -16,7 +16,7 @@ const routes: Routes = [
             },
             {
                 path: 'list-users',
-                component: UsersComponent
+                component: ListUsersComponent
             },
             {
                 path: 'list-orders',

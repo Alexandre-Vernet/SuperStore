@@ -5,4 +5,5 @@ export const environment = {
     orderUri: () => `${ environment.backendUrl }/order`,
     authUrl: () => `${ environment.backendUrl }/user`,
     addressUrl: () => `${ environment.backendUrl }/address`,
+    userUrl: () => `${ environment.backendUrl }/user`,
 };

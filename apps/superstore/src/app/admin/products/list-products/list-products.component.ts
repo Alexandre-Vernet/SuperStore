@@ -26,8 +26,11 @@ export class ListProductsComponent implements OnInit {
             .subscribe({
                 next: ({ products }) => {
                     this.products = products;
+                },
+                error: (err) => {
+                    this.notificationService.showErrorNotification('Error', err.message);
                 }
-            })
+            });
     }
 
     displayModalAddProduct() {

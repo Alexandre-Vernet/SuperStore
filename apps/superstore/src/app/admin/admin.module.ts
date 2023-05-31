@@ -7,18 +7,22 @@ import { ListProductsComponent } from './products/list-products/list-products.co
 import { AddProductComponent } from './products/add-product/add-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OrdersComponent } from './orders/orders.component';
-import { UsersComponent } from './users/users.component';
 import { TabsComponent } from './tabs/tabs.component';
+import { ListUsersComponent } from './users/list-users/list-users.component';
+import { UpdateUserComponent } from './users/update-user/update-user.component';
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    ListProductsComponent,
-    AddProductComponent,
-    OrdersComponent,
-    UsersComponent,
-    TabsComponent,
-  ],
-  imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule],
+    declarations: [
+        AdminComponent,
+        ListProductsComponent,
+        AddProductComponent,
+        OrdersComponent,
+        ListUsersComponent,
+        TabsComponent,
+        UpdateUserComponent,
+        UpdateUserComponent,
+    ],
+    imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule],
 })
-export class AdminModule {}
+export class AdminModule {
+}

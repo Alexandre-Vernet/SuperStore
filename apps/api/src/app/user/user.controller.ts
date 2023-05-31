@@ -1,15 +1,6 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete, HttpCode,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, SignInUserDto } from '@superstore/libs';
-import { UserDto } from '@superstore/libs';
+import { CreateUserDto, SignInUserDto, UserDto } from '@superstore/libs';
 
 @Controller('user')
 export class UserController {
@@ -43,9 +34,9 @@ export class UserController {
         return this.usersService.findOne(+id);
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UserDto) {
-        return this.usersService.update(+id, updateUserDto);
+    @Put(':id')
+    update(@Param('id') id: number, @Body() updateUserDto: UserDto) {
+        return this.usersService.update(id, updateUserDto);
     }
 
     @Delete(':id')

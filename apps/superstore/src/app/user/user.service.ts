@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from "../auth/auth.service";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { AddressDto, CreateAddressDto } from "@superstore/libs";
+import { AddressDto, CreateAddressDto, UserDto } from "@superstore/libs";
 import { environment } from "../../environments/environment";
 
 @Injectable({
@@ -10,12 +10,25 @@ import { environment } from "../../environments/environment";
 })
 export class UserService {
 
+    userUrl = environment.userUrl();
     addressUrl = environment.addressUrl();
 
     constructor(
         private readonly authService: AuthService,
         private readonly http: HttpClient,
     ) {
+    }
+
+    getUsers(): Observable<UserDto[]> {
+        return this.http.get<UserDto[]>(`${ this.userUrl }`);
+    }
+
+    updateUser(user: UserDto): Observable<UserDto> {
+        return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user);
+    }
+
+    deleteUser(userId: number): Observable<void> {
+        return this.http.delete<void>(`${ this.userUrl }/${ userId }`);
     }
 
     createAddress(address: CreateAddressDto): Observable<AddressDto> {
