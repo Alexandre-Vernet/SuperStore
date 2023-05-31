@@ -47,6 +47,7 @@ export class ListProductsComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.products = this.products.filter(p => p.id !== product.id);
+                    this.notificationService.showSuccessNotification('Success', 'Product deleted');
                 },
                 error: (err) => {
                     this.notificationService.showErrorNotification('Error', err.message);

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListProductsComponent } from "./products/list-products/list-products.component";
 import { AdminComponent } from "./admin.component";
 import { ListUsersComponent } from "./users/list-users/list-users.component";
-import { OrdersComponent } from "./orders/orders.component";
+import { ListOrdersComponent } from "./orders/list-orders/list-orders.component";
 
 const routes: Routes = [
     {
@@ -20,7 +20,7 @@ const routes: Routes = [
             },
             {
                 path: 'list-orders',
-                component: OrdersComponent
+                component: ListOrdersComponent
             }
         ]
     },

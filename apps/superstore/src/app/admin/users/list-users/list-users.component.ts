@@ -43,6 +43,7 @@ export class ListUsersComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.users = this.users.filter(u => u.id !== user.id);
+                    this.notificationService.showSuccessNotification('Success', 'User deleted');
                 },
                 error: (err) => {
                     this.notificationService.showErrorNotification('Error', err.message);

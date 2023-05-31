@@ -35,7 +35,12 @@ export class OrderService {
     }
 
     findAll(): Promise<Order[]> {
-        return this.orderRepository.find();
+        // Order by id ASC
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        };
+
+        return this.orderRepository.find(options);
     }
 
     findOne(id: number) {

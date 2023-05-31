@@ -25,7 +25,7 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderService.getOrders()
+        this.orderService.getOrdersPerUser()
             .subscribe((orders) => {
                 orders.map((order) => {
                     this.productService.getProductFromIds(order.productsId)

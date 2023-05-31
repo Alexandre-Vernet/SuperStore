@@ -9,3 +9,9 @@ export class OrderDto extends PartialType(CreateOrderDto) {
 export class OrderWithProductsDto extends OrderDto  {
     products: ProductDto[];
 }
+
+export class OrderWithAddressAndUserDto extends OrderDto  {
+    address: string;
+    user: string;
+    products: ProductDto[];
+}

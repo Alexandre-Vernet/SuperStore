@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto, OrderDto } from '@superstore/libs';
 
@@ -33,9 +33,9 @@ export class OrderController {
         return this.orderService.findOne(+id);
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateOrderDto: OrderDto) {
-        return this.orderService.update(+id, updateOrderDto);
+    @Put(':id')
+    update(@Param('id') id: number, @Body() updateOrderDto: OrderDto) {
+        return this.orderService.update(id, updateOrderDto);
     }
 
     @Delete(':id')
