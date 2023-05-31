@@ -58,8 +58,8 @@
                                     </svg>
                                 </div>
                                 <input
-                                        [(ngModel)]="searchBar"
                                         (input)="searchProducts($event)"
+                                        #search
                                         autocomplete="off"
                                         id="search"
                                         placeholder="Search (CTRL + /)"

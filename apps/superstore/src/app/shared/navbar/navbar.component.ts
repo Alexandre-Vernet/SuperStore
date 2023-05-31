@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CartService } from "../../cart/cart.service";
 import { AppComponent } from "../../app.component";
 import { CartDto, ProductDto, UserDto } from "@superstore/libs";
@@ -15,6 +15,7 @@ import { AuthService } from "../../auth/auth.service";
 export class NavbarComponent implements OnInit {
 
     cart: CartDto[] = [];
+    @ViewChild('search', { static: false }) search!: ElementRef;
     searchBar = '';
     products: ProductDto[] = [];
 
@@ -63,13 +64,14 @@ export class NavbarComponent implements OnInit {
         return new ProductPipe().convertProductNameToSlug(name);
     }
 
+    // Keyboard shortcut CTRL + / to focus on searchBar input
     @HostListener('window:keydown.control.:', ['$event'])
     focusSearchInput(event: KeyboardEvent): void {
         event.preventDefault();
-        document.getElementById('searchBar').focus();
+        this.search.nativeElement.focus();
     }
-    // Keyboard shortcut ESC to close searchBar results
 
+    // Keyboard shortcut ESC to clear search bar
     @HostListener('window:keydown.escape', ['$event'])
     closeSearchResults(): void {
         this.searchBar = '';

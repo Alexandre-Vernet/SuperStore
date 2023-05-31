@@ -40,14 +40,6 @@ export class AddProductComponent implements OnInit {
     }
 
     submitForm() {
-        if (this.editProduct?.id) {
-            return this.updateProduct();
-        } else {
-            return this.addProduct();
-        }
-    }
-
-    addProduct() {
         const {
             name,
             description,
@@ -55,6 +47,24 @@ export class AddProductComponent implements OnInit {
             category
         } = this.formAddProduct.value;
 
+        if (this.editProduct?.id) {
+            return this.updateProduct({
+                name,
+                description,
+                price,
+                category
+            });
+        } else {
+            return this.addProduct({
+                name,
+                description,
+                price,
+                category
+            });
+        }
+    }
+
+    addProduct({ name, description, price, category }) {
         // Check if category is valid
         const isCategoryValid = this.checkCategory(category);
         if (!isCategoryValid) {
@@ -82,14 +92,7 @@ export class AddProductComponent implements OnInit {
         this.closeModal();
     }
 
-    updateProduct() {
-        const {
-            name,
-            description,
-            price,
-            category
-        } = this.formAddProduct.value;
-
+    updateProduct({ name, description, price, category }) {
         // Check if category is valid
         const isCategoryValid = this.checkCategory(category);
         if (!isCategoryValid) {
@@ -109,7 +112,7 @@ export class AddProductComponent implements OnInit {
                 next: () => {
                     this.formAddProduct.reset();
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
-                    this.closeModal()
+                    this.closeModal();
                 },
                 error: (err) => {
                     this.notificationService.showErrorNotification('Error', err.message);
