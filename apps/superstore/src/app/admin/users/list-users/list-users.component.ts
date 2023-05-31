@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { UserService } from "../../../user/user.service";
 import { UserDto } from "@superstore/libs";
 import { NotificationsService } from "../../../shared/notifications/notifications.service";
@@ -13,6 +13,7 @@ export class ListUsersComponent implements OnInit {
 
     users: UserDto[] = [];
     editedUser: UserDto;
+    searchBar = '';
 
     constructor(
         private readonly userService: UserService,
@@ -49,5 +50,12 @@ export class ListUsersComponent implements OnInit {
                     this.notificationService.showErrorNotification('Error', err.message);
                 }
             });
+    }
+
+    // Escape key to clear search bar
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        if (this.searchBar.length > 0) {
+            this.searchBar = '';
+        }
     }
 }

@@ -22,6 +22,7 @@ import { NotificationsComponent } from "./notifications/notifications.component"
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
+        ProductPipe,
     ],
 })
 export class SharedModule {

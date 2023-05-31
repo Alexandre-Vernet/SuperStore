@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderDto, OrderWithAddressAndUserDto } from "@superstore/libs";
 import { NotificationsService } from "../../../shared/notifications/notifications.service";
 import { AdminService } from "../../admin.service";
@@ -15,6 +15,7 @@ export class ListOrdersComponent implements OnInit {
 
     orders: OrderWithAddressAndUserDto[];
     editedOrder: OrderWithAddressAndUserDto;
+    searchBar = '';
 
     constructor(
         private readonly orderService: OrderService,
@@ -71,5 +72,12 @@ export class ListOrdersComponent implements OnInit {
                     this.notificationService.showErrorNotification('Error', err.message);
                 }
             });
+    }
+
+    // Escape key to clear search bar
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        if (this.searchBar.length > 0) {
+            this.searchBar = '';
+        }
     }
 }

@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
 
     cart: CartDto[] = [];
     searchBar = '';
-    searchResults: ProductDto[] = [];
+    products: ProductDto[] = [];
 
     constructor(
         private readonly cartService: CartService,
@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
         this.productService.getProducts(300, 1)
             .subscribe(result => {
-                this.searchResults = result.products;
+                this.products = result.products;
             });
     }
 

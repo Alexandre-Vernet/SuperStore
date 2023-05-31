@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/libs";
 import { ProductService } from "../../../product/product.service";
 import { NotificationsService } from "../../../shared/notifications/notifications.service";
@@ -13,6 +13,7 @@ export class ListProductsComponent implements OnInit {
 
     products: ProductDto[];
     editedProduct: ProductDto;
+    searchBar = '';
 
     constructor(
         private readonly productService: ProductService,
@@ -53,5 +54,12 @@ export class ListProductsComponent implements OnInit {
                     this.notificationService.showErrorNotification('Error', err.message);
                 }
             });
+    }
+
+    // Escape key to clear search bar
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        if (this.searchBar.length > 0) {
+            this.searchBar = '';
+        }
     }
 }
