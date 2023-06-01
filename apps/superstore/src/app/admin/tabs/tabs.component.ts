@@ -29,7 +29,7 @@ export class TabsComponent {
     }
 
     navigateTo(event: Event) {
-        const link: string = (event.target as HTMLInputElement).value;
-        this.router.navigateByUrl(link);
+        const url: string = (event.target as HTMLInputElement).value;
+        this.router.navigateByUrl(url);
     }
 }
