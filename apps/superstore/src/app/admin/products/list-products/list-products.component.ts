@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/libs";
 import { ProductService } from "../../../product/product.service";
-import { NotificationsService } from "../../../shared/notifications/notifications.service";
 import { AdminService } from "../../admin.service";
 
 @Component({
@@ -17,20 +16,14 @@ export class ListProductsComponent implements OnInit {
 
     constructor(
         private readonly productService: ProductService,
-        private readonly notificationService: NotificationsService,
         public adminService: AdminService
     ) {
     }
 
     ngOnInit() {
-        this.productService.getProducts(300, 1)
-            .subscribe({
-                next: ({ products }) => {
-                    this.products = products;
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
+        this.productService.products
+            .subscribe((products) => {
+                this.products = products;
             });
     }
 
@@ -44,16 +37,7 @@ export class ListProductsComponent implements OnInit {
     }
 
     deleteProduct(product: ProductDto) {
-        this.productService.deleteProduct(product.id)
-            .subscribe({
-                next: () => {
-                    this.products = this.products.filter(p => p.id !== product.id);
-                    this.notificationService.showSuccessNotification('Success', 'Product deleted');
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            });
+        this.productService.deleteProduct(product.id).subscribe();
     }
 
     // Escape key to clear search bar

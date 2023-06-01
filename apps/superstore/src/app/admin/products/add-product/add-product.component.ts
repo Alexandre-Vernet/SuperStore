@@ -1,7 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "../../../product/product.service";
-import { NotificationsService } from "../../../shared/notifications/notifications.service";
 import { AdminService } from "../../admin.service";
 import { ProductDto } from "@superstore/libs";
 
@@ -23,7 +22,6 @@ export class AddProductComponent implements OnInit {
 
     constructor(
         private readonly productService: ProductService,
-        private readonly notificationService: NotificationsService,
         private readonly adminService: AdminService
     ) {
     }
@@ -80,15 +78,7 @@ export class AddProductComponent implements OnInit {
             price,
             category: categories
         })
-            .subscribe({
-                next: () => {
-                    this.formAddProduct.reset();
-                    this.notificationService.showSuccessNotification('Success', 'Product added successfully');
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            })
+            .subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 
@@ -102,22 +92,14 @@ export class AddProductComponent implements OnInit {
         // Get all categories separated by comma
         const categories = category.split(',').map(c => c.trim());
 
-        this.productService.updateProduct(this.editProduct.id, {
+        this.productService.updateProduct({
+            id: this.editProduct.id,
             name,
             description,
             price,
             category: categories
         })
-            .subscribe({
-                next: () => {
-                    this.formAddProduct.reset();
-                    this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
-                    this.closeModal();
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            });
+            .subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 

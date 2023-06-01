@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { OrderState, OrderWithAddressAndUserDto } from "@superstore/libs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
-import { NotificationsService } from "../../../shared/notifications/notifications.service";
 import { OrderService } from "../../../order/order.service";
 
 @Component({
@@ -36,7 +35,6 @@ export class EditOrderComponent implements OnInit {
     constructor(
         private readonly adminService: AdminService,
         private readonly orderService: OrderService,
-        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -59,15 +57,7 @@ export class EditOrderComponent implements OnInit {
         const { id: orderId, state } = this.formUpdateOrder.value;
 
         this.orderService.updateOrderState(orderId, state)
-            .subscribe({
-                next: () => {
-                    this.formUpdateOrder.reset();
-                    this.notificationService.showSuccessNotification('Success', 'Order updated successfully');
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            });
+            .subscribe(() => this.formUpdateOrder.reset());
         this.closeModal();
     }
 

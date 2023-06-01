@@ -14,10 +14,11 @@ import { AuthService } from "../../auth/auth.service";
 })
 export class NavbarComponent implements OnInit {
 
-    cart: CartDto[] = [];
     @ViewChild('search', { static: false }) search!: ElementRef;
     searchBar = '';
     products: ProductDto[] = [];
+    user: UserDto;
+    cart: CartDto[] = [];
 
     constructor(
         private readonly cartService: CartService,
@@ -28,9 +29,9 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.getProducts(300, 1)
-            .subscribe(result => {
-                this.products = result.products;
+        this.productService.products
+            .subscribe((products) => {
+                this.products = products;
             });
     }
 

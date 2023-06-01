@@ -50,8 +50,11 @@ export class UserService {
         return this.userRepository.findOne(options);
     }
 
-    update(id: number, updateUserDto: UserDto) {
-        return this.userRepository.update(id, updateUserDto);
+    update(id: number, updateUserDto: UserDto): Promise<UserDto> {
+        return this.userRepository.update(id, updateUserDto)
+            .then(() => {
+                return this.findOne(id);
+            });
     }
 
     remove(id: number) {

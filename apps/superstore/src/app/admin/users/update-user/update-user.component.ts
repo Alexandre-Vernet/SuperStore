@@ -3,7 +3,6 @@ import { UserDto } from "@superstore/libs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { UserService } from "../../../user/user.service";
-import { NotificationsService } from "../../../shared/notifications/notifications.service";
 
 @Component({
     selector: 'superstore-update-user',
@@ -25,7 +24,6 @@ export class UpdateUserComponent implements OnInit {
     constructor(
         private readonly adminService: AdminService,
         private readonly userService: UserService,
-        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -55,15 +53,8 @@ export class UpdateUserComponent implements OnInit {
             email,
             isAdmin
         })
-            .subscribe({
-                next: () => {
-                    this.formUpdateUser.reset();
-                    this.notificationService.showSuccessNotification('Success', 'User updated successfully');
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            });
+            .subscribe(() => this.formUpdateUser.reset());
+
         this.closeModal();
     }
 

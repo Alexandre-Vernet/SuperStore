@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserService } from "../../../user/user.service";
 import { UserDto } from "@superstore/libs";
-import { NotificationsService } from "../../../shared/notifications/notifications.service";
 import { AdminService } from "../../admin.service";
 
 @Component({
@@ -17,20 +16,14 @@ export class ListUsersComponent implements OnInit {
 
     constructor(
         private readonly userService: UserService,
-        private readonly notificationService: NotificationsService,
         public adminService: AdminService
     ) {
     }
 
     ngOnInit() {
-        this.userService.getUsers()
-            .subscribe({
-                next: (users) => {
-                    this.users = users;
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
+        this.userService.users
+            .subscribe((users) => {
+                this.users = users;
             });
     }
 
@@ -40,16 +33,7 @@ export class ListUsersComponent implements OnInit {
     }
 
     deleteUser(user: UserDto) {
-        this.userService.deleteUser(user.id)
-            .subscribe({
-                next: () => {
-                    this.users = this.users.filter(u => u.id !== user.id);
-                    this.notificationService.showSuccessNotification('Success', 'User deleted');
-                },
-                error: (err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                }
-            });
+        this.userService.deleteUser(user.id).subscribe();
     }
 
     // Escape key to clear search bar
