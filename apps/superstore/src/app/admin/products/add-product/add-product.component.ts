@@ -11,7 +11,7 @@ import { ProductDto } from "@superstore/libs";
 })
 export class AddProductComponent implements OnInit {
 
-    @Input() editProduct = {} as ProductDto;
+    @Input() editProduct = {} as ProductDto | null;
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required]),
@@ -46,14 +46,14 @@ export class AddProductComponent implements OnInit {
         } = this.formAddProduct.value;
 
         if (this.editProduct?.id) {
-            return this.updateProduct({
+            this.updateProduct({
                 name,
                 description,
                 price,
                 category
             });
         } else {
-            return this.addProduct({
+            this.addProduct({
                 name,
                 description,
                 price,
@@ -77,8 +77,7 @@ export class AddProductComponent implements OnInit {
             description,
             price,
             category: categories
-        })
-            .subscribe(() => this.formAddProduct.reset());
+        }).subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 
@@ -98,8 +97,7 @@ export class AddProductComponent implements OnInit {
             description,
             price,
             category: categories
-        })
-            .subscribe(() => this.formAddProduct.reset());
+        }).subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 
