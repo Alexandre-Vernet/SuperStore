@@ -14,7 +14,7 @@ import { UserModule } from "./user/user.module";
     declarations: [AppComponent],
     imports: [
         BrowserModule,
-        RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
+        RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking', scrollPositionRestoration: 'enabled' }),
         HttpClientModule,
         SharedModule,
         ProductModule,
