@@ -22,17 +22,10 @@ export class NotificationsComponent implements OnInit {
             .message
             .subscribe((message) => {
                 this.notificationMessage = message;
-                this.hideNotificationAfterDelay(message.duration);
             });
     }
 
     hideNotification() {
-        this.notificationMessage.show = false;
-    }
-
-    hideNotificationAfterDelay(delay: number = 5000) {
-        setTimeout(() => {
-            this.notificationsService.hideNotification();
-        }, delay);
+        this.notificationMessage = null;
     }
 }

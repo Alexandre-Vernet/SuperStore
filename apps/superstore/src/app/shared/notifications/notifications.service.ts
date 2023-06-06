@@ -16,6 +16,10 @@ export class NotificationsService {
             description,
             duration
         });
+
+        setTimeout(() => {
+            this.hideNotification();
+        }, duration);
     }
 
     showErrorNotification(title: string, description: string, duration: number = 7000) {
@@ -26,6 +30,10 @@ export class NotificationsService {
             description,
             duration,
         });
+
+        setTimeout(() => {
+            this.hideNotification();
+        }, duration);
     }
 
     hideNotification() {
