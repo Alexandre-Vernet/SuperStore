@@ -6,7 +6,8 @@ import { ResponsiveNavbarComponent } from './responsive-navbar/responsive-navbar
 import { FooterComponent } from './footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
-import { NotificationsComponent } from "./notifications/notifications.component";
+import { NotificationsComponent } from './notifications/notifications.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
     declarations: [
@@ -14,7 +15,8 @@ import { NotificationsComponent } from "./notifications/notifications.component"
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
-        ProductPipe
+        ProductPipe,
+        LoaderComponent,
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
@@ -22,6 +24,7 @@ import { NotificationsComponent } from "./notifications/notifications.component"
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
+        LoaderComponent,
     ],
 })
 export class SharedModule {
