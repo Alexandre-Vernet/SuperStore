@@ -10,6 +10,7 @@ import { AddressModule } from "./address/address.module";
 import { Address } from "./address/address.entity";
 import { JwtModule } from "@nestjs/jwt";
 import { EmailModule } from "./email/email.module";
+import { AuthModule } from "./auth/auth.module";
 
 const {
     POSTGRES_HOST,
@@ -37,6 +38,7 @@ const {
         UserModule,
         AddressModule,
         EmailModule,
+        AuthModule,
         JwtModule.register({
             global: true,
             secret: JWT_SECRET,
