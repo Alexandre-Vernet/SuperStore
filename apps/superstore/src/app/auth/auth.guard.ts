@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from "./auth.service";
 import { NotificationsService } from "../shared/notifications/notifications.service";
-import { NotificationType } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +16,9 @@ export class AuthGuard {
     ) {
     }
 
-    canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return new Promise((resolve, reject) => {
             // Check for access token
             const accessToken = localStorage.getItem('accessToken');
@@ -32,17 +33,10 @@ export class AuthGuard {
                         }
                     });
             } else {
-                this.notificationsService.message
-                    .emit({
-                        icon: 'error' as NotificationType,
-                        title: 'Unauthorized',
-                        description: 'You must be logged in to access this page.',
-                        show: true
-                    });
+                this.notificationsService.showErrorNotification('Unauthorized', 'You must be logged in to access this page.');
                 this.router.navigate(['/sign-in']);
                 reject(false);
             }
         });
-
     }
 }

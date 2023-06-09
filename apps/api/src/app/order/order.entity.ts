@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { OrderState } from "@superstore/libs";
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {
@@ -14,8 +15,8 @@ export class Order {
     @Column({ name: 'products_id', type: 'integer' })
     productsId: number[];
 
-    @Column()
-    state: string;
+    @Column({ name: 'state', type: 'text'})
+    state: OrderState;
 
     @Column({ name: 'delivery_method' })
     deliveryMethod: string;

@@ -34,7 +34,13 @@ export class UserService {
     }
 
     findAll(): Promise<User[]> {
-        return this.userRepository.find();
+       return this.userRepository.find()
+            .then((users) => {
+                return users.map((user) => {
+                    delete user.password;
+                    return user;
+                });
+            });
     }
 
     findOne(id: number) {
@@ -44,8 +50,11 @@ export class UserService {
         return this.userRepository.findOne(options);
     }
 
-    update(id: number, updateUserDto: UserDto) {
-        return this.userRepository.update(id, updateUserDto);
+    update(id: number, updateUserDto: UserDto): Promise<UserDto> {
+        return this.userRepository.update(id, updateUserDto)
+            .then(() => {
+                return this.findOne(id);
+            });
     }
 
     remove(id: number) {

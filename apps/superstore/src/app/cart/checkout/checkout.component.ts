@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, NotificationType, OrderState } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/libs";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -51,7 +51,7 @@ export class CheckoutComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly orderService: OrderService,
-        private readonly notificationService: NotificationsService,
+        private readonly notificationsService: NotificationsService,
         private router: Router
     ) {
     }
@@ -114,8 +114,8 @@ export class CheckoutComponent implements OnInit {
         return new ProductPipe().convertProductNameToSlug(name);
     }
 
-    updateQuantity(item: CartDto, event) {
-        const quantityUpdated: number = event.target.value;
+    updateQuantity(item: CartDto, event: Event) {
+        const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
     }
 
@@ -222,22 +222,11 @@ export class CheckoutComponent implements OnInit {
             .confirmOrder(order)
             .subscribe({
                 next: () => {
-                    this.notificationService.message.emit({
-                        icon: 'success' as NotificationType,
-                        title: 'Email sent',
-                        description: 'An email has been sent to confirm your order.',
-                        show: true,
-                    });
+                    this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
                     this.router.navigateByUrl('/order/confirm-order')
                 },
-                error: (err) => {
-                    this.notificationService.message.emit({
-                        icon: 'error' as NotificationType,
-                        title: 'An error occurred',
-                        description: `Please try again later. \n${ err.message }`,
-                        show: true,
-                        duration: 7000,
-                    })
+                error: () => {
+                    this.notificationsService.showErrorNotification('Error', 'An error occurred while confirming your order.');
                 }
             });
     }

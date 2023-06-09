@@ -35,7 +35,12 @@ export class OrderService {
     }
 
     findAll(): Promise<Order[]> {
-        return this.orderRepository.find();
+        // Order by id ASC
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        };
+
+        return this.orderRepository.find(options);
     }
 
     findOne(id: number) {
@@ -45,8 +50,9 @@ export class OrderService {
         return this.orderRepository.findOne(options);
     }
 
-    update(id: number, updateOrderDto: OrderDto) {
-        return this.orderRepository.update(id, updateOrderDto);
+    update(id: number, updateOrderDto: OrderDto): Promise<OrderDto> {
+        return this.orderRepository.update(id, updateOrderDto)
+            .then(() => this.findOne(id));
     }
 
     remove(id: number) {

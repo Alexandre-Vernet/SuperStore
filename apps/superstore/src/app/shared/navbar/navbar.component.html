@@ -58,8 +58,8 @@
                                     </svg>
                                 </div>
                                 <input
-                                        [(ngModel)]="searchBar"
                                         (input)="searchProducts($event)"
+                                        #search
                                         autocomplete="off"
                                         id="search"
                                         placeholder="Search (CTRL + /)"
@@ -72,7 +72,7 @@
                                         <div class="relative">
                                             <ul class="mt-70 bg-white border border-gray-100 rounded-md shadow-lg max-h-56 overflow-auto">
                                                 <li class="text-gray-900 hover:bg-gray-50 cursor-pointer px-4 py-2"
-                                                    *ngFor="let product of searchBar | search: searchResults">
+                                                    *ngFor="let product of searchBar | search: products">
                                                     <a (click)="viewProduct(product)">
                                                         <div class="view-product">
                                                             <div class="product-info">
@@ -97,7 +97,7 @@
                 <div class="ml-auto flex items-center">
                     <ng-container *ngIf="getUserConnected(); else noUser">
                         <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                            <a routerLink="/order/order-history"
+                            <a [routerLink]="userIsAdmin() ? '/admin/list-products' : '/order/order-history'"
                                class="text-sm font-medium text-gray-700 hover:text-gray-800">{{ getFirstNameAndLastName() }}</a>
                             <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
                             <a (click)="signOut()" class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">Logout</a>

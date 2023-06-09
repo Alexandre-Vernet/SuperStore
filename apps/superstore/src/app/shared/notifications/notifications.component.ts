@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsDto, NotificationType } from "@superstore/libs";
+import { NotificationsDto } from "@superstore/libs";
 import { NotificationsService } from "./notifications.service";
 
 @Component({
@@ -22,22 +22,10 @@ export class NotificationsComponent implements OnInit {
             .message
             .subscribe((message) => {
                 this.notificationMessage = message;
-                this.hideNotificationAfterDelay(message.duration);
             });
     }
 
     hideNotification() {
-        this.notificationMessage.show = false;
-    }
-
-    hideNotificationAfterDelay(delay: number = 5000) {
-        setTimeout(() => {
-            this.notificationsService.message.next({
-                show: false,
-                icon: '' as NotificationType,
-                title: '',
-                description: '',
-            })
-        }, delay);
+        this.notificationMessage = null;
     }
 }

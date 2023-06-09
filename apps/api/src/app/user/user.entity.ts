@@ -17,6 +17,9 @@ export class User {
     @Column()
     password: string;
 
+    @Column({ name: 'is_admin' })
+    isAdmin: boolean;
+
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;
 

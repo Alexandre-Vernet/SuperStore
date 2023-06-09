@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CartService } from "../../cart/cart.service";
 import { AppComponent } from "../../app.component";
 import { CartDto, ProductDto, UserDto } from "@superstore/libs";
@@ -14,10 +14,11 @@ import { AuthService } from "../../auth/auth.service";
 })
 export class NavbarComponent implements OnInit {
 
-    cart: CartDto[] = [];
+    @ViewChild('search', { static: false }) search!: ElementRef;
     searchBar = '';
-    searchResults: ProductDto[] = [];
+    products: ProductDto[] = [];
     user: UserDto;
+    cart: CartDto[] = [];
 
     constructor(
         private readonly cartService: CartService,
@@ -28,9 +29,9 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.getProducts(300, 1)
-            .subscribe(result => {
-                this.searchResults = result.products;
+        this.productService.products
+            .subscribe((products) => {
+                this.products = products;
             });
     }
 
@@ -44,6 +45,10 @@ export class NavbarComponent implements OnInit {
 
     getFirstNameAndLastName(): string {
         return `${ this.getUserConnected().firstName } ${ this.getUserConnected().lastName }`;
+    }
+
+    userIsAdmin(): boolean {
+        return this.authService.user.isAdmin;
     }
 
     signOut(): void {
@@ -60,13 +65,14 @@ export class NavbarComponent implements OnInit {
         return new ProductPipe().convertProductNameToSlug(name);
     }
 
+    // Keyboard shortcut CTRL + / to focus on searchBar input
     @HostListener('window:keydown.control.:', ['$event'])
     focusSearchInput(event: KeyboardEvent): void {
         event.preventDefault();
-        document.getElementById('searchBar').focus();
+        this.search.nativeElement.focus();
     }
-    // Keyboard shortcut ESC to close searchBar results
 
+    // Keyboard shortcut ESC to clear search bar
     @HostListener('window:keydown.escape', ['$event'])
     closeSearchResults(): void {
         this.searchBar = '';

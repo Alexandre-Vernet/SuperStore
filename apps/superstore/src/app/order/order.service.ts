@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, OrderDto, OrderWithProductsDto } from "@superstore/libs";
-import { Observable, tap } from "rxjs";
+import { CreateOrderDto, OrderDto, OrderWithAddressAndUserDto, OrderWithProductsDto } from "@superstore/libs";
+import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "../cart/cart.service";
 import { AuthService } from "../auth/auth.service";
+import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,12 +13,15 @@ import { AuthService } from "../auth/auth.service";
 export class OrderService {
 
     orderUri = environment.orderUri();
+    orders = new BehaviorSubject([] as OrderWithAddressAndUserDto[])
 
     constructor(
         private http: HttpClient,
         private readonly cartService: CartService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly notificationService: NotificationsService,
     ) {
+        this.getOrders().subscribe();
     }
 
     confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
@@ -27,14 +31,31 @@ export class OrderService {
             )
     }
 
-    getOrders(): Observable<OrderWithProductsDto[]> {
+    getOrders(): Observable<OrderWithAddressAndUserDto[]> {
+        return this.http.get<OrderWithAddressAndUserDto[]>(`${ this.orderUri }`)
+            .pipe(
+                tap((orders) => {
+                    this.orders.next(orders);
+                }),
+                catchError((err) => {
+                    this.notificationService.showErrorNotification('Error', err.message);
+                    throw err;
+                })
+            );
+    }
+
+    getOrdersPerUser(): Observable<OrderWithProductsDto[]> {
         const userId = this.authService.user.id;
         return this.http.get<OrderWithProductsDto[]>(`${ this.orderUri }/user/${ userId }`)
             .pipe(
                 tap((orders) => {
                         orders.map(order => order.createdAt = new Date(order.createdAt));
                     }
-                )
+                ),
+                catchError((err) => {
+                    this.notificationService.showErrorNotification('Error', err.message);
+                    throw err;
+                })
             );
     }
 
@@ -45,5 +66,38 @@ export class OrderService {
     getLastOrder(): Observable<OrderDto> {
         const userId = this.authService.user.id;
         return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);
+    }
+
+    updateOrderState(orderId: number, state: string): Observable<OrderWithAddressAndUserDto> {
+        return this.http.put<OrderWithAddressAndUserDto>(`${ this.orderUri }/${ orderId }`, { state })
+            .pipe(
+                tap((order) => {
+                    const orders = this.orders.value.map((p) => {
+                        if (p.id === order.id) {
+                            return order;
+                        } else {
+                            return p;
+                        }
+                    });
+                    this.notificationService.showSuccessNotification('Success', 'Order updated successfully');
+                    this.orders.next(orders);
+                })
+            );
+    }
+
+    deleteOrder(orderId: number): Observable<void> {
+        return this.http.delete<void>(`${ this.orderUri }/${ orderId }`)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Order deleted successfully');
+                    const order = this.orders.value.filter((p) => p.id !== orderId);
+                    this.orders.next(order);
+                }),
+                catchError((err) => {
+                        this.notificationService.showErrorNotification('Error', err.message);
+                        throw err;
+                    }
+                )
+            );
     }
 }

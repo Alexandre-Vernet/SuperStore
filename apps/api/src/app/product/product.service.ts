@@ -33,8 +33,9 @@ export class ProductService {
         return this.productRepository.findOne(options);
     }
 
-    update(id: number, updateProductDto: ProductDto) {
-        return this.productRepository.update(id, updateProductDto);
+    update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
+        return this.productRepository.update(id, updateProductDto)
+            .then(() => this.findOne(id));
     }
 
     remove(id: number) {
