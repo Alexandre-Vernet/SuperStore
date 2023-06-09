@@ -8,7 +8,6 @@ export class CreateOrderDto {
     deliveryMethod: string;
     paymentMethod: string;
     totalPrice: number;
-    createdAt: Date;
 }
 
 export class DeliveryMethod {

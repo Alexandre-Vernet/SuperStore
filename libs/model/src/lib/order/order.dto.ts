@@ -8,6 +8,7 @@ export class OrderDto extends PartialType(CreateOrderDto) {
 
 export class OrderWithProductsDto extends OrderDto  {
     products: ProductDto[];
+    createdAt: Date;
 }
 
 export class OrderWithAddressAndUserDto extends OrderDto  {

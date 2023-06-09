@@ -169,7 +169,6 @@ export class CheckoutComponent implements OnInit {
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
             totalPrice: this.totalPrice(),
-            createdAt: null,
         };
 
         if (!this.selectedAddress) {
@@ -220,14 +219,6 @@ export class CheckoutComponent implements OnInit {
     confirmOrder(order: CreateOrderDto) {
         this.orderService
             .confirmOrder(order)
-            .subscribe({
-                next: () => {
-                    this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
-                    this.router.navigateByUrl('/order/confirm-order')
-                },
-                error: () => {
-                    this.notificationsService.showErrorNotification('Error', 'An error occurred while confirming your order.');
-                }
-            });
+            .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
     }
 }
