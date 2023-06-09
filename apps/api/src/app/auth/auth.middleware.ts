@@ -10,8 +10,8 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     use(req: Request, res: Response, next: NextFunction) {
-        const bearer = req.headers['authorization'];
-        const token = bearer.split(' ')[1];
+        const bearer = req.headers.authorization;
+        const token = bearer?.split(' ')[1];
 
         if (token) {
             this.authService.signInWithAccessToken(token)
