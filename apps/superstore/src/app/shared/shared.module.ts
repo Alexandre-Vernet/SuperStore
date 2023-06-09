@@ -25,7 +25,6 @@ import { LoaderComponent } from './loader/loader.component';
         FooterComponent,
         NotificationsComponent,
         LoaderComponent,
-        ProductPipe,
     ],
 })
 export class SharedModule {
