@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import { SignInUserDto } from "@superstore/libs";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'superstore-sign-in',
@@ -11,12 +12,13 @@ import { SignInUserDto } from "@superstore/libs";
 export class SignInComponent {
 
     formSignIn = new FormGroup({
-        email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
-        password: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
 
     constructor(
         private readonly authService: AuthService,
+        private router: Router
     ) {
     }
 
@@ -30,6 +32,11 @@ export class SignInComponent {
             email,
             password,
         }
-        this.authService.signIn(user).subscribe();
+        this.authService.signIn(user).subscribe({
+            next: () => this.router.navigateByUrl('/'),
+            error: (err) => {
+                this.formSignIn.setErrors({ error: err.error.message });
+            }
+        });
     }
 }

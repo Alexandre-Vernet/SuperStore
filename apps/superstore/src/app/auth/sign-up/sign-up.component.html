@@ -1,4 +1,4 @@
-<div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <img class="mx-auto h-12 w-auto" src="/assets/icon.png" alt="Logo">
         <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up</h2>
@@ -31,6 +31,10 @@
                         <input formControlName="email" id="email" type="email" required
                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                     </div>
+                    <span *ngIf="formSignUp.hasError('error')"
+                          class="text-red-600 text-xs">
+                        {{ formSignUp.getError('error') }}
+                    </span>
                 </div>
 
                 <div>
@@ -47,23 +51,11 @@
                 </div>
 
                 <div>
-                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm
-                        password</label>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">
+                        Confirm password
+                    </label>
                     <div class="mt-1">
                         <input formControlName="confirmPassword" id="confirm-password" type="password" required
-                               class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                    <span *ngIf="formSignUp.hasError('passwordNotMatch')"
-                          class="text-red-600 text-xs">
-                        Passwords do not match
-                    </span>
-                </div>
-
-                <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700">Confirm
-                        password</label>
-                    <div class="mt-1">
-                        <input formControlName="address" id="address" type="password" required
                                class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <span *ngIf="formSignUp.hasError('passwordNotMatch')"
