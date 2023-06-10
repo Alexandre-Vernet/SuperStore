@@ -4,7 +4,6 @@ import { AddressDto, OrderDto, ProductDto } from "@superstore/libs";
 import { OrderService } from "../order.service";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
-import { Cart } from "../../cart/cart";
 
 @Component({
     selector: 'superstore-confirm-order',
@@ -50,30 +49,5 @@ export class ConfirmOrderComponent implements OnInit {
 
     convertProductNameToSlug(name: string): string {
         return new ProductPipe().convertProductNameToSlug(name);
-    }
-
-    subTotalPrice(): number {
-        let total = 0;
-        this.confirmOrder?.products
-            .map(item => {
-                total += item.price;
-            });
-        return Cart.convertTwoDecimals(total);
-    }
-
-    shippingPrice(): number {
-        if (this.subTotalPrice()) {
-            return Cart.convertTwoDecimals(20);
-        } else {
-            return Cart.convertTwoDecimals(0);
-        }
-    }
-
-    taxes(): number {
-        return Cart.convertTwoDecimals(this.subTotalPrice() * 0.25);
-    }
-
-    totalPrice(): number {
-        return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
     }
 }

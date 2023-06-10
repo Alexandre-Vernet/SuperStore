@@ -30,7 +30,8 @@ export class CheckoutComponent implements OnInit {
             expectedDelivery: '1-2 business days',
             price: 16,
         },
-    ]
+    ];
+    shippingPrice = this.deliveryMethods[0].price;
     selectedAddress: AddressDto;
     selectedDeliveryMethod: DeliveryMethod;
 
@@ -99,6 +100,8 @@ export class CheckoutComponent implements OnInit {
         this.formAddress.patchValue({
             deliveryMethod: deliveryMethod.name,
         });
+
+        this.updateShippingPrice(deliveryMethod.price);
     }
 
     clearFormAddress() {
@@ -131,12 +134,8 @@ export class CheckoutComponent implements OnInit {
         return Cart.convertTwoDecimals(total);
     }
 
-    shippingPrice(): number {
-        if (this.subTotalPrice()) {
-            return Cart.convertTwoDecimals(20);
-        } else {
-            return Cart.convertTwoDecimals(0);
-        }
+    updateShippingPrice(price: number) {
+        this.shippingPrice = price;
     }
 
     taxes(): number {
@@ -144,7 +143,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     totalPrice(): number {
-        return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
+        return Cart.convertTwoDecimals(this.shippingPrice + this.taxes() + this.subTotalPrice());
     }
 
     submitForm() {
@@ -168,8 +167,10 @@ export class CheckoutComponent implements OnInit {
             productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
+            subTotalPrice: this.subTotalPrice(),
+            shippingPrice: this.shippingPrice,
+            taxesPrice: this.taxes(),
             totalPrice: this.totalPrice(),
-            createdAt: null,
         };
 
         if (!this.selectedAddress) {
@@ -220,14 +221,6 @@ export class CheckoutComponent implements OnInit {
     confirmOrder(order: CreateOrderDto) {
         this.orderService
             .confirmOrder(order)
-            .subscribe({
-                next: () => {
-                    this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
-                    this.router.navigateByUrl('/order/confirm-order')
-                },
-                error: () => {
-                    this.notificationsService.showErrorNotification('Error', 'An error occurred while confirming your order.');
-                }
-            });
+            .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
     }
 }

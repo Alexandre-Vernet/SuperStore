@@ -19,7 +19,7 @@ export class OrderService {
         private http: HttpClient,
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly notificationService: NotificationsService,
+        private readonly notificationsService: NotificationsService,
     ) {
         this.getOrders().subscribe();
     }
@@ -27,8 +27,15 @@ export class OrderService {
     confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
-                tap(() => this.cartService.clearCart())
-            )
+                tap(() => {
+                    this.cartService.clearCart();
+                    this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.message);
+                    throw err;
+                })
+            );
     }
 
     getOrders(): Observable<OrderWithAddressAndUserDto[]> {
@@ -38,7 +45,7 @@ export class OrderService {
                     this.orders.next(orders);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationsService.showErrorNotification('Error', err.message);
                     throw err;
                 })
             );
@@ -53,7 +60,7 @@ export class OrderService {
                     }
                 ),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationsService.showErrorNotification('Error', err.message);
                     throw err;
                 })
             );
@@ -79,7 +86,7 @@ export class OrderService {
                             return p;
                         }
                     });
-                    this.notificationService.showSuccessNotification('Success', 'Order updated successfully');
+                    this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
                     this.orders.next(orders);
                 })
             );
@@ -89,12 +96,12 @@ export class OrderService {
         return this.http.delete<void>(`${ this.orderUri }/${ orderId }`)
             .pipe(
                 tap(() => {
-                    this.notificationService.showSuccessNotification('Success', 'Order deleted successfully');
+                    this.notificationsService.showSuccessNotification('Success', 'Order deleted successfully');
                     const order = this.orders.value.filter((p) => p.id !== orderId);
                     this.orders.next(order);
                 }),
                 catchError((err) => {
-                        this.notificationService.showErrorNotification('Error', err.message);
+                        this.notificationsService.showErrorNotification('Error', err.message);
                         throw err;
                     }
                 )

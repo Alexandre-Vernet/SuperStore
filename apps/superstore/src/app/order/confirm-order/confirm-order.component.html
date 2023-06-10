@@ -97,7 +97,7 @@
                 <dl class="space-y-6 border-t border-gray-200 pt-10 text-sm">
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Subtotal</dt>
-                        <dd class="text-gray-700">{{ subTotalPrice() }} €</dd>
+                        <dd class="text-gray-700">{{ confirmOrder?.order.subTotalPrice }} €</dd>
                     </div>
                     <!--                    <div class="flex justify-between">-->
                     <!--                        <dt class="flex font-medium text-gray-900">-->
@@ -108,15 +108,15 @@
                     <!--                    </div>-->
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Shipping</dt>
-                        <dd class="text-gray-700">{{ shippingPrice() }} €</dd>
+                        <dd class="text-gray-700">{{ confirmOrder?.order.shippingPrice }} €</dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Taxes</dt>
-                        <dd class="text-gray-900">{{ taxes() }} €</dd>
+                        <dd class="text-gray-900">{{ confirmOrder?.order.taxesPrice }} €</dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Total</dt>
-                        <dd class="text-gray-900">{{ totalPrice() }} €</dd>
+                        <dd class="text-gray-900">{{ confirmOrder?.order.totalPrice }} €</dd>
                     </div>
                 </dl>
             </div>
