@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import { CreateUserDto } from "@superstore/libs";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'superstore-sign-up',
@@ -11,16 +12,16 @@ import { CreateUserDto } from "@superstore/libs";
 export class SignUpComponent {
 
     formSignUp = new FormGroup({
-        firstName: new FormControl('Test', [Validators.required]),
-        lastName: new FormControl('Zebi', [Validators.required]),
-        email: new FormControl('test@gmail.com', [Validators.required, Validators.email]),
-        password: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
-        confirmPassword: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
-        address: new FormControl('test123', [Validators.required, Validators.minLength(6)]),
+        firstName: new FormControl('', [Validators.required]),
+        lastName: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+        confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
 
     constructor(
         private readonly authService: AuthService,
+        private router: Router
     ) {
     }
 
@@ -31,7 +32,6 @@ export class SignUpComponent {
             email,
             password,
             confirmPassword,
-            address
         } = this.formSignUp.value;
 
         const user: CreateUserDto = {
@@ -39,7 +39,7 @@ export class SignUpComponent {
             lastName,
             email,
             password,
-            address
+            isAdmin: false,
         }
         if (password !== confirmPassword) {
             this.formSignUp.setErrors({ passwordNotMatch: true });
@@ -47,11 +47,9 @@ export class SignUpComponent {
         }
         this.authService.signUp(user)
             .subscribe({
-                next: () => {
-                    console.log('ok');
-                },
+                next: () => this.router.navigateByUrl('/'),
                 error: (err) => {
-                    console.error(err);
+                    this.formSignUp.setErrors({ error: err.error.message });
                 }
             });
     }

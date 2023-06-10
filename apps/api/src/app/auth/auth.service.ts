@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { SignInUserDto } from "@superstore/libs";
+import { CreateUserDto, SignInUserDto } from "@superstore/libs";
 import { FindOneOptions, Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -15,6 +15,23 @@ export class AuthService {
     ) {
     }
 
+    async signUp(createUserDto: CreateUserDto): Promise<User> {
+        const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
+        if (existingUser) {
+            throw new ConflictException('This email is already taken');
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+        if (!hashedPassword) {
+            throw new ConflictException('Something went wrong. Please try again later.');
+        }
+        createUserDto.password = hashedPassword;
+        createUserDto.isAdmin = false;
+
+        return this.userRepository.save(createUserDto);
+    }
+
     signIn(signInUserDto: SignInUserDto) {
         const options: FindOneOptions = {
             where: {
@@ -28,7 +45,7 @@ export class AuthService {
                 }
                 const matchPassword = await bcrypt.compare(signInUserDto.password, user.password);
                 if (!matchPassword) {
-                    throw new ConflictException('Invalid password');
+                    throw new ConflictException('Email or password is incorrect');
                 }
 
                 delete user.password;
