@@ -24,6 +24,15 @@ export class Order {
     @Column({ name: 'payment_method' })
     paymentMethod: string;
 
+    @Column({ name: 'sub_total_price', type: 'decimal' })
+    subTotalPrice: number;
+
+    @Column({ name: 'shipping_price', type: 'decimal' })
+    shippingPrice: number;
+
+    @Column({ name: 'taxes_price', type: 'decimal' })
+    taxesPrice: number;
+
     @Column({ name: 'total_price', type: 'decimal' })
     totalPrice: number;
 

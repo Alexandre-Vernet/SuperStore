@@ -7,6 +7,9 @@ export class CreateOrderDto {
     productsId: number[];
     deliveryMethod: string;
     paymentMethod: string;
+    subTotalPrice: number;
+    shippingPrice: number;
+    taxesPrice: number;
     totalPrice: number;
 }
 

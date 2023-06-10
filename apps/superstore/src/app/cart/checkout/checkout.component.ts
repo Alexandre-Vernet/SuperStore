@@ -168,6 +168,9 @@ export class CheckoutComponent implements OnInit {
             productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
+            subTotalPrice: this.subTotalPrice(),
+            shippingPrice: this.shippingPrice(),
+            taxesPrice: this.taxes(),
             totalPrice: this.totalPrice(),
         };
 
