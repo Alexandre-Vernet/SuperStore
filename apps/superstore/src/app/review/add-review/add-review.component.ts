@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ReviewService } from "../review.service";
 import { AuthService } from "../../auth/auth.service";
@@ -38,5 +38,10 @@ export class AddReviewComponent {
 
     closeModal() {
         this.reviewService.closeAddReviewModal();
+    }
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModal();
     }
 }
