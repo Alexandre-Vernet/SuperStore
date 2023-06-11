@@ -35,7 +35,9 @@
                             <p class="text-lg text-gray-900 sm:text-xl">{{product?.price}} €</p>
 
                             <ng-container *ngIf="reviews">
-                                <superstore-review-stars [reviews]="reviews"></superstore-review-stars>
+                                <div class="ml-4 border-l border-gray-300 pl-4">
+                                    <superstore-review-stars [reviews]="reviews"></superstore-review-stars>
+                                </div>
                             </ng-container>
                         </div>
 
@@ -148,7 +150,8 @@
                 </div>
             </div>
         </div>
-
-
     </main>
 </div>
+<ng-container *ngIf="reviews">
+    <superstore-review [reviews]="reviews"></superstore-review>
+</ng-container>
