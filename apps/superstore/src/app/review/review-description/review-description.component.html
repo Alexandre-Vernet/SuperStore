@@ -15,6 +15,9 @@
                             <h4 class="text-sm font-bold text-gray-900">
                                 {{ user?.firstName }} {{ user?.lastName }}
                             </h4>
+                            <p class="text-sm text-gray-600">
+                                <time datetime="2020-08-25">{{ review.createdAt | date }}</time>
+                            </p>
                             <div class="mt-1 flex items-center">
                                 <superstore-review-stars [review]="review"></superstore-review-stars>
                             </div>
