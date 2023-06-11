@@ -9,12 +9,12 @@ import { Review } from "./review.entity";
 export class ReviewService {
     constructor(
         @InjectRepository(Review)
-        private readonly productRepository: Repository<Review>
+        private readonly reviewRepository: Repository<Review>
     ) {
     }
 
-    create(createReviewDto: CreateReviewDto) {
-        return this.productRepository.save(createReviewDto);
+    create(createReviewDto: CreateReviewDto): Promise<CreateReviewDto> {
+        return this.reviewRepository.save(createReviewDto);
     }
 
 
@@ -23,7 +23,7 @@ export class ReviewService {
             where: { productId },
         };
 
-        return this.productRepository.find(options);
+        return this.reviewRepository.find(options);
     }
 
 
@@ -31,18 +31,18 @@ export class ReviewService {
         const options = {
             where: { id },
         }
-        return this.productRepository.findOne(options);
+        return this.reviewRepository.findOne(options);
     }
 
     update(id: number, updateReviewDto: ReviewDto) {
-        return this.productRepository.update(id, updateReviewDto);
+        return this.reviewRepository.update(id, updateReviewDto);
     }
 
     remove(id: number) {
-        return this.productRepository.delete(id);
+        return this.reviewRepository.delete(id);
     }
 
     findReviewsForAllProducts() {
-        return this.productRepository.find();
+        return this.reviewRepository.find();
     }
 }

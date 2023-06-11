@@ -4,6 +4,8 @@ import { ReviewComponent } from './review.component';
 import { ReviewStarsComponent } from './review-stars/review-stars.component';
 import { ReviewStatsComponent } from './review-stats/review-stats.component';
 import { ReviewDescriptionComponent } from './review-description/review-description.component';
+import { AddReviewComponent } from './add-review/add-review.component';
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -11,9 +13,10 @@ import { ReviewDescriptionComponent } from './review-description/review-descript
         ReviewStarsComponent,
         ReviewStatsComponent,
         ReviewDescriptionComponent,
+        AddReviewComponent,
     ],
-    imports: [CommonModule],
-    exports: [ReviewComponent, ReviewStarsComponent],
+  imports: [CommonModule, ReactiveFormsModule],
+    exports: [ReviewComponent, ReviewStarsComponent, AddReviewComponent],
 })
 export class ReviewModule {
 }

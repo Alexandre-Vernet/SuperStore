@@ -5,6 +5,7 @@ import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
+import { ReviewService } from "../../review/review.service";
 
 @Component({
     selector: 'superstore-order-history',
@@ -20,7 +21,8 @@ export class OrderHistoryComponent implements OnInit {
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
         private readonly cartService: CartService,
-        private readonly notificationsService: NotificationsService
+        private readonly notificationsService: NotificationsService,
+        readonly reviewService: ReviewService,
     ) {
     }
 
@@ -40,6 +42,10 @@ export class OrderHistoryComponent implements OnInit {
 
     toggleOrderOption() {
         this.displayOrderOptions = !this.displayOrderOptions;
+    }
+
+    toggleAddReviewModal() {
+        this.reviewService.openAddReviewModal();
     }
 
     @HostListener('document:click', ['$event'])
