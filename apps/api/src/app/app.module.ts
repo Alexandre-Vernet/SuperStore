@@ -11,6 +11,8 @@ import { Address } from "./address/address.entity";
 import { JwtModule } from "@nestjs/jwt";
 import { EmailModule } from "./email/email.module";
 import { AuthModule } from "./auth/auth.module";
+import { Review } from "./review/review.entity";
+import { ReviewModule } from "./review/review.module";
 
 const {
     POSTGRES_HOST,
@@ -30,7 +32,7 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, User, Address],
+            entities: [Product, Order, User, Address, Review],
             ssl: true,
         }),
         ProductModule,
@@ -39,6 +41,7 @@ const {
         AddressModule,
         EmailModule,
         AuthModule,
+        ReviewModule,
         JwtModule.register({
             global: true,
             secret: JWT_SECRET,
