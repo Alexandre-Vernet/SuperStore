@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartDto, ProductDto } from "@superstore/libs";
+import { CartDto } from "@superstore/libs";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +15,8 @@ export class CartService {
         }
     }
 
-    addToCart(product: ProductDto) {
+    addToCart(productId: number) {
+        const product = this.cart.find(cartProduct => cartProduct.id === productId);
         // Check if the product is already in the cart
         const productInCart = this.cart.find(cartProduct => cartProduct.id === product.id);
         if (productInCart) {

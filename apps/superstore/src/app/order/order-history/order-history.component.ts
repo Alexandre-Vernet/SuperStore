@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
-import { OrderState, OrderWithProductsDto, ProductDto } from "@superstore/libs";
+import { OrderState, OrderWithProductsDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
@@ -60,8 +60,8 @@ export class OrderHistoryComponent implements OnInit {
         return `assets/order-state/${ state.toLowerCase() }.png`;
     }
 
-    addToCart(product: ProductDto) {
-        this.cartService.addToCart(product);
+    addToCart(productId: number) {
+        this.cartService.addToCart(productId);
         this.notificationsService.showSuccessNotification('Product added to cart', '${ product.name } has been added to your cart.');
     }
 }

@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { CreateReviewDto, ReviewDto } from "@superstore/libs";
+import { InjectRepository } from "@nestjs/typeorm";
+import { FindManyOptions, Repository } from "typeorm";
+import { Review } from "./review.entity";
+
 
 @Injectable()
 export class ReviewService {
-  create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
-  }
+    constructor(
+        @InjectRepository(Review)
+        private readonly productRepository: Repository<Review>
+    ) {
+    }
 
-  findAll() {
-    return `This action returns all review`;
-  }
+    create(createReviewDto: CreateReviewDto) {
+        return this.productRepository.save(createReviewDto);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} review`;
-  }
 
-  update(id: number, updateReviewDto: UpdateReviewDto) {
-    return `This action updates a #${id} review`;
-  }
+    findReviewsForProduct(productId: number) {
+        const options: FindManyOptions = {
+            where: { productId },
+        };
 
-  remove(id: number) {
-    return `This action removes a #${id} review`;
-  }
+        return this.productRepository.find(options);
+    }
+
+
+    findOne(id: number) {
+        const options = {
+            where: { id },
+        }
+        return this.productRepository.findOne(options);
+    }
+
+    update(id: number, updateReviewDto: ReviewDto) {
+        return this.productRepository.update(id, updateReviewDto);
+    }
+
+    remove(id: number) {
+        return this.productRepository.delete(id);
+    }
 }
