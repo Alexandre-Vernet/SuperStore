@@ -41,4 +41,8 @@ export class ReviewService {
     remove(id: number) {
         return this.productRepository.delete(id);
     }
+
+    findReviewsForAllProducts() {
+        return this.productRepository.find();
+    }
 }

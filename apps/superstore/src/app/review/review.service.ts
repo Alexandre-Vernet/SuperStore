@@ -19,4 +19,8 @@ export class ReviewService {
     getReviewsForProduct(productId: number): Observable<ReviewDto[]> {
         return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product/${ productId }`);
     }
+
+    getReviewsForAllProducts(): Observable<ReviewDto[]> {
+        return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product`);
+    }
 }
