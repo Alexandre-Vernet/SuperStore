@@ -62,6 +62,6 @@ export class OrderHistoryComponent implements OnInit {
 
     addToCart(productId: number) {
         this.cartService.addToCart(productId);
-        this.notificationsService.showSuccessNotification('Product added to cart', '${ product.name } has been added to your cart.');
+        this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
     }
 }
