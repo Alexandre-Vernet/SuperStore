@@ -7,8 +7,9 @@ import { OrderHistoryComponent } from './order-history/order-history.component';
 import { ReviewModule } from "../review/review.module";
 
 @NgModule({
-  declarations: [OrderHistoryComponent],
+    declarations: [OrderHistoryComponent],
     imports: [CommonModule, OrderRoutingModule, ReviewModule],
-  providers: [AuthGuard],
+    providers: [AuthGuard],
 })
-export class OrderModule {}
+export class OrderModule {
+}

@@ -13,7 +13,6 @@ export class ReviewService {
     reviewUrl = environment.reviewUrl();
     showModalAddReview: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-
     constructor(
         private readonly http: HttpClient,
         private readonly notificationService: NotificationsService,
