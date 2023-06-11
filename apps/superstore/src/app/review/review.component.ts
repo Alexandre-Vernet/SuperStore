@@ -22,12 +22,10 @@ export class ReviewComponent implements OnInit {
         this.reviews.forEach(review => {
             this.getUserFromId(review.userId);
         });
-
     }
 
     getUserFromId(userId: number) {
         this.userService.getUser(userId)
             .subscribe((user) => this.user = user)
     }
-
 }

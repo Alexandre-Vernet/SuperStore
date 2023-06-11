@@ -7,14 +7,26 @@ import { ReviewDto } from "@superstore/libs";
     styleUrls: ['./review-stars.component.scss'],
 })
 export class ReviewStarsComponent implements OnInit {
+    @Input() review = {} as ReviewDto;
     @Input() reviews: ReviewDto[];
     stars: number[] = [1, 2, 3, 4, 5];
 
     ngOnInit() {
-        this.getAverageRating();
+        this.getStarsForOneReview();
+        this.getStarsForAllReview();
     }
 
-    getAverageRating() {
+    getStarsForOneReview() {
+        this.stars = this.stars
+            .map((star, index) => {
+                if (index < this.review.rating) {
+                    return 1;
+                }
+                return 0;
+            });
+    }
+
+    getStarsForAllReview() {
         if (!this.reviews || this.reviews.length === 0) {
             return;
         }
@@ -38,6 +50,6 @@ export class ReviewStarsComponent implements OnInit {
     }
 
     getTotalReviews() {
-        return this.reviews.length;
+        return this.reviews?.length;
     }
 }
