@@ -73,7 +73,10 @@ export class ListProductsComponent implements OnInit {
 
     updateOrderBy($event: Event) {
         const orderBy = (<HTMLInputElement>$event.target).value;
-        this.products = this.productService.sortProducts(this.products, orderBy);
+        this.productService.sortProducts(this.products, orderBy)
+            .then(products => {
+                this.products = products;
+            });
     }
 
     getPage(page: number) {

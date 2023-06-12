@@ -5,6 +5,7 @@ import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
+import { ReviewService } from "../../review/review.service";
 
 @Component({
     selector: 'superstore-order-history',
@@ -12,15 +13,16 @@ import { NotificationsService } from "../../shared/notifications/notifications.s
     styleUrls: ['./order-history.component.scss'],
 })
 export class OrderHistoryComponent implements OnInit {
-
     orders: OrderWithProductsDto[];
     displayOrderOptions = false;
+    productToReview: ProductDto;
 
     constructor(
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
         private readonly cartService: CartService,
-        private readonly notificationsService: NotificationsService
+        private readonly notificationsService: NotificationsService,
+        readonly reviewService: ReviewService,
     ) {
     }
 
@@ -42,6 +44,11 @@ export class OrderHistoryComponent implements OnInit {
         this.displayOrderOptions = !this.displayOrderOptions;
     }
 
+    toggleAddReviewModal(product: ProductDto) {
+        this.productToReview = product;
+        this.reviewService.openAddReviewModal();
+    }
+
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {
         const clickedElement = event.target as HTMLElement;
@@ -60,8 +67,8 @@ export class OrderHistoryComponent implements OnInit {
         return `assets/order-state/${ state.toLowerCase() }.png`;
     }
 
-    addToCart(product: ProductDto) {
-        this.cartService.addToCart(product);
-        this.notificationsService.showSuccessNotification('Product added to cart', '${ product.name } has been added to your cart.');
+    addToCart(productId: number) {
+        this.cartService.addToCart(productId);
+        this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
     }
 }

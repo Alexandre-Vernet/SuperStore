@@ -6,4 +6,5 @@ export const environment = {
     authUrl: () => `${ environment.backendUrl }/user`,
     addressUrl: () => `${ environment.backendUrl }/address`,
     userUrl: () => `${ environment.backendUrl }/user`,
+    reviewUrl: () => `${ environment.backendUrl }/review`,
 };

@@ -3,7 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { CartService } from "../../cart/cart.service";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto, ReviewDto } from "@superstore/libs";
+import { ReviewService } from "../../review/review.service";
 
 @Component({
     selector: 'superstore-view-product',
@@ -12,11 +13,13 @@ import { ProductDto } from "@superstore/libs";
 })
 export class ViewProductComponent implements OnInit {
     product: ProductDto;
+    reviews: ReviewDto[];
 
     constructor(
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
-        private readonly cartService: CartService
+        private readonly cartService: CartService,
+        private readonly reviewService: ReviewService
     ) {
     }
 
@@ -30,14 +33,22 @@ export class ViewProductComponent implements OnInit {
         this.getProductFromSlug(productSlug)
             .subscribe(product => {
                 this.product = product;
+
+
+                this.reviewService
+                    .getReviewsForProduct(product.id)
+                    .subscribe(reviews => {
+                        this.reviews = reviews;
+                    });
             });
+
     }
 
     getProductFromSlug(productSlug: string): Observable<ProductDto> {
         return this.productService.getProductFromSlug(productSlug);
     }
 
-    addToCart(product: ProductDto) {
-        this.cartService.addToCart(product);
+    addToCart(productId: number) {
+        this.cartService.addToCart(productId);
     }
 }

@@ -1,6 +1,9 @@
 export * from './lib/cart/cart.dto';
 export * from './lib/cart/create-cart.dto';
 
+export * from './lib/review/review.dto';
+export * from './lib/review/create-review.dto';
+
 export * from './lib/notifications/notifications.dto';
 
 export * from './lib/order/order.dto';

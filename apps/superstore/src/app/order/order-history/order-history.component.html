@@ -67,12 +67,12 @@
                                                    tabindex="-1" id="menu-0-item-0">
                                                     View
                                                 </a>
-<!--                                                <a href="#"-->
-<!--                                                   class="hover:bg-gray-100 hover:text-gray-900 block px-4 py-2 text-sm"-->
-<!--                                                   role="menuitem"-->
-<!--                                                   tabindex="-1" id="menu-0-item-1">-->
-<!--                                                    Invoice-->
-<!--                                                </a>-->
+                                                <!--                                                <a href="#"-->
+                                                <!--                                                   class="hover:bg-gray-100 hover:text-gray-900 block px-4 py-2 text-sm"-->
+                                                <!--                                                   role="menuitem"-->
+                                                <!--                                                   tabindex="-1" id="menu-0-item-1">-->
+                                                <!--                                                    Invoice-->
+                                                <!--                                                </a>-->
                                             </div>
                                         </div>
                                     </div>
@@ -127,15 +127,25 @@
                                             </div>
 
                                             <div class="mt-6 flex items-center space-x-4 divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
-                                                <div class="flex flex-1 justify-center">
-                                                    <a routerLink="/product/{{ convertProductNameToSlug(product.name) }}"
-                                                       class="whitespace-nowrap text-indigo-600 hover:text-indigo-500">View
-                                                        product</a>
+                                                <div *ngIf="order.state === 'DELIVERED'"
+                                                     class="flex flex-1 justify-center pl-4">
+                                                    <span
+                                                            (click)="toggleAddReviewModal(product)"
+                                                            class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
+                                                        Add a review
+                                                    </span>
                                                 </div>
                                                 <div class="flex flex-1 justify-center pl-4">
-                                                    <a (click)="addToCart(product)"
-                                                       class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">Buy
-                                                        again</a>
+                                                    <a routerLink="/product/{{ convertProductNameToSlug(product.name) }}"
+                                                       class="whitespace-nowrap text-indigo-600 hover:text-indigo-500">
+                                                        View product
+                                                    </a>
+                                                </div>
+                                                <div class="flex flex-1 justify-center pl-4">
+                                                    <a (click)="addToCart(product.id)"
+                                                       class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
+                                                        Buy again
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,3 +164,6 @@
         </section>
     </main>
 </div>
+
+
+<superstore-add-review *ngIf="reviewService.showModalAddReview.value" [productToReview]="productToReview"></superstore-add-review>

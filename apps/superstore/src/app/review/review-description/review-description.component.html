@@ -1,0 +1,50 @@
+<h3 class="sr-only">Recent reviews</h3>
+
+<div class="flow-root">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ng-container *ngFor="let review of reviews | slice:0:10">
+            <div class="-my-12 divide-y divide-gray-200">
+                <div class="py-12">
+                    <div class="flex items-center">
+                        <img
+                                src="assets/icons/profile-user.png"
+                                [alt]="'userId ' + user?.id"
+                                class="h-10 w-10 rounded-full"
+                        />
+                        <div class="ml-4">
+                            <h4 class="text-sm font-bold text-gray-900">
+                                {{ user?.firstName }} {{ user?.lastName }}
+                            </h4>
+                            <p class="text-sm text-gray-600">
+                                <time datetime="2020-08-25">{{ review.createdAt | date }}</time>
+                            </p>
+                            <div class="mt-1 flex items-center">
+                                <superstore-review-stars [review]="review"></superstore-review-stars>
+                            </div>
+                            <p class="sr-only">5 out of 5 stars</p>
+                        </div>
+
+                        <div *ngIf="userLogged?.id === review.userId"
+                             class="ml-10 gap-4">
+                            <button type="button"
+                                    (click)="deleteReview(review.id)"
+                                    class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Remove</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 space-y-6 text-base italic text-gray-600">
+                        <p>
+                            {{ review.description | titlecase }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
