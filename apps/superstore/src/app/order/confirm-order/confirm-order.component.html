@@ -4,7 +4,8 @@
         <div class="max-w-xl">
             <h1 class="text-base font-medium text-indigo-600">Thank you!</h1>
             <p class="mt-2 text-4xl font-bold tracking-tight">It's on the way!</p>
-            <p class="mt-2 text-base text-gray-500">Your order #{{ confirmOrder?.order.id }} has shipped and will be with you soon.</p>
+            <p class="mt-2 text-base text-gray-500">Your order #{{ confirmOrder?.order.id }} has shipped and will be
+                with you soon.</p>
 
             <dl class="mt-12 text-sm font-medium">
                 <dt class="text-gray-900">Tracking number</dt>
@@ -97,7 +98,9 @@
                 <dl class="space-y-6 border-t border-gray-200 pt-10 text-sm">
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Subtotal</dt>
-                        <dd class="text-gray-700">{{ confirmOrder?.order.subTotalPrice }} €</dd>
+                        <dd class="text-gray-700">
+                            {{ confirmOrder?.order.subTotalPrice | convertCurrency }}
+                        </dd>
                     </div>
                     <!--                    <div class="flex justify-between">-->
                     <!--                        <dt class="flex font-medium text-gray-900">-->
@@ -108,15 +111,21 @@
                     <!--                    </div>-->
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Shipping</dt>
-                        <dd class="text-gray-700">{{ confirmOrder?.order.shippingPrice }} €</dd>
+                        <dd class="text-gray-700">
+                            {{ confirmOrder?.order.shippingPrice | convertCurrency }}
+                        </dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Taxes</dt>
-                        <dd class="text-gray-900">{{ confirmOrder?.order.taxesPrice }} €</dd>
+                        <dd class="text-gray-900">
+                            {{ confirmOrder?.order.taxesPrice | convertCurrency }}
+                        </dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Total</dt>
-                        <dd class="text-gray-900">{{ confirmOrder?.order.totalPrice }} €</dd>
+                        <dd class="text-gray-900">
+                            {{ confirmOrder?.order.totalPrice  | convertCurrency }}
+                        </dd>
                     </div>
                 </dl>
             </div>

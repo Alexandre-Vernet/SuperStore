@@ -33,7 +33,8 @@
                                         </div>
                                         <div>
                                             <dt class="font-medium text-gray-900">Total amount</dt>
-                                            <dd class="mt-1 font-medium text-gray-900">{{ order.totalPrice }} €</dd>
+                                            <dd class="mt-1 font-medium text-gray-900">
+                                                {{ order.totalPrice | convertCurrency }}</dd>
                                         </div>
                                     </dl>
 
@@ -166,4 +167,5 @@
 </div>
 
 
-<superstore-add-review *ngIf="reviewService.showModalAddReview.value" [productToReview]="productToReview"></superstore-add-review>
+<superstore-add-review *ngIf="reviewService.showModalAddReview.value"
+                       [productToReview]="productToReview"></superstore-add-review>
