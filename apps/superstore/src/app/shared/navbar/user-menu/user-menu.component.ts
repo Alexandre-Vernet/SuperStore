@@ -28,11 +28,11 @@ export class UserMenuComponent {
         return this.authService.user.isAdmin;
     }
 
-    redirectTo(path: string): void {
+    redirectTo(path: string) {
         this.router.navigateByUrl(path);
     }
 
-    signOut(): void {
+    signOut() {
         this.authService.signOut();
         this.router.navigateByUrl('/');
     }

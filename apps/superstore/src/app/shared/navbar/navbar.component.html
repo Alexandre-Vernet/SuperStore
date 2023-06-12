@@ -45,9 +45,10 @@
                 </div>
 
                 <div class="ml-auto flex items-center">
-                    <superstore-user-menu></superstore-user-menu>
-
-                    <superstore-change-currency></superstore-change-currency>
+                    <ng-container *ngIf="getScreenWidth() > 1024">
+                        <superstore-user-menu></superstore-user-menu>
+                        <superstore-change-currency></superstore-change-currency>
+                    </ng-container>
 
                     <superstore-cart-icon></superstore-cart-icon>
                 </div>

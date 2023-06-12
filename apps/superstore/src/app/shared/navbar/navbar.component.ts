@@ -15,4 +15,8 @@ export class NavbarComponent {
     toggleResponsiveMenu(): void {
         AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;
     }
+
+    getScreenWidth(): number {
+        return window.innerWidth;
+    }
 }
