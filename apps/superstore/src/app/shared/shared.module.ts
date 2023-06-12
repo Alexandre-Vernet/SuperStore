@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { LoaderComponent } from './loader/loader.component';
+import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { LoaderComponent } from './loader/loader.component';
         NotificationsComponent,
         ProductPipe,
         LoaderComponent,
+        SearchBarComponent,
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
