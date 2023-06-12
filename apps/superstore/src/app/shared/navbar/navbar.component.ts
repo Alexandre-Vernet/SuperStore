@@ -20,6 +20,8 @@ export class NavbarComponent implements OnInit {
     user: UserDto;
     cart: CartDto[] = [];
 
+    showDropdown = false;
+
     constructor(
         private readonly cartService: CartService,
         private readonly productService: ProductService,
@@ -39,6 +41,10 @@ export class NavbarComponent implements OnInit {
         AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;
     }
 
+    toggleDropdown() {
+        this.showDropdown = !this.showDropdown;
+    }
+
     getUserConnected(): UserDto {
         return this.authService.user;
     }
@@ -49,6 +55,11 @@ export class NavbarComponent implements OnInit {
 
     userIsAdmin(): boolean {
         return this.authService.user.isAdmin;
+    }
+
+    redirectTo(path: string): void {
+        this.router.navigateByUrl(path)
+            .then(() => this.showDropdown = false);
     }
 
     signOut(): void {
