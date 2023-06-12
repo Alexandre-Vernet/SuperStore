@@ -40,6 +40,19 @@ export class ReviewService {
         return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product`);
     }
 
+    deleteReview(reviewId: number): Observable<ReviewDto> {
+        return this.http.delete<ReviewDto>(`${ this.reviewUrl }/${ reviewId }`)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
+                }),
+                catchError((err) => {
+                    this.notificationService.showErrorNotification('Error', err.message);
+                    throw err;
+                })
+            );
+    }
+
     openAddReviewModal() {
         this.showModalAddReview.next(true);
     }
