@@ -82,6 +82,10 @@ export class ProductService {
         return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`);
     }
 
+    getProductFromId(productId: number): Observable<ProductDto> {
+        return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`);
+    }
+
     getProductFromIds(ids: number[]): Observable<ProductDto[]> {
         return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids });
     }
