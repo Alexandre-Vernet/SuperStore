@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartDto } from "@superstore/libs";
+import { CartDto, ProductSizeDto } from "@superstore/libs";
 import { ProductService } from "../product/product.service";
 
 @Injectable({
@@ -18,7 +18,7 @@ export class CartService {
         }
     }
 
-    addToCart(productId: number) {
+    addToCart(productId: number, size: ProductSizeDto) {
         this.productService.getProductFromId(productId)
             .subscribe((product) => {
                 // Check if the product is already in the cart
@@ -31,7 +31,8 @@ export class CartService {
 
                 this.cart.push({
                     ...product,
-                    quantity: 1
+                    quantity: 1,
+                    size
                 });
                 this.updateCartLocalStorage();
             });

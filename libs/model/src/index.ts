@@ -13,6 +13,7 @@ export * from './lib/order/state.dto';
 
 export * from './lib/product/product.dto';
 export * from './lib/product/create-product.dto';
+export * from './lib/product/product-size.dto';
 
 
 export * from './lib/user/user.dto';
