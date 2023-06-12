@@ -7,7 +7,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 @Injectable({
     providedIn: 'root'
 })
-export class AuthGuard {
+export class OptionalAuthGuard {
 
     constructor(
         private readonly authService: AuthService,
@@ -26,14 +26,11 @@ export class AuthGuard {
                     .subscribe({
                         next: () => resolve(true),
                         error: () => {
+                            this.notificationsService.showErrorNotification('Unauthorized', 'Your session has expired. Please log in again.');
                             this.router.navigate(['/sign-in']);
                             reject(false);
                         }
                     });
-            } else {
-                this.notificationsService.showErrorNotification('Unauthorized', 'You must be logged in to access this page.');
-                this.router.navigate(['/sign-in']);
-                reject(false);
             }
         });
     }

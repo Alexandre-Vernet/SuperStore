@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.component";
+import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.comp
         ReactiveFormsModule,
         SharedModule,
     ],
+    providers: [OptionalAuthGuard]
 })
 export class CartModule {
 }
