@@ -12,6 +12,7 @@ import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
 import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
 import { CurrencyPipe } from './currency/currency.pipe';
 import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
+import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
         ProductPipe,
         CurrencyPipe,
         UserMenuComponent,
+        CartIconComponent,
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
