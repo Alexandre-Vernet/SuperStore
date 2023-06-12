@@ -14,6 +14,7 @@ import { EditOrderComponent } from './orders/edit-order/edit-order.component';
 import { OrdersPipe } from "./orders/orders.pipe";
 import { ProductsPipe } from "./products/products.pipe";
 import { UsersPipe } from "./users/users.pipe";
+import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
     declarations: [
@@ -30,7 +31,7 @@ import { UsersPipe } from "./users/users.pipe";
         ProductsPipe,
         UsersPipe
     ],
-    imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule, FormsModule],
+    imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule, FormsModule, SharedModule],
 })
 export class AdminModule {
 }

@@ -33,7 +33,7 @@
                             <dl class="flex space-x-4 divide-x divide-gray-200 text-sm sm:space-x-6">
                                 <div class="flex pl-4 sm:pl-6">
                                     <dt class="font-medium text-gray-900">Price</dt>
-                                    <dd class="ml-2 text-gray-700">{{product?.price }} €</dd>
+                                    <dd class="ml-2 text-gray-700">{{product?.price | convertCurrency }}</dd>
                                 </div>
                             </dl>
                         </div>

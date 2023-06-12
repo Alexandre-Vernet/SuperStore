@@ -76,7 +76,7 @@
                                 # {{ product.id }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ product.name }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ product.description | slice:0:30 }}</td>
-                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ product.price }}
+                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ product.price | convertCurrency }}
                                 €
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ product.category }}</td>

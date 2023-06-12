@@ -32,7 +32,7 @@
                         <h2 id="information-heading" class="sr-only">Product information</h2>
 
                         <div class="flex items-center">
-                            <p class="text-lg text-gray-900 sm:text-xl">{{product?.price}} €</p>
+                            <p class="text-lg text-gray-900 sm:text-xl">{{ product?.price | convertCurrency }}</p>
 
                             <ng-container *ngIf="reviews">
                                 <div class="ml-4 border-l border-gray-300 pl-4">
@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="mt-4 space-y-6">
-                            <p class="text-base text-gray-500">{{product?.description}}</p>
+                            <p class="text-base text-gray-500">{{ product?.description }}</p>
                         </div>
 
                         <div class="mt-6 flex items-center">

@@ -108,7 +108,7 @@
                                                     <a routerLink="/product/{{ convertProductNameToSlug(product.name) }}">
                                                         <h5>{{ product.name }}</h5>
                                                     </a>
-                                                    <p class="mt-2 sm:mt-0">{{ product.price }} €</p>
+                                                    <p class="mt-2 sm:mt-0">{{ product.price | convertCurrency }}</p>
                                                 </div>
                                                 <p class="hidden text-gray-500 sm:mt-2 sm:block">Are you a minimalist
                                                     looking for a compact carry option? The Micro Backpack is the

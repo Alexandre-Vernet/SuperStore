@@ -32,6 +32,7 @@ import { CurrencyPipe } from "./currency/currency.pipe";
         FooterComponent,
         NotificationsComponent,
         LoaderComponent,
+        CurrencyPipe,
     ],
 })
 export class SharedModule {

@@ -30,7 +30,7 @@
                                     <div class="view-product">
                                         <div class="product-info">
                                             <span>{{ product.name }}</span>
-                                            <span>{{ product.price }} €</span>
+                                            <span>{{ product.price | convertCurrency }}</span>
                                         </div>
                                         <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
                                              [alt]="product.name"

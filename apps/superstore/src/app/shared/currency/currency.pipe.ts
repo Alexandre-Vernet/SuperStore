@@ -1,11 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OrderWithAddressAndUserDto } from "@superstore/libs";
 
 @Pipe({
-    name: 'searchOrders'
+    name: 'convertCurrency',
+    pure: false
 })
 export class CurrencyPipe implements PipeTransform {
-    transform(search: string, orders: OrderWithAddressAndUserDto[]) {
-
+    transform(price: number) {
+        // Get the currency from local storage
+        const currency = localStorage.getItem('currency');
+        if (currency) {
+            // If currency is USD, convert to USD
+            if (currency === 'USD') {
+                return `$${ (price * 1.1).toFixed(2) }`;
+            }
+        }
+        return `${ price } €`;
     }
 }

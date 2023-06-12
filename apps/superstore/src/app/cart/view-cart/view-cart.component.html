@@ -32,7 +32,7 @@
                                                 </p>
                                             </div>
                                             <p class="text-sm font-medium text-gray-900">
-                                                {{ getPricePerItem(item) }} €
+                                                {{ getPricePerItem(item) | convertCurrency }}
                                             </p>
                                         </div>
 
@@ -100,23 +100,23 @@
                     <dl class="mt-6 space-y-4">
                         <div class="flex items-center justify-between">
                             <dt class="text-sm text-gray-600">Subtotal</dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() }} €</dd>
+                            <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="flex items-center text-sm text-gray-600">
                                 <span>Shipping estimate</span>
                             </dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ shippingPrice() }} €</dd>
+                            <dd class="text-sm font-medium text-gray-900">{{ shippingPrice() | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="flex text-sm text-gray-600">
                                 <span>Tax estimate</span>
                             </dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ taxes() }} €</dd>
+                            <dd class="text-sm font-medium text-gray-900">{{ taxes() | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="text-base font-medium text-gray-900">Total</dt>
-                            <dd class="text-base font-medium text-gray-900">{{ totalPrice() }} €</dd>
+                            <dd class="text-base font-medium text-gray-900">{{ totalPrice() | convertCurrency }}</dd>
                         </div>
                     </dl>
 
