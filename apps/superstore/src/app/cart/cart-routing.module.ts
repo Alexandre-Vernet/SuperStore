@@ -4,11 +4,13 @@ import { ViewCartComponent } from "./view-cart/view-cart.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
 import { CheckoutGuard } from "./checkout/checkout.guard";
 import { AuthGuard } from "../auth/auth.guard";
+import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 
 const routes: Routes = [
     {
         path: '',
-        component: ViewCartComponent
+        component: ViewCartComponent,
+        canActivate: [OptionalAuthGuard]
     },
     {
         path: 'checkout',

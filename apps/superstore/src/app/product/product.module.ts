@@ -7,6 +7,7 @@ import { ViewProductComponent } from './view-product/view-product.component';
 import { ProductComponent } from "./product.component";
 import { FormsModule } from "@angular/forms";
 import { ReviewModule } from "../review/review.module";
+import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 
 @NgModule({
     declarations: [
@@ -15,7 +16,7 @@ import { ReviewModule } from "../review/review.module";
         ProductComponent
     ],
     imports: [CommonModule, ProductRoutingModule, FormsModule, ReviewModule],
-    providers: [ProductService],
+    providers: [ProductService, OptionalAuthGuard],
 })
 export class ProductModule {
 }
