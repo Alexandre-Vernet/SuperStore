@@ -68,12 +68,13 @@
                                                    tabindex="-1" id="menu-0-item-0">
                                                     View
                                                 </a>
-                                                <!--                                                <a href="#"-->
-                                                <!--                                                   class="hover:bg-gray-100 hover:text-gray-900 block px-4 py-2 text-sm"-->
-                                                <!--                                                   role="menuitem"-->
-                                                <!--                                                   tabindex="-1" id="menu-0-item-1">-->
-                                                <!--                                                    Invoice-->
-                                                <!--                                                </a>-->
+                                                <a
+                                                        (click)="downloadInvoice(order)"
+                                                        class="hover:bg-gray-100 hover:text-gray-900 block px-4 py-2 text-sm hover:cursor-pointer"
+                                                        role="menuitem"
+                                                        tabindex="-1" id="menu-0-item-1">
+                                                    Download invoice
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -81,14 +82,17 @@
                                     <div class="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
                                         <a href="#"
                                            class="flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                            <span>View Order</span>
+                                            <span>View order</span>
                                             <span class="sr-only">WU88191111</span>
                                         </a>
-                                        <!--                                    <a href="#"-->
-                                        <!--                                       class="flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">-->
-                                        <!--                                        <span>View Invoice</span>-->
-                                        <!--                                        <span class="sr-only">for order WU88191111</span>-->
-                                        <!--                                    </a>-->
+                                        <a
+                                                (click)="downloadInvoice(order)"
+                                                class="flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:cursor-pointer">
+                                            <span>
+                                                Download invoice
+                                            </span>
+                                            <span class="sr-only">for order WU88191111</span>
+                                        </a>
                                     </div>
                                 </div>
 
