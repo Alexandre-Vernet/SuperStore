@@ -20,6 +20,7 @@ export class NavbarComponent implements OnInit {
     user: UserDto;
     cart: CartDto[] = [];
 
+
     constructor(
         private readonly cartService: CartService,
         private readonly productService: ProductService,
@@ -51,9 +52,13 @@ export class NavbarComponent implements OnInit {
         return this.authService.user.isAdmin;
     }
 
+    redirectTo(path: string): void {
+        this.router.navigateByUrl(path);
+    }
+
     signOut(): void {
         this.authService.signOut();
-        this.router.navigate(['/']);
+        this.router.navigateByUrl('/');
     }
 
     getTotalItemsInCart(): number {
