@@ -93,21 +93,29 @@
                 <div class="ml-auto flex items-center">
                     <ng-container *ngIf="getUserConnected(); else noUser">
                         <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 relative">
-                            <a (click)="toggleDropdown()"
-                               class="text-sm font-medium text-gray-700 hover:text-gray-800">{{ getFirstNameAndLastName() }}</a>
 
                             <!-- Dropdown Menu -->
-                            <div *ngIf="showDropdown" class="absolute right-0 mt-50 w-48 bg-white rounded-md shadow-lg">
-                                <a *ngIf="userIsAdmin()" (click)="redirectTo('admin/list-products')"
-                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
-                                    Admin Panel
-                                </a>
+                            <label class="dropdown">
+                                <div class="dd-button">
+                                    <span class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">{{ getFirstNameAndLastName() }}</span>
+                                </div>
 
-                                <a (click)="redirectTo('/order/order-history')"
-                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
-                                    Order History
-                                </a>
-                            </div>
+                                <input type="checkbox" class="dd-input" id="test">
+                                <ul class="dd-menu">
+                                    <li *ngIf="userIsAdmin()">
+                                        <span (click)="redirectTo('admin/list-products')"
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
+                                            Admin Panel
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span (click)="redirectTo('/order/order-history')"
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
+                                            Order History
+                                        </span>
+                                    </li>
+                                </ul>
+                            </label>
 
                             <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
                             <a (click)="signOut()"

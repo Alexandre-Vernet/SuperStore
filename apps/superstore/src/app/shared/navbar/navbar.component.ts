@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit {
     user: UserDto;
     cart: CartDto[] = [];
 
-    showDropdown = false;
 
     constructor(
         private readonly cartService: CartService,
@@ -41,10 +40,6 @@ export class NavbarComponent implements OnInit {
         AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;
     }
 
-    toggleDropdown() {
-        this.showDropdown = !this.showDropdown;
-    }
-
     getUserConnected(): UserDto {
         return this.authService.user;
     }
@@ -58,13 +53,12 @@ export class NavbarComponent implements OnInit {
     }
 
     redirectTo(path: string): void {
-        this.router.navigateByUrl(path)
-            .then(() => this.showDropdown = false);
+        this.router.navigateByUrl(path);
     }
 
     signOut(): void {
         this.authService.signOut();
-        this.router.navigate(['/']);
+        this.router.navigateByUrl('/');
     }
 
     getTotalItemsInCart(): number {
