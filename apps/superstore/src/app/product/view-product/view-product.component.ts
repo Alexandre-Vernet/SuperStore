@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { CartService } from "../../cart/cart.service";
-import { ProductDto, ReviewDto } from "@superstore/libs";
+import { ProductDto, ProductSizeDto, ReviewDto } from "@superstore/libs";
 import { ReviewService } from "../../review/review.service";
 
 @Component({
@@ -15,6 +15,30 @@ export class ViewProductComponent implements OnInit {
     product: ProductDto;
     reviews: ReviewDto[];
 
+    selectedSize: ProductSizeDto;
+    productSize: ProductSizeDto[] = [
+        {
+            tag: 'S',
+            name: 'Small',
+        },
+        {
+            tag: 'M',
+            name: 'Medium',
+        },
+        {
+            tag: 'L',
+            name: 'Large',
+        },
+        {
+            tag: 'XL',
+            name: 'Extra Large',
+        },
+        {
+            tag: 'XXL',
+            name: 'Extra Extra Large',
+        }
+    ];
+
     constructor(
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
@@ -25,6 +49,7 @@ export class ViewProductComponent implements OnInit {
 
     ngOnInit() {
         this.getProduct();
+        this.selectedSize = this.productSize[0];
     }
 
     getProduct() {
@@ -48,7 +73,12 @@ export class ViewProductComponent implements OnInit {
         return this.productService.getProductFromSlug(productSlug);
     }
 
+    selectSize(size: ProductSizeDto) {
+        this.selectedSize = size;
+    }
+
     addToCart(productId: number) {
-        this.cartService.addToCart(productId);
+        const size = this.selectedSize;
+        this.cartService.addToCart(productId, size);
     }
 }

@@ -31,6 +31,8 @@ export class OptionalAuthGuard {
                             reject(false);
                         }
                     });
+            } else {
+                resolve(true);
             }
         });
     }

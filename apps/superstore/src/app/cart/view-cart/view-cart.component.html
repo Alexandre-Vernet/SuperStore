@@ -12,7 +12,7 @@
                                 <div class="flex-shrink-0">
                                     <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}">
                                         <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg"
-                                             alt="Front of men&#039;s Basic Tee in black."
+                                             [alt]="item?.name"
                                              class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
                                     </a>
                                 </div>
@@ -27,11 +27,13 @@
                                                 </h3>
                                             </div>
                                             <div class="mt-1 flex text-sm">
-                                                <p class="text-gray-500">Black</p>
-                                                <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">Large</p>
+                                                <p class="border-gray-200 pb-1 text-gray-500">
+                                                    {{ item?.size?.name }}
+                                                </p>
                                             </div>
-                                            <p class="mt-1 text-sm font-medium text-gray-900">{{ getPricePerItem(item) }}
-                                                €</p>
+                                            <p class="text-sm font-medium text-gray-900">
+                                                {{ getPricePerItem(item) }} €
+                                            </p>
                                         </div>
 
                                         <div class="mt-4 sm:mt-0 sm:pr-9">
@@ -53,7 +55,6 @@
                                                         (click)="removeFromCart(item)"
                                                         class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
                                                     <span class="sr-only">Remove</span>
-                                                    <!-- Heroicon name: mini/x-mark -->
                                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
                                                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
@@ -64,7 +65,6 @@
                                     </div>
 
                                     <p class="mt-4 flex space-x-2 text-sm text-gray-700">
-                                        <!-- Heroicon name: mini/clock -->
                                         <svg class="h-5 w-5 flex-shrink-0 text-gray-300"
                                              xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -77,7 +77,6 @@
 
 
                                     <p class="mt-4 flex space-x-2 text-sm text-gray-700">
-                                        <!-- Heroicon name: mini/check -->
                                         <svg class="h-5 w-5 flex-shrink-0 text-green-500"
                                              xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
