@@ -130,7 +130,7 @@
                                                 <div *ngIf="order.state === 'DELIVERED'"
                                                      class="flex flex-1 justify-center pl-4">
                                                     <span
-                                                            (click)="toggleAddReviewModal()"
+                                                            (click)="toggleAddReviewModal(product)"
                                                             class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
                                                         Add a review
                                                     </span>
@@ -166,4 +166,4 @@
 </div>
 
 
-<superstore-add-review *ngIf="reviewService.showModalAddReview.value"></superstore-add-review>
+<superstore-add-review *ngIf="reviewService.showModalAddReview.value" [productToReview]="productToReview"></superstore-add-review>

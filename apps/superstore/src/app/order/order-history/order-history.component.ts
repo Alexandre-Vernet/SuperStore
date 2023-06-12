@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
-import { OrderState, OrderWithProductsDto } from "@superstore/libs";
+import { OrderState, OrderWithProductsDto, ProductDto } from "@superstore/libs";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
@@ -13,9 +13,9 @@ import { ReviewService } from "../../review/review.service";
     styleUrls: ['./order-history.component.scss'],
 })
 export class OrderHistoryComponent implements OnInit {
-
     orders: OrderWithProductsDto[];
     displayOrderOptions = false;
+    productToReview: ProductDto;
 
     constructor(
         private readonly orderService: OrderService,
@@ -44,7 +44,8 @@ export class OrderHistoryComponent implements OnInit {
         this.displayOrderOptions = !this.displayOrderOptions;
     }
 
-    toggleAddReviewModal() {
+    toggleAddReviewModal(product: ProductDto) {
+        this.productToReview = product;
         this.reviewService.openAddReviewModal();
     }
 
