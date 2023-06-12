@@ -1,0 +1,28 @@
+<div class="lg:ml-8 lg:flex">
+    <label class="dropdown">
+        <div class="dd-button">
+            <a class="flex items-center text-gray-700 hover:text-gray-800 hover:cursor-pointer">
+                <img [src]="currentCurrency.flag" [alt]="currentCurrency.name"
+                     class="block h-auto w-5 flex-shrink-0">
+                <span class="ml-3 block text-sm font-medium">
+                    {{ currentCurrency.name }}
+                </span>
+                <span class="sr-only">, change currency</span>
+            </a>
+        </div>
+
+        <input type="checkbox" class="dd-input" id="change-currency">
+        <ul class="dd-menu">
+            <li *ngFor="let currency of currencies">
+                <a class="flex justify-center items-center text-gray-700 hover:text-gray-800"
+                   (click)="changeCurrency(currency.name)">
+                    <img [src]="currency.flag" [alt]="currency.name" class="block h-auto w-5">
+                    <span class="ml-3 block text-sm font-medium">
+                        {{ currency.name }}
+                    </span>
+                    <span class="sr-only">, change currency</span>
+                </a>
+            </li>
+        </ul>
+    </label>
+</div>

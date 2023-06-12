@@ -41,124 +41,16 @@
                 </div>
 
                 <div class="ml-4 mr-4 flex-1">
-                    <div class="flex items-center px-6 py-4 md:mx-auto md:max-w-3xl lg:mx-0 lg:max-w-none xl:px-0">
-                        <div class="w-full">
-                            <label for="search" class="sr-only">Search</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <input
-                                        (input)="searchProducts($event)"
-                                        #search
-                                        autocomplete="off"
-                                        id="search"
-                                        placeholder="Search (CTRL + /)"
-                                        type="search"
-                                        class="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-rose-500 focus:text-gray-900 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-500 sm:text-sm">
-
-                                <div class="absolute z-10 top-30 left-0 right-0 bg-white"
-                                     *ngIf="searchBar.length > 0">
-                                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                                        <div class="relative">
-                                            <ul class="mt-70 bg-white border border-gray-100 rounded-md shadow-lg max-h-56 overflow-auto">
-                                                <li class="text-gray-900 hover:bg-gray-50 cursor-pointer px-4 py-2"
-                                                    *ngFor="let product of searchBar | search: products">
-                                                    <a (click)="viewProduct(product)">
-                                                        <div class="view-product">
-                                                            <div class="product-info">
-                                                                <span>{{ product.name }}</span>
-                                                                <span>{{ product.price }} €</span>
-                                                            </div>
-                                                            <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
-                                                                 [alt]="product.name"
-                                                                 class="h-full w-full object-cover object-center lg:h-full lg:w-full">
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <superstore-search-bar></superstore-search-bar>
                 </div>
 
                 <div class="ml-auto flex items-center">
-                    <ng-container *ngIf="getUserConnected(); else noUser">
-                        <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 relative">
-
-                            <!-- Dropdown Menu -->
-                            <label class="dropdown">
-                                <div class="dd-button">
-                                    <span class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">{{ getFirstNameAndLastName() }}</span>
-                                </div>
-
-                                <input type="checkbox" class="dd-input" id="test">
-                                <ul class="dd-menu">
-                                    <li *ngIf="userIsAdmin()">
-                                        <span (click)="redirectTo('admin/list-products')"
-                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
-                                            Admin Panel
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span (click)="redirectTo('/order/order-history')"
-                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
-                                            Order History
-                                        </span>
-                                    </li>
-                                </ul>
-                            </label>
-
-                            <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
-                            <a (click)="signOut()"
-                               class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">
-                                Logout
-                            </a>
-                        </div>
+                    <ng-container *ngIf="getScreenWidth() > 1024">
+                        <superstore-user-menu></superstore-user-menu>
+                        <superstore-change-currency></superstore-change-currency>
                     </ng-container>
 
-                    <ng-template #noUser>
-                        <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                            <a routerLink="/sign-in" class="text-sm font-medium text-gray-700 hover:text-gray-800">Sign
-                                in</a>
-                            <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
-                            <a routerLink="/sign-up" class="text-sm font-medium text-gray-700 hover:text-gray-800">Create
-                                account</a>
-                        </div>
-                    </ng-template>
-
-
-                    <div class="hidden lg:ml-8 lg:flex">
-                        <a href="#" class="flex items-center text-gray-700 hover:text-gray-800">
-                            <img src="https://tailwindui.com/img/flags/flag-canada.svg" alt=""
-                                 class="block h-auto w-5 flex-shrink-0">
-                            <span class="ml-3 block text-sm font-medium">CAD</span>
-                            <span class="sr-only">, change currency</span>
-                        </a>
-                    </div>
-
-                    <!-- Cart -->
-                    <div class="ml-4 flow-root lg:ml-6">
-                        <a routerLink="/cart" class="group -m-2 flex items-center p-2">
-                            <svg class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-                            </svg>
-                            <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{ getTotalItemsInCart() }}</span>
-                            <span class="sr-only">items in cart, view bag</span>
-                        </a>
-                    </div>
+                    <superstore-cart-icon></superstore-cart-icon>
                 </div>
             </div>
         </div>

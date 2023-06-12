@@ -8,6 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { LoaderComponent } from './loader/loader.component';
+import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
+import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
+import { CurrencyPipe } from './currency/currency.pipe';
+import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
+import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
 
 @NgModule({
     declarations: [
@@ -15,8 +20,14 @@ import { LoaderComponent } from './loader/loader.component';
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
-        ProductPipe,
         LoaderComponent,
+        SearchBarComponent,
+        ChangeCurrencyComponent,
+
+        ProductPipe,
+        CurrencyPipe,
+        UserMenuComponent,
+        CartIconComponent,
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
@@ -25,6 +36,7 @@ import { LoaderComponent } from './loader/loader.component';
         FooterComponent,
         NotificationsComponent,
         LoaderComponent,
+        CurrencyPipe,
     ],
 })
 export class SharedModule {

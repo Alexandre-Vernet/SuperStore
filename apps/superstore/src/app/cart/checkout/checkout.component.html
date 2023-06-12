@@ -166,7 +166,7 @@
                                           <span id="delivery-method-0-description-0"
                                                 class="mt-1 flex items-center text-sm text-gray-500">{{ deliveryMethod.expectedDelivery }}</span>
                                           <span id="delivery-method-0-description-1"
-                                                class="mt-6 text-sm font-medium text-gray-900">{{ deliveryMethod.price }} €</span>
+                                                class="mt-6 text-sm font-medium text-gray-900">{{ deliveryMethod.price | convertCurrency }}</span>
                                         </span>
                                     </span>
                                     <svg
@@ -279,7 +279,7 @@
                                                     {{ item?.size?.name }}
                                                 </p>
                                                 <p class="mt-1 text-sm font-medium text-gray-900">
-                                                    {{ item?.price }} €
+                                                    {{ item?.price | convertCurrency }}
                                                 </p>
                                             </div>
 
@@ -318,24 +318,24 @@
                         <dl class="space-y-6 border-t border-gray-200 py-6 px-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <dt class="text-sm">Subtotal</dt>
-                                <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() }} €</dd>
+                                <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}</dd>
                             </div>
                             <div class="flex items-center justify-between">
                                 <dt class="text-sm">Shipping</dt>
                                 <dd class="text-sm font-medium text-gray-900">
-                                    {{ shippingPrice }} €
+                                    {{ shippingPrice | convertCurrency }}
                                 </dd>
                             </div>
                             <div class="flex items-center justify-between">
                                 <dt class="text-sm">Taxes</dt>
                                 <dd class="text-sm font-medium text-gray-900">
-                                    {{ taxes() }} €
+                                    {{ taxes() | convertCurrency }}
                                 </dd>
                             </div>
                             <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                                 <dt class="text-base font-medium">Total</dt>
                                 <dd class="text-base font-medium text-gray-900">
-                                    {{ totalPrice() }} €
+                                    {{ totalPrice() | convertCurrency }}
                                 </dd>
                             </div>
                         </dl>

@@ -33,7 +33,8 @@
                                         </div>
                                         <div>
                                             <dt class="font-medium text-gray-900">Total amount</dt>
-                                            <dd class="mt-1 font-medium text-gray-900">{{ order.totalPrice }} €</dd>
+                                            <dd class="mt-1 font-medium text-gray-900">
+                                                {{ order.totalPrice | convertCurrency }}</dd>
                                         </div>
                                     </dl>
 
@@ -108,7 +109,7 @@
                                                     <a routerLink="/product/{{ convertProductNameToSlug(product.name) }}">
                                                         <h5>{{ product.name }}</h5>
                                                     </a>
-                                                    <p class="mt-2 sm:mt-0">{{ product.price }} €</p>
+                                                    <p class="mt-2 sm:mt-0">{{ product.price | convertCurrency }}</p>
                                                 </div>
                                                 <p class="hidden text-gray-500 sm:mt-2 sm:block">Are you a minimalist
                                                     looking for a compact carry option? The Micro Backpack is the
@@ -166,4 +167,5 @@
 </div>
 
 
-<superstore-add-review *ngIf="reviewService.showModalAddReview.value" [productToReview]="productToReview"></superstore-add-review>
+<superstore-add-review *ngIf="reviewService.showModalAddReview.value"
+                       [productToReview]="productToReview"></superstore-add-review>
