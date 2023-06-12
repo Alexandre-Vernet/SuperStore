@@ -10,7 +10,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { LoaderComponent } from './loader/loader.component';
 import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
 import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
-import { CurrencyPipe } from "./currency/currency.pipe";
+import { CurrencyPipe } from './currency/currency.pipe';
+import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { CurrencyPipe } from "./currency/currency.pipe";
         ChangeCurrencyComponent,
 
         ProductPipe,
-        CurrencyPipe
+        CurrencyPipe,
+        UserMenuComponent,
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [
