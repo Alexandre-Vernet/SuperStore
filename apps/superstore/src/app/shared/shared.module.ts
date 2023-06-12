@@ -9,6 +9,8 @@ import { ProductPipe } from '../product/product.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { LoaderComponent } from './loader/loader.component';
 import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
+import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
+import { CurrencyPipe } from "./currency/currency.pipe";
 
 @NgModule({
     declarations: [
@@ -16,9 +18,12 @@ import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
-        ProductPipe,
         LoaderComponent,
         SearchBarComponent,
+        ChangeCurrencyComponent,
+
+        ProductPipe,
+        CurrencyPipe
     ],
     imports: [CommonModule, RouterLink, FormsModule],
     exports: [

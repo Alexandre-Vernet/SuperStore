@@ -54,17 +54,17 @@
                                     <span class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">{{ getFirstNameAndLastName() }}</span>
                                 </div>
 
-                                <input type="checkbox" class="dd-input" id="test">
+                                <input type="checkbox" class="dd-input" id="user-menu">
                                 <ul class="dd-menu">
                                     <li *ngIf="userIsAdmin()">
                                         <span (click)="redirectTo('admin/list-products')"
-                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
+                                              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
                                             Admin Panel
                                         </span>
                                     </li>
                                     <li>
                                         <span (click)="redirectTo('/order/order-history')"
-                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
+                                              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
                                             Order History
                                         </span>
                                     </li>
@@ -89,15 +89,7 @@
                         </div>
                     </ng-template>
 
-
-                    <div class="hidden lg:ml-8 lg:flex">
-                        <a href="#" class="flex items-center text-gray-700 hover:text-gray-800">
-                            <img src="https://tailwindui.com/img/flags/flag-canada.svg" alt=""
-                                 class="block h-auto w-5 flex-shrink-0">
-                            <span class="ml-3 block text-sm font-medium">CAD</span>
-                            <span class="sr-only">, change currency</span>
-                        </a>
-                    </div>
+                    <superstore-change-currency></superstore-change-currency>
 
                     <!-- Cart -->
                     <div class="ml-4 flow-root lg:ml-6">

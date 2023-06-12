@@ -23,3 +23,5 @@ export * from './lib/user/sign-in-user.dto';
 
 export * from './lib/address/address.dto';
 export * from './lib/address/create-address.dto';
+
+export * from './lib/shared/currency.dto';

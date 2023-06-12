@@ -1,0 +1,40 @@
+.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dd-input {
+    display: none;
+}
+
+.dd-menu {
+    position: absolute;
+    top: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.dd-input {
+    + .dd-menu {
+        display: none;
+    }
+
+    &:checked + .dd-menu {
+        display: block;
+    }
+}
+
+.dd-menu {
+    list-style-type: none;
+
+    li {
+        padding: .8em 1.6em;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f6f6f6;
+        }
+    }
+}
