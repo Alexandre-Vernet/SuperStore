@@ -1,5 +1,8 @@
-import { ReviewDto } from "@superstore/libs";
+import { ProductDto, ReviewDto } from "@superstore/libs";
 import { Component, Input, OnInit } from "@angular/core";
+import { AuthService } from "../../auth/auth.service";
+import { ReviewService } from "../review.service";
+import { OrderService } from "../../order/order.service";
 
 @Component({
     selector: 'superstore-review-stats',
@@ -9,7 +12,16 @@ import { Component, Input, OnInit } from "@angular/core";
 export class ReviewStatsComponent implements OnInit {
 
     @Input() reviews: ReviewDto[];
+    @Input() product = {} as ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
+    hasBoughtProduct: boolean;
+
+    constructor(
+        readonly reviewService: ReviewService,
+        private readonly authService: AuthService,
+        private readonly orderService: OrderService
+    ) {
+    }
 
     ngOnInit() {
         this.getTotalReviews();
@@ -19,6 +31,8 @@ export class ReviewStatsComponent implements OnInit {
                 ratingItem.count++;
             }
         });
+
+        this.userHasBoughtProduct();
     }
 
     getTotalReviews() {
@@ -44,5 +58,18 @@ export class ReviewStatsComponent implements OnInit {
         const ratingCount = ratingItem ? ratingItem.count : 0;
         const percentage = Math.round((ratingCount / totalReviews) * 100);
         return `${ percentage }%`;
+    }
+
+
+    userHasBoughtProduct() {
+        this.orderService.getOrdersPerUser()
+            .subscribe(orders => {
+               const userHasBoughtProduct =  orders.find(order => order.productsId.find(productId => productId === this.product.id));
+                this.hasBoughtProduct = !!userHasBoughtProduct;
+            });
+    }
+
+    toggleAddReviewModal() {
+        this.reviewService.openAddReviewModal();
     }
 }

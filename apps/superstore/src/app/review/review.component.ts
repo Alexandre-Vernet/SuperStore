@@ -1,31 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ReviewDto, UserDto } from "@superstore/libs";
-import { ReviewService } from "./review.service";
-import { UserService } from "../user/user.service";
+import { Component, Input } from '@angular/core';
+import { ProductDto, ReviewDto } from "@superstore/libs";
 
 @Component({
     selector: 'superstore-review',
     templateUrl: './review.component.html',
     styleUrls: ['./review.component.scss'],
 })
-export class ReviewComponent implements OnInit {
+export class ReviewComponent {
     @Input() reviews: ReviewDto[];
-    user: UserDto;
+    @Input() product = {} as ProductDto;
 
-    constructor(
-        private readonly reviewService: ReviewService,
-        private readonly userService: UserService
-    ) {
-    }
-
-    ngOnInit() {
-        this.reviews.forEach(review => {
-            this.getUserFromId(review.userId);
-        });
-    }
-
-    getUserFromId(userId: number) {
-        this.userService.getUser(userId)
-            .subscribe((user) => this.user = user)
+    constructor() {
     }
 }
