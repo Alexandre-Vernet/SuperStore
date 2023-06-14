@@ -32,11 +32,12 @@ export class SignInComponent {
             email,
             password,
         }
-        this.authService.signIn(user).subscribe({
-            next: () => this.router.navigateByUrl('/'),
-            error: (err) => {
-                this.formSignIn.setErrors({ error: err.error.message });
-            }
-        });
+        this.authService.signIn(user)
+            .subscribe({
+                next: () => this.router.navigateByUrl('/'),
+                error: (err) => {
+                    this.formSignIn.setErrors({ error: err.error.message });
+                }
+            });
     }
 }
