@@ -16,8 +16,6 @@ export class EmailService {
         return new Promise((resolve, reject) => {
             this.userService.findOne(order.userId)
                 .then(user => {
-                    delete user.password;
-
                     const { EMAIL_SERVICE_URL } = process.env;
 
                     this.httpService
@@ -34,6 +32,6 @@ export class EmailService {
                 .catch(error => {
                     reject(error);
                 })
-        })
+        });
     }
 }

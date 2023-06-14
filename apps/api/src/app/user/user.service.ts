@@ -13,7 +13,7 @@ export class UserService {
     }
 
     findAll(): Promise<User[]> {
-       return this.userRepository.find()
+        return this.userRepository.find()
             .then((users) => {
                 return users.map((user) => {
                     delete user.password;
@@ -26,7 +26,11 @@ export class UserService {
         const options: FindOneOptions = {
             where: { id }
         };
-        return this.userRepository.findOne(options);
+        return this.userRepository.findOne(options)
+            .then(user => {
+                delete user.password;
+                return user;
+            });
     }
 
     update(id: number, updateUserDto: UserDto): Promise<UserDto> {

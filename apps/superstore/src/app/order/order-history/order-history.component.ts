@@ -6,6 +6,7 @@ import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
 import { ReviewService } from "../../review/review.service";
+import { PdfService } from "../../shared/pdf/pdf.service";
 
 @Component({
     selector: 'superstore-order-history',
@@ -23,6 +24,7 @@ export class OrderHistoryComponent implements OnInit {
         private readonly cartService: CartService,
         private readonly notificationsService: NotificationsService,
         readonly reviewService: ReviewService,
+        private readonly pdfService: PdfService,
     ) {
     }
 
@@ -65,6 +67,10 @@ export class OrderHistoryComponent implements OnInit {
 
     getOrderStateImageFileName(state: OrderState): string {
         return `assets/order-state/${ state.toLowerCase() }.png`;
+    }
+
+    downloadInvoice(order: OrderWithProductsDto) {
+        return this.pdfService.downloadInvoice(order);
     }
 
     addToCart(productId: number) {

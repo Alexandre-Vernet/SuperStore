@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterLink } from '@angular/router';
 import { ResponsiveNavbarComponent } from './responsive-navbar/responsive-navbar.component';
@@ -13,6 +13,7 @@ import { ChangeCurrencyComponent } from './currency/change-currency/change-curre
 import { CurrencyPipe } from './currency/currency.pipe';
 import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
 import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
+import { PdfService } from "./pdf/pdf.service";
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
         LoaderComponent,
         CurrencyPipe,
     ],
+    providers: [PdfService, DatePipe]
 })
 export class SharedModule {
 }
