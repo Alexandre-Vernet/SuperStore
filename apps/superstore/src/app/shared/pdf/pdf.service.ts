@@ -86,7 +86,6 @@ export class PdfService {
                         });
 
                         const productTableHeight = productRows.length * 100;
-                        console.log(productTableHeight)
                         if (productTableHeight > 500) {
                             doc.addPage();
                             this.displayPriceOnBottomPage(doc, 50, order);
