@@ -8,7 +8,7 @@
                     <div class="flex items-center">
                         <img
                                 src="assets/icons/profile-user.png"
-                                [alt]="'userId ' + currentUser?.id"
+                                alt="user"
                                 class="h-10 w-10 rounded-full"
                         />
                         <div class="ml-4">
@@ -19,7 +19,7 @@
                                 <time datetime="2020-08-25">{{ review.createdAt | date }}</time>
                             </p>
                             <div class="mt-1 flex items-center">
-                                <superstore-review-stars [review]="review"></superstore-review-stars>
+                                <superstore-review-stars [showTotalReviews]="false" [review]="review"></superstore-review-stars>
                             </div>
                             <p class="sr-only">{{ review.rating }} out of 5 stars</p>
                         </div>

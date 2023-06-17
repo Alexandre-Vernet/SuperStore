@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ReviewWithUserDto, UserDto } from "@superstore/libs";
 import { ReviewService } from "../review.service";
 import { AuthService } from "../../auth/auth.service";
@@ -10,6 +10,7 @@ import { UserService } from "../../user/user.service";
     styleUrls: ['./review-description.component.scss'],
 })
 export class ReviewDescriptionComponent implements OnInit {
+    @Input() showTotalReviews;
     reviews: ReviewWithUserDto[] = [];
     currentUser = {} as UserDto;
 
@@ -24,6 +25,7 @@ export class ReviewDescriptionComponent implements OnInit {
     ngOnInit() {
         this.reviewService.reviews
             .subscribe((reviews) => {
+                this.reviews = [];
                 reviews.forEach(review => {
                     this.userService.getUser(review.userId)
                         .subscribe(user => {

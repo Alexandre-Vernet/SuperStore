@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReviewDto } from "@superstore/libs";
+import { ReviewService } from "../review.service";
 
 @Component({
     selector: 'superstore-review-stars',
@@ -7,13 +8,22 @@ import { ReviewDto } from "@superstore/libs";
     styleUrls: ['./review-stars.component.scss'],
 })
 export class ReviewStarsComponent implements OnInit {
+    @Input() showTotalReviews;
     @Input() review = {} as ReviewDto;
-    @Input() reviews: ReviewDto[];
+    reviews: ReviewDto[] = [];
     stars: number[] = [1, 2, 3, 4, 5];
 
+    constructor(
+        private readonly reviewService: ReviewService,
+    ) {
+    }
+
     ngOnInit() {
-        this.getStarsForOneReview();
-        this.getStarsForAllReview();
+        if (this.review) {
+            this.getStarsForOneReview();
+        } else {
+            this.getStarsForAllReview();
+        }
     }
 
     getStarsForOneReview() {
@@ -27,29 +37,29 @@ export class ReviewStarsComponent implements OnInit {
     }
 
     getStarsForAllReview() {
-        if (!this.reviews || this.reviews.length === 0) {
-            return;
-        }
+        this.reviewService.reviews
+            .subscribe(reviews => {
+                this.reviews = reviews;
+                const totalReview = this.reviews
+                    .reduce((acc, review) => {
+                        return acc + review.rating;
+                    }, 0);
 
-        const totalReview = this.reviews
-            .reduce((acc, review) => {
-                return acc + review.rating;
-            }, 0);
 
+                // Around to the nearest whole number
+                const averageRating = Math.round(totalReview / this.reviews.length);
+                this.stars = this.stars
+                    .map((star, index) => {
+                        if (index < averageRating) {
+                            return 1;
+                        }
 
-        // Around to the nearest whole number
-        const averageRating = Math.round(totalReview / this.reviews.length);
-        this.stars = this.stars
-            .map((star, index) => {
-                if (index < averageRating) {
-                    return 1;
-                }
-
-                return 0;
+                        return 0;
+                    });
             });
     }
 
     getTotalReviews() {
-        return this.reviews?.length;
+        return this.reviews.length;
     }
 }

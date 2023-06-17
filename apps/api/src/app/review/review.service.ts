@@ -13,8 +13,11 @@ export class ReviewService {
     ) {
     }
 
-    create(createReviewDto: CreateReviewDto): Promise<CreateReviewDto> {
-        return this.reviewRepository.save(createReviewDto);
+    create(createReviewDto: CreateReviewDto): Promise<ReviewDto> {
+        return this.reviewRepository.save(createReviewDto)
+            .then(review => {
+                return this.findOne(review.id);
+            });
     }
 
 
