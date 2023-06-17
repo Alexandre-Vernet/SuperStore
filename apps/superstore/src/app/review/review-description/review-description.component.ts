@@ -13,6 +13,9 @@ export class ReviewDescriptionComponent implements OnInit {
     @Input() showTotalReviews;
     reviews: ReviewWithUserDto[] = [];
     currentUser = {} as UserDto;
+    currentPage = 1;
+    totalPage = 1;
+    countItemPerPage = 10;
 
     constructor(
         private readonly reviewService: ReviewService,
@@ -33,13 +36,28 @@ export class ReviewDescriptionComponent implements OnInit {
                                 ...review,
                                 user
                             });
+
+                            this.totalPage = Math.ceil(this.reviews.length / 10);
                         });
                 });
+
             });
     }
 
     deleteReview(reviewId: number) {
         this.reviewService.deleteReview(reviewId)
             .subscribe();
+    }
+
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPage) {
+            this.currentPage++;
+        }
     }
 }

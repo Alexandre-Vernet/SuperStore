@@ -2,7 +2,8 @@
 
 <div class="flow-root">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ng-container *ngFor="let review of reviews | slice:0:10">
+        <ng-container
+                *ngFor="let review of reviews.slice((currentPage - 1) * countItemPerPage, currentPage * countItemPerPage)">
             <div class="-my-12 divide-y divide-gray-200">
                 <div class="py-12">
                     <div class="flex items-center">
@@ -19,7 +20,8 @@
                                 <time datetime="2020-08-25">{{ review.createdAt | date }}</time>
                             </p>
                             <div class="mt-1 flex items-center">
-                                <superstore-review-stars [showTotalReviews]="false" [review]="review"></superstore-review-stars>
+                                <superstore-review-stars [showTotalReviews]="false"
+                                                         [review]="review"></superstore-review-stars>
                             </div>
                             <p class="sr-only">{{ review.rating }} out of 5 stars</p>
                         </div>
@@ -46,5 +48,23 @@
                 </div>
             </div>
         </ng-container>
+    </div>
+
+    <!--    Previous & nex pagination button-->
+    <div class="mt-6 flex flex-col justify-stretch">
+        <div class="flex justify-between">
+            <div class="flex-1 flex justify-between">
+                <a (click)="previousPage()"
+                   class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:cursor-pointer">
+                    Previous
+                </a>
+            </div>
+            <div class="flex-1 flex justify-between">
+                <a (click)="nextPage()"
+                   class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:cursor-pointer">
+                    Next
+                </a>
+            </div>
+        </div>
     </div>
 </div>
