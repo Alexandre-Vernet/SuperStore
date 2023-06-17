@@ -13,7 +13,7 @@ export class ReviewStatsComponent implements OnInit {
 
     @Input() product = {} as ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
-    hasBoughtProduct: boolean;
+    userCanAddReview: boolean;
 
     constructor(
         readonly reviewService: ReviewService,
@@ -68,7 +68,7 @@ export class ReviewStatsComponent implements OnInit {
             .subscribe(orders => {
                 const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
                 const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.userId === this.authService.user?.id && review.productId === this.product?.id);
-                this.hasBoughtProduct = !!userHasBoughtProduct && !userHasAlreadyReviewedProduct;
+                this.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
             });
     }
 
