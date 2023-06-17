@@ -17,7 +17,7 @@ export class AuthModule implements NestModule {
             .exclude(
                 {
                     path: 'user',
-                    method: RequestMethod.POST
+                    method: RequestMethod.GET
                 },
                 {
                     path: 'product',
@@ -51,7 +51,7 @@ export class AuthModule implements NestModule {
                 },
                 {
                     path: 'user',
-                    method: RequestMethod.ALL
+                    method: RequestMethod.POST
                 },
                 {
                     path: 'review',
