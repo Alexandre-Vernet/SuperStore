@@ -15,6 +15,7 @@ export class AddReviewComponent {
         rating: new FormControl('', Validators.required),
         description: new FormControl('', Validators.required),
     });
+    highlightedRating = 0;
 
     constructor(
         private readonly reviewService: ReviewService,
@@ -22,8 +23,18 @@ export class AddReviewComponent {
     ) {
     }
 
-    setRating(rating: string) {
-        this.formAddReview.patchValue({ rating });
+    setRating(rating: number) {
+        this.formAddReview.patchValue({ rating: rating.toString() });
+    }
+
+    highlightRating(number: number) {
+        this.highlightedRating = number;
+    }
+
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModal();
     }
 
     submitForm() {
@@ -40,10 +51,5 @@ export class AddReviewComponent {
 
     closeModal() {
         this.reviewService.closeAddReviewModal();
-    }
-
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-        this.closeModal();
     }
 }
