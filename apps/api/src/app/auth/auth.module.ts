@@ -31,6 +31,10 @@ export class AuthModule implements NestModule {
                     path: 'review',
                     method: RequestMethod.GET
                 },
+                {
+                    path: 'auth',
+                    method: RequestMethod.ALL
+                }
             )
             .forRoutes(
                 {
