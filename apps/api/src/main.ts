@@ -14,7 +14,9 @@ async function bootstrap() {
     const NODE_ENV = process.env.NODE_ENV || 'development';
     if (NODE_ENV === 'production') {
         app.enableCors({
+            allowedHeaders: ['content-type', 'authorization'],
             origin: 'https://superstore-hxlq.onrender.com',
+            credentials: true,
         })
     } else {
         app.enableCors({
