@@ -1,4 +1,4 @@
-import { ProductDto, ReviewDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/libs";
 import { Component, Input, OnInit } from "@angular/core";
 import { AuthService } from "../../auth/auth.service";
 import { ReviewService } from "../review.service";
@@ -11,7 +11,6 @@ import { OrderService } from "../../order/order.service";
 })
 export class ReviewStatsComponent implements OnInit {
 
-    @Input() reviews: ReviewDto[];
     @Input() product = {} as ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
     hasBoughtProduct: boolean;
@@ -25,18 +24,21 @@ export class ReviewStatsComponent implements OnInit {
 
     ngOnInit() {
         this.getTotalReviews();
-        this.reviews.forEach(review => {
-            const ratingItem = this.rating.find(item => item.rating === review.rating);
-            if (ratingItem) {
-                ratingItem.count++;
-            }
-        });
+        this.reviewService.reviews
+            .subscribe(reviews => {
+                reviews.forEach(review => {
+                    const ratingItem = this.rating.find(item => item.rating === review.rating);
+                    if (ratingItem) {
+                        ratingItem.count++;
+                    }
+                });
+            })
 
         this.userHasBoughtProduct();
     }
 
     getTotalReviews() {
-        return this.reviews.length;
+        return this.reviewService.reviews.value.length;
     }
 
     calculateSizeProgressBar(rating: number) {
@@ -64,7 +66,7 @@ export class ReviewStatsComponent implements OnInit {
     userHasBoughtProduct() {
         this.orderService.getOrdersPerUser()
             .subscribe(orders => {
-               const userHasBoughtProduct =  orders.find(order => order.productsId.find(productId => productId === this.product.id));
+                const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
                 this.hasBoughtProduct = !!userHasBoughtProduct;
             });
     }

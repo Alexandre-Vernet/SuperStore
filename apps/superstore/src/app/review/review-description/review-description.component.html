@@ -8,12 +8,12 @@
                     <div class="flex items-center">
                         <img
                                 src="assets/icons/profile-user.png"
-                                [alt]="'userId ' + user?.id"
+                                [alt]="'userId ' + currentUser?.id"
                                 class="h-10 w-10 rounded-full"
                         />
                         <div class="ml-4">
                             <h4 class="text-sm font-bold text-gray-900">
-                                {{ user?.firstName }} {{ user?.lastName }}
+                                {{ review.user.firstName }} {{ review.user.lastName }}
                             </h4>
                             <p class="text-sm text-gray-600">
                                 <time datetime="2020-08-25">{{ review.createdAt | date }}</time>
@@ -21,10 +21,10 @@
                             <div class="mt-1 flex items-center">
                                 <superstore-review-stars [review]="review"></superstore-review-stars>
                             </div>
-                            <p class="sr-only">5 out of 5 stars</p>
+                            <p class="sr-only">{{ review.rating }} out of 5 stars</p>
                         </div>
 
-                        <div *ngIf="userLogged?.id === review.userId"
+                        <div *ngIf="currentUser?.id === review.user.id"
                              class="ml-10 gap-4">
                             <button type="button"
                                     (click)="deleteReview(review.id)"

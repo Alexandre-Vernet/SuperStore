@@ -59,7 +59,6 @@ export class ViewProductComponent implements OnInit {
             .subscribe(product => {
                 this.product = product;
 
-
                 this.reviewService
                     .getReviewsForProduct(product.id)
                     .subscribe(reviews => {

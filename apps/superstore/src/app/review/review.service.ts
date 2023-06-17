@@ -11,6 +11,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class ReviewService {
 
     reviewUrl = environment.reviewUrl();
+    reviews = new BehaviorSubject([] as ReviewDto[]);
     showModalAddReview: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
@@ -44,6 +45,7 @@ export class ReviewService {
         return this.http.delete<ReviewDto>(`${ this.reviewUrl }/${ reviewId }`)
             .pipe(
                 tap(() => {
+                    this.reviews.next(this.reviews.getValue().filter(review => review.id !== reviewId));
                     this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
                 }),
                 catchError((err) => {
