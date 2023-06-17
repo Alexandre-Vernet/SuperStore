@@ -13,7 +13,7 @@ export class AddReviewComponent {
     @Input() productToReview = {} as ProductDto;
     formAddReview = new FormGroup({
         rating: new FormControl('', Validators.required),
-        description: new FormControl('', Validators.required),
+        description: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
     });
     highlightedRating = 0;
 
