@@ -17,6 +17,11 @@ export class AuthInterceptor implements AngularHttpInterceptor {
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+        // If route is /sign-in or /sign-up, do not add Authorization header
+        if (request.url.includes('/sign-in') || request.url.includes('/sign-up')) {
+            return next.handle(request);
+        }
+
         const token = localStorage.getItem('accessToken');
         if (token) {
             request = request.clone({
