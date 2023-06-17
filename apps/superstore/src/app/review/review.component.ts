@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewDto, UserDto } from "@superstore/libs";
+import { ProductDto, ReviewDto } from "@superstore/libs";
 import { ReviewService } from "./review.service";
-import { UserService } from "../user/user.service";
 
 @Component({
     selector: 'superstore-review',
@@ -9,23 +8,19 @@ import { UserService } from "../user/user.service";
     styleUrls: ['./review.component.scss'],
 })
 export class ReviewComponent implements OnInit {
-    @Input() reviews: ReviewDto[];
-    user: UserDto;
+    @Input() product = {} as ProductDto;
+    reviews: ReviewDto[] = [];
 
     constructor(
         private readonly reviewService: ReviewService,
-        private readonly userService: UserService
     ) {
     }
 
     ngOnInit() {
-        this.reviews.forEach(review => {
-            this.getUserFromId(review.userId);
-        });
-    }
-
-    getUserFromId(userId: number) {
-        this.userService.getUser(userId)
-            .subscribe((user) => this.user = user)
+        this.reviewService.getReviewsForProduct(this.product.id)
+            .subscribe(reviews => {
+                this.reviewService.reviews.next(reviews);
+                this.reviews = reviews;
+            });
     }
 }

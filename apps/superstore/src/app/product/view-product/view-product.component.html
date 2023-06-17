@@ -36,7 +36,7 @@
 
                             <ng-container *ngIf="reviews">
                                 <div class="ml-4 border-l border-gray-300 pl-4">
-                                    <superstore-review-stars [reviews]="reviews"></superstore-review-stars>
+                                    <superstore-review-stars [showTotalReviews]="true" [review]="null"></superstore-review-stars>
                                 </div>
                             </ng-container>
                         </div>
@@ -123,6 +123,6 @@
         </div>
     </main>
 </div>
-<ng-container *ngIf="reviews?.length > 0">
-    <superstore-review [reviews]="reviews"></superstore-review>
+<ng-container *ngIf="product">
+    <superstore-review [product]="product"></superstore-review>
 </ng-container>

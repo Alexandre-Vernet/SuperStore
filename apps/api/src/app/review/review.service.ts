@@ -13,8 +13,14 @@ export class ReviewService {
     ) {
     }
 
-    create(createReviewDto: CreateReviewDto): Promise<CreateReviewDto> {
-        return this.reviewRepository.save(createReviewDto);
+    create(createReviewDto: CreateReviewDto): Promise<ReviewDto> {
+        if (createReviewDto.description.length > 1000) {
+            throw new Error('Description is too long');
+        }
+        return this.reviewRepository.save(createReviewDto)
+            .then(review => {
+                return this.findOne(review.id);
+            });
     }
 
 

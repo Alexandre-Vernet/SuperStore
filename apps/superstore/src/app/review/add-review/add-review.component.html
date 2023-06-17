@@ -12,10 +12,12 @@
                     <div class="mb-3">
                         <label class="block text-sm font-medium text-gray-700">Rating</label>
                         <div class="mt-1">
-                            <ng-container *ngFor="let r of ['1', '2', '3', '4', '5']">
+                            <ng-container *ngFor="let r of [1, 2, 3, 4, 5]">
                                 <div class="inline-flex justify-center items-center mr-2">
-                                    <svg class="text-yellow-400 h-10 w-10 flex-shrink-0 hover:cursor-pointer"
+                                    <svg [ngClass]="{'text-yellow-400': r < highlightedRating, 'text-gray-300': r >= highlightedRating}"
+                                         class="h-10 w-10 flex-shrink-0 hover:cursor-pointer"
                                          (click)="setRating(r)"
+                                         (mouseenter)="highlightRating(r + 1)"
                                          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                          fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd"
@@ -24,12 +26,13 @@
                                     </svg>
                                 </div>
                             </ng-container>
+
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                         <div class="mt-1">
-                            <textarea formControlName="description" id="description" type="text" required
+                            <textarea formControlName="description" id="description" type="text" required rows="5"
                                       class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </textarea>
                         </div>

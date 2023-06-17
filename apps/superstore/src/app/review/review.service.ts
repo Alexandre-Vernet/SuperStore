@@ -11,6 +11,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class ReviewService {
 
     reviewUrl = environment.reviewUrl();
+    reviews = new BehaviorSubject([] as ReviewDto[]);
     showModalAddReview: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
@@ -19,10 +20,11 @@ export class ReviewService {
     ) {
     }
 
-    addReview(review: CreateReviewDto): Observable<CreateReviewDto> {
-        return this.http.post<CreateReviewDto>(this.reviewUrl, review)
+    addReview(review: CreateReviewDto): Observable<ReviewDto> {
+        return this.http.post<ReviewDto>(this.reviewUrl, review)
             .pipe(
-                tap(() => {
+                tap((review) => {
+                    this.reviews.next([...this.reviews.getValue(), review]);
                     this.notificationService.showSuccessNotification('Success', 'Review added successfully');
                 }),
                 catchError((err) => {
@@ -44,6 +46,10 @@ export class ReviewService {
         return this.http.delete<ReviewDto>(`${ this.reviewUrl }/${ reviewId }`)
             .pipe(
                 tap(() => {
+                    const reviews = this.reviews.getValue();
+                    const index = reviews.findIndex((review) => review.id === reviewId);
+                    reviews.splice(index, 1);
+                    this.reviews.next(reviews);
                     this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
                 }),
                 catchError((err) => {

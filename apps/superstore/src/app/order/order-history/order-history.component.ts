@@ -29,16 +29,19 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
+        const ordersWithProducts: OrderWithProductsDto[] = [];
         this.orderService.getOrdersPerUser()
             .subscribe((orders) => {
                 orders.map((order) => {
                     this.productService.getProductFromIds(order.productsId)
-                        .subscribe((products) => {
-                            order.products = products;
-                            delete order.productsId;
+                        .subscribe(product => {
+                            ordersWithProducts.push({
+                                ...order,
+                                products: product,
+                            });
                         });
                 });
-                this.orders = orders;
+                this.orders = ordersWithProducts;
             });
     }
 
