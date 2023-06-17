@@ -67,7 +67,8 @@ export class ReviewStatsComponent implements OnInit {
         this.orderService.getOrdersPerUser()
             .subscribe(orders => {
                 const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
-                this.hasBoughtProduct = !!userHasBoughtProduct;
+                const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.userId === this.authService.user?.id && review.productId === this.product?.id);
+                this.hasBoughtProduct = !!userHasBoughtProduct && !userHasAlreadyReviewedProduct;
             });
     }
 
