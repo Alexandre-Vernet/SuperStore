@@ -26,6 +26,7 @@ export class ReviewStatsComponent implements OnInit {
         this.getTotalReviews();
         this.reviewService.reviews
             .subscribe(reviews => {
+                this.rating.forEach(rating => rating.count = 0);
                 reviews.forEach(review => {
                     const ratingItem = this.rating.find(item => item.rating === review.rating);
                     if (ratingItem) {
