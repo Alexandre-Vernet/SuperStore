@@ -16,33 +16,19 @@ export class AuthService {
     ) {
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<User> {
+    async signUp(createUserDto: CreateUserDto): Promise<CreateUserDto> {
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
         }
 
-        for (let i = 0; i < 10; i++) {
-            createUserDto = {
-                firstName: faker.name.firstName(),
-                lastName: faker.name.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
-                isAdmin: false
-            };
-
-
-            // Hash password
-            const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-            if (!hashedPassword) {
-                throw new ConflictException('Something went wrong. Please try again later.');
-            }
-            createUserDto.password = hashedPassword;
-            createUserDto.isAdmin = false;
-
-            this.userRepository.save(createUserDto)
-
+        // Hash password
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+        if (!hashedPassword) {
+            throw new ConflictException('Something went wrong. Please try again later.');
         }
+        createUserDto.password = hashedPassword;
+        createUserDto.isAdmin = false;
 
         return this.userRepository.save(createUserDto);
     }
@@ -95,8 +81,15 @@ export class AuthService {
 
 
     migrate() {
-        for (let i = 0; i < 10; i++) {
-            const createUserDto = {
+        for (let i = 0; i < 50; i++) {
+            const addressesId = [];
+            const randomAddressId = Math.floor(Math.random() * 2) + 1;
+            for (let j = 0; j < randomAddressId; j++) {
+                addressesId.push(faker.datatype.number({ min: 1, max: 6 }));
+            }
+
+            const createUserDto: CreateUserDto = {
+                addressesId,
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 email: faker.internet.email(),

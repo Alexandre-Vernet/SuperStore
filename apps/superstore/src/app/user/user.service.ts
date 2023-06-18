@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from "../auth/auth.service";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { AddressDto, CreateAddressDto, UpdateUser, UserDto } from "@superstore/interfaces";
+import { AddressDto, CreateAddressDto, UpdateUserDto, UserDto } from "@superstore/interfaces";
 import { environment } from "../../environments/environment";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
@@ -40,7 +40,7 @@ export class UserService {
         return this.http.get<UserDto>(`${ this.userUrl }/${ userId }`);
     }
 
-    updateUser(user: UpdateUser): Observable<UserDto> {
+    updateUser(user: UpdateUserDto): Observable<UserDto> {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
                 tap((user) => {

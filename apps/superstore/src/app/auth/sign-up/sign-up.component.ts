@@ -35,6 +35,7 @@ export class SignUpComponent {
         } = this.formSignUp.value;
 
         const user: CreateUserDto = {
+            addressesId: [],
             firstName,
             lastName,
             email,

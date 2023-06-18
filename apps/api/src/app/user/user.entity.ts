@@ -5,6 +5,9 @@ export class User {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
+    @Column({ name: 'addresses_id', type: 'integer' })
+    addressesId: number[];
+
     @Column({ name: 'first_name' })
     firstName: string;
 
