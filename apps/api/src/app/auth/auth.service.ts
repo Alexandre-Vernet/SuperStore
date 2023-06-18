@@ -104,7 +104,7 @@ export class AuthService {
                 isAdmin: false
             };
 
-            return this.signUp(createUserDto);
+            this.signUp(createUserDto);
         }
     }
 }
