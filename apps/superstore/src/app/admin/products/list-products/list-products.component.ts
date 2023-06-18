@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/interfaces";
 import { ProductService } from "../../../product/product.service";
 import { AdminService } from "../../admin.service";
@@ -13,10 +13,11 @@ export class ListProductsComponent implements OnInit {
     products: ProductDto[];
     editedProduct: ProductDto;
     searchBar = '';
+    showModalAddProduct = false;
 
     constructor(
         private readonly productService: ProductService,
-        public adminService: AdminService
+        private readonly adminService: AdminService
     ) {
     }
 
@@ -25,6 +26,16 @@ export class ListProductsComponent implements OnInit {
             .subscribe((products) => {
                 products.sort((a, b) => a.id - b.id);
                 this.products = products;
+            });
+
+        this.adminService.searchBar
+            .subscribe((search) => {
+                this.searchBar = search;
+            });
+
+        this.adminService.showModalAddProduct
+            .subscribe((show) => {
+                this.showModalAddProduct = show;
             });
     }
 
@@ -40,12 +51,5 @@ export class ListProductsComponent implements OnInit {
 
     deleteProduct(product: ProductDto) {
         this.productService.deleteProduct(product.id).subscribe();
-    }
-
-    // Escape key to clear search bar
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-        if (this.searchBar.length > 0) {
-            this.searchBar = '';
-        }
     }
 }

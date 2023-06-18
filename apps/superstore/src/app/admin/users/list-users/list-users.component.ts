@@ -13,10 +13,11 @@ export class ListUsersComponent implements OnInit {
     users: UserDto[] = [];
     editedUser: UserDto;
     searchBar = '';
+    showModalAddProduct = false;
 
     constructor(
         private readonly userService: UserService,
-        public adminService: AdminService
+        private readonly adminService: AdminService
     ) {
     }
 
@@ -24,6 +25,16 @@ export class ListUsersComponent implements OnInit {
         this.userService.users
             .subscribe((users) => {
                 this.users = users;
+            });
+
+        this.adminService.searchBar
+            .subscribe((search) => {
+                this.searchBar = search;
+            });
+
+        this.adminService.showModalAddProduct
+            .subscribe((show) => {
+                this.showModalAddProduct = show;
             });
     }
 
