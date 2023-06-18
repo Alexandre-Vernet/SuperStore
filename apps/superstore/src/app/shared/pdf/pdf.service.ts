@@ -49,7 +49,7 @@ export class PdfService {
                 doc.setFontSize(14);
                 doc.text(address.country, 50, 190);
                 doc.text(`${ address.address } \n${ address.apartment }`, 50, 210);
-                doc.text(address.postalCode, 50, 250);
+                doc.text(address.zipCode, 50, 250);
                 doc.text(address.phone, 50, 270);
 
 

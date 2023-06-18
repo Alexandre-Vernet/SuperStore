@@ -1,5 +1,5 @@
-import { UpdateUser } from "./update-user";
+import { UpdateUserDto } from "./update-user";
 
-export class UserDto extends UpdateUser {
+export class UserDto extends UpdateUserDto {
     password: string;
 }

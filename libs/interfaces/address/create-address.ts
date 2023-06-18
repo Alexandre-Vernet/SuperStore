@@ -5,6 +5,6 @@ export class CreateAddressDto {
     apartment?: string;
     country: string;
     city: string;
-    postalCode: string;
+    zipCode: string;
     phone: string;
 }

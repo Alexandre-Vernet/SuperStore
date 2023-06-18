@@ -3,6 +3,7 @@ import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
 import { FindOneOptions, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Address } from "./address.entity";
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AddressService {
@@ -23,7 +24,7 @@ export class AddressService {
                 apartment: createOrderDto?.apartment,
                 country: createOrderDto.country,
                 city: createOrderDto.city,
-                postalCode: createOrderDto.postalCode,
+                zipCode: createOrderDto.zipCode,
                 phone: createOrderDto.phone,
             }
         };
@@ -60,5 +61,22 @@ export class AddressService {
 
     remove(id: number) {
         return this.addressRepository.delete(id);
+    }
+
+
+    migrate() {
+        for (let i = 0; i < 25; i++) {
+            const address: CreateAddressDto = {
+                userId: Math.floor(Math.random() * 10) + 1,
+                address: faker.address.streetAddress(),
+                apartment: faker.address.secondaryAddress(),
+                city: faker.address.city(),
+                country: faker.address.country(),
+                zipCode: faker.address.zipCode(),
+                phone: `06${faker.phone.number('########')}`,
+            };
+
+            this.create(address);
+        }
     }
 }

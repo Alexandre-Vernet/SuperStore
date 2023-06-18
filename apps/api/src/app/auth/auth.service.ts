@@ -5,6 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../user/user.entity";
 import bcrypt from "bcrypt";
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     ) {
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<User> {
+    async signUp(createUserDto: CreateUserDto): Promise<CreateUserDto> {
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
@@ -76,5 +77,27 @@ export class AuthService {
             .catch(() => {
                 throw new ConflictException('Your session has expired. Please sign in again.');
             });
+    }
+
+
+    migrate() {
+        for (let i = 0; i < 50; i++) {
+            const addressesId = [];
+            const randomAddressId = Math.floor(Math.random() * 2) + 1;
+            for (let j = 0; j < randomAddressId; j++) {
+                addressesId.push(faker.datatype.number({ min: 1, max: 6 }));
+            }
+
+            const createUserDto: CreateUserDto = {
+                addressesId,
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                isAdmin: false
+            };
+
+            this.signUp(createUserDto);
+        }
     }
 }

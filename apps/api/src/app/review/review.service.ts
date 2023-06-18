@@ -3,7 +3,7 @@ import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { Review } from "./review.entity";
-
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ReviewService {
@@ -50,5 +50,19 @@ export class ReviewService {
 
     findReviewsForAllProducts() {
         return this.reviewRepository.find();
+    }
+
+
+    migrate() {
+        for (let i = 0; i < 200; i++) {
+            const review: CreateReviewDto = {
+                productId: faker.datatype.number({ min: 1, max: 150 }),
+                description: faker.lorem.paragraph(),
+                rating: faker.datatype.number({ min: 1, max: 5 }),
+                userId: faker.datatype.number({ min: 1, max: 80 }),
+            }
+
+            this.create(review);
+        }
     }
 }
