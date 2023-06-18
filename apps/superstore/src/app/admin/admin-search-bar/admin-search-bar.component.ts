@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { AdminService } from "../admin.service";
 
 @Component({
@@ -7,6 +7,7 @@ import { AdminService } from "../admin.service";
     styleUrls: ['./admin-search-bar.component.scss'],
 })
 export class AdminSearchBarComponent {
+    searchValue = '';
 
     constructor(
         private readonly adminService: AdminService
@@ -15,13 +16,11 @@ export class AdminSearchBarComponent {
 
     search(event: Event) {
         const search = (event.target as HTMLInputElement).value;
-        this.adminService.searchBar.next(search);
-    }
-
-    // Escape key to clear search bar
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-        if (this.adminService.searchBar.getValue().length > 0) {
-            this.adminService.searchBar.next('');
+        if (event instanceof KeyboardEvent && event.key === 'Escape') {
+            // Do nothing if Escape key is pressed
+            this.searchValue = '';
+            return;
         }
+        this.adminService.searchBar.next(search);
     }
 }
