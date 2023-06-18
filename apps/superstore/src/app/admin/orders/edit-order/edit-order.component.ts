@@ -11,13 +11,13 @@ import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 })
 export class EditOrderComponent implements OnInit {
 
-    @Input() editOrder = {} as OrderWithAddressAndUserDto;
+    @Input() editOrder : OrderWithAddressAndUserDto;
     orderStates = [
-        'PENDING' as OrderState,
-        'CONFIRMED' as OrderState,
-        'SHIPPED' as OrderState,
-        'DELIVERED' as OrderState,
-        'CANCELED' as OrderState,
+        OrderState.PENDING,
+        OrderState.CONFIRMED,
+        OrderState.SHIPPED,
+        OrderState.DELIVERED,
+        OrderState.CANCELED,
     ];
 
     formUpdateOrder = new FormGroup({

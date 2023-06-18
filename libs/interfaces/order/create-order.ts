@@ -1,4 +1,4 @@
-import { OrderState } from './state.dto';
+import { OrderState } from './state';
 
 export class CreateOrderDto {
     userId: number;

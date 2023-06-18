@@ -11,7 +11,7 @@ import { ProductDto } from "@superstore/interfaces";
 })
 export class AddProductComponent implements OnInit {
 
-    @Input() editProduct = {} as ProductDto | null;
+    @Input() editProduct:  ProductDto | null;
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required]),

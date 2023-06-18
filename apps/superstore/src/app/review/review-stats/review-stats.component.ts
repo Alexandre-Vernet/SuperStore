@@ -11,7 +11,7 @@ import { OrderService } from "../../order/order.service";
 })
 export class ReviewStatsComponent implements OnInit {
 
-    @Input() product = {} as ProductDto;
+    @Input() product: ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
     userCanAddReview: boolean;
 

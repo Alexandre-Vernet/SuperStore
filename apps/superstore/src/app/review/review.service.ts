@@ -11,7 +11,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class ReviewService {
 
     reviewUrl = environment.reviewUrl();
-    reviews = new BehaviorSubject([] as ReviewDto[]);
+    reviews = new BehaviorSubject(<ReviewDto[]>[]);
     showModalAddReview: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(

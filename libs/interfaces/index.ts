@@ -1,27 +1,27 @@
-export * from '../interfaces/cart/cart.dto';
-export * from '../interfaces/cart/create-cart.dto';
+export * from './cart/cart';
+export * from './cart/create-cart';
 
-export * from '../interfaces/review/review.dto';
-export * from '../interfaces/review/create-review.dto';
+export * from './review/review';
+export * from './review/create-review';
 
-export * from '../interfaces/notifications/notifications.dto';
+export * from './notifications/notifications';
 
-export * from '../interfaces/order/order.dto';
-export * from '../interfaces/order/create-order.dto';
-export * from '../interfaces/order/state.dto';
-
-
-export * from '../interfaces/product/product.dto';
-export * from '../interfaces/product/create-product.dto';
-export * from '../interfaces/product/product-size.dto';
+export * from './order/order';
+export * from './order/create-order';
+export * from './order/state';
 
 
-export * from '../interfaces/user/user.dto';
-export * from '../interfaces/user/create-user.dto';
-export * from '../interfaces/user/sign-in-user.dto';
+export * from './product/product';
+export * from './product/create-product';
+export * from './product/product-size';
 
 
-export * from '../interfaces/address/address.dto';
-export * from '../interfaces/address/create-address.dto';
+export * from './user/user';
+export * from './user/create-user';
+export * from './user/sign-in-user';
 
-export * from '../interfaces/shared/currency.dto';
+
+export * from './address/address';
+export * from './address/create-address';
+
+export * from './shared/currency';

@@ -10,7 +10,7 @@ import { ProductDto } from "@superstore/interfaces";
     styleUrls: ['./add-review.component.scss'],
 })
 export class AddReviewComponent {
-    @Input() productToReview = {} as ProductDto;
+    @Input() productToReview: ProductDto;
     formAddReview = new FormGroup({
         rating: new FormControl('', Validators.required),
         description: new FormControl('', [Validators.required, Validators.maxLength(1000)]),

@@ -13,7 +13,7 @@ export class UserService {
 
     userUrl = environment.userUrl();
     addressUrl = environment.addressUrl();
-    users = new BehaviorSubject([] as UserDto[]);
+    users = new BehaviorSubject(<UserDto[]>[]);
 
     constructor(
         private readonly http: HttpClient,

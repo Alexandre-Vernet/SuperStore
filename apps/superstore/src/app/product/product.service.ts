@@ -12,7 +12,7 @@ import { ReviewService } from "../review/review.service";
 export class ProductService {
 
     productUri = environment.productUri();
-    products = new BehaviorSubject([] as ProductDto[]);
+    products = new BehaviorSubject(<ProductDto[]>[]);
 
     constructor(
         private readonly http: HttpClient,

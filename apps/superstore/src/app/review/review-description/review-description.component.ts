@@ -12,7 +12,7 @@ import { UserService } from "../../user/user.service";
 export class ReviewDescriptionComponent implements OnInit {
     @Input() showTotalReviews;
     reviews: ReviewWithUserDto[] = [];
-    currentUser = {} as UserDto;
+    currentUser: UserDto;
     currentPage = 1;
     totalPage = 1;
     countItemPerPage = 10;

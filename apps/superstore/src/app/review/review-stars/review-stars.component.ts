@@ -9,7 +9,7 @@ import { ReviewService } from "../review.service";
 })
 export class ReviewStarsComponent implements OnInit {
     @Input() showTotalReviews;
-    @Input() review = {} as ReviewDto;
+    @Input() review: ReviewDto;
     reviews: ReviewDto[] = [];
     stars: number[] = [1, 2, 3, 4, 5];
 

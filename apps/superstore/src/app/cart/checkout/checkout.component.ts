@@ -162,7 +162,7 @@ export class CheckoutComponent implements OnInit {
 
         const order: CreateOrderDto = {
             userId,
-            state: 'PENDING' as OrderState,
+            state: OrderState.PENDING,
             addressId: this.selectedAddress?.id,
             productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),

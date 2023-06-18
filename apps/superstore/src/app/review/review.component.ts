@@ -8,7 +8,7 @@ import { ReviewService } from "./review.service";
     styleUrls: ['./review.component.scss'],
 })
 export class ReviewComponent implements OnInit {
-    @Input() product = {} as ProductDto;
+    @Input() product: ProductDto;
     reviews: ReviewDto[] = [];
 
     constructor(

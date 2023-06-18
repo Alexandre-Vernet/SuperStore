@@ -11,7 +11,7 @@ import { UserService } from "../../../user/user.service";
 })
 export class UpdateUserComponent implements OnInit {
 
-    @Input() editUser = {} as UserDto;
+    @Input() editUser:  UserDto;
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
@@ -51,7 +51,8 @@ export class UpdateUserComponent implements OnInit {
             firstName,
             lastName,
             email,
-            isAdmin
+            isAdmin,
+            password: ''
         })
             .subscribe(() => this.formUpdateUser.reset());
 

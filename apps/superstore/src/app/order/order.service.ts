@@ -13,7 +13,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class OrderService {
 
     orderUri = environment.orderUri();
-    orders = new BehaviorSubject([] as OrderWithAddressAndUserDto[])
+    orders = new BehaviorSubject(<OrderWithAddressAndUserDto[]>[])
 
     constructor(
         private http: HttpClient,

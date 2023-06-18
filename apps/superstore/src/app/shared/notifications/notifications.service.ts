@@ -11,7 +11,7 @@ export class NotificationsService {
     showSuccessNotification(title: string, description: string, duration: number = 5000) {
         this.message.emit({
             show: true,
-            icon: 'success' as NotificationType,
+            icon: NotificationType.success,
             title,
             description,
             duration
@@ -25,7 +25,7 @@ export class NotificationsService {
     showErrorNotification(title: string, description: string, duration: number = 7000) {
         this.message.emit({
             show: true,
-            icon: 'error' as NotificationType,
+            icon: NotificationType.error,
             title,
             description,
             duration,
@@ -39,7 +39,7 @@ export class NotificationsService {
     hideNotification() {
         this.message.emit({
             show: false,
-            icon: '' as NotificationType,
+            icon: NotificationType.success,
             title: '',
             description: '',
             duration: 0,
