@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { CreateUserDto } from "@superstore/libs";
+import { CreateUserDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
 
 @Component({

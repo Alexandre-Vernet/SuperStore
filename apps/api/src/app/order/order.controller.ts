@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto, OrderDto } from '@superstore/libs';
+import { CreateOrderDto, OrderDto } from '@superstore/interfaces';
 
 @Controller('order')
 export class OrderController {

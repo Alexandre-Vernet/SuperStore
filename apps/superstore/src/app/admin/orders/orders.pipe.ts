@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OrderWithAddressAndUserDto } from "@superstore/libs";
+import { OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
 @Pipe({
     name: 'searchOrders'

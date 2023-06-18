@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";

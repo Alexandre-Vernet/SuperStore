@@ -1,4 +1,4 @@
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 import { Component, Input, OnInit } from "@angular/core";
 import { AuthService } from "../../auth/auth.service";
 import { ReviewService } from "../review.service";

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from '@superstore/libs';
-import { ProductDto } from '@superstore/libs';
+import { CreateProductDto, ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, In, Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { InjectRepository } from "@nestjs/typeorm";

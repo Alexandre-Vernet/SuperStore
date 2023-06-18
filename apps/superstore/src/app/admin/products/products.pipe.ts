@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Pipe({
     name: 'searchProducts'

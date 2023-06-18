@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserDto } from '@superstore/libs';
+import { UserDto } from '@superstore/interfaces';
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";

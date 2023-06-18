@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, } from '@nestjs/common';
 import { AddressService } from './address.service';
-import { AddressDto, CreateAddressDto } from "@superstore/libs";
+import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
 
 @Controller('address')
 export class AddressController {

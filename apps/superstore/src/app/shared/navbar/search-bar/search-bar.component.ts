@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
 import { ProductPipe } from "../../../product/product.pipe";
 import { ProductService } from "../../../product/product.service";

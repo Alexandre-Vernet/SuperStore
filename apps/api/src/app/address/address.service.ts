@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto, CreateAddressDto } from "@superstore/libs";
+import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
 import { FindOneOptions, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Address } from "./address.entity";

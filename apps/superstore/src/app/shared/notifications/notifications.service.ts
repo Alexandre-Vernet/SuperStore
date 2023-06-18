@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { NotificationsDto, NotificationType } from "@superstore/libs";
+import { NotificationsDto, NotificationType } from "@superstore/interfaces";
 
 @Injectable({
     providedIn: 'root'

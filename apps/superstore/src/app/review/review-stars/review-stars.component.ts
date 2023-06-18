@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewDto } from "@superstore/libs";
+import { ReviewDto } from "@superstore/interfaces";
 import { ReviewService } from "../review.service";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto, ProductDto } from '@superstore/libs';
+import { CreateProductDto, ProductDto } from '@superstore/interfaces';
 
 @Controller('product')
 export class ProductController {

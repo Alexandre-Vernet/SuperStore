@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { OrderDto, OrderWithAddressAndUserDto } from "@superstore/libs";
+import { OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { UserService } from "../../../user/user.service";

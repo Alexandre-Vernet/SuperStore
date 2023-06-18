@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrencyDto } from "@superstore/libs";
+import { CurrencyDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-change-currency',

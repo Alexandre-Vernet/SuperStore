@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { SignInUserDto } from "@superstore/libs";
+import { SignInUserDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
 
 @Component({

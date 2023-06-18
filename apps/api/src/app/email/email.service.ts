@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from "@superstore/libs";
+import { CreateOrderDto } from "@superstore/interfaces";
 import { HttpService } from "@nestjs/axios";
 import { UserService } from "../user/user.service";
 

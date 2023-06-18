@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { UserDto } from "@superstore/libs";
+import { UserDto } from "@superstore/interfaces";
 
 @Pipe({
     name: 'searchUsers'

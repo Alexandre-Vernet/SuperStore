@@ -2,7 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "../../../product/product.service";
 import { AdminService } from "../../admin.service";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-add-product',

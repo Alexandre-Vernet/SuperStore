@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from "../auth/auth.service";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { AddressDto, CreateAddressDto, UserDto } from "@superstore/libs";
+import { AddressDto, CreateAddressDto, UserDto } from "@superstore/interfaces";
 import { environment } from "../../environments/environment";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { CreateReviewDto, ReviewDto } from "@superstore/libs";
+import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({

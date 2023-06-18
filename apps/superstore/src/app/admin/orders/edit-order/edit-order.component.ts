@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { OrderState, OrderWithAddressAndUserDto } from "@superstore/libs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
+import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-edit-order',

@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { CartService } from "../../cart/cart.service";
-import { ProductDto, ProductSizeDto, ReviewDto } from "@superstore/libs";
+import { ProductDto, ProductSizeDto, ReviewDto } from "@superstore/interfaces";
 import { ReviewService } from "../../review/review.service";
 
 @Component({

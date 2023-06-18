@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserDto } from "@superstore/libs";
+import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { UserService } from "../../../user/user.service";

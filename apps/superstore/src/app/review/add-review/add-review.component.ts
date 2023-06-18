@@ -2,7 +2,7 @@ import { Component, HostListener, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ReviewService } from "../review.service";
 import { AuthService } from "../../auth/auth.service";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-add-review',

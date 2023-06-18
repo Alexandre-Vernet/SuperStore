@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "../../user/user.service";
-import { AddressDto, OrderDto, ProductDto } from "@superstore/libs";
+import { AddressDto, OrderDto, ProductDto } from "@superstore/interfaces";
 import { OrderService } from "../order.service";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";

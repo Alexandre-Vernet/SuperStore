@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, OrderDto, OrderWithAddressAndUserDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";

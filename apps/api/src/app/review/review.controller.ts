@@ -8,8 +8,7 @@ import {
     Delete,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { CreateReviewDto } from "@superstore/libs";
-import { ReviewDto } from "@superstore/libs";
+import { ReviewDto, CreateReviewDto } from "@superstore/interfaces";
 
 @Controller('review')
 export class ReviewController {
