@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from "./auth.service";
-import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +11,6 @@ export class AuthGuard {
     constructor(
         private readonly authService: AuthService,
         private router: Router,
-        private readonly notificationsService: NotificationsService
     ) {
     }
 
@@ -25,13 +23,14 @@ export class AuthGuard {
                     .signInWithAccessToken()
                     .subscribe({
                         next: () => resolve(true),
-                        error: () => {
+                        error: (err) => {
+                            this.authService.error = err.error.message;
                             this.router.navigate(['/sign-in']);
                             reject(false);
                         }
                     });
             } else {
-                this.notificationsService.showErrorNotification('Unauthorized', 'You must be logged in to access this page.');
+                this.authService.error = 'You must be signed in to access this page.';
                 this.router.navigate(['/sign-in']);
                 reject(false);
             }
