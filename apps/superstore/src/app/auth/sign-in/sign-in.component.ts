@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import { SignInUserDto } from "@superstore/libs";
@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
     templateUrl: './sign-in.component.html',
     styleUrls: ['./sign-in.component.scss'],
 })
-export class SignInComponent {
+export class SignInComponent implements AfterViewInit {
 
     formSignIn = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email]),
@@ -18,8 +18,14 @@ export class SignInComponent {
 
     constructor(
         private readonly authService: AuthService,
-        private router: Router
+        private router: Router,
+        private cdRef: ChangeDetectorRef
     ) {
+    }
+
+    ngAfterViewInit() {
+        this.authService.error ? this.formSignIn.setErrors({ error: this.authService.error }) : null;
+        this.cdRef.detectChanges();
     }
 
     signIn() {

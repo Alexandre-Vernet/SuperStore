@@ -11,6 +11,7 @@ export class AuthService {
 
     user: UserDto;
     authUrl = environment.authUrl();
+    error = '';
 
     constructor(
         private http: HttpClient,
