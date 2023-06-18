@@ -41,7 +41,7 @@ export class CheckoutComponent implements OnInit {
         apartment: new FormControl(),
         country: new FormControl('', [Validators.required]),
         city: new FormControl('', [Validators.required]),
-        postalCode: new FormControl('', [Validators.required]),
+        zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl('', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
@@ -76,7 +76,7 @@ export class CheckoutComponent implements OnInit {
                     apartment: addresses[0]?.apartment,
                     country: addresses[0]?.country,
                     city: addresses[0]?.city,
-                    postalCode: addresses[0]?.postalCode,
+                    zipCode: addresses[0]?.zipCode,
                     phone: addresses[0]?.phone,
                 });
             });
@@ -90,7 +90,7 @@ export class CheckoutComponent implements OnInit {
             apartment: address.apartment,
             country: address.country,
             city: address.city,
-            postalCode: address.postalCode,
+            zipCode: address.zipCode,
             phone: address.phone,
         });
     }
@@ -153,7 +153,7 @@ export class CheckoutComponent implements OnInit {
             apartment,
             country,
             city,
-            postalCode,
+            zipCode,
             phone,
             paymentMethod
         } = this.formAddress.value;
@@ -182,7 +182,7 @@ export class CheckoutComponent implements OnInit {
                     apartment,
                     country,
                     city,
-                    postalCode,
+                    zipCode,
                     phone
                 })
                 .subscribe((address) => {
@@ -195,7 +195,7 @@ export class CheckoutComponent implements OnInit {
                 this.selectedAddress.apartment !== apartment ||
                 this.selectedAddress.country !== country ||
                 this.selectedAddress.city !== city ||
-                this.selectedAddress.postalCode !== postalCode ||
+                this.selectedAddress.zipCode !== zipCode ||
                 this.selectedAddress.phone !== phone) {
                 this.userService
                     .createAddress({
@@ -205,7 +205,7 @@ export class CheckoutComponent implements OnInit {
                         apartment,
                         country,
                         city,
-                        postalCode,
+                        zipCode,
                         phone
                     })
                     .subscribe((address) => {

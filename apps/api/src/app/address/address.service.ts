@@ -23,7 +23,7 @@ export class AddressService {
                 apartment: createOrderDto?.apartment,
                 country: createOrderDto.country,
                 city: createOrderDto.city,
-                postalCode: createOrderDto.postalCode,
+                postalCode: createOrderDto.zipCode,
                 phone: createOrderDto.phone,
             }
         };

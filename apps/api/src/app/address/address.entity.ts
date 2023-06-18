@@ -23,8 +23,8 @@ export class Address {
     @Column()
     city: string;
 
-    @Column({ name: 'postal_code' })
-    postalCode: string;
+    @Column({ name: 'zip_code' })
+    zipCode: string;
 
     @Column()
     phone: string;

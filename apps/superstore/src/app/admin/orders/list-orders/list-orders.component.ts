@@ -30,7 +30,7 @@ export class ListOrdersComponent implements OnInit {
                 orders.map(order => {
                     this.userService.getAddress(order.addressId)
                         .subscribe((address) => {
-                            const shortAddress = `${ address.address } ${ address.city } ${ address.postalCode }`;
+                            const shortAddress = `${ address.address } ${ address.city } ${ address.zipCode }`;
                             order.address = shortAddress;
                         });
 
