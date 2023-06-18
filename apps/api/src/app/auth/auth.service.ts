@@ -5,6 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../user/user.entity";
 import bcrypt from "bcrypt";
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AuthService {
@@ -21,13 +22,27 @@ export class AuthService {
             throw new ConflictException('This email is already taken');
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-        if (!hashedPassword) {
-            throw new ConflictException('Something went wrong. Please try again later.');
+        for (let i = 0; i < 10; i++) {
+            createUserDto = {
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                isAdmin: false
+            };
+
+
+            // Hash password
+            const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+            if (!hashedPassword) {
+                throw new ConflictException('Something went wrong. Please try again later.');
+            }
+            createUserDto.password = hashedPassword;
+            createUserDto.isAdmin = false;
+
+            this.userRepository.save(createUserDto)
+
         }
-        createUserDto.password = hashedPassword;
-        createUserDto.isAdmin = false;
 
         return this.userRepository.save(createUserDto);
     }
@@ -76,5 +91,20 @@ export class AuthService {
             .catch(() => {
                 throw new ConflictException('Your session has expired. Please sign in again.');
             });
+    }
+
+
+    migrate() {
+        for (let i = 0; i < 10; i++) {
+            const createUserDto = {
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                isAdmin: false
+            };
+
+            return this.signUp(createUserDto);
+        }
     }
 }
