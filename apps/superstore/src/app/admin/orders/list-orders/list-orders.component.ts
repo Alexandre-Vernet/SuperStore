@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
@@ -14,13 +14,14 @@ export class ListOrdersComponent implements OnInit {
 
     orders: OrderWithAddressAndUserDto[];
     editedOrder: OrderWithAddressAndUserDto;
-    searchBar = '';
+    searchBar: string;
+    showModalAddProduct = false;
 
     constructor(
         private readonly orderService: OrderService,
         private readonly userService: UserService,
         private readonly productService: ProductService,
-        public adminService: AdminService
+        private readonly adminService: AdminService
     ) {
     }
 
@@ -47,6 +48,16 @@ export class ListOrdersComponent implements OnInit {
                 });
                 this.orders = orders;
             });
+
+        this.adminService.searchBar
+            .subscribe((search) => {
+                this.searchBar = search;
+            });
+
+        this.adminService.showModalAddProduct
+            .subscribe((show) => {
+                this.showModalAddProduct = show;
+            });
     }
 
     editOrder(order: OrderWithAddressAndUserDto) {
@@ -56,12 +67,5 @@ export class ListOrdersComponent implements OnInit {
 
     deleteOrder(order: OrderDto) {
         this.orderService.deleteOrder(order.id).subscribe();
-    }
-
-    // Escape key to clear search bar
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-        if (this.searchBar.length > 0) {
-            this.searchBar = '';
-        }
     }
 }

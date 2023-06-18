@@ -11,10 +11,11 @@ import { TabsComponent } from './tabs/tabs.component';
 import { ListUsersComponent } from './users/list-users/list-users.component';
 import { UpdateUserComponent } from './users/update-user/update-user.component';
 import { EditOrderComponent } from './orders/edit-order/edit-order.component';
-import { OrdersPipe } from "./orders/orders.pipe";
-import { ProductsPipe } from "./products/products.pipe";
-import { UsersPipe } from "./users/users.pipe";
-import { SharedModule } from "../shared/shared.module";
+import { OrdersPipe } from './orders/orders.pipe';
+import { ProductsPipe } from './products/products.pipe';
+import { UsersPipe } from './users/users.pipe';
+import { SharedModule } from '../shared/shared.module';
+import { AdminSearchBarComponent } from "./admin-search-bar/admin-search-bar.component";
 
 @NgModule({
     declarations: [
@@ -29,9 +30,16 @@ import { SharedModule } from "../shared/shared.module";
         EditOrderComponent,
         OrdersPipe,
         ProductsPipe,
-        UsersPipe
+        UsersPipe,
+        AdminSearchBarComponent,
+        AdminSearchBarComponent,
     ],
-    imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule, FormsModule, SharedModule],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    SharedModule,
+  ],
 })
-export class AdminModule {
-}
+export class AdminModule {}
