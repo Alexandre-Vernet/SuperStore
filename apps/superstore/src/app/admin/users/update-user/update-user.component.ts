@@ -52,7 +52,6 @@ export class UpdateUserComponent implements OnInit {
             lastName,
             email,
             isAdmin,
-            password: ''
         })
             .subscribe(() => this.formUpdateUser.reset());
 

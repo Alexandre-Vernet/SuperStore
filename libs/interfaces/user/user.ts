@@ -1,5 +1,5 @@
-import { CreateUserDto } from './create-user';
+import { UpdateUser } from "./update-user";
 
-export class UserDto extends CreateUserDto {
-    id: number;
+export class UserDto extends UpdateUser {
+    password: string;
 }

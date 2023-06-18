@@ -19,6 +19,7 @@ export * from './product/product-size';
 export * from './user/user';
 export * from './user/create-user';
 export * from './user/sign-in-user';
+export * from './user/update-user';
 
 
 export * from './address/address';
