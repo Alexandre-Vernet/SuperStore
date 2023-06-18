@@ -3,6 +3,7 @@ import { CreateProductDto, ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, In, Repository } from "typeorm";
 import { Product } from "./product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ProductService {
@@ -57,5 +58,25 @@ export class ProductService {
                 id: In(ids),
             },
         });
+    }
+
+    migrate() {
+        for (let i = 0; i < 150; i++) {
+
+            const randomNumberCategories = Math.floor(Math.random() * 3) + 1;
+            const categories = [];
+            for (let j = 0; j < randomNumberCategories; j++) {
+                categories.push(faker.commerce.department());
+            }
+
+            const product: CreateProductDto = {
+                name: faker.commerce.productName(),
+                description: faker.commerce.productDescription(),
+                price: Number(faker.commerce.price()),
+                category: categories,
+            };
+
+            this.create(product);
+        }
     }
 }
