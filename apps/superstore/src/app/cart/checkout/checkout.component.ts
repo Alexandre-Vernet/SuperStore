@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/interfaces";
+import {
+    AddressDto,
+    CartDto,
+    CreateOrderDto,
+    DeliveryMethod,
+    DeliveryMethodExpectedDelivery,
+    DeliveryMethodPrice, DeliveryMethodType,
+    OrderState
+} from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -21,14 +29,14 @@ export class CheckoutComponent implements OnInit {
     addresses: AddressDto[] = [];
     deliveryMethods: DeliveryMethod[] = [
         {
-            name: 'Standard',
-            expectedDelivery: '3-5 business days',
-            price: 5,
+            name: DeliveryMethodType.STANDARD,
+            expectedDelivery: DeliveryMethodExpectedDelivery.STANDARD,
+            price: DeliveryMethodPrice.STANDARD,
         },
         {
-            name: 'Express',
-            expectedDelivery: '1-2 business days',
-            price: 16,
+            name: DeliveryMethodType.EXPRESS,
+            expectedDelivery: DeliveryMethodExpectedDelivery.EXPRESS,
+            price: DeliveryMethodPrice.EXPRESS,
         },
     ];
     shippingPrice = this.deliveryMethods[0].price;
