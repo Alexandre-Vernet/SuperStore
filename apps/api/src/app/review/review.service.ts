@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReviewDto, ReviewDto } from "@superstore/libs";
+import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { Review } from "./review.entity";

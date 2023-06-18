@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserDto } from "@superstore/libs";
+import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { UserService } from "../../../user/user.service";
@@ -11,7 +11,7 @@ import { UserService } from "../../../user/user.service";
 })
 export class UpdateUserComponent implements OnInit {
 
-    @Input() editUser = {} as UserDto;
+    @Input() editUser:  UserDto;
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
@@ -51,7 +51,7 @@ export class UpdateUserComponent implements OnInit {
             firstName,
             lastName,
             email,
-            isAdmin
+            isAdmin,
         })
             .subscribe(() => this.formUpdateUser.reset());
 

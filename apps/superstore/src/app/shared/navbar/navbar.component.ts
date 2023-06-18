@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AppComponent } from "../../app.component";
-import { CartDto, UserDto } from "@superstore/libs";
+import { CartDto, UserDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-navbar',

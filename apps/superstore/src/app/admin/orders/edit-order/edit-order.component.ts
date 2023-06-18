@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { OrderState, OrderWithAddressAndUserDto } from "@superstore/libs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
+import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-edit-order',
@@ -11,13 +11,13 @@ import { OrderService } from "../../../order/order.service";
 })
 export class EditOrderComponent implements OnInit {
 
-    @Input() editOrder = {} as OrderWithAddressAndUserDto;
+    @Input() editOrder : OrderWithAddressAndUserDto;
     orderStates = [
-        'PENDING' as OrderState,
-        'CONFIRMED' as OrderState,
-        'SHIPPED' as OrderState,
-        'DELIVERED' as OrderState,
-        'CANCELED' as OrderState,
+        OrderState.PENDING,
+        OrderState.CONFIRMED,
+        OrderState.SHIPPED,
+        OrderState.DELIVERED,
+        OrderState.CANCELED,
     ];
 
     formUpdateOrder = new FormGroup({

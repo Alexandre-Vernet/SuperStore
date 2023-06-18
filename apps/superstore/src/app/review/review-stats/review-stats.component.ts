@@ -1,4 +1,4 @@
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 import { Component, Input, OnInit } from "@angular/core";
 import { AuthService } from "../../auth/auth.service";
 import { ReviewService } from "../review.service";
@@ -11,7 +11,7 @@ import { OrderService } from "../../order/order.service";
 })
 export class ReviewStatsComponent implements OnInit {
 
-    @Input() product = {} as ProductDto;
+    @Input() product: ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
     userCanAddReview: boolean;
 

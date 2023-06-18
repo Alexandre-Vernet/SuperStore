@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
-import { CreateOrderDto, OrderDto } from "@superstore/libs";
+import { CreateOrderDto, OrderDto } from "@superstore/interfaces";
 import { EmailService } from "../email/email.service";
 
 @Injectable()

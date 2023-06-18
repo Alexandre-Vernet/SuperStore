@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/libs";
+import { AddressDto, CartDto, CreateOrderDto, DeliveryMethod, OrderState } from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -162,7 +162,7 @@ export class CheckoutComponent implements OnInit {
 
         const order: CreateOrderDto = {
             userId,
-            state: 'PENDING' as OrderState,
+            state: OrderState.PENDING,
             addressId: this.selectedAddress?.id,
             productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),

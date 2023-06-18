@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartDto, ProductSizeDto } from "@superstore/libs";
+import { CartDto, ProductSizeDto } from "@superstore/interfaces";
 import { ProductService } from "../product/product.service";
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "../../../product/product.service";
 import { AdminService } from "../../admin.service";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-add-product',
@@ -11,7 +11,7 @@ import { ProductDto } from "@superstore/libs";
 })
 export class AddProductComponent implements OnInit {
 
-    @Input() editProduct = {} as ProductDto | null;
+    @Input() editProduct:  ProductDto | null;
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required]),

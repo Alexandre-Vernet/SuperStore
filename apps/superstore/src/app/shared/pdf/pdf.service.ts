@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OrderDto, OrderWithProductsDto } from "@superstore/libs";
+import { OrderDto, OrderWithProductsDto } from "@superstore/interfaces";
 import { jsPDF } from "jspdf";
 import { forkJoin } from "rxjs";
 import autoTable from "jspdf-autotable";

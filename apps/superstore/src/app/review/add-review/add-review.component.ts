@@ -2,7 +2,7 @@ import { Component, HostListener, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ReviewService } from "../review.service";
 import { AuthService } from "../../auth/auth.service";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-add-review',
@@ -10,7 +10,7 @@ import { ProductDto } from "@superstore/libs";
     styleUrls: ['./add-review.component.scss'],
 })
 export class AddReviewComponent {
-    @Input() productToReview = {} as ProductDto;
+    @Input() productToReview: ProductDto;
     formAddReview = new FormGroup({
         rating: new FormControl('', Validators.required),
         description: new FormControl('', [Validators.required, Validators.maxLength(1000)]),

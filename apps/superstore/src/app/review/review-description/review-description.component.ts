@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewWithUserDto, UserDto } from "@superstore/libs";
+import { ReviewWithUserDto, UserDto } from "@superstore/interfaces";
 import { ReviewService } from "../review.service";
 import { AuthService } from "../../auth/auth.service";
 import { UserService } from "../../user/user.service";
@@ -12,7 +12,7 @@ import { UserService } from "../../user/user.service";
 export class ReviewDescriptionComponent implements OnInit {
     @Input() showTotalReviews;
     reviews: ReviewWithUserDto[] = [];
-    currentUser = {} as UserDto;
+    currentUser: UserDto;
     currentPage = 1;
     totalPage = 1;
     countItemPerPage = 10;

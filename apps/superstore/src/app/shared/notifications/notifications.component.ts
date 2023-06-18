@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsDto } from "@superstore/libs";
+import { NotificationsDto } from "@superstore/interfaces";
 import { NotificationsService } from "./notifications.service";
 
 @Component({

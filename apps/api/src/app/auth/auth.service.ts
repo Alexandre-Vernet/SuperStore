@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto } from "@superstore/libs";
+import { CreateUserDto, SignInUserDto } from "@superstore/interfaces";
 import { FindOneOptions, Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";

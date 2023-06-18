@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Put, } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from '@superstore/libs';
+import { UserDto } from '@superstore/interfaces';
 
 @Controller('user')
 export class UserController {

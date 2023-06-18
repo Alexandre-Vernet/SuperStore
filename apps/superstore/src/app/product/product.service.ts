@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
-import { CreateProductDto, ProductDto } from "@superstore/libs";
+import { CreateProductDto, ProductDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 import { ReviewService } from "../review/review.service";
 
@@ -12,7 +12,7 @@ import { ReviewService } from "../review/review.service";
 export class ProductService {
 
     productUri = environment.productUri();
-    products = new BehaviorSubject([] as ProductDto[]);
+    products = new BehaviorSubject(<ProductDto[]>[]);
 
     constructor(
         private readonly http: HttpClient,

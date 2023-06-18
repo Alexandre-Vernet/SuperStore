@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { OrderState } from "@superstore/libs";
+import { OrderState } from "@superstore/interfaces";
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {

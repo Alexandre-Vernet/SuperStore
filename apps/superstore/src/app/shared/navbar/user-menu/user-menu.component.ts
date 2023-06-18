@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserDto } from "@superstore/libs";
+import { UserDto } from "@superstore/interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { Router } from "@angular/router";
 

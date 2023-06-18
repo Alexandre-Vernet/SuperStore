@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
-import { OrderState, OrderWithProductsDto, ProductDto, ProductSizeDto } from "@superstore/libs";
+import { OrderState, OrderWithProductsDto, ProductDto, ProductSizeDto } from "@superstore/interfaces";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";

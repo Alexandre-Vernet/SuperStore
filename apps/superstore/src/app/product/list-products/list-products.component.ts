@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from "../product.service";
 import { ProductPipe } from "../product.pipe";
-import { ProductDto } from "@superstore/libs";
+import { ProductDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-list-products',
