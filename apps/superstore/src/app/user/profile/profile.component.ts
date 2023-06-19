@@ -4,11 +4,11 @@ import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
-    selector: 'superstore-my-profile',
-    templateUrl: './my-profile.component.html',
-    styleUrls: ['./my-profile.component.scss'],
+    selector: 'superstore-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
 })
-export class MyProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit {
 
     user: UserDto;
     formUser = new FormGroup({

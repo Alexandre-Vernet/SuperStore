@@ -1,11 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MyProfileComponent } from "./my-profile/my-profile.component";
+import { ProfileComponent } from "./profile/profile.component";
+import { UserComponent } from "./user.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: MyProfileComponent
+        component: UserComponent,
+        children: [
+            {
+                path: '',
+                redirectTo: 'profile',
+                pathMatch: 'full'
+            },
+            {
+                path: 'profile',
+                component: ProfileComponent,
+            }
+        ]
     }
 ];
 
