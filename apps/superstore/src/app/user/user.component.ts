@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
         },
         {
             label: 'Newsletter',
-            link: '/user/password',
+            link: '/user/newsletter',
             icon: 'assets/icons/user/newsletter.svg'
         },
         {
@@ -44,6 +44,9 @@ export class UserComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentRoute = this.router.url;
+        this.router.events
+            .subscribe(() => {
+                this.currentRoute = this.router.url;
+            });
     }
 }
