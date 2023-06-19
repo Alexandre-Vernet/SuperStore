@@ -16,20 +16,9 @@ export class UserComponent implements OnInit {
             icon: 'assets/icons/user/profile.svg'
         },
         {
-            label: 'Account',
-            link: '/user/account',
-            icon: 'assets/icons/user/account.svg'
-
-        },
-        {
             label: 'Password',
             link: '/user/password',
             icon: 'assets/icons/user/password.svg'
-        },
-        {
-            label: 'Newsletter',
-            link: '/user/newsletter',
-            icon: 'assets/icons/user/newsletter.svg'
         },
         {
             label: 'Addresses',
