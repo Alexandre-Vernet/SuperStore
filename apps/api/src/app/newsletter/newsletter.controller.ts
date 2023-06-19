@@ -11,7 +11,7 @@ export class NewsletterController {
 
     @Post()
     storeEmailInDatabase(@Body() createNewsletterDto: CreateNewsletterDto) {
-        return this.newsletterService.create(createNewsletterDto);
+        return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
     }
 
     @Post('send-email')
