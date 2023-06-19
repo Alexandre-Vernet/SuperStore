@@ -4,6 +4,7 @@ import { ListProductsComponent } from "./products/list-products/list-products.co
 import { AdminComponent } from "./admin.component";
 import { ListUsersComponent } from "./users/list-users/list-users.component";
 import { ListOrdersComponent } from "./orders/list-orders/list-orders.component";
+import { SendNewsletterComponent } from "./send-newsletter/send-newsletter.component";
 
 const routes: Routes = [
     {
@@ -21,6 +22,10 @@ const routes: Routes = [
             {
                 path: 'list-orders',
                 component: ListOrdersComponent
+            },
+            {
+                path: 'send-newsletter',
+                component: SendNewsletterComponent
             }
         ]
     },

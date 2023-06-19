@@ -1,5 +1,5 @@
-import { CreateNewsletterDto } from "./create-newsletter";
-
-export class NewsletterDto extends CreateNewsletterDto {
-    id: number
+export class NewsletterDto {
+    title: string;
+    description: string;
+    emails: string[];
 }

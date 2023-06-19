@@ -7,4 +7,5 @@ export const environment = {
     addressUrl: () => `${ environment.backendUrl }/address`,
     userUrl: () => `${ environment.backendUrl }/user`,
     reviewUrl: () => `${ environment.backendUrl }/review`,
+    newsletterUrl: () => `${ environment.backendUrl }/newsletter`,
 };
