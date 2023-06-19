@@ -15,7 +15,8 @@ export class NewsletterService {
     ) {
     }
 
-    create(createNewsletterDto: CreateNewsletterDto): Promise<CreateNewsletterDto> {
+    storeEmailInDatabase(createNewsletterDto: CreateNewsletterDto): Promise<CreateNewsletterDto> {
+        createNewsletterDto.isSubscribed = true;
         return this.newsletterRepository.save(createNewsletterDto);
     }
 
@@ -54,7 +55,7 @@ export class NewsletterService {
                 isSubscribed: faker.datatype.boolean(),
             };
 
-            this.create(newsletter);
+            this.storeEmailInDatabase(newsletter);
         }
     }
 }

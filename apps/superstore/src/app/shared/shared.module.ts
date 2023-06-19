@@ -4,7 +4,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { RouterLink } from '@angular/router';
 import { ResponsiveNavbarComponent } from './responsive-navbar/responsive-navbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { LoaderComponent } from './loader/loader.component';
@@ -30,7 +30,7 @@ import { PdfService } from "./pdf/pdf.service";
         UserMenuComponent,
         CartIconComponent,
     ],
-    imports: [CommonModule, RouterLink, FormsModule],
+    imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule],
     exports: [
         NavbarComponent,
         ResponsiveNavbarComponent,
