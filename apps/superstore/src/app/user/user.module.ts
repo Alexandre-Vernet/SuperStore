@@ -5,9 +5,10 @@ import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
+import { PasswordComponent } from './password/password.component';
 
 @NgModule({
-    declarations: [ProfileComponent, UserComponent],
+    declarations: [ProfileComponent, UserComponent, PasswordComponent],
     imports: [CommonModule, UserRoutingModule, ReactiveFormsModule],
 })
 export class UserModule {
