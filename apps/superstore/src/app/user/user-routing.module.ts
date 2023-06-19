@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from "./profile/profile.component";
 import { UserComponent } from "./user.component";
 import { PasswordComponent } from "./password/password.component";
+import { AddressComponent } from "./address/address.component";
 
 const routes: Routes = [
     {
@@ -21,6 +22,10 @@ const routes: Routes = [
             {
                 path: 'password',
                 component: PasswordComponent,
+            },
+            {
+                path: 'address',
+                component: AddressComponent,
             },
         ]
     }
