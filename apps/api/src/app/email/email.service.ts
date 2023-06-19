@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from "@superstore/interfaces";
+import { CreateOrderDto, NewsletterDto } from "@superstore/interfaces";
 import { HttpService } from "@nestjs/axios";
 import { UserService } from "../user/user.service";
 
@@ -32,6 +32,23 @@ export class EmailService {
                 .catch(error => {
                     reject(error);
                 })
+        });
+    }
+
+    sendNewsletter(newsletter: NewsletterDto): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const { EMAIL_SERVICE_URL } = process.env;
+
+            this.httpService
+                .post(`${ EMAIL_SERVICE_URL }/newsletter`, { newsletter })
+                .subscribe({
+                    next: () => {
+                        resolve();
+                    },
+                    error: (err) => {
+                        reject(err);
+                    }
+                });
         });
     }
 }

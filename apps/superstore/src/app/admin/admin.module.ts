@@ -15,7 +15,8 @@ import { OrdersPipe } from './orders/orders.pipe';
 import { ProductsPipe } from './products/products.pipe';
 import { UsersPipe } from './users/users.pipe';
 import { SharedModule } from '../shared/shared.module';
-import { AdminSearchBarComponent } from "./admin-search-bar/admin-search-bar.component";
+import { AdminSearchBarComponent } from './admin-search-bar/admin-search-bar.component';
+import { SendNewsletterComponent } from './send-newsletter/send-newsletter.component';
 
 @NgModule({
     declarations: [
@@ -33,13 +34,15 @@ import { AdminSearchBarComponent } from "./admin-search-bar/admin-search-bar.com
         UsersPipe,
         AdminSearchBarComponent,
         AdminSearchBarComponent,
+        SendNewsletterComponent,
     ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    SharedModule,
-  ],
+    imports: [
+        CommonModule,
+        AdminRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        SharedModule,
+    ],
 })
-export class AdminModule {}
+export class AdminModule {
+}

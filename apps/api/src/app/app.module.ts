@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ProductModule } from "./product/product.module";
-import { Product } from "./product/product.entity";
-import { Order } from "./order/order.entity";
-import { User } from "./user/user.entity";
-import { OrderModule } from "./order/order.module";
-import { UserModule } from "./user/user.module";
-import { AddressModule } from "./address/address.module";
-import { Address } from "./address/address.entity";
-import { JwtModule } from "@nestjs/jwt";
-import { EmailModule } from "./email/email.module";
-import { AuthModule } from "./auth/auth.module";
-import { Review } from "./review/review.entity";
-import { ReviewModule } from "./review/review.module";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductModule } from './product/product.module';
+import { Product } from './product/product.entity';
+import { Order } from './order/order.entity';
+import { User } from './user/user.entity';
+import { OrderModule } from './order/order.module';
+import { UserModule } from './user/user.module';
+import { AddressModule } from './address/address.module';
+import { Address } from './address/address.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { EmailModule } from './email/email.module';
+import { AuthModule } from './auth/auth.module';
+import { Review } from './review/review.entity';
+import { ReviewModule } from './review/review.module';
+import { NewsletterModule } from './newsletter/newsletter.module';
+import { Newsletter } from "./newsletter/newsletter.entity";
 
 const {
     POSTGRES_HOST,
@@ -20,7 +22,7 @@ const {
     POSTGRES_USERNAME,
     POSTGRES_PASSWORD,
     POSTGRES_DATABASE,
-    JWT_SECRET
+    JWT_SECRET,
 } = process.env;
 
 @Module({
@@ -32,7 +34,7 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, User, Address, Review],
+            entities: [Product, Order, User, Address, Review, Newsletter],
             ssl: true,
         }),
         ProductModule,
@@ -46,7 +48,8 @@ const {
             global: true,
             secret: JWT_SECRET,
             signOptions: { expiresIn: '1d' },
-        })
+        }),
+        NewsletterModule,
     ],
 })
 export class AppModule {

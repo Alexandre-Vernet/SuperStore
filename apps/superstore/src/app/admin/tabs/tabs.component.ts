@@ -12,7 +12,8 @@ export class TabsComponent {
     tabs = [
         { label: 'Products', link: '/admin/list-products' },
         { label: 'Orders', link: '/admin/list-orders' },
-        { label: 'Users', link: '/admin/list-users' }
+        { label: 'Users', link: '/admin/list-users' },
+        { label: 'Newsletter', link: '/admin/send-newsletter' },
     ];
 
     activeTab = this.tabs[0].link;
