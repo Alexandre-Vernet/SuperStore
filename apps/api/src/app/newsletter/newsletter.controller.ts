@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
 import { NewsletterService } from './newsletter.service';
-import { CreateNewsletterDto, NewsletterDto } from "@superstore/interfaces";
+import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 
 @Controller('newsletter')
 export class NewsletterController {
@@ -15,12 +15,12 @@ export class NewsletterController {
     }
 
     @Post()
-    storeEmailInDatabase(@Body() createNewsletterDto: CreateNewsletterDto) {
+    storeEmailInDatabase(@Body() createNewsletterDto: NewsletterDto) {
         return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
     }
 
     @Post('send-email')
-    sendNewsletter(@Body() newsletterDto: NewsletterDto) {
+    sendNewsletter(@Body() newsletterDto: SendNewsletterDto) {
         return this.newsletterService.sendNewsletter(newsletterDto);
     }
 
@@ -35,7 +35,7 @@ export class NewsletterController {
     }
 
     @Put()
-    updateSubscription(@Body() newsletterDto: CreateNewsletterDto) {
+    updateSubscription(@Body() newsletterDto: NewsletterDto) {
         return this.newsletterService.updateSubscription(newsletterDto);
     }
 

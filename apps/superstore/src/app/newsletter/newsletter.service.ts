@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { CreateNewsletterDto, NewsletterDto } from "@superstore/interfaces";
+import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 import { catchError, Observable, tap } from "rxjs";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
@@ -23,7 +23,7 @@ export class NewsletterService {
     }
 
     storeEmailInDatabase(email: string): Observable<void> {
-        const newsletter: CreateNewsletterDto = {
+        const newsletter: NewsletterDto = {
             email,
             isSubscribed: true,
         }
@@ -31,7 +31,7 @@ export class NewsletterService {
     }
 
     updateSubscription(email: string, isSubscribed: boolean): Observable<void> {
-        const newsletter: CreateNewsletterDto = {
+        const newsletter: NewsletterDto = {
             email,
             isSubscribed,
         };
@@ -48,7 +48,7 @@ export class NewsletterService {
             );
     }
 
-    sendNewsletter(newsletter: NewsletterDto): Observable<void> {
+    sendNewsletter(newsletter: SendNewsletterDto): Observable<void> {
         return this.http.post<void>(`${ this.newsletterUrl }/send-email`, newsletter);
     }
 }
