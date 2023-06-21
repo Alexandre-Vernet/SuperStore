@@ -53,9 +53,10 @@ export class UserService {
                     });
                     this.notificationService.showSuccessNotification('Success', 'User updated successfully');
                     this.users.next(users);
+                    this.authService.user = user;
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );

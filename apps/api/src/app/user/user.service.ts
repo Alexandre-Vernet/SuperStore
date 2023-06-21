@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserDto } from '@superstore/interfaces';
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Repository } from "typeorm";
+import { FindOneOptions, Not, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
@@ -34,10 +34,38 @@ export class UserService {
     }
 
     update(id: number, updateUserDto: UserDto): Promise<UserDto> {
-        return this.userRepository.update(id, updateUserDto)
-            .then(() => {
-                return this.findOne(id);
-            });
+
+
+        // Check that the email is not already in use
+        const options: FindOneOptions = {
+            where: {
+                email: updateUserDto.email,
+                id: Not(id)
+            }
+        };
+
+        return this.userRepository.findOne(options)
+            .then(user => {
+                if (user && user.id !== id) {
+                    throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
+                }
+
+                updateUserDto.isAdmin = user.isAdmin;
+
+                return this.userRepository
+                    .update(id, updateUserDto)
+                    .then(() => {
+                        return this.userRepository.findOne({ where: { id } })
+                            .then((user) => {
+                                delete user.password;
+                                return user;
+                            });
+                    })
+                    .catch((err) => {
+                        throw new Error(err.message);
+                    });
+            })
+
     }
 
     remove(id: number) {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../auth/auth.service";
-import { UserDto } from "@superstore/interfaces";
+import { UpdateUserDto, UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup } from "@angular/forms";
+import { UserService } from "../user.service";
 
 @Component({
     selector: 'superstore-profile',
@@ -15,11 +16,11 @@ export class ProfileComponent implements OnInit {
         firstName: new FormControl(''),
         lastName: new FormControl(''),
         email: new FormControl(''),
-        password: new FormControl(''),
     });
 
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
     ) {
     }
 
@@ -36,7 +37,20 @@ export class ProfileComponent implements OnInit {
     }
 
     updateUser() {
-        const { firstName, lastName, email, password } = this.formUser.value;
-        console.log({ firstName, lastName, email, password})
+        const { firstName, lastName, email } = this.formUser.value;
+
+        const user: UpdateUserDto = {
+            id: this.user.id,
+            firstName,
+            lastName,
+            email,
+            isAdmin: this.user.isAdmin,
+        };
+
+        this.userService.updateUser(user)
+            .subscribe((user) => {
+                this.user = user;
+                this.formUser.patchValue(user);
+            });
     }
 }
