@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../../auth/auth.service";
 import { UserService } from "../user.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'superstore-security',
@@ -18,6 +19,7 @@ export class SecurityComponent {
     constructor(
         private readonly authService: AuthService,
         private readonly userService: UserService,
+        private readonly router: Router
     ) {
     }
 
@@ -46,6 +48,7 @@ export class SecurityComponent {
         this.userService.deleteUser(this.authService.user.id)
             .subscribe(() => {
                 this.authService.signOut();
+                this.router.navigateByUrl('/');
             });
     }
 }
