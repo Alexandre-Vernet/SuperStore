@@ -14,9 +14,9 @@ export class ProfileComponent implements OnInit {
 
     user: UserDto;
     formUser = new FormGroup({
-        firstName: new FormControl('', [Validators.required]),
-        lastName: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required]),
+        firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+        lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+        email: new FormControl('', [Validators.required, Validators.email]),
         isSubscribedToNewsletter: new FormControl(false),
     });
 
@@ -50,7 +50,6 @@ export class ProfileComponent implements OnInit {
             });
     }
 
-    // TODO - add validation to form
     submitForm() {
         if (this.formUser.invalid) {
             return;
@@ -73,6 +72,13 @@ export class ProfileComponent implements OnInit {
             .subscribe((user) => {
                 this.user = user;
                 this.formUser.patchValue(user);
+            });
+    }
+
+    deleteAccount() {
+        this.userService.deleteUser(this.user.id)
+            .subscribe(() => {
+                this.authService.signOut();
             });
     }
 }

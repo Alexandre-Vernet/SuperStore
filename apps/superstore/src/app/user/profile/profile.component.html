@@ -4,8 +4,9 @@
     <div class="py-6 px-4 sm:p-6 lg:pb-8">
         <div>
             <h2 class="text-lg font-medium leading-6 text-gray-900">Profile</h2>
-            <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you
-                share.</p>
+            <p class="mt-1 text-sm text-gray-500">
+                Display information about your account.
+            </p>
         </div>
 
         <div class="mt-6 grid grid-cols-12 gap-6">
@@ -37,8 +38,12 @@
     <div class="divide-y divide-gray-200 pt-6">
         <div class="px-4 sm:px-6">
             <div>
-                <h2 class="text-lg font-medium leading-6 text-gray-900">Privacy</h2>
-                <p class="mt-1 text-sm text-gray-500">Ornare eu a volutpat eget vulputate. Fringilla commodo amet.</p>
+                <h2 class="text-lg font-medium leading-6 text-gray-900">
+                    Information
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Update your privacy settings.
+                </p>
             </div>
             <ul role="list" class="mt-2 divide-y divide-gray-200">
                 <!-- Newsletter -->
@@ -64,55 +69,23 @@
                         </span>
                     </button>
                 </li>
+
+                <!-- Delete account -->
                 <li class="flex items-center justify-between py-4">
                     <div class="flex flex-col">
-                        <p class="text-sm font-medium text-gray-900" id="privacy-option-2-label">Make account
-                            private</p>
-                        <p class="text-sm text-gray-500" id="privacy-option-2-description">Pharetra morbi dui mi mattis
-                            tellus sollicitudin cursus pharetra.</p>
+                        <p class="text-sm font-medium text-gray-900" id="privacy-option-2-label">
+                            Delete account
+                        </p>
+                        <p class="text-sm text-gray-500" id="privacy-option-2-description">
+                            Permanently delete your account.
+                        </p>
                     </div>
-                    <!-- Enabled: "bg-teal-500", Not Enabled: "bg-gray-200" -->
-                    <button type="button"
-                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                            role="switch" aria-checked="false" aria-labelledby="privacy-option-2-label"
-                            aria-describedby="privacy-option-2-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        <span aria-hidden="true"
-                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                    <button
+                            (click)="deleteAccount()"
+                            type="button"
+                            class="ml-5 inline-flex justify-center rounded-md border border-transparent bg-red-700 py-2 px-4 text-sm font-medium text-white">
+                        Delete
                     </button>
-                </li>
-                <li class="flex items-center justify-between py-4">
-                    <div class="flex flex-col">
-                        <p class="text-sm font-medium text-gray-900" id="privacy-option-3-label">Allow commenting</p>
-                        <p class="text-sm text-gray-500" id="privacy-option-3-description">Integer amet, nunc hendrerit
-                            adipiscing nam. Elementum ame</p>
-                    </div>
-                    <!-- Enabled: "bg-teal-500", Not Enabled: "bg-gray-200" -->
-                    <button type="button"
-                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                            role="switch" aria-checked="true" aria-labelledby="privacy-option-3-label"
-                            aria-describedby="privacy-option-3-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        <span aria-hidden="true"
-                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                    </button>
-                </li>
-                <li class="flex items-center justify-between py-4">
-                    <div class="flex flex-col">
-                        <p class="text-sm font-medium text-gray-900" id="privacy-option-4-label">Allow mentions</p>
-                        <p class="text-sm text-gray-500" id="privacy-option-4-description">Adipiscing est venenatis enim
-                            molestie commodo eu gravid</p>
-                    </div>
-                    <!-- Enabled: "bg-teal-500", Not Enabled: "bg-gray-200" -->
-                    <button type="button"
-                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                            role="switch" aria-checked="true" aria-labelledby="privacy-option-4-label"
-                            aria-describedby="privacy-option-4-description">
-                        <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                        <span aria-hidden="true"
-                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                    </button>
-                </li>
             </ul>
         </div>
         <div class="mt-4 flex justify-end py-4 px-4 sm:px-6">
@@ -121,7 +94,8 @@
                 Cancel
             </button>
             <button type="submit"
-                    class="ml-5 inline-flex justify-center rounded-md border border-transparent bg-sky-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                    class="ml-5 inline-flex justify-center rounded-md border border-transparent bg-sky-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                    [ngClass]="!formUser.valid ? 'cursor-not-allowed opacity-50' : ''">
                 Save
             </button>
         </div>
