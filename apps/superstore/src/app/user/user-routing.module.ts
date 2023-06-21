@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from "./profile/profile.component";
 import { UserComponent } from "./user.component";
-import { PasswordComponent } from "./password/password.component";
+import { SecurityComponent } from "./security/security.component";
 import { AddressComponent } from "./address/address.component";
 
 const routes: Routes = [
@@ -20,8 +20,8 @@ const routes: Routes = [
                 component: ProfileComponent,
             },
             {
-                path: 'password',
-                component: PasswordComponent,
+                path: 'security',
+                component: SecurityComponent,
             },
             {
                 path: 'address',

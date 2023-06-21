@@ -74,11 +74,4 @@ export class ProfileComponent implements OnInit {
                 this.formUser.patchValue(user);
             });
     }
-
-    deleteAccount() {
-        this.userService.deleteUser(this.user.id)
-            .subscribe(() => {
-                this.authService.signOut();
-            });
-    }
 }

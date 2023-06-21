@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, tap } from "rxjs";
+import { catchError, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
+import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ export class AuthService {
 
     constructor(
         private http: HttpClient,
+        private readonly notificationService: NotificationsService,
     ) {
     }
 
@@ -45,6 +47,20 @@ export class AuthService {
                 tap(res => {
                     this.user = res.user;
                     localStorage.setItem('accessToken', res.accessToken);
+                })
+            );
+    }
+
+    updatePassword(password: string): Observable<void> {
+        const userId = this.user.id;
+        return this.http.put<void>(`${ this.authUrl }/update-password`, { userId, password })
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Password updated successfully');
+                }),
+                catchError(err => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
                 })
             );
     }

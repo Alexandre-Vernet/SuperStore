@@ -80,6 +80,28 @@ export class AuthService {
     }
 
 
+    updatePassword(userId: number, password: string) {
+        const options: FindOneOptions = {
+            where: {
+                id: userId,
+            }
+        };
+
+        return this.userRepository.findOne(options)
+            .then(async user => {
+                if (!user) {
+                    throw new ConflictException('Invalid credentials');
+                }
+
+                // Hash security
+                const hashedPassword = await bcrypt.hash(password, 10);
+                if (!hashedPassword) {
+                    throw new ConflictException('Something went wrong. Please try again later.');
+                }
+                return this.userRepository.update(userId, { password: hashedPassword });
+            })
+    }
+
     migrate() {
         for (let i = 0; i < 50; i++) {
             const addressesId = [];

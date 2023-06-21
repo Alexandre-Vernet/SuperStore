@@ -5,14 +5,14 @@ import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
-import { PasswordComponent } from './password/password.component';
+import { SecurityComponent } from './security/security.component';
 import { AddressComponent } from './address/address.component';
 
 @NgModule({
   declarations: [
     ProfileComponent,
     UserComponent,
-    PasswordComponent,
+    SecurityComponent,
     AddressComponent,
   ],
   imports: [CommonModule, UserRoutingModule, ReactiveFormsModule],
