@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
         lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
         email: new FormControl('', [Validators.required, Validators.email]),
         isSubscribedToNewsletter: new FormControl(false),
+        currency: new FormControl(localStorage.getItem('currency') || 'USD'),
     });
 
     constructor(
@@ -48,6 +49,21 @@ export class ProfileComponent implements OnInit {
             .subscribe(() => {
                 this.userIsSubscribedToNewsletter();
             });
+    }
+
+    getCurrency() {
+        return localStorage.getItem('currency');
+    }
+
+    toggleCurrency() {
+        const currency = this.formUser.value.currency;
+        if (currency === 'EUR') {
+            localStorage.setItem('currency', 'USD');
+            this.formUser.patchValue({ currency: 'USD' })
+        } else {
+            localStorage.setItem('currency', 'EUR');
+            this.formUser.patchValue({ currency: 'EUR' })
+        }
     }
 
     submitForm() {

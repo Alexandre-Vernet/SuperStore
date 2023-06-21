@@ -13,6 +13,9 @@ export class CurrencyPipe implements PipeTransform {
             if (currency === 'USD') {
                 return `$${ (price * 1.1).toFixed(2) }`;
             }
+        } else {
+            // If no currency is set, set it to EUR
+            localStorage.setItem('currency', 'EUR');
         }
         return `${ price } €`;
     }

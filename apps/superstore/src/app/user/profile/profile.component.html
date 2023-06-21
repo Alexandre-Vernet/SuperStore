@@ -48,10 +48,10 @@
                 <!-- Newsletter -->
                 <li class="flex items-center justify-between py-4">
                     <div class="flex flex-col">
-                        <p class="text-sm font-medium text-gray-900" id="privacy-option-1-label">
+                        <p class="text-sm font-medium text-gray-900" id="newsletter-option-1-label">
                             Subscribe to newsletter
                         </p>
-                        <p class="text-sm text-gray-500" id="privacy-option-1-description">
+                        <p class="text-sm text-gray-500" id="newsletter-option-1-description">
                             You'll receive monthly updates with the latest news, events, and more.
                         </p>
                     </div>
@@ -59,12 +59,35 @@
                             (click)="toggleNewsletterSubscription()"
                             type="button"
                             class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                            role="switch" aria-checked="true" aria-labelledby="privacy-option-1-label"
+                            role="switch" aria-checked="true" aria-labelledby="newsletter-option-1-label"
                             aria-describedby="privacy-option-1-description"
                             [ngClass]="formUser.controls.isSubscribedToNewsletter.value ? 'bg-teal-500': ''">
                         <span aria-hidden="true"
                               class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
                               [ngClass]="formUser.controls.isSubscribedToNewsletter.value ? 'translate-x-5' : ''">
+                        </span>
+                    </button>
+                </li>
+                <!-- Currency -->
+                <li class="flex items-center justify-between py-4">
+                    <div class="flex flex-col">
+                        <p class="text-sm font-medium text-gray-900" id="currency-option-1-label">
+                            Change currency
+                        </p>
+                        <p class="text-sm text-gray-500" id="currency-option-1-description">
+                            {{ getCurrency() }}
+                        </p>
+                    </div>
+                    <button
+                            (click)="toggleCurrency()"
+                            type="button"
+                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                            role="switch" aria-checked="true" aria-labelledby="currency-option-1-label"
+                            aria-describedby="privacy-option-1-description"
+                            [ngClass]="formUser.controls.currency.value === 'EUR' ? 'bg-teal-500': ''">
+                        <span aria-hidden="true"
+                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                              [ngClass]="formUser.controls.currency.value === 'EUR' ? 'translate-x-5' : ''">
                         </span>
                     </button>
                 </li>

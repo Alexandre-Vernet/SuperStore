@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrencyDto } from "@superstore/interfaces";
+import { currencies, CurrencyDto } from "@superstore/interfaces";
 
 @Component({
     selector: 'superstore-change-currency',
@@ -8,16 +8,7 @@ import { CurrencyDto } from "@superstore/interfaces";
 })
 export class ChangeCurrencyComponent implements OnInit {
 
-    currencies: CurrencyDto[] = [
-        {
-            name: 'EUR',
-            flag: 'assets/icons/flags/EU.png'
-        },
-        {
-            name: 'USD',
-            flag: 'assets/icons/flags/US.png'
-        }
-    ];
+    currencies = currencies;
     currentCurrency: CurrencyDto;
 
     ngOnInit(): void {
