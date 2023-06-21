@@ -48,6 +48,34 @@ export class NewsletterService {
         return this.newsletterRepository.delete(id);
     }
 
+    isUserSubscribed(email: string) {
+        const options: FindOneOptions = {
+            where: { email }
+        };
+        return this.newsletterRepository.findOne(options)
+            .then(newsletter => {
+                if (newsletter) {
+                    return newsletter.isSubscribed;
+                }
+                return false;
+            });
+    }
+
+    updateSubscription(newsletterDto: CreateNewsletterDto): Promise<CreateNewsletterDto> {
+        const options: FindOneOptions = {
+            where: { email: newsletterDto.email }
+        };
+
+        return this.newsletterRepository.findOne(options)
+            .then((newsletter) => {
+                return this.newsletterRepository.update(newsletter.id, { isSubscribed: !newsletter.isSubscribed })
+                    .then(() => {
+                        newsletter.isSubscribed = !newsletter.isSubscribed;
+                        return newsletter;
+                    });
+            });
+    }
+
     migrate() {
         for (let i = 0; i < 45; i++) {
             const newsletter: CreateNewsletterDto = {

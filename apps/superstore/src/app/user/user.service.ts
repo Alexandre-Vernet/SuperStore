@@ -30,7 +30,7 @@ export class UserService {
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -71,7 +71,7 @@ export class UserService {
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
