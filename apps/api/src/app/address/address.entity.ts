@@ -5,9 +5,6 @@ export class Address {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: 'user_id' })
-    userId: number;
-
     @Column({ nullable: true })
     company: string;
 

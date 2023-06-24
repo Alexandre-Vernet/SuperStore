@@ -73,7 +73,7 @@ export class CheckoutComponent implements OnInit {
         });
 
         // Get addresses of user
-        this.userService.getAddresses()
+        this.userService.getUserAddresses()
             .subscribe(addresses => {
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
@@ -184,7 +184,6 @@ export class CheckoutComponent implements OnInit {
         if (!this.selectedAddress) {
             this.userService
                 .createAddress({
-                    userId,
                     company,
                     address,
                     apartment,
@@ -195,7 +194,7 @@ export class CheckoutComponent implements OnInit {
                 })
                 .subscribe((address) => {
                     order.addressId = address.id;
-                    this.orderService.confirmOrder(order).subscribe();
+                    this.confirmOrder(order);
                 });
         } else {
             // If form address is different from addresses, create new address
@@ -207,7 +206,6 @@ export class CheckoutComponent implements OnInit {
                 this.selectedAddress.phone !== phone) {
                 this.userService
                     .createAddress({
-                        userId,
                         company,
                         address,
                         apartment,

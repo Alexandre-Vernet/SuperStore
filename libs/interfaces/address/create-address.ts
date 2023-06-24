@@ -1,5 +1,4 @@
 export class CreateAddressDto {
-    userId: number;
     company?: string;
     address: string;
     apartment?: string;

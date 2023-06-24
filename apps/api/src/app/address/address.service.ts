@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
-import { FindOneOptions, Repository } from "typeorm";
+import { FindManyOptions, FindOneOptions, In, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Address } from "./address.entity";
 import { faker } from '@faker-js/faker';
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AddressService {
 
     constructor(
         @InjectRepository(Address)
-        private readonly addressRepository: Repository<Address>
+        private readonly addressRepository: Repository<Address>,
+        private readonly userService: UserService
     ) {
     }
 
-    create(createOrderDto: CreateAddressDto): Promise<Address> {
-        // If address already exists, don't create it
+    create(createOrderDto: CreateAddressDto, userId: number): Promise<Address> {
         const options = {
             where: {
-                userId: createOrderDto.userId,
                 company: createOrderDto?.company,
                 address: createOrderDto.address,
                 apartment: createOrderDto?.apartment,
@@ -29,29 +29,57 @@ export class AddressService {
             }
         };
 
+        // Check if address already exists
         return this.addressRepository.findOne(options)
             .then(address => {
+                // If address does not exist, create it
                 if (!address) {
                     return this.addressRepository.save(createOrderDto)
                         .then(createdAddress => {
-                            return createdAddress;
-                        });
+                            const option: FindOneOptions = {
+                                where: {
+                                    id: createdAddress.id
+                                }
+                            };
+
+                            // Get the address id
+                            return this.addressRepository.findOne(option)
+                                .then(address => {
+                                    // Link address to user
+                                    this.userService.linkAddress(userId, address.id)
+                                        .then(() => {
+                                            return createdAddress;
+                                        });
+                                    return createdAddress;
+                                })
+                                .catch(error => {
+                                    throw error;
+                                });
+                        })
+                        .catch(error => {
+                            throw error;
+                        })
                 }
                 return address;
             });
     }
 
-    findAll(userId: number): Promise<AddressDto[]> {
-        const options = {
-            where: { userId }
-        }
-        return this.addressRepository.find(options);
+    findAllUserAddress(userId: number): Promise<AddressDto[]> {
+        return this.userService.findOne(userId)
+            .then(user => {
+                const option: FindManyOptions = {
+                    where: { id: In(user.addressesId) }
+                };
+
+                return this.addressRepository.find(option);
+            });
     }
 
     findOne(id: number) {
         const options: FindOneOptions = {
             where: { id }
         };
+
         return this.addressRepository.findOne(options);
     }
 
@@ -67,16 +95,16 @@ export class AddressService {
     migrate() {
         for (let i = 0; i < 25; i++) {
             const address: CreateAddressDto = {
-                userId: Math.floor(Math.random() * 10) + 1,
                 address: faker.address.streetAddress(),
                 apartment: faker.address.secondaryAddress(),
                 city: faker.address.city(),
                 country: faker.address.country(),
                 zipCode: faker.address.zipCode(),
-                phone: `06${faker.phone.number('########')}`,
+                phone: `06${ faker.phone.number('########') }`,
             };
 
-            this.create(address);
+            const userId = faker.datatype.number({ min: 1, max: 25 });
+            this.create(address, userId);
         }
     }
 }

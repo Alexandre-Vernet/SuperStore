@@ -34,8 +34,6 @@ export class UserService {
     }
 
     update(id: number, updateUserDto: UserDto): Promise<UserDto> {
-
-
         // Check that the email is not already in use
         const options: FindOneOptions = {
             where: {
@@ -70,5 +68,32 @@ export class UserService {
 
     remove(id: number) {
         return this.userRepository.delete(id);
+    }
+
+    linkAddress(userId: number, addressId: number): Promise<UserDto> {
+        const options: FindOneOptions = {
+            where: { id: userId }
+        };
+
+        return this.userRepository.findOne(options)
+            .then(user => {
+                if (user.addressesId.includes(addressId)) {
+                    return user;
+                }
+
+                return this.userRepository.update(userId, {
+                    addressesId: [...user.addressesId, addressId]
+                })
+                    .then(() => {
+                        return this.userRepository.findOne(options)
+                            .then((user) => {
+                                delete user.password;
+                                return user;
+                            });
+                    })
+                    .catch((err) => {
+                        throw new Error(err.message);
+                    });
+            });
     }
 }

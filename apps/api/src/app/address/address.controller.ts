@@ -8,28 +8,28 @@ export class AddressController {
     }
 
     @Post()
-    create(@Body() createAddressDto: CreateAddressDto): Promise<AddressDto> {
-        return this.addressService.create(createAddressDto);
+    create(@Body() body: { address: CreateAddressDto, userId: number }): Promise<AddressDto> {
+        return this.addressService.create(body.address, body.userId);
     }
 
     @HttpCode(200)
     @Post('/find-all')
-    findAll(@Body() { userId }: { userId: number }) {
-        return this.addressService.findAll(userId);
+    findAllUserAddress(@Body() { userId }: { userId: number }) {
+        return this.addressService.findAllUserAddress(userId);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.addressService.findOne(+id);
+    findOne(@Param('id') id: number) {
+        return this.addressService.findOne(id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateAddressDto: AddressDto) {
-        return this.addressService.update(+id, updateAddressDto);
+    update(@Param('id') id: number, @Body() updateAddressDto: AddressDto) {
+        return this.addressService.update(id, updateAddressDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.addressService.remove(+id);
+    remove(@Param('id') id: number) {
+        return this.addressService.remove(id);
     }
 }
