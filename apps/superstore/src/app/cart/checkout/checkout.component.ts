@@ -4,8 +4,7 @@ import {
     CartDto,
     CreateOrderDto,
     DeliveryMethod,
-    DeliveryMethodExpectedDelivery,
-    DeliveryMethodPrice, DeliveryMethodType,
+    deliveryMethods,
     OrderState
 } from "@superstore/interfaces";
 import { Cart } from "../cart";
@@ -13,10 +12,10 @@ import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductPipe } from "../../product/product.pipe";
 import { AuthService } from "../../auth/auth.service";
-import { UserService } from "../../user/user.service";
 import { OrderService } from "../../order/order.service";
 import { Router } from "@angular/router";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
+import { AddressService } from "../../address/address.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -27,18 +26,7 @@ export class CheckoutComponent implements OnInit {
 
     cart: CartDto[] = [];
     addresses: AddressDto[] = [];
-    deliveryMethods: DeliveryMethod[] = [
-        {
-            name: DeliveryMethodType.STANDARD,
-            expectedDelivery: DeliveryMethodExpectedDelivery.STANDARD,
-            price: DeliveryMethodPrice.STANDARD,
-        },
-        {
-            name: DeliveryMethodType.EXPRESS,
-            expectedDelivery: DeliveryMethodExpectedDelivery.EXPRESS,
-            price: DeliveryMethodPrice.EXPRESS,
-        },
-    ];
+    deliveryMethods = deliveryMethods;
     shippingPrice = this.deliveryMethods[0].price;
     selectedAddress: AddressDto;
     selectedDeliveryMethod: DeliveryMethod;
@@ -58,7 +46,7 @@ export class CheckoutComponent implements OnInit {
     constructor(
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly userService: UserService,
+        private readonly addressService: AddressService,
         private readonly orderService: OrderService,
         private readonly notificationsService: NotificationsService,
         private router: Router
@@ -73,7 +61,7 @@ export class CheckoutComponent implements OnInit {
         });
 
         // Get addresses of user
-        this.userService.getUserAddresses()
+        this.addressService.getUserAddresses()
             .subscribe(addresses => {
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
@@ -182,7 +170,7 @@ export class CheckoutComponent implements OnInit {
         };
 
         if (!this.selectedAddress) {
-            this.userService
+            this.addressService
                 .createAddress({
                     company,
                     address,
@@ -204,7 +192,7 @@ export class CheckoutComponent implements OnInit {
                 this.selectedAddress.city !== city ||
                 this.selectedAddress.zipCode !== zipCode ||
                 this.selectedAddress.phone !== phone) {
-                this.userService
+                this.addressService
                     .createAddress({
                         company,
                         address,

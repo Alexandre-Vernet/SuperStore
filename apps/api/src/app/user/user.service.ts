@@ -48,8 +48,6 @@ export class UserService {
                     throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
                 }
 
-                updateUserDto.isAdmin = user.isAdmin;
-
                 return this.userRepository
                     .update(id, updateUserDto)
                     .then(() => {
