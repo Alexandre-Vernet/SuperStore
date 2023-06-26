@@ -169,47 +169,20 @@ export class CheckoutComponent implements OnInit {
             totalPrice: this.totalPrice(),
         };
 
-        if (!this.selectedAddress) {
-            this.addressService
-                .createAddress({
-                    company,
-                    address,
-                    apartment,
-                    country,
-                    city,
-                    zipCode,
-                    phone
-                })
-                .subscribe((address) => {
-                    order.addressId = address.id;
-                    this.confirmOrder(order);
-                });
-        } else {
-            // If form address is different from addresses, create new address
-            if (this.selectedAddress.address !== address ||
-                this.selectedAddress.apartment !== apartment ||
-                this.selectedAddress.country !== country ||
-                this.selectedAddress.city !== city ||
-                this.selectedAddress.zipCode !== zipCode ||
-                this.selectedAddress.phone !== phone) {
-                this.addressService
-                    .createAddress({
-                        company,
-                        address,
-                        apartment,
-                        country,
-                        city,
-                        zipCode,
-                        phone
-                    })
-                    .subscribe((address) => {
-                        order.addressId = address.id;
-                        this.confirmOrder(order);
-                    });
-                return;
-            }
-            this.confirmOrder(order);
-        }
+        this.addressService
+            .createAddress({
+                company,
+                address,
+                apartment,
+                country,
+                city,
+                zipCode,
+                phone
+            })
+            .subscribe((address) => {
+                order.addressId = address.id;
+                this.confirmOrder(order);
+            });
     }
 
     confirmOrder(order: CreateOrderDto) {
