@@ -13,8 +13,8 @@ export class UserController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.usersService.findOne(+id);
+    findOne(@Param('id') id: number) {
+        return this.usersService.findOne(id);
     }
 
     @Put(':id')
@@ -23,7 +23,7 @@ export class UserController {
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.usersService.remove(+id);
+    remove(@Param('id') id: number) {
+        return this.usersService.remove(id);
     }
 }
