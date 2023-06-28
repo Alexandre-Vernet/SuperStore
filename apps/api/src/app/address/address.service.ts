@@ -92,7 +92,9 @@ export class AddressService {
     }
 
 
-    migrate() {
+    async migrate() {
+        console.log('Migrating addresses...');
+
         for (let i = 0; i < 25; i++) {
             const address: CreateAddressDto = {
                 address: faker.address.streetAddress(),
@@ -104,7 +106,7 @@ export class AddressService {
             };
 
             const userId = faker.datatype.number({ min: 1, max: 25 });
-            this.create(address, userId);
+            await this.create(address, userId);
         }
     }
 }

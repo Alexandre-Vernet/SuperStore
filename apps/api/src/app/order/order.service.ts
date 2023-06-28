@@ -18,6 +18,10 @@ export class OrderService {
     create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
         return this.orderRepository.save(createOrderDto)
             .then((order) => {
+                const NODE_ENV = process.env.NODE_ENV;
+                if (NODE_ENV === 'development') {
+                    return order;
+                }
                 return this.emailService
                     .sendEmailConfirmationOrder(order)
                     .then(() => order)
@@ -71,9 +75,10 @@ export class OrderService {
         return this.orderRepository.find(options);
     }
 
-    migrate() {
-        for (let i = 0; i < 45; i++) {
+    async migrate() {
+        console.log('Migrating orders...');
 
+        for (let i = 0; i < 100; i++) {
             // Product id
             const productsId = [];
             const randomNumberGenerateProductId = Math.floor(Math.random() * 3) + 1;
@@ -125,7 +130,7 @@ export class OrderService {
                 totalPrice: Number(faker.commerce.price()),
             }
 
-            this.create(order)
+            await this.create(order)
         }
     }
 }
