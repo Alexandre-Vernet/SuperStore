@@ -76,14 +76,15 @@ export class NewsletterService {
             });
     }
 
-    migrate() {
-        for (let i = 0; i < 45; i++) {
+    async migrate() {
+        console.log('Migrating newsletter ...');
+        for (let i = 0; i < 100; i++) {
             const newsletter: NewsletterDto = {
                 email: faker.internet.email(),
                 isSubscribed: faker.datatype.boolean(),
             };
 
-            this.storeEmailInDatabase(newsletter);
+            await this.storeEmailInDatabase(newsletter);
         }
     }
 }

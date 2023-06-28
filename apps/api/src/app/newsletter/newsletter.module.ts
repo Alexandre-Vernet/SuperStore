@@ -9,6 +9,7 @@ import { EmailModule } from "../email/email.module";
     imports: [TypeOrmModule.forFeature([Newsletter]), EmailModule],
     controllers: [NewsletterController],
     providers: [NewsletterService],
+    exports: [NewsletterService]
 })
 export class NewsletterModule {
 }

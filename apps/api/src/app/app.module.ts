@@ -15,6 +15,7 @@ import { Review } from './review/review.entity';
 import { ReviewModule } from './review/review.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { Newsletter } from "./newsletter/newsletter.entity";
+import { MigrationModule } from "./migration/migration.module";
 
 const {
     POSTGRES_HOST,
@@ -50,6 +51,7 @@ const {
             signOptions: { expiresIn: '1d' },
         }),
         NewsletterModule,
+        MigrationModule
     ],
 })
 export class AppModule {

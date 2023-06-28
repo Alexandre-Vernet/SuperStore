@@ -53,8 +53,10 @@ export class ReviewService {
     }
 
 
-    migrate() {
-        for (let i = 0; i < 200; i++) {
+    async migrate() {
+        console.log('Migrating reviews...');
+
+        for (let i = 0; i < 300; i++) {
             const review: CreateReviewDto = {
                 productId: faker.datatype.number({ min: 1, max: 150 }),
                 description: faker.lorem.paragraph(),
