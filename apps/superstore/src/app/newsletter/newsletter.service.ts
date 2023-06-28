@@ -49,6 +49,15 @@ export class NewsletterService {
     }
 
     sendNewsletter(newsletter: SendNewsletterDto): Observable<void> {
-        return this.http.post<void>(`${ this.newsletterUrl }/send-email`, newsletter);
+        return this.http.post<void>(`${ this.newsletterUrl }/send-email`, newsletter)
+            .pipe(
+                tap(() => {
+                    this.notificationsService.showSuccessNotification('Success', 'Newsletter sent successfully!');
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
     }
 }
