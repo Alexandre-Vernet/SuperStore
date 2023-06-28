@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NewsletterService } from "../../newsletter/newsletter.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { NewsletterDto } from "@superstore/interfaces";
+import { SendNewsletterDto } from "@superstore/interfaces";
 
 
 @Component({
@@ -26,7 +26,7 @@ export class SendNewsletterComponent {
     sendNewsletter() {
         const { title, description } = this.formSendNewsletter.value;
 
-        const newsletter: NewsletterDto = {
+        const newsletter: SendNewsletterDto = {
             title,
             description,
             emails: []

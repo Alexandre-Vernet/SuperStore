@@ -4,8 +4,8 @@ import { jsPDF } from "jspdf";
 import { forkJoin } from "rxjs";
 import autoTable from "jspdf-autotable";
 import { ProductService } from "../../product/product.service";
-import { UserService } from "../../user/user.service";
 import { DatePipe } from "@angular/common";
+import { AddressService } from "../../address/address.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class PdfService {
 
     constructor(
         private readonly productService: ProductService,
-        private readonly userService: UserService,
+        private readonly addressService: AddressService,
         private datePipe: DatePipe
     ) {
     }
@@ -41,7 +41,7 @@ export class PdfService {
         doc.setFontSize(14);
         doc.text(`${ this.datePipe.transform(order.createdAt, 'dd/MM/yyyy') }`, 200, 120);
 
-        this.userService.getAddress(order.addressId)
+        this.addressService.getAddress(order.addressId)
             .subscribe((address) => {
                 // Billing Address
                 doc.setFontSize(18);

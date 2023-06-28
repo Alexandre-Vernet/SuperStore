@@ -1,5 +1,4 @@
 export class NewsletterDto {
-    title: string;
-    description: string;
-    emails: string[];
+    email: string;
+    isSubscribed: boolean;
 }

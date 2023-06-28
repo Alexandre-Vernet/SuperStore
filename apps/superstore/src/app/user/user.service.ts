@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from "../auth/auth.service";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { AddressDto, CreateAddressDto, UpdateUserDto, UserDto } from "@superstore/interfaces";
+import { UpdateUserDto, UserDto } from "@superstore/interfaces";
 import { environment } from "../../environments/environment";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
@@ -12,7 +12,6 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class UserService {
 
     userUrl = environment.userUrl();
-    addressUrl = environment.addressUrl();
     users = new BehaviorSubject(<UserDto[]>[]);
 
     constructor(
@@ -30,7 +29,7 @@ export class UserService {
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -53,9 +52,10 @@ export class UserService {
                     });
                     this.notificationService.showSuccessNotification('Success', 'User updated successfully');
                     this.users.next(users);
+                    this.authService.user = user;
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -70,22 +70,9 @@ export class UserService {
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
-    }
-
-    createAddress(address: CreateAddressDto): Observable<AddressDto> {
-        return this.http.post<AddressDto>(this.addressUrl, address);
-    }
-
-    getAddresses(): Observable<AddressDto[]> {
-        const userId = this.authService.user.id;
-        return this.http.post<AddressDto[]>(`${ this.addressUrl }/find-all`, { userId });
-    }
-
-    getAddress(addressId: number): Observable<AddressDto> {
-        return this.http.get<AddressDto>(`${ this.addressUrl }/${ addressId }`);
     }
 }

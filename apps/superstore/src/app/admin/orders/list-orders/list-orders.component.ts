@@ -4,6 +4,7 @@ import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { UserService } from "../../../user/user.service";
 import { ProductService } from "../../../product/product.service";
+import { AddressService } from "../../../address/address.service";
 
 @Component({
     selector: 'superstore-orders',
@@ -20,6 +21,7 @@ export class ListOrdersComponent implements OnInit {
     constructor(
         private readonly orderService: OrderService,
         private readonly userService: UserService,
+        private readonly addressService: AddressService,
         private readonly productService: ProductService,
         private readonly adminService: AdminService
     ) {
@@ -29,7 +31,7 @@ export class ListOrdersComponent implements OnInit {
         this.orderService.orders
             .subscribe((orders) => {
                 orders.map(order => {
-                    this.userService.getAddress(order.addressId)
+                    this.addressService.getAddress(order.addressId)
                         .subscribe((address) => {
                             const shortAddress = `${ address.address } ${ address.city } ${ address.zipCode }`;
                             order.address = shortAddress;

@@ -31,8 +31,8 @@ export class ProductController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.productService.findOne(+id);
+    findOne(@Param('id') id: number) {
+        return this.productService.findOne(id);
     }
 
     @Get('slug/:id')
@@ -46,7 +46,7 @@ export class ProductController {
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.productService.remove(+id);
+    remove(@Param('id') id: number) {
+        return this.productService.remove(id);
     }
 }

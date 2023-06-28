@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindOneOptions, Repository } from "typeorm";
 import { faker } from '@faker-js/faker';
 import { Newsletter } from "./newsletter.entity";
-import { CreateNewsletterDto, NewsletterDto } from "@superstore/interfaces";
+import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 import { EmailService } from "../email/email.service";
 
 @Injectable()
@@ -15,12 +15,12 @@ export class NewsletterService {
     ) {
     }
 
-    storeEmailInDatabase(createNewsletterDto: CreateNewsletterDto): Promise<CreateNewsletterDto> {
+    storeEmailInDatabase(createNewsletterDto: NewsletterDto): Promise<NewsletterDto> {
         createNewsletterDto.isSubscribed = true;
         return this.newsletterRepository.save(createNewsletterDto);
     }
 
-    sendNewsletter(newsletter: NewsletterDto) {
+    sendNewsletter(newsletter: SendNewsletterDto) {
         // Send newsletter to all subscribed users
         this.findAll()
             .then(newsletters => {
@@ -48,9 +48,37 @@ export class NewsletterService {
         return this.newsletterRepository.delete(id);
     }
 
+    isUserSubscribed(email: string) {
+        const options: FindOneOptions = {
+            where: { email }
+        };
+        return this.newsletterRepository.findOne(options)
+            .then(newsletter => {
+                if (newsletter) {
+                    return newsletter.isSubscribed;
+                }
+                return false;
+            });
+    }
+
+    updateSubscription(newsletterDto: NewsletterDto): Promise<NewsletterDto> {
+        const options: FindOneOptions = {
+            where: { email: newsletterDto.email }
+        };
+
+        return this.newsletterRepository.findOne(options)
+            .then((newsletter) => {
+                return this.newsletterRepository.update(newsletter.id, { isSubscribed: !newsletter.isSubscribed })
+                    .then(() => {
+                        newsletter.isSubscribed = !newsletter.isSubscribed;
+                        return newsletter;
+                    });
+            });
+    }
+
     migrate() {
         for (let i = 0; i < 45; i++) {
-            const newsletter: CreateNewsletterDto = {
+            const newsletter: NewsletterDto = {
                 email: faker.internet.email(),
                 isSubscribed: faker.datatype.boolean(),
             };

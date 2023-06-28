@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from "../../user/user.service";
 import { AddressDto, OrderDto, ProductDto } from "@superstore/interfaces";
 import { OrderService } from "../order.service";
 import { ProductService } from "../../product/product.service";
 import { ProductPipe } from "../../product/product.pipe";
+import { AddressService } from "../../address/address.service";
 
 @Component({
     selector: 'superstore-confirm-order',
@@ -19,7 +19,7 @@ export class ConfirmOrderComponent implements OnInit {
     };
 
     constructor(
-        private readonly userService: UserService,
+        private readonly addressService: AddressService,
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
     ) {
@@ -34,7 +34,7 @@ export class ConfirmOrderComponent implements OnInit {
                         this.productService.getProductFromIds(order.productsId)
                             .subscribe((products) => {
 
-                                this.userService.getAddress(order.addressId)
+                                this.addressService.getAddress(order.addressId)
                                     .subscribe((address: AddressDto) => {
                                         this.confirmOrder = {
                                             order,

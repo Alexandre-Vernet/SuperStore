@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Put } from '@nestjs/common';
 import { CreateUserDto, SignInUserDto } from "@superstore/interfaces";
 import { AuthService } from "./auth.service";
 
@@ -26,5 +26,10 @@ export class AuthController {
     @Post('sign-in-with-access-token')
     signInWithAccessToken(@Body() { accessToken }: { accessToken: string }) {
         return this.authService.signInWithAccessToken(accessToken);
+    }
+
+    @Put('update-password')
+    updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
+        return this.authService.updatePassword(userId, password);
     }
 }

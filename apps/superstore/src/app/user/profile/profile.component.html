@@ -1,0 +1,108 @@
+<form
+        [formGroup]="formUser"
+        (ngSubmit)="formUser.valid && submitForm()">
+    <div class="py-6 px-4 sm:p-6 lg:pb-8">
+        <div>
+            <h2 class="text-lg font-medium leading-6 text-gray-900">Profile</h2>
+            <p class="mt-1 text-sm text-gray-500">
+                Display information about your account.
+            </p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-6">
+                <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
+                <input
+                        formControlName="firstName"
+                        type="text" name="first-name" id="first-name" autocomplete="first-name"
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm">
+            </div>
+
+            <div class="col-span-12 sm:col-span-6">
+                <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
+                <input
+                        formControlName="lastName"
+                        type="text" name="last-name" id="last-name" autocomplete="last-name"
+                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm">
+            </div>
+
+            <div class="col-span-12">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="text" formControlName="email" name="email" id="email"
+                       class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm">
+            </div>
+        </div>
+    </div>
+
+    <div class="divide-y divide-gray-200 pt-6">
+        <div class="px-4 sm:px-6">
+            <div>
+                <h2 class="text-lg font-medium leading-6 text-gray-900">
+                    Information
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Personal details and application.
+                </p>
+            </div>
+            <ul role="list" class="mt-2 divide-y divide-gray-200">
+                <!-- Newsletter -->
+                <li class="flex items-center justify-between py-4">
+                    <div class="flex flex-col">
+                        <p class="text-sm font-medium text-gray-900" id="newsletter-option-1-label">
+                            Subscribe to newsletter
+                        </p>
+                        <p class="text-sm text-gray-500" id="newsletter-option-1-description">
+                            You'll receive monthly updates with the latest news, events, and more.
+                        </p>
+                    </div>
+                    <button
+                            (click)="toggleNewsletterSubscription()"
+                            type="button"
+                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                            role="switch" aria-checked="true" aria-labelledby="newsletter-option-1-label"
+                            aria-describedby="privacy-option-1-description"
+                            [ngClass]="formUser.controls.isSubscribedToNewsletter.value ? 'bg-teal-500': ''">
+                        <span aria-hidden="true"
+                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                              [ngClass]="formUser.controls.isSubscribedToNewsletter.value ? 'translate-x-5' : ''">
+                        </span>
+                    </button>
+                </li>
+                <!-- Currency -->
+                <li class="flex items-center justify-between py-4">
+                    <div class="flex flex-col">
+                        <p class="text-sm font-medium text-gray-900" id="currency-option-1-label">
+                            Currency
+                        </p>
+                        <p class="text-sm text-gray-500" id="currency-option-1-description">
+                            {{ getCurrency() }}
+                        </p>
+                    </div>
+                    <button
+                            (click)="toggleCurrency()"
+                            type="button"
+                            class="bg-gray-200 relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                            role="switch" aria-checked="true" aria-labelledby="currency-option-1-label"
+                            aria-describedby="privacy-option-1-description"
+                            [ngClass]="formUser.controls.currency.value === 'EUR' ? 'bg-teal-500': ''">
+                        <span aria-hidden="true"
+                              class="translate-x-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                              [ngClass]="formUser.controls.currency.value === 'EUR' ? 'translate-x-5' : ''">
+                        </span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="mt-4 flex justify-end py-4 px-4 sm:px-6">
+            <button type="button"
+                    class="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="ml-5 inline-flex justify-center rounded-md border border-transparent bg-sky-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                    [ngClass]="!formUser.valid ? 'cursor-not-allowed opacity-50' : ''">
+                Save
+            </button>
+        </div>
+    </div>
+</form>

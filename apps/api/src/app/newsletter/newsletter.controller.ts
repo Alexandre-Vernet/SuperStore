@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
 import { NewsletterService } from './newsletter.service';
-import { CreateNewsletterDto, NewsletterDto } from "@superstore/interfaces";
+import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 
 @Controller('newsletter')
 export class NewsletterController {
@@ -9,13 +9,18 @@ export class NewsletterController {
     ) {
     }
 
+    @Get('is-subscribed/:email')
+    isUserSubscribed(@Param('email') email: string) {
+        return this.newsletterService.isUserSubscribed(email);
+    }
+
     @Post()
-    storeEmailInDatabase(@Body() createNewsletterDto: CreateNewsletterDto) {
+    storeEmailInDatabase(@Body() createNewsletterDto: NewsletterDto) {
         return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
     }
 
     @Post('send-email')
-    sendNewsletter(@Body() newsletterDto: NewsletterDto) {
+    sendNewsletter(@Body() newsletterDto: SendNewsletterDto) {
         return this.newsletterService.sendNewsletter(newsletterDto);
     }
 
@@ -27,6 +32,11 @@ export class NewsletterController {
     @Get(':id')
     findOne(@Param('id') id: number) {
         return this.newsletterService.findOne(id);
+    }
+
+    @Put()
+    updateSubscription(@Body() newsletterDto: NewsletterDto) {
+        return this.newsletterService.updateSubscription(newsletterDto);
     }
 
     @Delete(':id')
