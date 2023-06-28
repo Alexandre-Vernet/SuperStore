@@ -60,9 +60,10 @@ export class ProductService {
         });
     }
 
-    migrate() {
-        for (let i = 0; i < 150; i++) {
+    async migrate() {
+        console.log('Migrating products...');
 
+        for (let i = 0; i < 200; i++) {
             const randomNumberCategories = Math.floor(Math.random() * 3) + 1;
             const categories = [];
             for (let j = 0; j < randomNumberCategories; j++) {

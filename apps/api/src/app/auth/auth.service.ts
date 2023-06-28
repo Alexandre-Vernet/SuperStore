@@ -102,8 +102,10 @@ export class AuthService {
             })
     }
 
-    migrate() {
-        for (let i = 0; i < 50; i++) {
+    async migrate() {
+        console.log('Migrating users...');
+
+        for (let i = 0; i < 100; i++) {
             const addressesId = [];
             const randomAddressId = Math.floor(Math.random() * 2) + 1;
             for (let j = 0; j < randomAddressId; j++) {
@@ -119,7 +121,7 @@ export class AuthService {
                 isAdmin: false
             };
 
-            this.signUp(createUserDto);
+            await this.signUp(createUserDto);
         }
     }
 }
