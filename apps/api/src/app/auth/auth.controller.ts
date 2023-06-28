@@ -28,7 +28,7 @@ export class AuthController {
         return this.authService.signInWithAccessToken(accessToken);
     }
 
-    @Put('update-security')
+    @Put('update-password')
     updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
         return this.authService.updatePassword(userId, password);
     }
