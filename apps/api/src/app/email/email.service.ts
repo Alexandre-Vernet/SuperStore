@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateOrderDto, SendNewsletterDto } from "@superstore/interfaces";
 import { HttpService } from "@nestjs/axios";
 import { UserService } from "../user/user.service";
@@ -13,42 +13,38 @@ export class EmailService {
     }
 
     sendEmailConfirmationOrder(order: CreateOrderDto): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.userService.findOne(order.userId)
-                .then(user => {
-                    const { EMAIL_SERVICE_URL } = process.env;
+        return this.userService.findOne(order.userId)
+            .then(user => {
+                const { EMAIL_SERVICE_URL } = process.env;
 
-                    this.httpService
-                        .post(EMAIL_SERVICE_URL, { order, user })
-                        .subscribe({
-                            next: () => {
-                                resolve();
-                            },
-                            error: (err) => {
-                                reject(err);
-                            }
-                        });
-                })
-                .catch(error => {
-                    reject(error);
-                })
-        });
+                this.httpService
+                    .post(EMAIL_SERVICE_URL, { order, user })
+                    .subscribe({
+                        next: () => {
+                            return;
+                        },
+                        error: (err) => {
+                            throw new HttpException(err, 500);
+                        }
+                    });
+            })
+            .catch(error => {
+                throw new HttpException(error, 500);
+            })
     }
 
-    sendNewsletter(newsletter: SendNewsletterDto): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const { EMAIL_SERVICE_URL } = process.env;
+    sendNewsletter(newsletter: SendNewsletterDto) {
+        const { EMAIL_SERVICE_URL } = process.env;
 
-            this.httpService
-                .post(`${ EMAIL_SERVICE_URL }/newsletter`, { newsletter })
-                .subscribe({
-                    next: () => {
-                        resolve();
-                    },
-                    error: (err) => {
-                        reject(err);
-                    }
-                });
-        });
+        return this.httpService
+            .post(`${ EMAIL_SERVICE_URL }/newsletter`, { newsletter })
+            .subscribe({
+                next: () => {
+                    return;
+                },
+                error: () => {
+                    throw new HttpException('Error sending newsletter', 500);
+                }
+            });
     }
 }

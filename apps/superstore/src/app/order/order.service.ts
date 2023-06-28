@@ -32,7 +32,7 @@ export class OrderService {
                     this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -45,7 +45,7 @@ export class OrderService {
                     this.orders.next(orders);
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -56,7 +56,7 @@ export class OrderService {
         return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
             .pipe(
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -97,7 +97,7 @@ export class OrderService {
                     this.orders.next(order);
                 }),
                 catchError((err) => {
-                        this.notificationsService.showErrorNotification('Error', err.message);
+                        this.notificationsService.showErrorNotification('Error', err.error.message);
                         throw err;
                     }
                 )
