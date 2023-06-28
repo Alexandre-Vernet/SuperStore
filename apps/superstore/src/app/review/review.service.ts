@@ -21,17 +21,7 @@ export class ReviewService {
     }
 
     addReview(review: CreateReviewDto): Observable<ReviewDto> {
-        return this.http.post<ReviewDto>(this.reviewUrl, review)
-            .pipe(
-                tap((review) => {
-                    this.reviews.next([...this.reviews.getValue(), review]);
-                    this.notificationService.showSuccessNotification('Success', 'Review added successfully');
-                }),
-                catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
-                    throw err;
-                })
-            );
+        return this.http.post<ReviewDto>(this.reviewUrl, review);
     }
 
     getReviewsForProduct(productId: number): Observable<ReviewDto[]> {
@@ -53,7 +43,7 @@ export class ReviewService {
                     this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );

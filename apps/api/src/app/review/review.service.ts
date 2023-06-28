@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
@@ -15,7 +15,7 @@ export class ReviewService {
 
     create(createReviewDto: CreateReviewDto): Promise<ReviewDto> {
         if (createReviewDto.description.length > 1000) {
-            throw new Error('Description is too long');
+            throw new HttpException('Description is too long', 400);
         }
         return this.reviewRepository.save(createReviewDto)
             .then(review => {

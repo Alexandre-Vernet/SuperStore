@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
@@ -16,21 +16,18 @@ export class OrderService {
     }
 
     create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
-        return new Promise<OrderDto>((resolve, reject) => {
-            this.orderRepository.save(createOrderDto)
-                .then((order) => {
-                    this.emailService.sendEmailConfirmationOrder(order)
-                        .then(() => {
-                            resolve(order);
-                        })
-                        .catch((error) => {
-                            reject(error);
-                        });
-                })
-                .catch((error) => {
-                    reject(error);
-                })
-        });
+        return this.orderRepository.save(createOrderDto)
+            .then((order) => {
+                return this.emailService
+                    .sendEmailConfirmationOrder(order)
+                    .then(() => order)
+                    .catch(() => {
+                        throw new HttpException('Error sending email', 500);
+                    });
+            })
+            .catch(() => {
+                throw new HttpException('Error creating order', 500);
+            })
     }
 
     findAll(): Promise<Order[]> {

@@ -46,7 +46,12 @@ export class AddReviewComponent {
                 rating: Number(rating),
                 description,
             })
-            .subscribe(() => this.closeModal());
+            .subscribe({
+                next: () => this.closeModal(),
+                error: (e) => {
+                    this.formAddReview.setErrors({ error: e.error.message });
+                }
+            });
     }
 
     closeModal() {
