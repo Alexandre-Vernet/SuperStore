@@ -30,7 +30,7 @@ export class ProductService {
                     this.notificationService.showSuccessNotification('Success', 'Product added successfully');
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -52,7 +52,7 @@ export class ProductService {
                     this.products.next(products);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -105,7 +105,7 @@ export class ProductService {
                     this.products.next(products);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -120,7 +120,7 @@ export class ProductService {
                     this.products.next(products);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.message);
+                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
