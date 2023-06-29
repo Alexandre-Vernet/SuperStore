@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto } from "@superstore/interfaces";
+import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
 import { FindOneOptions, Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -16,7 +16,7 @@ export class AuthService {
     ) {
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<CreateUserDto> {
+    async signUp(createUserDto: CreateUserDto): Promise<{ accessToken: string, user: UserDto }> {
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
@@ -30,7 +30,11 @@ export class AuthService {
         createUserDto.password = hashedPassword;
         createUserDto.isAdmin = false;
 
-        return this.userRepository.save(createUserDto);
+        return this.userRepository.save(createUserDto)
+            .then((user) => {
+                const accessToken = this.jwtService.sign({ user });
+                return this.signInWithAccessToken(accessToken);
+            });
     }
 
     signIn(signInUserDto: SignInUserDto) {

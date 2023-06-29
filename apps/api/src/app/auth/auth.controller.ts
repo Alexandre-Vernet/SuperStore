@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post, Put } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto } from "@superstore/interfaces";
+import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
 import { AuthService } from "./auth.service";
 
 @Controller('auth')
@@ -12,7 +12,7 @@ export class AuthController {
 
     @HttpCode(200)
     @Post('sign-up')
-    signUp(@Body() createUserDto: CreateUserDto) {
+    signUp(@Body() createUserDto: CreateUserDto): Promise<{ accessToken: string, user: UserDto }> {
         return this.authService.signUp(createUserDto);
     }
 

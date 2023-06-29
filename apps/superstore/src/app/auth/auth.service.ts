@@ -30,10 +30,10 @@ export class AuthService {
             );
     }
 
-    signUp(user: CreateUserDto): Observable<void> {
-        return this.http.post<void>(`${ this.authUrl }/sign-up`, user)
+    signUp(user: CreateUserDto): Observable<{ accessToken: string, user: UserDto }> {
+        return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
-                tap(() => this.signIn({ email: user.email, password: user.password }))
+                tap((res) => localStorage.setItem('accessToken', res.accessToken))
             );
     }
 
