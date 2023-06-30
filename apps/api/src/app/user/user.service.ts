@@ -75,23 +75,25 @@ export class UserService {
 
         return this.userRepository.findOne(options)
             .then(user => {
-                if (user.addressesId.includes(addressId)) {
-                    return user;
-                }
+                if (user) {
+                    if (user.addressesId.includes(addressId)) {
+                        return user;
+                    }
 
-                return this.userRepository.update(userId, {
-                    addressesId: [...user.addressesId, addressId]
-                })
-                    .then(() => {
-                        return this.userRepository.findOne(options)
-                            .then((user) => {
-                                delete user.password;
-                                return user;
-                            });
+                    return this.userRepository.update(userId, {
+                        addressesId: [...user.addressesId, addressId]
                     })
-                    .catch((err) => {
-                        throw new Error(err.message);
-                    });
+                        .then(() => {
+                            return this.userRepository.findOne(options)
+                                .then((user) => {
+                                    delete user.password;
+                                    return user;
+                                });
+                        })
+                        .catch((err) => {
+                            throw new Error(err.message);
+                        });
+                }
             });
     }
 }
