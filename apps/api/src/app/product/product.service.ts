@@ -43,13 +43,11 @@ export class ProductService {
     }
 
     findBySlug(slug: string) {
-        // Remove all the '-' from the slug
-        slug = slug.replace(/-/g, ' ');
+        const options: FindOneOptions = {
+            where: { slug }
+        };
 
-        // Find in DB where name is like slug
-        return this.productRepository.createQueryBuilder('products')
-            .where('LOWER(products.name) LIKE LOWER(:slug)', { slug: `%${ slug }%` })
-            .getOne();
+        return this.productRepository.findOne(options);
     }
 
     getProductsByIds(ids: number[]) {
@@ -70,8 +68,10 @@ export class ProductService {
                 categories.push(faker.commerce.department());
             }
 
+            const productName = faker.commerce.productName();
             const product: CreateProductDto = {
-                name: faker.commerce.productName(),
+                name: productName,
+                slug: productName.replace(/ /g, '-').toLowerCase(),
                 description: faker.commerce.productDescription(),
                 price: Number(faker.commerce.price()),
                 category: categories,

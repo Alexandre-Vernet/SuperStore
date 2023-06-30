@@ -9,6 +9,9 @@ export class Product {
     name: string;
 
     @Column({ type: 'text' })
+    slug: string;
+
+    @Column({ type: 'text' })
     description: string;
 
     @Column({ type: 'decimal' })

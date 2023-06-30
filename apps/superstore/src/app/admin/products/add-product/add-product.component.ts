@@ -72,8 +72,12 @@ export class AddProductComponent implements OnInit {
         // Get all categories separated by comma
         const categories = category.split(',').map(c => c.trim());
 
+        // Slug : Remove all special characters and replace spaces with dash
+        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
+
         this.productService.addProduct({
             name,
+            slug,
             description,
             price,
             category: categories
@@ -91,9 +95,14 @@ export class AddProductComponent implements OnInit {
         // Get all categories separated by comma
         const categories = category.split(',').map(c => c.trim());
 
+
+        // Slug : Remove all special characters and replace spaces with dash
+        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
+
         this.productService.updateProduct({
             id: this.editProduct.id,
             name,
+            slug,
             description,
             price,
             category: categories
