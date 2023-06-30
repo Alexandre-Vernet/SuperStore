@@ -47,6 +47,7 @@ export class AddressComponent implements OnInit {
 
     clearFormAddress() {
         this.formAddress.reset();
+        this.selectedAddress = null;
     }
 
     selectAddress(address: AddressDto) {
