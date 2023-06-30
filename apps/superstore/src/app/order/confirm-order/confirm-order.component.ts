@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AddressDto, OrderDto, ProductDto } from "@superstore/interfaces";
 import { OrderService } from "../order.service";
 import { ProductService } from "../../product/product.service";
-import { ProductPipe } from "../../product/product.pipe";
 import { AddressService } from "../../address/address.service";
 
 @Component({
@@ -45,9 +44,5 @@ export class ConfirmOrderComponent implements OnInit {
                             });
                     });
             });
-    }
-
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
     }
 }

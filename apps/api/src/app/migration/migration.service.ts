@@ -45,10 +45,10 @@ export class MigrationService {
 
     async migrateAllResources() {
         this.addressService.migrate();
-        this.authService.migrate();
         this.newsletterService.migrate();
         this.orderService.migrate();
         this.productService.migrate();
         this.reviewService.migrate();
+        this.authService.migrate();
     }
 }

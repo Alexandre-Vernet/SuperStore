@@ -54,10 +54,6 @@ export class ViewCartComponent implements OnInit {
         return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
     }
 
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
-    }
-
     updateQuantity(item: CartDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);

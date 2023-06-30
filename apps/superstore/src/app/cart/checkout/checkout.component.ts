@@ -10,7 +10,6 @@ import {
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ProductPipe } from "../../product/product.pipe";
 import { AuthService } from "../../auth/auth.service";
 import { OrderService } from "../../order/order.service";
 import { Router } from "@angular/router";
@@ -107,10 +106,6 @@ export class CheckoutComponent implements OnInit {
             deliveryMethod: this.deliveryMethods[0].name,
         });
         this.selectedAddress = null;
-    }
-
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     updateQuantity(item: CartDto, event: Event) {
