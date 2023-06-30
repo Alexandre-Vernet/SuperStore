@@ -26,7 +26,9 @@
                     <div class="flex flex-auto flex-col">
                         <div>
                             <h4 class="font-medium text-gray-900">
-                                <a routerLink="/product/{{ convertProductNameToSlug(product?.name) }}">{{ product?.name }}</a>
+                                <a routerLink="/product/{{ product?.slug }}">
+                                    {{ product?.name }}
+                                </a>
                             </h4>
                             <p class="mt-2 text-sm text-gray-600">{{ product?.description }}</p>
                         </div>

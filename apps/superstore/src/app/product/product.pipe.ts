@@ -10,8 +10,4 @@ export class ProductPipe implements PipeTransform {
             return product.name?.toLowerCase().includes(search.toLowerCase());
         });
     }
-
-    convertProductNameToSlug(name: string): string {
-        return name?.toLowerCase().replace(/ /g, '-');
-    }
 }

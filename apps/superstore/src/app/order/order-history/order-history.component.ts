@@ -2,7 +2,6 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from "../order.service";
 import { OrderState, OrderWithProductsDto, ProductDto, ProductSizeDto } from "@superstore/interfaces";
 import { ProductService } from "../../product/product.service";
-import { ProductPipe } from "../../product/product.pipe";
 import { CartService } from "../../cart/cart.service";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
 import { ReviewService } from "../../review/review.service";
@@ -62,10 +61,6 @@ export class OrderHistoryComponent implements OnInit {
         if (menuElement && !menuElement.contains(clickedElement)) {
             this.displayOrderOptions = false;
         }
-    }
-
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     getOrderStateImageFileName(state: OrderState): string {

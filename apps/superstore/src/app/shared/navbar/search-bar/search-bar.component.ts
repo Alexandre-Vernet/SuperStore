@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProductDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
-import { ProductPipe } from "../../../product/product.pipe";
 import { ProductService } from "../../../product/product.service";
 
 @Component({
@@ -33,12 +32,8 @@ export class SearchBarComponent implements OnInit {
     }
 
     viewProduct(product: ProductDto): void {
-        this.router.navigate(['/product', this.convertProductNameToSlug(product.name)])
+        this.router.navigate(['/product', product.slug])
             .then(() => this.closeSearchResults());
-    }
-
-    convertProductNameToSlug(name: string): string {
-        return new ProductPipe().convertProductNameToSlug(name);
     }
 
     // Keyboard shortcut CTRL + / to focus on searchBarResult input

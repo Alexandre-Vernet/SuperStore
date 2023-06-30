@@ -10,7 +10,7 @@
                         <ng-container *ngFor="let item of cart">
                             <li class="flex py-6 sm:py-10">
                                 <div class="flex-shrink-0">
-                                    <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}">
+                                    <a routerLink="/product/{{ item?.slug }}">
                                         <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg"
                                              [alt]="item?.name"
                                              class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
@@ -22,7 +22,7 @@
                                         <div>
                                             <div class="flex justify-between">
                                                 <h3 class="text-sm">
-                                                    <a routerLink="/product/{{ convertProductNameToSlug(item?.name) }}"
+                                                    <a routerLink="/product/{{ item?.slug }}">
                                                        class="font-medium text-gray-700 hover:text-gray-800">{{ item?.name }}</a>
                                                 </h3>
                                             </div>
