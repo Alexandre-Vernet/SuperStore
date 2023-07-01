@@ -1,49 +1,82 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateOrderDto, SendNewsletterDto } from "@superstore/interfaces";
-import { HttpService } from "@nestjs/axios";
-import { UserService } from "../user/user.service";
+import { Transporter, OrderDto, SendNewsletterDto, UserDto } from "@superstore/interfaces";
+import { sendNewsletter } from "./html_templates/send-newsletter";
+import { confirmOrder } from "./html_templates/confirm-order";
 
 @Injectable()
 export class EmailService {
+    nodemailer = require("nodemailer");
+    transporterOptions: Transporter = {
+        auth: {
+            user: '',
+            pass: ''
+        }
+    };
 
-    constructor(
-        private readonly httpService: HttpService,
-        private readonly userService: UserService
-    ) {
+    constructor() {
+        this.initTransporter();
     }
 
-    sendEmailConfirmationOrder(order: CreateOrderDto): Promise<void> {
-        return this.userService.findOne(order.userId)
-            .then(user => {
-                const { EMAIL_SERVICE_URL } = process.env;
+    initTransporter() {
+        const { MAIL_USER, MAIL_PASSWORD, NODE_ENV } = process.env;
 
-                this.httpService
-                    .post(EMAIL_SERVICE_URL, { order, user })
-                    .subscribe({
-                        next: () => {
-                            return;
-                        },
-                        error: (err) => {
-                            throw new HttpException(err, 500);
-                        }
-                    });
-            })
-            .catch(error => {
-                throw new HttpException(error, 500);
-            })
+        if (NODE_ENV === 'production') {
+            this.transporterOptions = {
+                auth: {
+                    user: MAIL_USER,
+                    pass: MAIL_PASSWORD
+                },
+                service: 'gmail'
+            };
+
+        } else {
+            this.transporterOptions = {
+                auth: {
+                    user: MAIL_USER,
+                    pass: MAIL_PASSWORD
+                },
+                host: 'sandbox.smtp.mailtrap.io',
+                port: 2525
+            }
+        }
+    }
+
+    sendEmailConfirmationOrder(order: OrderDto, user: UserDto) {
+        const transporter = this.nodemailer.createTransport(this.transporterOptions);
+
+        const mailOptions = {
+            from: 'superstore@gmail.com',
+            to: user.email,
+            subject: 'Order Confirmation',
+            html: confirmOrder(order, user),
+        };
+
+        return transporter
+            .sendMail(mailOptions, (error) => {
+                if (error) {
+                    throw new HttpException(error, 500, { cause: error })
+                } else {
+                    return { message: 'Email sent successfully' };
+                }
+            });
     }
 
     sendNewsletter(newsletter: SendNewsletterDto) {
-        const { EMAIL_SERVICE_URL } = process.env;
+        const transporter = this.nodemailer.createTransport(this.transporterOptions);
 
-        return this.httpService
-            .post(`${ EMAIL_SERVICE_URL }/newsletter`, { newsletter })
-            .subscribe({
-                next: () => {
-                    return;
-                },
-                error: () => {
-                    throw new HttpException('Error sending newsletter', 500);
+        const mailOptions = {
+            from: 'superstore@gmail.com',
+            to: newsletter.emails,
+            subject: newsletter.title,
+            html: sendNewsletter(newsletter.title, newsletter.description),
+        };
+
+        return transporter
+            .sendMail(mailOptions, (error) => {
+                if (error) {
+                    throw new HttpException(error, 500, { cause: error })
+                } else {
+                    return { message: 'Email sent successfully' };
                 }
             });
     }

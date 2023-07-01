@@ -31,6 +31,7 @@
     "bcrypt": "^5.1.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.29",
+    "nodemailer": "^6.9.3",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",

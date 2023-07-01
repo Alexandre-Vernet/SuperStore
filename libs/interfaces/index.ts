@@ -31,3 +31,5 @@ export * from './shared/delivery-method';
 
 export * from './newsletter/send-newsletter';
 export * from './newsletter/newsletter';
+
+export * from './email/transporter';
