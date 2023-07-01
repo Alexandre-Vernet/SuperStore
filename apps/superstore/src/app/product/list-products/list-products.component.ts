@@ -38,8 +38,11 @@ export class ListProductsComponent implements OnInit {
                 page,
             )
             .subscribe(result => {
-                const { products, total } = result;
-                this.products = products;
+                this.productService.products.subscribe(products => {
+                    this.products = products;
+                });
+
+                const { total } = result;
                 this.addPagination(total, page);
             });
     }
