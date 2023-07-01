@@ -24,9 +24,9 @@ export class NewsletterService {
         // Send newsletter to all subscribed users
         this.findAll()
             .then(newsletters => {
-                newsletters.forEach(newsletters => {
-                    if (newsletters.isSubscribed) {
-                        newsletter.emails.push(newsletters.email);
+                newsletters.forEach(n => {
+                    if (n.isSubscribed) {
+                        newsletter.emails.push(n.email);
                     }
                 });
                 return this.emailService.sendNewsletter(newsletter);

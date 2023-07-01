@@ -1,10 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
 import { CreateOrderDto, DeliveryMethodType, OrderDto, OrderState } from "@superstore/interfaces";
 import { EmailService } from "../email/email.service";
 import { faker } from '@faker-js/faker';
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class OrderService {
@@ -12,26 +13,25 @@ export class OrderService {
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
         private readonly emailService: EmailService,
+        private readonly userService: UserService
     ) {
     }
 
     create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
         return this.orderRepository.save(createOrderDto)
-            .then((order) => {
+            .then((order: OrderDto) => {
                 const NODE_ENV = process.env.NODE_ENV;
                 if (NODE_ENV === 'development') {
                     return order;
                 }
-                return this.emailService
-                    .sendEmailConfirmationOrder(order)
-                    .then(() => order)
-                    .catch(() => {
-                        throw new HttpException('Error sending email', 500);
-                    });
-            })
-            .catch(() => {
-                throw new HttpException('Error creating order', 500);
-            })
+
+                // Get user from order id
+                return this.userService.findOne(order.userId)
+                    .then(user => {
+                        this.emailService.sendEmailConfirmationOrder(order, user);
+                        return order;
+                    })
+            });
     }
 
     findAll(): Promise<Order[]> {
