@@ -92,7 +92,7 @@
                                                 *ngFor="let filter of filterPrice"
                                                 class="flex items-center">
                                             <input
-                                                    (click)="setPriceFilter(filter.label)"
+                                                    (click)="setPriceFilter(filter.label, $event)"
                                                     [id]="filter.name"
                                                     [checked]="filter.checked"
                                                     type="checkbox"
@@ -193,7 +193,7 @@
                                                 *ngFor="let filter of filterPrice"
                                                 class="flex items-center">
                                             <input
-                                                    (click)="setPriceFilter(filter.label)"
+                                                    (click)="setPriceFilter(filter.label, $event)"
                                                     [id]="filter.name"
                                                     [checked]="filter.checked"
                                                     type="checkbox"

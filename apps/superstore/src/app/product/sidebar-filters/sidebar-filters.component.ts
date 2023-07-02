@@ -61,7 +61,13 @@ export class SidebarFiltersComponent {
         this.productService.resetFilters();
     }
 
-    setPriceFilter(label: string) {
+    setPriceFilter(label: string, event) {
+        // If checkbox is unchecked, reset filter
+        if (!event.target.checked) {
+            this.resetPriceFilter();
+            return;
+        }
+
         this.closeSubMenus();
 
         // Uncheck all other price filters
