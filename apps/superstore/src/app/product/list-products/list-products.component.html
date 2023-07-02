@@ -1,100 +1,84 @@
-<div class="bg-white">
-    <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <div class="home-banner">
-            <h2 class="text-2xl font-bold tracking-tight text-gray-900">Related Products</h2>
-
-            <div>
-                <label for="orderBy">Order by</label>
-                <select (change)="updateOrderBy($event)" id="orderBy" class="block w-full mt-1 text-gray-500">
-                    <option value="name">Name</option>
-                    <option value="lowestPrice">Lowest Price</option>
-                    <option value="highestPrice">Highest Price</option>
-                    <option value="reviews">Best Reviews</option>
-                </select>
-            </div>
-        </div>
-
-
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            <ng-container *ngFor="let product of products">
-                <a routerLink="/product/{{ product.slug }}">
-                    <div class="group relative">
-                        <div
-                                class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                            <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
-                                 alt="Front of men&#039;s Basic Tee in black."
-                                 class="h-full w-full object-cover object-center lg:h-full lg:w-full">
-                        </div>
-                        <div class="mt-4 flex justify-between">
-                            <div>
-                                <h3 class="text-sm text-gray-700">
-                                    <span aria-hidden="true" class="absolute inset-0"></span>
-                                    {{ product.name }}
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-500">{{ product.category }}</p>
-                            </div>
-                            <p class="text-sm font-medium text-gray-900">{{ product.price | convertCurrency }}</p>
-                        </div>
+<div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <ng-container *ngFor="let product of products">
+            <a routerLink="/product/{{ product.slug }}">
+                <div class="group relative">
+                    <div
+                            class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                        <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
+                             alt="Front of men&#039;s Basic Tee in black."
+                             class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                     </div>
-                </a>
-            </ng-container>
+                    <div class="mt-4 flex justify-between">
+                        <div>
+                            <h3 class="text-sm text-gray-700">
+                                <span aria-hidden="true" class="absolute inset-0"></span>
+                                {{ product.name }}
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ product.category }}</p>
+                        </div>
+                        <p class="text-sm font-medium text-gray-900">{{ product.price | convertCurrency }}</p>
+                    </div>
+                </div>
+            </a>
+        </ng-container>
+    </div>
+
+
+    <div class="flex items-center justify-between bg-white px-4 py-3 sm:px-6 mt-10">
+        <div>
+            <label for="limit">
+                <p class="text-sm text-gray-700">
+                    Products per page
+                </p>
+            </label>
         </div>
-
-
-        <div class="flex items-center justify-between bg-white px-4 py-3 sm:px-6 mt-10">
-            <div>
-                <label for="limit">
-                    <p class="text-sm text-gray-700">
-                        Products per page
-                    </p>
-                </label>
-            </div>
-            <div>
-                <select [(ngModel)]="pagination.limit"
-                        (change)="updateLimit($event)" id="limit" class="block w-full mt-1 text-gray-500">
-                    <ng-container *ngFor="let limit of limitOptions">
-                        <option [value]="limit">
-                            {{ limit }}
-                        </option>
-                    </ng-container>
-                </select>
-            </div>
+        <div>
+            <select [(ngModel)]="pagination.limit"
+                    (change)="updateLimit($event)" id="limit" class="block w-full mt-1 text-gray-500">
+                <ng-container *ngFor="let limit of limitOptions">
+                    <option [value]="limit">
+                        {{ limit }}
+                    </option>
+                </ng-container>
+            </select>
         </div>
+    </div>
 
-        <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-10">
-            <div class="flex flex-1 justify-between sm:hidden">
+    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-10">
+        <div class="flex flex-1 justify-between sm:hidden">
                 <span (click)="getPage(pagination.page - 1)"
                       class="pagination relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Previous
                 </span>
-                <span (click)="getPage(pagination.page + 1)"
-                      class="pagination relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <span (click)="getPage(pagination.page + 1)"
+                  class="pagination relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Next
                 </span>
-            </div>
-            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Showing
-                        <span class="font-medium">
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+                <p class="text-sm text-gray-700">
+                    Showing
+                    <span class="font-medium">
                             {{ pagination?.limit * pagination?.page - pagination?.limit + 1 }}
                         </span>
-                        to
-                        <span class="font-medium">
+                    to
+                    <span class="font-medium">
                             {{ pagination?.limit * pagination?.page }}
                         </span>
-                        of
-                        <span class="font-medium">
+                    of
+                    <span class="font-medium">
                             {{ pagination?.totalProduct }}
                         </span>
-                        results
-                    </p>
-                </div>
-                <div>
-                    <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                        <!-- Previous -->
-                        <span (click)="getPage(pagination.page - 1)"
-                              class="pagination relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20">
+                    results
+                </p>
+            </div>
+            <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                    <!-- Previous -->
+                    <span (click)="getPage(pagination.page - 1)"
+                          class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 hover:cursor-pointer">
                             <span class="sr-only">Previous</span>
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                  fill="currentColor" aria-hidden="true">
@@ -104,22 +88,22 @@
                             </svg>
                         </span>
 
-                        <!-- Pagination -->
-                        <ng-container *ngFor="let currentPage of pagination.pages">
+                    <!-- Pagination -->
+                    <ng-container *ngFor="let currentPage of pagination.pages">
                             <span
                                     (click)="getPage(currentPage)"
                                     [ngClass]="{
                                 'z-10 border-indigo-500 bg-indigo-50 text-indigo-600': pagination.page === currentPage,
                                 }"
-                                    class="pagination relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20">
+                                    class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 hover:cursor-pointer">
                                 {{ currentPage }}
                             </span>
-                        </ng-container>
+                    </ng-container>
 
 
-                        <!-- Next -->
-                        <span (click)="getPage(pagination.page + 1)"
-                              class="pagination relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20">
+                    <!-- Next -->
+                    <span (click)="getPage(pagination.page + 1)"
+                          class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 hover:cursor-pointer">
                             <span class="sr-only">Next</span>
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                  fill="currentColor" aria-hidden="true">
@@ -128,8 +112,7 @@
                                       clip-rule="evenodd"/>
                             </svg>
                         </span>
-                    </nav>
-                </div>
+                </nav>
             </div>
         </div>
     </div>

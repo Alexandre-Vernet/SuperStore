@@ -69,14 +69,6 @@ export class ListProductsComponent implements OnInit {
         };
     }
 
-    updateOrderBy($event: Event) {
-        const orderBy = (<HTMLInputElement>$event.target).value;
-        this.productService.sortProducts(this.products, orderBy)
-            .then(products => {
-                this.products = products;
-            });
-    }
-
     getPage(page: number) {
         if (page === this.pagination.page) {
             return;

@@ -25,3 +25,11 @@ export const filterPrice = [
         checked: false
     }
 ];
+
+export const sortBy = [
+    { label: 'Price: Low to High', name: 'price' },
+    { label: 'Price: High to Low', name: '-price' },
+    { label: 'Name: A to Z', name: 'name' },
+    { label: 'Name: Z to A', name: '-name' },
+    { label: 'Best rating', name: '-rating' },
+];

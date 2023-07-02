@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, catchError, map, Observable, tap } from "rxjs";
+import { BehaviorSubject, catchError, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { CreateProductDto, ProductDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
@@ -59,21 +59,26 @@ export class ProductService {
     }
 
     async sortProducts(products: ProductDto[], orderBy): Promise<ProductDto[]> {
-        if (orderBy === 'lowestPrice') {
-            return products.sort((a, b) => a.price - b.price);
-        } else if (orderBy === 'highestPrice') {
-            return products.sort((a, b) => b.price - a.price);
-        } else if (orderBy === 'name') {
-            return products.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (orderBy === 'reviews') {
-            const reviews = await this.reviewService.getReviewsForAllProducts().toPromise();
-            return products.sort((a, b) => {
-                const aReviews = reviews.filter((r) => r.productId === a.id);
-                const bReviews = reviews.filter((r) => r.productId === b.id);
-                return bReviews.length - aReviews.length;
-            });
-        } else {
-            return products;
+        switch (orderBy) {
+            case 'price':
+                return products.sort((a, b) => a.price - b.price);
+            case '-price':
+                return products.sort((a, b) => b.price - a.price);
+            case 'name':
+                return products.sort((a, b) => a.name.localeCompare(b.name));
+            case '-name':
+                return products.sort((a, b) => b.name.localeCompare(a.name));
+            case '-rating':
+                const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
+                return products.sort((a, b) => {
+                    const aReviews = reviews.filter((r) => r.productId === a.id);
+                    const bReviews = reviews.filter((r) => r.productId === b.id);
+                    const aRating = aReviews.reduce((acc, cur) => acc + cur.rating, 0) / aReviews.length;
+                    const bRating = bReviews.reduce((acc, cur) => acc + cur.rating, 0) / bReviews.length;
+                    return bRating - aRating;
+                });
+            default:
+                return products;
         }
     }
 

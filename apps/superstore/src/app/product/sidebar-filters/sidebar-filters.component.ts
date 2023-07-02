@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filterPrice, ProductDto } from "@superstore/interfaces";
+import { filterPrice, ProductDto, sortBy } from "@superstore/interfaces";
 import { ProductService } from "../product.service";
 
 @Component({
@@ -9,7 +9,10 @@ import { ProductService } from "../product.service";
 })
 export class SidebarFiltersComponent implements OnInit {
     products: ProductDto[] = [];
-    filterPrice: { label: string, name: string, checked: boolean }[] = filterPrice;
+    filterPrice = filterPrice;
+    sortBy = sortBy;
+    sortByOpen = false;
+    sortCurrent = '';
 
     constructor(
         private readonly productService: ProductService
@@ -25,6 +28,16 @@ export class SidebarFiltersComponent implements OnInit {
             .subscribe(products => {
                 this.products = products;
             });
+    }
+
+    toggleSortBy() {
+        this.sortByOpen = !this.sortByOpen;
+    }
+
+    updateSortBy(sortBy: string) {
+        this.productService.sortProducts(this.products, sortBy);
+        this.sortByOpen = false;
+        this.sortCurrent = sortBy;
     }
 
     setPriceFilter(label: string) {

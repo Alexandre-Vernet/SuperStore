@@ -27,7 +27,7 @@ export * from './address/create-address';
 
 export * from './shared/currency';
 export * from './shared/delivery-method';
-export * from './shared/filter-price';
+export * from './shared/filter';
 
 
 export * from './newsletter/send-newsletter';
