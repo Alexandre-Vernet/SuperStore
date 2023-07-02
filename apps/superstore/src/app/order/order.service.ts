@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CreateOrderDto, OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
-import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
+import { BehaviorSubject, catchError, Observable, of, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "../cart/cart.service";
@@ -52,14 +52,18 @@ export class OrderService {
     }
 
     getOrdersPerUser(): Observable<OrderDto[]> {
-        const userId = this.authService.user.id;
-        return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
-            .pipe(
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
-            );
+        if (this.authService.user) {
+            const userId = this.authService.user.id;
+            return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
+                .pipe(
+                    catchError((err) => {
+                        this.notificationsService.showErrorNotification('Error', err.error.message);
+                        throw err;
+                    })
+                );
+        } else {
+            return of([]);
+        }
     }
 
     getOrder(orderId: number): Observable<OrderDto> {
