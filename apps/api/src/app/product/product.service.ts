@@ -18,7 +18,11 @@ export class ProductService {
         return this.productRepository.save(createProductDto);
     }
 
-    findAll(pagination): Promise<{ products: Product[], total: number }> {
+    findAll(): Promise<Product[]> {
+        return this.productRepository.find();
+    }
+
+    findAllProductsWithPagination(pagination): Promise<{ products: Product[], total: number }> {
         const { limit, page } = pagination;
         return this.productRepository.findAndCount({
             skip: limit * (page - 1),

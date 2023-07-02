@@ -20,7 +20,7 @@ export class ProductService {
         private readonly notificationService: NotificationsService,
         private readonly reviewService: ReviewService,
     ) {
-        this.getProducts(300, 1).subscribe();
+        this.getAllProducts().subscribe();
     }
 
     addProduct(product: CreateProductDto): Observable<ProductDto> {
@@ -38,12 +38,11 @@ export class ProductService {
             );
     }
 
-    getAllProducts(): Observable<{ products: ProductDto[], total: number }> {
-        return this.http.get<{ products: ProductDto[], total: number }>(this.productUri)
+    getAllProducts(): Observable<ProductDto[]> {
+        return this.http.get<ProductDto[]>(this.productUri)
             .pipe(
-                tap((res) => {
-                    this.products.next(res.products);
-                    this.productsFiltered.next(res.products);
+                tap((products) => {
+                    this.products.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -53,7 +52,7 @@ export class ProductService {
     }
 
     getProducts(limit: number, page: number): Observable<{ products: ProductDto[], total: number }> {
-        return this.http.get<{ products: ProductDto[], total: number }>(this.productUri, {
+        return this.http.get<{ products: ProductDto[], total: number }>(`${ this.productUri }/pagination`, {
             params: {
                 limit,
                 page: page,

@@ -12,8 +12,8 @@ export class ProductController {
         return this.productService.create(createProductDto);
     }
 
-    @Get()
-    findAll(
+    @Get('pagination')
+    findAllProductsWithPagination(
         @Query('page') page = 1,
         @Query('limit') limit = 10,
     ) {
@@ -22,7 +22,12 @@ export class ProductController {
             limit,
         };
 
-        return this.productService.findAll(pagination);
+        return this.productService.findAllProductsWithPagination(pagination);
+    }
+
+    @Get()
+    findAll() {
+        return this.productService.findAll();
     }
 
     @Post('get-by-ids')
