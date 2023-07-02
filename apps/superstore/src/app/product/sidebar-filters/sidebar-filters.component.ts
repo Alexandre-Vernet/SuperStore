@@ -13,6 +13,7 @@ export class SidebarFiltersComponent implements OnInit {
     sortBy = sortBy;
     sortByOpen = false;
     sortCurrent = '';
+    filterCurrent = '';
     responsiveFilterOpen = false;
 
     constructor(
@@ -55,7 +56,22 @@ export class SidebarFiltersComponent implements OnInit {
 
         this.productService.sortProducts(this.products, sortBy);
         this.sortByOpen = false;
-        this.sortCurrent = sortBy;
+        this.sortCurrent = this.sortBy.find(f => f.name === sortBy).label;
+    }
+
+    resetSortBy() {
+        this.responsiveFilterOpen = false;
+
+        // Uncheck all other price filters
+        this.sortBy.map(f => {
+            f.checked = false;
+        });
+
+        this.productService.getProducts(300, 1)
+            .subscribe(res => {
+                this.productService.products.next(res.products);
+            });
+        this.sortCurrent = '';
     }
 
     setPriceFilter(label: string) {
@@ -87,5 +103,21 @@ export class SidebarFiltersComponent implements OnInit {
                 });
                 this.productService.products.next(filteredProducts);
             });
+        this.filterCurrent = this.filterPrice.find(f => f.label === label).name;
+    }
+
+    resetPriceFilter() {
+        this.responsiveFilterOpen = false;
+
+        // Uncheck all other price filters
+        this.filterPrice.map(f => {
+            f.checked = false;
+        });
+
+        this.productService.getProducts(300, 1)
+            .subscribe(res => {
+                this.productService.products.next(res.products);
+            });
+        this.filterCurrent = '';
     }
 }
