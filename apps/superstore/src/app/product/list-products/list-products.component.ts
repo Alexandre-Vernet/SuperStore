@@ -38,8 +38,12 @@ export class ListProductsComponent implements OnInit {
                 page,
             )
             .subscribe(result => {
-                const { products, total } = result;
-                this.products = products;
+                this.productService.productsFiltered
+                    .subscribe(products => {
+                        this.products = products;
+                    });
+
+                const { total } = result;
                 this.addPagination(total, page);
             });
     }
@@ -64,14 +68,6 @@ export class ListProductsComponent implements OnInit {
             ),
             totalProduct: totalProduct,
         };
-    }
-
-    updateOrderBy($event: Event) {
-        const orderBy = (<HTMLInputElement>$event.target).value;
-        this.productService.sortProducts(this.products, orderBy)
-            .then(products => {
-                this.products = products;
-            });
     }
 
     getPage(page: number) {

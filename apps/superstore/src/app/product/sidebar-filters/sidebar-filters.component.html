@@ -1,0 +1,221 @@
+<div class="bg-white">
+    <div>
+        <div class="relative z-40 lg:hidden"
+             [ngClass]="{'': responsiveFilterOpen, 'hidden': !responsiveFilterOpen}"
+             role="dialog" aria-modal="true">
+            <div class="fixed inset-0 bg-black bg-opacity-25"></div>
+
+            <div class="fixed inset-0 z-40 flex">
+                <div class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl transition ease-in-out duration-300 transform">
+                    <div class="flex items-center justify-between px-4">
+                        <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+                        <button type="button"
+                                (click)="toggleFilterResponsive()"
+                                class="-mr-2 flex h-10 w-10 items-center justify-center p-2 text-gray-400 hover:text-gray-500">
+                            <span class="sr-only">Close menu</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <form class="mt-4">
+                        <div class="border-t border-gray-200 pt-4 pb-4">
+                            <fieldset>
+                                <legend class="w-full px-2">
+                                    <button type="button"
+                                            class="flex w-full items-center justify-between p-2 text-gray-400 hover:text-gray-500"
+                                            aria-controls="filter-section-0" aria-expanded="false">
+                                        <span class="text-sm font-medium text-gray-900">
+                                            Sort
+                                        </span>
+                                        <span class="ml-6 flex h-7 items-center">
+                                          <svg class="rotate-0 h-5 w-5 transform" xmlns="http://www.w3.org/2000/svg"
+                                               viewBox="0 0 20 20"
+                                               fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                  clip-rule="evenodd"/>
+                                          </svg>
+                                        </span>
+                                    </button>
+                                </legend>
+                                <div class="px-4 pt-4 pb-2" id="filter-section-1">
+                                    <div class="space-y-6">
+                                        <div
+                                                *ngFor="let sort of sortBy"
+                                                class="flex items-center">
+                                            <input
+                                                    (click)="setSortBy(sort.name)"
+                                                    [id]="sort.name"
+                                                    [checked]="sort.checked"
+                                                    type="checkbox"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 hover:cursor-pointer">
+                                            <label
+                                                    (click)="setSortBy(sort.name)"
+                                                    class="ml-3 text-sm text-gray-600 hover:cursor-pointer"
+                                                    [ngClass]="{'font-medium text-gray-900': sort.name === sortCurrent, 'text-gray-500': sort.name !== sortCurrent}"
+                                                    [for]="sort.name">
+                                                {{ sort.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="border-t border-gray-200 pt-4 pb-4">
+                            <fieldset>
+                                <legend class="w-full px-2">
+                                    <button type="button"
+                                            class="flex w-full items-center justify-between p-2 text-gray-400 hover:text-gray-500"
+                                            aria-controls="filter-section-2" aria-expanded="false">
+                                        <span class="text-sm font-medium text-gray-900">
+                                            Price
+                                        </span>
+                                        <span class="ml-6 flex h-7 items-center">
+                                          <svg class="rotate-0 h-5 w-5 transform" xmlns="http://www.w3.org/2000/svg"
+                                               viewBox="0 0 20 20"
+                                               fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                  clip-rule="evenodd"/>
+                                          </svg>
+                                        </span>
+                                    </button>
+                                </legend>
+                                <div class="px-4 pt-4 pb-2" id="filter-section-2">
+                                    <div class="space-y-6">
+                                        <div
+                                                *ngFor="let filter of filterPrice"
+                                                class="flex items-center">
+                                            <input
+                                                    (click)="setPriceFilter(filter.label, $event)"
+                                                    [id]="filter.name"
+                                                    [checked]="filter.checked"
+                                                    type="checkbox"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 hover:cursor-pointer">
+                                            <label [for]="filter.name"
+                                                   class="ml-3 text-sm text-gray-600 hover:cursor-pointer">
+                                                {{ filter.name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <main class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+            <div class="border-b border-gray-200 pb-10">
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900">
+                    Welcome to Super Store
+                </h1>
+                <p class="mt-4 text-base text-gray-500">
+                    Discover our wide selection of products
+                </p>
+            </div>
+
+            <div class="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
+                <aside>
+                    <h2 class="sr-only">Filters</h2>
+
+                    <button type="button"
+                            (click)="toggleFilterResponsive()"
+                            class="inline-flex items-center lg:hidden">
+                        <span class="text-sm font-medium text-gray-700">Filters</span>
+                        <span class="ml-2 flex flex-shrink-0 text-gray-400 gap-1">
+                            <span
+                                    *ngIf="sortCurrent"
+                                    (click)="resetSortBy()"
+                                    class="border-2 border-gray-200 rounded-full p-1">
+                                {{ sortCurrent }}
+                                </span>
+                            <span
+                                    *ngIf="filterCurrent"
+                                    (click)="resetPriceFilter()"
+                                    class="border-2 border-gray-200 rounded-full p-1">
+                            {{ filterCurrent }}
+                            </span>
+                        </span>
+                    </button>
+
+                    <div class="hidden lg:block w-36">
+                        <form class="space-y-10 divide-y divide-gray-200">
+                            <div class="pt-10">
+                                <fieldset>
+                                    <div
+                                            class="col-start-1 row-start-1 py-4">
+                                        <div class="relative inline-block">
+                                            <div class="flex">
+                                                <button type="button"
+                                                        (click)="toggleSortBy()"
+                                                        class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                                                        id="menu-button" aria-expanded="false" aria-haspopup="true">
+                                                    Sort
+                                                    <img [src]="sortByOpen ? 'assets/icons/chevron/chevron-down.svg' : 'assets/icons/chevron/chevron-up.svg'"
+                                                         class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                                         alt="chevron">
+                                                </button>
+                                            </div>
+                                            <div class="absolute left-10 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100"
+                                                 [ngClass]="{'transform opacity-0 scale-95': !sortByOpen, 'transform opacity-100 scale-100': sortByOpen}"
+                                                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
+                                                 tabindex="-1">
+                                                <div
+                                                        *ngFor="let sort of sortBy"
+                                                        class="py-1" role="none">
+                                                    <a
+                                                            (click)="setSortBy(sort.name)"
+                                                            class="text-gray-500 block px-4 py-2 text-sm hover:cursor-pointer hover:bg-gray-100"
+                                                            [ngClass]="{'font-medium text-gray-900': sort.name === sortCurrent, 'text-gray-500': sort.name !== sortCurrent}"
+                                                            role="menuitem" tabindex="-1" id="menu-item-0">
+                                                        {{ sort.label }}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+
+                            <div class="pt-10">
+                                <fieldset>
+                                    <legend class="block text-sm font-medium text-gray-900">Price</legend>
+                                    <div class="space-y-3 pt-6">
+                                        <div
+                                                *ngFor="let filter of filterPrice"
+                                                class="flex items-center">
+                                            <input
+                                                    (click)="setPriceFilter(filter.label, $event)"
+                                                    [id]="filter.name"
+                                                    [checked]="filter.checked"
+                                                    type="checkbox"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                            <label [for]="filter.name" class="ml-3 text-sm text-gray-600">
+                                                {{ filter.name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+
+                <!-- Product grid -->
+                <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
+                    <div class="h-96 lg:h-full">
+                        <superstore-list-products></superstore-list-products>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

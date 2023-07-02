@@ -43,6 +43,9 @@ import { SendNewsletterComponent } from './send-newsletter/send-newsletter.compo
         FormsModule,
         SharedModule,
     ],
+    exports: [
+        ListProductsComponent
+    ]
 })
 export class AdminModule {
 }

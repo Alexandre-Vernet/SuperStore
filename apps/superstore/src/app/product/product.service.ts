@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, catchError, map, Observable, tap } from "rxjs";
+import { BehaviorSubject, catchError, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { CreateProductDto, ProductDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
@@ -13,6 +13,7 @@ export class ProductService {
 
     productUri = environment.productUri();
     products = new BehaviorSubject(<ProductDto[]>[]);
+    productsFiltered = new BehaviorSubject(<ProductDto[]>[]);
 
     constructor(
         private readonly http: HttpClient,
@@ -27,7 +28,22 @@ export class ProductService {
             .pipe(
                 tap((product) => {
                     this.products.next([...this.products.value, product]);
+                    this.productsFiltered.next([...this.productsFiltered.value, product]);
                     this.notificationService.showSuccessNotification('Success', 'Product added successfully');
+                }),
+                catchError((err) => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
+    getAllProducts(): Observable<{ products: ProductDto[], total: number }> {
+        return this.http.get<{ products: ProductDto[], total: number }>(this.productUri)
+            .pipe(
+                tap((res) => {
+                    this.products.next(res.products);
+                    this.productsFiltered.next(res.products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -50,6 +66,7 @@ export class ProductService {
                 })),
                 tap(({ products }) => {
                     this.products.next(products);
+                    this.productsFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -58,25 +75,60 @@ export class ProductService {
             );
     }
 
-    async sortProducts(products: ProductDto[], orderBy): Promise<ProductDto[]> {
-        if (orderBy === 'lowestPrice') {
-            return products.sort((a, b) => a.price - b.price);
-        } else if (orderBy === 'highestPrice') {
-            return products.sort((a, b) => b.price - a.price);
-        } else if (orderBy === 'name') {
-            return products.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (orderBy === 'reviews') {
-            const reviews = await this.reviewService.getReviewsForAllProducts().toPromise();
-            return products.sort((a, b) => {
-                const aReviews = reviews.filter((r) => r.productId === a.id);
-                const bReviews = reviews.filter((r) => r.productId === b.id);
-                return bReviews.length - aReviews.length;
-            });
-        } else {
-            return products;
+    async sortProducts(orderBy: string): Promise<ProductDto[]> {
+        switch (orderBy) {
+            case 'price':
+                return this.productsFiltered.value.sort((a, b) => a.price - b.price);
+            case '-price':
+                return this.productsFiltered.value.sort((a, b) => b.price - a.price);
+            case 'name':
+                return this.productsFiltered.value.sort((a, b) => a.name.localeCompare(b.name));
+            case '-name':
+                return this.productsFiltered.value.sort((a, b) => b.name.localeCompare(a.name));
+            case '-rating':
+                const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
+                return this.productsFiltered.value.sort((a, b) => {
+                    const aReviews = reviews.filter((r) => r.productId === a.id);
+                    const bReviews = reviews.filter((r) => r.productId === b.id);
+                    const aRating = aReviews.reduce((acc, cur) => acc + cur.rating, 0) / aReviews.length;
+                    const bRating = bReviews.reduce((acc, cur) => acc + cur.rating, 0) / bReviews.length;
+                    return bRating - aRating;
+                });
+            default:
+                return this.productsFiltered.value;
         }
     }
 
+    async sortProductsByPrice(label: string): Promise<ProductDto[]> {
+        let products: ProductDto[] = [];
+        this.productsFiltered.next(this.products.value);
+        switch (label) {
+            case 'under-25':
+                products = this.productsFiltered.value.filter((p) => p.price < 25);
+                break;
+            case '25-to-50':
+                products = this.productsFiltered.value.filter((p) => p.price >= 25 && p.price < 50);
+                break;
+            case '50-to-100':
+                products = this.productsFiltered.value.filter((p) => p.price >= 50 && p.price < 100);
+                break;
+            case '100-to-200':
+                products = this.productsFiltered.value.filter((p) => p.price >= 100 && p.price < 200);
+                break;
+            case '200-and-above':
+                products = this.productsFiltered.value.filter((p) => p.price >= 200);
+                break;
+            default:
+                return this.productsFiltered.value;
+        }
+
+        this.productsFiltered.next(products);
+        return products;
+    }
+
+    resetFilters(): void {
+        this.productsFiltered.next(this.products.value);
+    }
 
     getProductFromSlug(slug: string): Observable<ProductDto> {
         return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`);
@@ -118,6 +170,7 @@ export class ProductService {
                     this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                     const products = this.products.value.filter((p) => p.id !== productId);
                     this.products.next(products);
+                    this.productsFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
