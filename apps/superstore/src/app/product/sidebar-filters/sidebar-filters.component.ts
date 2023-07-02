@@ -13,6 +13,7 @@ export class SidebarFiltersComponent implements OnInit {
     sortBy = sortBy;
     sortByOpen = false;
     sortCurrent = '';
+    responsiveFilterOpen = false;
 
     constructor(
         private readonly productService: ProductService
@@ -34,13 +35,32 @@ export class SidebarFiltersComponent implements OnInit {
         this.sortByOpen = !this.sortByOpen;
     }
 
+    toggleFilterResponsive() {
+        this.responsiveFilterOpen = !this.responsiveFilterOpen;
+    }
+
+    closeResponsiveFilter() {
+        setTimeout(() => {
+            this.responsiveFilterOpen = false;
+        }, 300);
+    }
+
     updateSortBy(sortBy: string) {
+        this.closeResponsiveFilter();
+
+        // Uncheck all other price filters
+        this.sortBy.map(f => {
+            f.checked = f.name === sortBy;
+        });
+
         this.productService.sortProducts(this.products, sortBy);
         this.sortByOpen = false;
         this.sortCurrent = sortBy;
     }
 
     setPriceFilter(label: string) {
+        this.closeResponsiveFilter();
+
         // Uncheck all other price filters
         this.filterPrice.map(f => {
             f.checked = f.label === label;

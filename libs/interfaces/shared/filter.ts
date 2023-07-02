@@ -27,9 +27,29 @@ export const filterPrice = [
 ];
 
 export const sortBy = [
-    { label: 'Price: Low to High', name: 'price' },
-    { label: 'Price: High to Low', name: '-price' },
-    { label: 'Name: A to Z', name: 'name' },
-    { label: 'Name: Z to A', name: '-name' },
-    { label: 'Best rating', name: '-rating' },
+    {
+        label: 'Price: Low to High',
+        name: 'price',
+        checked: false
+    },
+    {
+        label: 'Price: High to Low',
+        name: '-price',
+        checked: false
+    },
+    {
+        label: 'Name: A to Z',
+        name: 'name',
+        checked: false
+    },
+    {
+        label: 'Name: Z to A',
+        name: '-name',
+        checked: false
+    },
+    {
+        label: 'Best rating',
+        name: '-rating',
+        checked: false
+    },
 ];
