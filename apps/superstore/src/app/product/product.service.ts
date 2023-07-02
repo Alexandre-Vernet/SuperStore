@@ -13,6 +13,7 @@ export class ProductService {
 
     productUri = environment.productUri();
     products = new BehaviorSubject(<ProductDto[]>[]);
+    productsFiltered = new BehaviorSubject(<ProductDto[]>[]);
 
     constructor(
         private readonly http: HttpClient,
@@ -27,7 +28,22 @@ export class ProductService {
             .pipe(
                 tap((product) => {
                     this.products.next([...this.products.value, product]);
+                    this.productsFiltered.next([...this.productsFiltered.value, product]);
                     this.notificationService.showSuccessNotification('Success', 'Product added successfully');
+                }),
+                catchError((err) => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
+    getAllProducts(): Observable<{ products: ProductDto[], total: number }> {
+        return this.http.get<{ products: ProductDto[], total: number }>(this.productUri)
+            .pipe(
+                tap((res) => {
+                    this.products.next(res.products);
+                    this.productsFiltered.next(res.products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -50,6 +66,7 @@ export class ProductService {
                 })),
                 tap(({ products }) => {
                     this.products.next(products);
+                    this.productsFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -58,19 +75,19 @@ export class ProductService {
             );
     }
 
-    async sortProducts(products: ProductDto[], orderBy): Promise<ProductDto[]> {
+    async sortProducts(orderBy: string): Promise<ProductDto[]> {
         switch (orderBy) {
             case 'price':
-                return products.sort((a, b) => a.price - b.price);
+                return this.productsFiltered.value.sort((a, b) => a.price - b.price);
             case '-price':
-                return products.sort((a, b) => b.price - a.price);
+                return this.productsFiltered.value.sort((a, b) => b.price - a.price);
             case 'name':
-                return products.sort((a, b) => a.name.localeCompare(b.name));
+                return this.productsFiltered.value.sort((a, b) => a.name.localeCompare(b.name));
             case '-name':
-                return products.sort((a, b) => b.name.localeCompare(a.name));
+                return this.productsFiltered.value.sort((a, b) => b.name.localeCompare(a.name));
             case '-rating':
                 const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
-                return products.sort((a, b) => {
+                return this.productsFiltered.value.sort((a, b) => {
                     const aReviews = reviews.filter((r) => r.productId === a.id);
                     const bReviews = reviews.filter((r) => r.productId === b.id);
                     const aRating = aReviews.reduce((acc, cur) => acc + cur.rating, 0) / aReviews.length;
@@ -78,10 +95,40 @@ export class ProductService {
                     return bRating - aRating;
                 });
             default:
-                return products;
+                return this.productsFiltered.value;
         }
     }
 
+    async sortProductsByPrice(label: string): Promise<ProductDto[]> {
+        let products: ProductDto[] = [];
+        this.productsFiltered.next(this.products.value);
+        switch (label) {
+            case 'under-25':
+                products = this.productsFiltered.value.filter((p) => p.price < 25);
+                break;
+            case '25-to-50':
+                products = this.productsFiltered.value.filter((p) => p.price >= 25 && p.price < 50);
+                break;
+            case '50-to-100':
+                products = this.productsFiltered.value.filter((p) => p.price >= 50 && p.price < 100);
+                break;
+            case '100-to-200':
+                products = this.productsFiltered.value.filter((p) => p.price >= 100 && p.price < 200);
+                break;
+            case '200-and-above':
+                products = this.productsFiltered.value.filter((p) => p.price >= 200);
+                break;
+            default:
+                return this.productsFiltered.value;
+        }
+
+        this.productsFiltered.next(products);
+        return products;
+    }
+
+    resetFilters(): void {
+        this.productsFiltered.next(this.products.value);
+    }
 
     getProductFromSlug(slug: string): Observable<ProductDto> {
         return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`);
@@ -123,6 +170,7 @@ export class ProductService {
                     this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                     const products = this.products.value.filter((p) => p.id !== productId);
                     this.products.next(products);
+                    this.productsFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);

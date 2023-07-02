@@ -38,9 +38,10 @@ export class ListProductsComponent implements OnInit {
                 page,
             )
             .subscribe(result => {
-                this.productService.products.subscribe(products => {
-                    this.products = products;
-                });
+                this.productService.productsFiltered
+                    .subscribe(products => {
+                        this.products = products;
+                    });
 
                 const { total } = result;
                 this.addPagination(total, page);

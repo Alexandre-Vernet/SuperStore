@@ -48,13 +48,13 @@
                                                 *ngFor="let sort of sortBy"
                                                 class="flex items-center">
                                             <input
-                                                    (click)="updateSortBy(sort.name)"
+                                                    (click)="setSortBy(sort.name)"
                                                     [id]="sort.name"
                                                     [checked]="sort.checked"
                                                     type="checkbox"
                                                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 hover:cursor-pointer">
                                             <label
-                                                    (click)="updateSortBy(sort.name)"
+                                                    (click)="setSortBy(sort.name)"
                                                     class="ml-3 text-sm text-gray-600 hover:cursor-pointer"
                                                     [ngClass]="{'font-medium text-gray-900': sort.name === sortCurrent, 'text-gray-500': sort.name !== sortCurrent}"
                                                     [for]="sort.name">
@@ -129,7 +129,7 @@
                             (click)="toggleFilterResponsive()"
                             class="inline-flex items-center lg:hidden">
                         <span class="text-sm font-medium text-gray-700">Filters</span>
-                        <span class="ml-2 flex-shrink-0 text-gray-400">
+                        <span class="ml-2 flex flex-shrink-0 text-gray-400 gap-1">
                             <span
                                     *ngIf="sortCurrent"
                                     (click)="resetSortBy()"
@@ -171,7 +171,7 @@
                                                         *ngFor="let sort of sortBy"
                                                         class="py-1" role="none">
                                                     <a
-                                                            (click)="updateSortBy(sort.name)"
+                                                            (click)="setSortBy(sort.name)"
                                                             class="text-gray-500 block px-4 py-2 text-sm hover:cursor-pointer hover:bg-gray-100"
                                                             [ngClass]="{'font-medium text-gray-900': sort.name === sortCurrent, 'text-gray-500': sort.name !== sortCurrent}"
                                                             role="menuitem" tabindex="-1" id="menu-item-0">
