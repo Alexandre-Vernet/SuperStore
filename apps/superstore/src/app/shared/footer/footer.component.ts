@@ -3,13 +3,14 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { NewsletterService } from "../../newsletter/newsletter.service";
 import { NotificationsService } from "../notifications/notifications.service";
 
-
 @Component({
     selector: 'superstore-footer',
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
+
+    currentYear = this.getCurrentYear();
 
     constructor(
         private readonly newsletterService: NewsletterService,
