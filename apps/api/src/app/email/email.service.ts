@@ -2,10 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Transporter, OrderDto, SendNewsletterDto, UserDto } from "@superstore/interfaces";
 import { sendNewsletter } from "./html_templates/send-newsletter";
 import { confirmOrder } from "./html_templates/confirm-order";
+import { sendEmailResetPassword } from "./html_templates/send-email-reset-password";
 
 @Injectable()
 export class EmailService {
     nodemailer = require("nodemailer");
+    transporter;
     transporterOptions: Transporter = {
         auth: {
             user: '',
@@ -39,11 +41,11 @@ export class EmailService {
                 port: 2525
             }
         }
+
+        this.transporter = this.nodemailer.createTransport(this.transporterOptions)
     }
 
     sendEmailConfirmationOrder(order: OrderDto, user: UserDto) {
-        const transporter = this.nodemailer.createTransport(this.transporterOptions);
-
         const mailOptions = {
             from: 'superstore@gmail.com',
             to: user.email,
@@ -51,7 +53,7 @@ export class EmailService {
             html: confirmOrder(order, user),
         };
 
-        return transporter
+        return this.transporter
             .sendMail(mailOptions, (error) => {
                 if (error) {
                     throw new HttpException(error, 500, { cause: error })
@@ -62,8 +64,6 @@ export class EmailService {
     }
 
     sendNewsletter(newsletter: SendNewsletterDto) {
-        const transporter = this.nodemailer.createTransport(this.transporterOptions);
-
         const mailOptions = {
             from: 'superstore@gmail.com',
             to: newsletter.emails,
@@ -71,7 +71,25 @@ export class EmailService {
             html: sendNewsletter(newsletter.title, newsletter.description),
         };
 
-        return transporter
+        return this.transporter
+            .sendMail(mailOptions, (error) => {
+                if (error) {
+                    throw new HttpException(error, 500, { cause: error })
+                } else {
+                    return { message: 'Email sent successfully' };
+                }
+            });
+    }
+
+    sendEmailResetPassword(user: UserDto, linkResetPassword: string) {
+        const mailOptions = {
+            from: 'superstore@gmail.com',
+            to: user.email,
+            subject: 'Reset Password',
+            html: sendEmailResetPassword(user, linkResetPassword),
+        };
+
+        return this.transporter
             .sendMail(mailOptions, (error) => {
                 if (error) {
                     throw new HttpException(error, 500, { cause: error })

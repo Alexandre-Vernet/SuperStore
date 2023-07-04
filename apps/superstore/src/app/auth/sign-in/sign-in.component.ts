@@ -15,6 +15,7 @@ export class SignInComponent implements AfterViewInit {
         email: new FormControl('', [Validators.required, Validators.email]),
         password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
+    showModalForgotPassword = false;
 
     constructor(
         private readonly authService: AuthService,
@@ -45,5 +46,13 @@ export class SignInComponent implements AfterViewInit {
                     this.formSignIn.setErrors({ error: err.error.message });
                 }
             });
+    }
+
+    public openModalForgotPassword(): void {
+        this.showModalForgotPassword = true;
+    }
+
+    public closeModalForgotPassword(): void {
+        this.showModalForgotPassword = false;
     }
 }

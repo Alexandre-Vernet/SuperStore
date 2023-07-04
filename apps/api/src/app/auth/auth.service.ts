@@ -6,13 +6,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../user/user.entity";
 import bcrypt from "bcrypt";
 import { faker } from '@faker-js/faker';
+import { EmailService } from "../email/email.service";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private readonly emailService: EmailService
     ) {
     }
 
@@ -104,6 +106,25 @@ export class AuthService {
                 }
                 return this.userRepository.update(userId, { password: hashedPassword });
             })
+    }
+
+    sendEmailForgotPassword(email: string) {
+        const options: FindOneOptions = {
+            where: {
+                email,
+            }
+        };
+
+        this.userRepository.findOne(options)
+            .then(user => {
+                if (user) {
+                    // Generate URL with token
+                    const FRONTEND_URL = process.env.FRONTEND_URL;
+                    const token = this.jwtService.sign({ user });
+                    const linkResetPassword = `${ FRONTEND_URL }/reset-password?token=${ token }`;
+                    return this.emailService.sendEmailResetPassword(user, linkResetPassword);
+                }
+            });
     }
 
     async migrate() {

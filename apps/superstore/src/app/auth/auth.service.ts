@@ -65,6 +65,19 @@ export class AuthService {
             );
     }
 
+    sendEmailForgotPassword(email: string): Observable<void> {
+        return this.http.post<void>(`${ this.authUrl }/send-email-reset-password`, { email })
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'An email has been sent with instructions to reset your password');
+                }),
+                catchError(err => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
     signOut(): void {
         this.user = null;
         localStorage.removeItem('accessToken');
