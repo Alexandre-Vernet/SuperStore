@@ -32,4 +32,10 @@ export class AuthController {
     updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
         return this.authService.updatePassword(userId, password);
     }
+
+    @HttpCode(200)
+    @Post('send-email-reset-password')
+    sendEmailForgotPassword(@Body() body: { email: string }) {
+        return this.authService.sendEmailForgotPassword(body.email);
+    }
 }
