@@ -32,20 +32,35 @@
                             </div>
                         </div>
                         <div>
-                            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                            <label for="categories" class="block text-sm font-medium text-gray-700">Category</label>
                             <div class="mt-1">
-                                <input formControlName="category" id="category" type="email" required
+                                <input formControlName="categories" id="categories" type="email" required
                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                <span *ngIf="formAddProduct.controls.category.value?.trim() === ''" class="text-blue-500 text-xs">
+                                <span *ngIf="formAddProduct.controls.categories.value?.trim() === ''"
+                                      class="text-blue-500 text-xs">
                                     Use ',' to separate categories
                                 </span>
                                 <span *ngIf="formAddProduct.hasError('invalidCharacters')" class="text-red-500 text-xs">
                                    Special characters are not allowed
                                 </span>
-                                <span *ngIf="formAddProduct.hasError('duplicateCategories')" class="text-red-500 text-xs">
+                                <span *ngIf="formAddProduct.hasError('duplicateCategories')"
+                                      class="text-red-500 text-xs">
                                     Duplicate categories are not allowed
                                 </span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="images" class="block text-sm font-medium text-gray-700">Images URL</label>
+                        <div class="mt-1">
+                            <textarea rows="5" formControlName="images" id="images" type="text" required
+                                      placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                                      class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                            </textarea>
+                            <span *ngIf="formAddProduct.controls.images.value?.trim() === ''"
+                                  class="text-blue-500 text-xs">
+                                Use ',' to separate images
+                                </span>
                         </div>
                     </div>
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">

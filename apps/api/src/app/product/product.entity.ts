@@ -20,6 +20,9 @@ export class Product {
     @Column({ type: 'text' })
     category: string[];
 
+    @Column({ type: 'text' })
+    images: string[];
+
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;
 

@@ -32,7 +32,7 @@
                                             <span>{{ product.name }}</span>
                                             <span>{{ product.price | convertCurrency }}</span>
                                         </div>
-                                        <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
+                                        <img [src]="product?.images[0]"
                                              [alt]="product.name"
                                              class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                                     </div>
