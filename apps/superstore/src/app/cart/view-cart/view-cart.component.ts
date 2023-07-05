@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from "../cart.service";
-import { ProductPipe } from "../../product/product.pipe";
 import { Cart } from "../cart";
 import { CartDto } from "@superstore/interfaces";
 
