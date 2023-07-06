@@ -125,6 +125,11 @@ export class ProductService {
         return products;
     }
 
+    filterProductsByCategory(category: string) {
+        const products = this.products.value.filter((p) => p.category.includes(category));
+        this.productsFiltered.next(products);
+    }
+
     resetFilters(): void {
         this.productsFiltered.next(this.products.value);
     }
