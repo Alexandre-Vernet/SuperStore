@@ -11,7 +11,7 @@
                             <li class="flex py-6 sm:py-10">
                                 <div class="flex-shrink-0">
                                     <a routerLink="/product/{{ item?.slug }}">
-                                        <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg"
+                                        <img [src]="item?.images[0]"
                                              [alt]="item?.name"
                                              class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
                                     </a>

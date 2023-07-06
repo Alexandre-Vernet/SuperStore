@@ -17,7 +17,8 @@ export class AddProductComponent implements OnInit {
         name: new FormControl('', [Validators.required]),
         description: new FormControl('', [Validators.required]),
         price: new FormControl(0, [Validators.required]),
-        category: new FormControl('', [Validators.required]),
+        categories: new FormControl('', [Validators.required]),
+        images: new FormControl('', Validators.required),
     });
 
     constructor(
@@ -32,7 +33,8 @@ export class AddProductComponent implements OnInit {
                 name: this.editProduct.name,
                 description: this.editProduct.description,
                 price: this.editProduct.price,
-                category: this.editProduct.category.join(', ')
+                categories: this.editProduct.category.join(', '),
+                images: this.editProduct.images.join(', ')
             });
         }
     }
@@ -42,35 +44,40 @@ export class AddProductComponent implements OnInit {
             name,
             description,
             price,
-            category
+            categories,
+            images
         } = this.formAddProduct.value;
+
+
+        // Check if categories is valid
+        const isCategoryValid = this.checkCategories(categories);
+        if (!isCategoryValid) {
+            return;
+        }
 
         if (this.editProduct?.id) {
             this.updateProduct({
                 name,
                 description,
                 price,
-                category
+                categories,
+                images
             });
         } else {
             this.addProduct({
                 name,
                 description,
                 price,
-                category
+                categories,
+                images
             });
         }
     }
 
-    addProduct({ name, description, price, category }) {
-        // Check if category is valid
-        const isCategoryValid = this.checkCategory(category);
-        if (!isCategoryValid) {
-            return;
-        }
-
-        // Get all categories separated by comma
-        const categories = category.split(',').map(c => c.trim());
+    addProduct({ name, description, price, categories, images }) {
+        // Remove all spaces and trim
+        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
+        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
 
         // Slug : Remove all special characters and replace spaces with dash
         const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
@@ -80,21 +87,16 @@ export class AddProductComponent implements OnInit {
             slug,
             description,
             price,
-            category: categories
+            category: categoriesSeparatedByComma,
+            images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 
-    updateProduct({ name, description, price, category }) {
-        // Check if category is valid
-        const isCategoryValid = this.checkCategory(category);
-        if (!isCategoryValid) {
-            return;
-        }
-
-        // Get all categories separated by comma
-        const categories = category.split(',').map(c => c.trim());
-
+    updateProduct({ name, description, price, categories, images }) {
+        // Remove all spaces and trim
+        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
+        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
 
         // Slug : Remove all special characters and replace spaces with dash
         const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
@@ -105,12 +107,13 @@ export class AddProductComponent implements OnInit {
             slug,
             description,
             price,
-            category: categories
+            category: categoriesSeparatedByComma,
+            images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
         this.closeModal();
     }
 
-    checkCategory(category: string): boolean {
+    checkCategories(category: string): boolean {
         // Check if category is valid (only letters, numbers, comma and space)
         const categoryRegex = /^[a-zA-Z0-9, ]*$/;
         if (!categoryRegex.test(category)) {
