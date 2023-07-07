@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ProductService } from "../product.service";
 import { Observable } from "rxjs";
 import { CartService } from "../../cart/cart.service";
-import { ProductDto, ProductSizeDto, ReviewDto } from "@superstore/interfaces";
+import { ProductDto, productSize, ProductSizeDto, ReviewDto } from "@superstore/interfaces";
 import { ReviewService } from "../../review/review.service";
 
 @Component({
@@ -16,40 +16,24 @@ export class ViewProductComponent implements OnInit {
     reviews: ReviewDto[];
 
     selectedSize: ProductSizeDto;
-    productSize: ProductSizeDto[] = [
-        {
-            tag: 'S',
-            name: 'Small',
-        },
-        {
-            tag: 'M',
-            name: 'Medium',
-        },
-        {
-            tag: 'L',
-            name: 'Large',
-        },
-        {
-            tag: 'XL',
-            name: 'Extra Large',
-        },
-        {
-            tag: 'XXL',
-            name: 'Extra Extra Large',
-        }
-    ];
+    productSize = productSize;
 
     constructor(
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
         private readonly cartService: CartService,
-        private readonly reviewService: ReviewService
+        private readonly reviewService: ReviewService,
+        private readonly router: Router,
     ) {
     }
 
     ngOnInit() {
         this.getProduct();
         this.selectedSize = this.productSize[0];
+    }
+
+    filterProductsByCategory(category: string) {
+        this.router.navigate(['/'], { queryParams: { category } });
     }
 
     getProduct() {
