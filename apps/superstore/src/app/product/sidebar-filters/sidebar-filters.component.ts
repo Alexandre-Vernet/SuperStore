@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { filterPrice, sortBy } from "@superstore/interfaces";
 import { ProductService } from "../product.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'superstore-sidebar-filters',
@@ -17,7 +18,8 @@ export class SidebarFiltersComponent implements OnInit {
     categories: string[] = [];
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private activatedRoute: ActivatedRoute,
     ) {
     }
 
@@ -33,7 +35,14 @@ export class SidebarFiltersComponent implements OnInit {
                         });
                     }
                 });
-            })
+
+                this.activatedRoute.queryParams
+                    .subscribe((params: { category: string }) => {
+                        if (params.category) {
+                            this.productService.filterProductsByCategory(params.category);
+                        }
+                    });
+            });
     }
 
     toggleSortBy() {
@@ -78,7 +87,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     setCategoriesFilter(category: string, $event) {
-    // If checkbox is unchecked, reset filter
+        // If checkbox is unchecked, reset filter
         if (!$event.target.checked) {
             this.resetCategoriesFilter();
             return;
