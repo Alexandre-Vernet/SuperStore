@@ -11,7 +11,7 @@ const routes: Routes = [
         canActivate: [OptionalAuthGuard]
     },
     {
-        path: 'product/:id',
+        path: 'product/:slug',
         component: ViewProductComponent,
         canActivate: [OptionalAuthGuard]
     }

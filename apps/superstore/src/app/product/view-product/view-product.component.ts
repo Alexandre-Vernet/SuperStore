@@ -37,8 +37,8 @@ export class ViewProductComponent implements OnInit {
     }
 
     getProduct() {
-        // Get the product ID from the URL
-        const productSlug = this.route.snapshot.paramMap.get('id');
+        // Get product slug from the URL
+        const productSlug = this.route.snapshot.paramMap.get('slug');
         this.getProductFromSlug(productSlug)
             .subscribe(product => {
                 this.product = product;

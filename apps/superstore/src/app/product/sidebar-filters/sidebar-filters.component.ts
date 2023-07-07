@@ -26,6 +26,15 @@ export class SidebarFiltersComponent implements OnInit {
     ngOnInit() {
         this.productService.products
             .subscribe(products => {
+                // Get category from URL and filter products
+                this.activatedRoute.queryParams
+                    .subscribe((params: { category: string }) => {
+                        if (params.category) {
+                            this.productService.filterProductsByCategory(params.category);
+                        }
+                    });
+
+                // List all categories
                 products.map(product => {
                     if (product.category) {
                         product.category.map(c => {
@@ -35,13 +44,6 @@ export class SidebarFiltersComponent implements OnInit {
                         });
                     }
                 });
-
-                this.activatedRoute.queryParams
-                    .subscribe((params: { category: string }) => {
-                        if (params.category) {
-                            this.productService.filterProductsByCategory(params.category);
-                        }
-                    });
             });
     }
 

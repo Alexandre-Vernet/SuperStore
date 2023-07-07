@@ -24,10 +24,16 @@ export class ListProductsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getProducts();
+        this.productService.productsFiltered
+            .subscribe(products => {
+                console.log(products)
+                this.products = products;
+            });
+
+        this.setPagination();
     }
 
-    getProducts(page: number = 1) {
+    setPagination(page: number = 1) {
         if (page) {
             this.pagination.page = page;
         }
@@ -38,11 +44,6 @@ export class ListProductsComponent implements OnInit {
                 page,
             )
             .subscribe(result => {
-                this.productService.productsFiltered
-                    .subscribe(products => {
-                        this.products = products;
-                    });
-
                 const { total } = result;
                 this.addPagination(total, page);
             });
@@ -77,7 +78,7 @@ export class ListProductsComponent implements OnInit {
         if (page < 1 || page > this.pagination.pages.length) {
             return;
         }
-        this.getProducts(page);
+        this.setPagination(page);
     }
 
     updateLimit($event: Event) {
@@ -85,7 +86,7 @@ export class ListProductsComponent implements OnInit {
         const limitParsed = (<HTMLInputElement>$event.target).value;
         localStorage.setItem('limit', limitParsed);
         this.pagination.limit = limit;
-        this.getProducts(this.pagination.page);
+        this.setPagination(this.pagination.page);
         this.scrollToBottom();
     }
 
