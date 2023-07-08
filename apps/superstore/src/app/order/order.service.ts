@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CreateOrderDto, OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
-import { BehaviorSubject, catchError, Observable, of, tap } from "rxjs";
+import {
+    CreateOrderDto,
+    OrderDto,
+    OrderWithAddressAndUserAndProductsDto,
+    OrderWithAddressAndUserDto
+} from "@superstore/interfaces";
+import { catchError, Observable, of, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "../cart/cart.service";
@@ -13,7 +18,7 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class OrderService {
 
     orderUri = environment.orderUri();
-    orders = new BehaviorSubject(<OrderWithAddressAndUserDto[]>[])
+    orders: OrderWithAddressAndUserDto[] = [];
 
     constructor(
         private http: HttpClient,
@@ -21,7 +26,6 @@ export class OrderService {
         private readonly authService: AuthService,
         private readonly notificationsService: NotificationsService,
     ) {
-        this.getOrders().subscribe();
     }
 
     confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
@@ -42,7 +46,20 @@ export class OrderService {
         return this.http.get<OrderWithAddressAndUserDto[]>(`${ this.orderUri }`)
             .pipe(
                 tap((orders) => {
-                    this.orders.next(orders);
+                    this.orders = orders;
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
+    getOrdersWithAddressAndUserAndProducts(): Observable<OrderWithAddressAndUserAndProductsDto[]> {
+        return this.http.get<OrderWithAddressAndUserAndProductsDto[]>(`${ this.orderUri }/products`)
+            .pipe(
+                tap((orders) => {
+                    return orders;
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
@@ -79,7 +96,7 @@ export class OrderService {
         return this.http.put<OrderWithAddressAndUserDto>(`${ this.orderUri }/${ orderId }`, { state })
             .pipe(
                 tap((order) => {
-                    const orders = this.orders.value.map((p) => {
+                    const orders = this.orders.map((p) => {
                         if (p.id === order.id) {
                             return order;
                         } else {
@@ -87,7 +104,7 @@ export class OrderService {
                         }
                     });
                     this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
-                    this.orders.next(orders);
+                    this.orders = orders;
                 })
             );
     }
@@ -97,8 +114,7 @@ export class OrderService {
             .pipe(
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'Order deleted successfully');
-                    const order = this.orders.value.filter((p) => p.id !== orderId);
-                    this.orders.next(order);
+                    this.orders = this.orders.filter((p) => p.id !== orderId);
                 }),
                 catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);

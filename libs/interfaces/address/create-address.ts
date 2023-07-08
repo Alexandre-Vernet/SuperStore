@@ -7,3 +7,7 @@ export class CreateAddressDto {
     zipCode: string;
     phone: string;
 }
+
+export class AddressWithShortAddressDto extends CreateAddressDto {
+    shortAddress: string;
+}

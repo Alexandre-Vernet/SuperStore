@@ -79,6 +79,7 @@ export class ProductService {
                 description: faker.commerce.productDescription(),
                 price: Number(faker.commerce.price()),
                 category: categories,
+                images: [faker.image.imageUrl()]
             };
 
             this.create(product);

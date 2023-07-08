@@ -13,6 +13,11 @@ export class OrderController {
         return this.orderService.create(createOrderDto);
     }
 
+    @Get('products')
+    findAllOrderWithAddressAndUserAndProducts() {
+        return this.orderService.findAllOrderWithAddressAndUserAndProducts();
+    }
+
     @Get()
     findAll() {
         return this.orderService.findAll();

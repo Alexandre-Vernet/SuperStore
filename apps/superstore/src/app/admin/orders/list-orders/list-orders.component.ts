@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
+import { OrderDto, OrderWithAddressAndUserAndProductsDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { UserService } from "../../../user/user.service";
@@ -13,7 +13,7 @@ import { AddressService } from "../../../address/address.service";
 })
 export class ListOrdersComponent implements OnInit {
 
-    orders: OrderWithAddressAndUserDto[];
+    orders: OrderWithAddressAndUserAndProductsDto[];
     editedOrder: OrderWithAddressAndUserDto;
     searchBar: string;
     showModalAddProduct = false;
@@ -28,26 +28,9 @@ export class ListOrdersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderService.orders
+        this.orderService.getOrdersWithAddressAndUserAndProducts()
             .subscribe((orders) => {
-                orders.map(order => {
-                    this.addressService.getAddress(order.addressId)
-                        .subscribe((address) => {
-                            const shortAddress = `${ address.address } ${ address.city } ${ address.zipCode }`;
-                            order.address = shortAddress;
-                        });
-
-                    this.userService.getUser(order.userId)
-                        .subscribe((user) => {
-                            const shortUser = `${ user.firstName } ${ user.lastName }`;
-                            order.user = shortUser;
-                        });
-
-                    this.productService.getProductFromIds(order.productsId)
-                        .subscribe((products) => {
-                            order.products = products;
-                        });
-                });
+                console.log(orders)
                 this.orders = orders;
             });
 
@@ -62,8 +45,25 @@ export class ListOrdersComponent implements OnInit {
             });
     }
 
-    editOrder(order: OrderWithAddressAndUserDto) {
-        this.editedOrder = order;
+    editOrder(order: OrderWithAddressAndUserAndProductsDto) {
+        this.editedOrder = {
+            id: order.id,
+            userId: order.user.id,
+            state: order.state,
+            addressId: order.addressId,
+            productsId: order.productsId,
+            deliveryMethod: order.deliveryMethod,
+            paymentMethod: order.paymentMethod,
+            subTotalPrice: order.subTotalPrice,
+            shippingPrice: order.shippingPrice,
+            taxesPrice: order.taxesPrice,
+            totalPrice: order.totalPrice,
+            createdAt: order.createdAt,
+            address: order.address.address,
+            user: `${ order.user.firstName } ${ order.user.lastName }`,
+            products: order.products
+        };
+
         this.adminService.openModal();
     }
 
