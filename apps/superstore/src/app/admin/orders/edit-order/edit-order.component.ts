@@ -22,8 +22,8 @@ export class EditOrderComponent implements OnInit {
 
     formUpdateOrder = new FormGroup({
         id: new FormControl(0, [Validators.required]),
-        name: new FormControl('', [Validators.required]),
-        address: new FormControl('', [Validators.required]),
+        name: new FormControl({ disabled: true, value: '' }, [Validators.required]),
+        address: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         products: new FormControl([], [Validators.required]),
         state: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
