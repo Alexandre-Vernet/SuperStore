@@ -2,10 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { Order } from "./order.entity";
-import { CreateOrderDto, DeliveryMethodType, OrderDto, OrderState } from "@superstore/interfaces";
+import {
+    CreateOrderDto,
+    DeliveryMethodType,
+    OrderDto,
+    OrderState,
+    OrderWithAddressAndUserAndProductsDto
+} from "@superstore/interfaces";
 import { EmailService } from "../email/email.service";
 import { faker } from '@faker-js/faker';
 import { UserService } from "../user/user.service";
+import { AddressService } from "../address/address.service";
+import { ProductService } from "../product/product.service";
 
 @Injectable()
 export class OrderService {
@@ -13,7 +21,9 @@ export class OrderService {
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
         private readonly emailService: EmailService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly addressService: AddressService,
+        private readonly productService: ProductService
     ) {
     }
 
@@ -41,6 +51,43 @@ export class OrderService {
         };
 
         return this.orderRepository.find(options);
+    }
+
+    findAllOrderWithAddressAndUserAndProducts(): Promise<OrderWithAddressAndUserAndProductsDto[]> {
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        };
+
+        return this.orderRepository.find(options)
+            .then((orders: OrderDto[]) => {
+                const promises = orders.map((order: OrderWithAddressAndUserAndProductsDto) => {
+                    const addressPromise = this.addressService.findOne(order.addressId)
+                        .then(address => {
+                            order.address = {
+                                ...address,
+                                shortAddress: `${ address.address } ${ address.city } ${ address.zipCode }`
+                            };
+                            return order;
+                        });
+
+                    const userPromise = this.userService.findOne(order.userId)
+                        .then(user => {
+                            order.user = {
+                                ...user,
+                                shortUser: `${ user.firstName } ${ user.lastName }`
+                            };
+                            return order;
+                        });
+
+                    const productsPromise = this.productService.getProductsByIds(order.productsId)
+                        .then(products => {
+                            order.products = products;
+                        });
+                    return Promise.all([addressPromise, userPromise, productsPromise])
+                        .then(() => order);
+                });
+                return Promise.all(promises);
+            });
     }
 
     findOne(id: number) {

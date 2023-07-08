@@ -6,3 +6,8 @@ export class CreateUserDto {
     password: string;
     isAdmin: boolean;
 }
+
+export class UserWithShortUserDto extends CreateUserDto {
+    id: number;
+    shortUser: string;
+}
