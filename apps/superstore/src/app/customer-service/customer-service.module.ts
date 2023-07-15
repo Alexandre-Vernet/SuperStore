@@ -9,17 +9,18 @@ import { FaqComponent } from './faq/faq.component';
 import { ShippingComponent } from './shipping/shipping.component';
 import { ReturnsComponent } from './returns/returns.component';
 import { WarrantyComponent } from './warranty/warranty.component';
+import { SecurePaymentComponent } from './secure-payment/secure-payment.component';
 
 @NgModule({
-    declarations: [
-        CustomerServiceComponent,
-        ContactComponent,
-        FaqComponent,
-        ShippingComponent,
-        ReturnsComponent,
-        WarrantyComponent,
-    ],
-    imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
+  declarations: [
+    CustomerServiceComponent,
+    ContactComponent,
+    FaqComponent,
+    ShippingComponent,
+    ReturnsComponent,
+    WarrantyComponent,
+    SecurePaymentComponent,
+  ],
+  imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
 })
-export class CustomerServiceModule {
-}
+export class CustomerServiceModule {}

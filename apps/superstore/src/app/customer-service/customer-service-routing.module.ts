@@ -6,6 +6,7 @@ import { FaqComponent } from "./faq/faq.component";
 import { ShippingComponent } from "./shipping/shipping.component";
 import { ReturnsComponent } from "./returns/returns.component";
 import { WarrantyComponent } from "./warranty/warranty.component";
+import { SecurePaymentComponent } from "./secure-payment/secure-payment.component";
 
 const routes: Routes = [
     {
@@ -23,6 +24,10 @@ const routes: Routes = [
             {
                 path: 'warranty',
                 component: WarrantyComponent
+            },
+            {
+                path: 'secure-payment',
+                component: SecurePaymentComponent
             },
             {
                 path: 'contact',
