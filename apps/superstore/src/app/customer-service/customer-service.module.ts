@@ -7,6 +7,7 @@ import { CustomerServiceComponent } from './customer-service.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FaqComponent } from './faq/faq.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { ReturnsComponent } from './returns/returns.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { ShippingComponent } from './shipping/shipping.component';
     ContactComponent,
     FaqComponent,
     ShippingComponent,
+    ReturnsComponent,
   ],
   imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
 })
