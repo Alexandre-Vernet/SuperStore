@@ -5,6 +5,7 @@ import { ContactComponent } from "./contact/contact.component";
 import { FaqComponent } from "./faq/faq.component";
 import { ShippingComponent } from "./shipping/shipping.component";
 import { ReturnsComponent } from "./returns/returns.component";
+import { WarrantyComponent } from "./warranty/warranty.component";
 
 const routes: Routes = [
     {
@@ -18,6 +19,10 @@ const routes: Routes = [
             {
                 path: 'returns',
                 component: ReturnsComponent
+            },
+            {
+                path: 'warranty',
+                component: WarrantyComponent
             },
             {
                 path: 'contact',

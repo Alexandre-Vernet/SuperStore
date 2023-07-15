@@ -8,15 +8,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FaqComponent } from './faq/faq.component';
 import { ShippingComponent } from './shipping/shipping.component';
 import { ReturnsComponent } from './returns/returns.component';
+import { WarrantyComponent } from './warranty/warranty.component';
 
 @NgModule({
-  declarations: [
-    CustomerServiceComponent,
-    ContactComponent,
-    FaqComponent,
-    ShippingComponent,
-    ReturnsComponent,
-  ],
-  imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
+    declarations: [
+        CustomerServiceComponent,
+        ContactComponent,
+        FaqComponent,
+        ShippingComponent,
+        ReturnsComponent,
+        WarrantyComponent,
+    ],
+    imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
 })
-export class CustomerServiceModule {}
+export class CustomerServiceModule {
+}
