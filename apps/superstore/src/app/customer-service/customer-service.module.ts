@@ -10,6 +10,7 @@ import { ShippingComponent } from './shipping/shipping.component';
 import { ReturnsComponent } from './returns/returns.component';
 import { WarrantyComponent } from './warranty/warranty.component';
 import { SecurePaymentComponent } from './secure-payment/secure-payment.component';
+import { FindAStoreComponent } from './find-a-store/find-a-store.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SecurePaymentComponent } from './secure-payment/secure-payment.componen
     ReturnsComponent,
     WarrantyComponent,
     SecurePaymentComponent,
+    FindAStoreComponent,
   ],
   imports: [CommonModule, CustomerServiceRoutingModule, ReactiveFormsModule],
 })

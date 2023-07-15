@@ -7,12 +7,17 @@ import { ShippingComponent } from "./shipping/shipping.component";
 import { ReturnsComponent } from "./returns/returns.component";
 import { WarrantyComponent } from "./warranty/warranty.component";
 import { SecurePaymentComponent } from "./secure-payment/secure-payment.component";
+import { FindAStoreComponent } from "./find-a-store/find-a-store.component";
 
 const routes: Routes = [
     {
         path: '',
         component: CustomerServiceComponent,
         children: [
+            {
+                path: 'contact',
+                component: ContactComponent
+            },
             {
                 path: 'shipping',
                 component: ShippingComponent
@@ -30,12 +35,12 @@ const routes: Routes = [
                 component: SecurePaymentComponent
             },
             {
-                path: 'contact',
-                component: ContactComponent
-            },
-            {
                 path: 'FAQ',
                 component: FaqComponent
+            },
+            {
+                path: 'find-a-store',
+                component: FindAStoreComponent
             },
         ]
     }
