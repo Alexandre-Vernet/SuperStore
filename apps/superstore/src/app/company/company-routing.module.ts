@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WhoWeAreComponent } from "./who-we-are/who-we-are.component";
 import { CompanyComponent } from "./company.component";
+import { PrivacyComponent } from "./privacy/privacy.component";
 
 const routes: Routes = [
     {
@@ -16,6 +17,10 @@ const routes: Routes = [
             {
                 path: 'who-we-are',
                 component: WhoWeAreComponent
+            },
+            {
+                path: 'privacy',
+                component: PrivacyComponent
             }
         ],
     },
