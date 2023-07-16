@@ -24,7 +24,8 @@
           "apps/superstore/src/assets"
         ],
         "styles": [
-          "apps/superstore/src/styles.scss"
+          "apps/superstore/src/styles.scss",
+          "./node_modules/leaflet/dist/leaflet.css"
         ],
         "scripts": []
       },

@@ -1,23 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { filterPrice, sortBy } from "@superstore/interfaces";
 import { ProductService } from "../product.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'superstore-sidebar-filters',
     templateUrl: './sidebar-filters.component.html',
     styleUrls: ['./sidebar-filters.component.scss'],
 })
-export class SidebarFiltersComponent {
+export class SidebarFiltersComponent implements OnInit {
     filterPrice = filterPrice;
     sortBy = sortBy;
     sortByOpen = false;
     sortCurrent = '';
     filterCurrent = '';
     responsiveFilterOpen = false;
+    categories: string[] = [];
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private activatedRoute: ActivatedRoute,
     ) {
+    }
+
+    ngOnInit() {
+        this.productService.products
+            .subscribe(products => {
+                // Get category from URL and filter products
+                this.activatedRoute.queryParams
+                    .subscribe((params: { category: string }) => {
+                        if (params.category) {
+                            this.productService.filterProductsByCategory(params.category);
+                        }
+                    });
+
+                // List all categories
+                products.map(product => {
+                    if (product.category) {
+                        product.category.map(c => {
+                            if (!this.categories.includes(c)) {
+                                this.categories.push(c);
+                            }
+                        });
+                    }
+                });
+            });
     }
 
     toggleSortBy() {
@@ -61,9 +88,30 @@ export class SidebarFiltersComponent {
         this.productService.resetFilters();
     }
 
-    setPriceFilter(label: string, event) {
+    setCategoriesFilter(category: string, $event) {
         // If checkbox is unchecked, reset filter
-        if (!event.target.checked) {
+        if (!$event.target.checked) {
+            this.resetCategoriesFilter();
+            return;
+        }
+
+        this.closeSubMenus();
+
+        this.productService.filterProductsByCategory(category);
+    }
+
+    resetCategoriesFilter() {
+        this.closeSubMenus();
+
+        // Uncheck all checkboxes
+        this.categories = [];
+
+        this.productService.resetFilters();
+    }
+
+    setPriceFilter(label: string, $event) {
+        // If checkbox is unchecked, reset filter
+        if (!$event.target.checked) {
             this.resetPriceFilter();
             return;
         }

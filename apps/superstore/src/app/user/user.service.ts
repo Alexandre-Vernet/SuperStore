@@ -17,7 +17,7 @@ export class UserService {
     constructor(
         private readonly http: HttpClient,
         private readonly authService: AuthService,
-        private readonly notificationService: NotificationsService,
+        private readonly notificationsService: NotificationsService,
     ) {
         this.getUsers().subscribe();
     }
@@ -29,7 +29,7 @@ export class UserService {
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -50,12 +50,12 @@ export class UserService {
                             return p;
                         }
                     });
-                    this.notificationService.showSuccessNotification('Success', 'User updated successfully');
+                    this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
                     this.users.next(users);
                     this.authService.user = user;
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -65,14 +65,36 @@ export class UserService {
         return this.http.delete<void>(`${ this.userUrl }/${ userId }`)
             .pipe(
                 tap(() => {
-                    this.notificationService.showSuccessNotification('Success', 'User deleted successfully');
+                    this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
                     const users = this.users.value.filter((p) => p.id !== userId);
                     this.users.next(users);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
+            );
+    }
+
+
+    sendContactEmail(firstName: string, lastName: string, email: string, phone: string, subject: string, message: string) {
+        return this.http.post(`${ this.userUrl }/contact`, {
+            firstName,
+            lastName,
+            email,
+            phone,
+            subject,
+            message
+        })
+            .pipe(
+                tap(() => {
+                    this.notificationsService.showSuccessNotification('Success', 'Your message has been sent');
+                }),
+                catchError((err) => {
+                        this.notificationsService.showErrorNotification('Error', err.error.message);
+                        throw err;
+                    }
+                )
             );
     }
 }

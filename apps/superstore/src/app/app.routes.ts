@@ -36,6 +36,14 @@ export const appRoutes: Route[] = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'company',
+        loadChildren: () => import('./company/company.module').then(m => m.CompanyModule)
+    },
+    {
+        path: 'customer-service',
+        loadChildren: () => import('./customer-service/customer-service.module').then(m => m.CustomerServiceModule)
+    },
+    {
         path: '**',
         redirectTo: ''
     }
