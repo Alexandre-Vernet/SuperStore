@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { WhoWeAreComponent } from "./who-we-are/who-we-are.component";
 import { CompanyComponent } from "./company.component";
 import { PrivacyComponent } from "./privacy/privacy.component";
+import { TermsAndConditionsComponent } from "./terms-and-conditions/terms-and-conditions.component";
 
 const routes: Routes = [
     {
@@ -21,6 +22,10 @@ const routes: Routes = [
             {
                 path: 'privacy',
                 component: PrivacyComponent
+            },
+            {
+                path: 'terms-and-conditions',
+                component: TermsAndConditionsComponent
             }
         ],
     },

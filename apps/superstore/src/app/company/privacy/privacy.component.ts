@@ -6,10 +6,4 @@ import { Component } from '@angular/core';
     styleUrls: ['./privacy.component.scss'],
 })
 export class PrivacyComponent {
-
-    lastUpdated = new Date(2023, 6, 16);
-
-    get lastUpdatedString(): string {
-        return this.lastUpdated.toLocaleDateString();
-    }
 }
