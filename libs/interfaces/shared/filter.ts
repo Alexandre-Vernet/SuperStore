@@ -53,3 +53,5 @@ export const sortBy = [
         checked: false
     },
 ];
+
+export const categories: { label: string, checked: boolean }[] = [];
