@@ -31,6 +31,11 @@ export class SidebarFiltersComponent implements OnInit {
                     .subscribe((params: { category: string }) => {
                         if (params.category) {
                             this.productService.filterProductsByCategory(params.category);
+
+                            // Check category checkbox
+                            this.categories.map(c => {
+                                c.checked = c.label === params.category;
+                            });
                         }
                     });
 
