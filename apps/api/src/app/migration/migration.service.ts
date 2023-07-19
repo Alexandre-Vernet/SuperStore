@@ -44,11 +44,11 @@ export class MigrationService {
     }
 
     async migrateAllResources() {
+        this.authService.migrate();
         this.addressService.migrate();
         this.newsletterService.migrate();
         this.orderService.migrate();
         this.productService.migrate();
         this.reviewService.migrate();
-        this.authService.migrate();
     }
 }

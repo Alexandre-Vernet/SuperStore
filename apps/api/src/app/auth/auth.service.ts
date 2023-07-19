@@ -130,6 +130,20 @@ export class AuthService {
     async migrate() {
         console.log('Migrating users...');
 
+        await this.userRepository.query(`
+            CREATE TABLE IF NOT EXISTS public.users (
+                id SERIAL PRIMARY KEY,
+                addresses_id INTEGER[],
+                first_name VARCHAR(255) NOT NULL,
+                last_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+            );
+        `);
+
         for (let i = 0; i < 100; i++) {
             const addressesId = [];
             const randomAddressId = Math.floor(Math.random() * 2) + 1;
