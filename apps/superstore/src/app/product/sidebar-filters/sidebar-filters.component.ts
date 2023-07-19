@@ -26,18 +26,11 @@ export class SidebarFiltersComponent implements OnInit {
     ngOnInit() {
         this.productService.products
             .subscribe(products => {
-                // Get category from URL and filter products
-                this.activatedRoute.queryParams
-                    .subscribe((params: { category: string }) => {
-                        if (params.category) {
-                            this.productService.filterProductsByCategory(params.category);
-
-                            // Check category checkbox
-                            this.categories.map(c => {
-                                c.checked = c.label === params.category;
-                            });
-                        }
-                    });
+                // Get category from URL and filter products by category
+                const category = this.getCategoryFromUrl();
+                if (category) {
+                    this.productService.filterProductsByCategory(category);
+                }
 
                 // List all categories
                 products.map(product => {
@@ -50,6 +43,15 @@ export class SidebarFiltersComponent implements OnInit {
                     }
                 });
             });
+    }
+
+    getCategoryFromUrl() {
+        const category = this.activatedRoute.snapshot.queryParams['category'];
+        // Check category checkbox
+        this.categories.map(c => {
+            c.checked = c.label === category;
+        });
+        return category;
     }
 
     toggleSortBy() {
