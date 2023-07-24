@@ -6,6 +6,7 @@ import { AuthModule } from "../auth/auth.module";
 import { OrderModule } from "../order/order.module";
 import { ProductModule } from "../product/product.module";
 import { ReviewModule } from "../review/review.module";
+import { PromotionModule } from "../promotion/promotion.module";
 
 @Module({
     imports: [
@@ -14,7 +15,8 @@ import { ReviewModule } from "../review/review.module";
         NewsletterModule,
         OrderModule,
         ProductModule,
-        ReviewModule
+        ReviewModule,
+        PromotionModule
     ],
     providers: [MigrationService],
 })
