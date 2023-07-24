@@ -16,7 +16,7 @@
                     </span>
                 </li>
                 <li>
-                    <span (click)="redirectTo('/user')"
+                    <span (click)="redirectTo('/user/profile')"
                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:cursor-pointer">
                         My profile
                     </span>
@@ -40,10 +40,12 @@
 
 <ng-template #noUser>
     <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-        <a routerLink="/sign-in" class="text-sm font-medium text-gray-700 hover:text-gray-800">Sign
-            in</a>
+        <a routerLink="/auth/sign-in" class="text-sm font-medium text-gray-700 hover:text-gray-800">
+            Sign in
+        </a>
         <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
-        <a routerLink="/sign-up" class="text-sm font-medium text-gray-700 hover:text-gray-800">Create
-            account</a>
+        <a routerLink="/auth/sign-up" class="text-sm font-medium text-gray-700 hover:text-gray-800">
+            Create account
+        </a>
     </div>
 </ng-template>

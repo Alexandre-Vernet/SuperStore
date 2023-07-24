@@ -30,7 +30,6 @@ export class ListOrdersComponent implements OnInit {
     ngOnInit() {
         this.orderService.getOrdersWithAddressAndUserAndProducts()
             .subscribe((orders) => {
-                console.log(orders)
                 this.orders = orders;
             });
 
