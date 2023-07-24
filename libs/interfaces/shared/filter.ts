@@ -1,4 +1,4 @@
-export const filterPrice = [
+export const filterPrice: { label: string, name: string, checked: boolean }[] = [
     {
         label: 'under-25',
         name: 'Under 25 €',
@@ -26,7 +26,7 @@ export const filterPrice = [
     }
 ];
 
-export const sortBy = [
+export const sortBy: { label: string, name: string, checked: boolean }[] = [
     {
         label: 'Price: Low to High',
         name: 'price',
@@ -53,3 +53,5 @@ export const sortBy = [
         checked: false
     },
 ];
+
+export const categories: { label: string, checked: boolean }[] = [];

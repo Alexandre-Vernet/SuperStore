@@ -133,11 +133,12 @@
                                                 *ngFor="let category of categories"
                                                 class="flex items-center">
                                             <input
-                                                    (click)="setCategoriesFilter(category, $event)"
+                                                    (click)="setCategoriesFilter(category.label, $event)"
                                                     type="checkbox"
+                                                    [checked]="category.checked"
                                                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                                             <label [for]="category" class="ml-3 text-sm text-gray-600">
-                                                {{ category }}
+                                                {{ category.label }}
                                             </label>
                                         </div>
                                     </div>
@@ -256,12 +257,13 @@
                                                 *ngFor="let category of categories"
                                                 class="flex items-center">
                                             <input
-                                                    (click)="setCategoriesFilter(category, $event)"
+                                                    (click)="setCategoriesFilter(category.label, $event)"
                                                     [id]="category"
+                                                    [checked]="category.checked"
                                                     type="checkbox"
                                                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                                             <label [for]="category" class="ml-3 text-sm text-gray-600">
-                                                {{ category }}
+                                                {{ category.label }}
                                             </label>
                                         </div>
                                     </div>

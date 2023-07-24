@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filterPrice, sortBy } from "@superstore/interfaces";
+import { categories, filterPrice, sortBy } from "@superstore/interfaces";
 import { ProductService } from "../product.service";
 import { ActivatedRoute } from "@angular/router";
 
@@ -15,7 +15,7 @@ export class SidebarFiltersComponent implements OnInit {
     sortCurrent = '';
     filterCurrent = '';
     responsiveFilterOpen = false;
-    categories: string[] = [];
+    categories = categories;
 
     constructor(
         private readonly productService: ProductService,
@@ -26,25 +26,32 @@ export class SidebarFiltersComponent implements OnInit {
     ngOnInit() {
         this.productService.products
             .subscribe(products => {
-                // Get category from URL and filter products
-                this.activatedRoute.queryParams
-                    .subscribe((params: { category: string }) => {
-                        if (params.category) {
-                            this.productService.filterProductsByCategory(params.category);
-                        }
-                    });
+                // Get category from URL and filter products by category
+                const category = this.getCategoryFromUrl();
+                if (category) {
+                    this.productService.filterProductsByCategory(category);
+                }
 
                 // List all categories
                 products.map(product => {
                     if (product.category) {
                         product.category.map(c => {
-                            if (!this.categories.includes(c)) {
-                                this.categories.push(c);
+                            if (!this.categories.map(c => c.label).includes(c)) {
+                                this.categories.push({ label: c, checked: false });
                             }
                         });
                     }
                 });
             });
+    }
+
+    getCategoryFromUrl() {
+        const category = this.activatedRoute.snapshot.queryParams['category'];
+        // Check category checkbox
+        this.categories.map(c => {
+            c.checked = c.label === category;
+        });
+        return category;
     }
 
     toggleSortBy() {
@@ -65,7 +72,7 @@ export class SidebarFiltersComponent implements OnInit {
     setSortBy(sortBy: string) {
         this.closeSubMenus();
 
-        // Uncheck all other price filters
+        // Uncheck all other sort by
         this.sortBy.map(f => {
             f.checked = f.name === sortBy;
         });
@@ -95,6 +102,11 @@ export class SidebarFiltersComponent implements OnInit {
             return;
         }
 
+        // Uncheck all other categories
+        this.categories.map(f => {
+            f.checked = f.label === category;
+        });
+
         this.closeSubMenus();
 
         this.productService.filterProductsByCategory(category);
@@ -104,7 +116,7 @@ export class SidebarFiltersComponent implements OnInit {
         this.closeSubMenus();
 
         // Uncheck all checkboxes
-        this.categories = [];
+        this.categories = categories;
 
         this.productService.resetFilters();
     }
