@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePromotionDto } from './dto/create-promotion.dto';
-import { UpdatePromotionDto } from './dto/update-promotion.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { MoreThan, Repository } from "typeorm";
 import { Promotion } from "./promotion.entity";
 import { faker } from "@faker-js/faker";
+import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
 
 @Injectable()
 export class PromotionService {
@@ -36,8 +35,12 @@ export class PromotionService {
         return result;
     }
 
-    update(id: number, updatePromotionDto: UpdatePromotionDto) {
-        return this.promotionRepository.update(id, updatePromotionDto);
+    usePromotionCode(label: string, promotion: PromotionDto) {
+        this.findOne(label)
+            .then((result) => {
+                promotion.count--;
+                this.promotionRepository.update(result.id, promotion);
+            });
     }
 
     remove(id: number) {

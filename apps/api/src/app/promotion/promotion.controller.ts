@@ -1,15 +1,6 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
 import { PromotionService } from './promotion.service';
-import { CreatePromotionDto } from './dto/create-promotion.dto';
-import { UpdatePromotionDto } from './dto/update-promotion.dto';
+import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
 
 @Controller('promotion')
 export class PromotionController {
@@ -31,12 +22,12 @@ export class PromotionController {
         return this.promotionService.findOne(label);
     }
 
-    @Patch(':id')
-    update(
-        @Param('id') id: number,
-        @Body() updatePromotionDto: UpdatePromotionDto
+    @Put(':label')
+    usePromotionCode(
+        @Param('label') label: string,
+        @Body() promotion: PromotionDto
     ) {
-        return this.promotionService.update(id, updatePromotionDto);
+        return this.promotionService.usePromotionCode(label, promotion);
     }
 
     @Delete(':id')
