@@ -5,7 +5,7 @@ import {
     CreateOrderDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderState
+    OrderState, PromotionDto
 } from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
@@ -15,6 +15,7 @@ import { OrderService } from "../../order/order.service";
 import { Router } from "@angular/router";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
 import { AddressService } from "../../address/address.service";
+import { PromotionService } from "../../promotion/promotion.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -40,7 +41,9 @@ export class CheckoutComponent implements OnInit {
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl('', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
+        promotionCode: new FormControl(''),
     });
+    promotionCodeStatus: string;
 
     constructor(
         private readonly cartService: CartService,
@@ -48,6 +51,7 @@ export class CheckoutComponent implements OnInit {
         private readonly addressService: AddressService,
         private readonly orderService: OrderService,
         private readonly notificationsService: NotificationsService,
+        private readonly promotionService: PromotionService,
         private router: Router
     ) {
     }
@@ -184,5 +188,25 @@ export class CheckoutComponent implements OnInit {
         this.orderService
             .confirmOrder(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
+    }
+
+    applyPromotionCode() {
+        const promotionCode = this.formAddress.value.promotionCode.toString().trim();
+        this.promotionService.checkPromotionCode(promotionCode)
+            .subscribe({
+                next: (promotion: PromotionDto) => {
+                    // TODO: Apply promotion code to decrease subTotalPrice
+                    const amount = promotion.amount;
+                    const subTotalPrice = this.subTotalPrice();
+                    console.log(subTotalPrice)
+                    const totalPrice = subTotalPrice - amount;
+                    console.log(totalPrice)
+
+                    this.promotionCodeStatus = 'The promotion code has been applied';
+                },
+                error: (err) => {
+                    this.promotionCodeStatus = err.error.message;
+                }
+            });
     }
 }

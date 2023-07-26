@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
 import { UpdatePromotionDto } from './dto/update-promotion.dto';
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { MoreThan, Repository } from "typeorm";
 import { Promotion } from "./promotion.entity";
-import { CreateReviewDto } from "@superstore/interfaces";
 import { faker } from "@faker-js/faker";
 
 @Injectable()
@@ -23,11 +22,18 @@ export class PromotionService {
         return this.promotionRepository.find();
     }
 
-    findOne(id: number) {
+    async findOne(label: string) {
         const options = {
-            where: { id }
-        };
-        return this.promotionRepository.findOne(options);
+            where: {
+                label: label,
+                count: MoreThan(0),
+            }
+        }
+        const result = await this.promotionRepository.findOne(options);
+        if (!result) {
+            throw new NotFoundException(`Promotion with label ${ label } not found`)
+        }
+        return result;
     }
 
     update(id: number, updatePromotionDto: UpdatePromotionDto) {
@@ -46,7 +52,7 @@ export class PromotionService {
             id SERIAL PRIMARY KEY,
             label TEXT NOT NULL,
             amount DECIMAL NOT NULL,
-            count TEXT NOT NULL,
+            count DECIMAL NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT NOW(),
             updated_at TIMESTAMP NOT NULL DEFAULT NOW()
         );

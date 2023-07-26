@@ -26,9 +26,9 @@ export class PromotionController {
         return this.promotionService.findAll();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.promotionService.findOne(id);
+    @Get(':label')
+    findOne(@Param('label') label: string) {
+        return this.promotionService.findOne(label);
     }
 
     @Patch(':id')

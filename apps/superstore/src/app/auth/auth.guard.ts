@@ -25,7 +25,7 @@ export class AuthGuard {
                         next: () => resolve(true),
                         error: (err) => {
                             this.authService.error = err.error.message;
-                            this.router.navigate(['/sign-in']);
+                            this.router.navigate(['/auth/sign-in']);
                             reject(false);
                         }
                     });
