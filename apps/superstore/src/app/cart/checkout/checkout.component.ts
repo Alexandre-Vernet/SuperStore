@@ -5,7 +5,7 @@ import {
     CreateOrderDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderState
+    OrderState, PromotionDto, PromotionWithStatus
 } from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
@@ -15,6 +15,7 @@ import { OrderService } from "../../order/order.service";
 import { Router } from "@angular/router";
 import { NotificationsService } from "../../shared/notifications/notifications.service";
 import { AddressService } from "../../address/address.service";
+import { PromotionService } from "../../promotion/promotion.service";
 
 @Component({
     selector: 'superstore-checkout',
@@ -42,12 +43,18 @@ export class CheckoutComponent implements OnInit {
         paymentMethod: new FormControl('CB', [Validators.required]),
     });
 
+    formPromotion = new FormGroup({
+        promotionCode: new FormControl('', [Validators.required])
+    });
+    promotion: PromotionWithStatus;
+
     constructor(
         private readonly cartService: CartService,
         private readonly authService: AuthService,
         private readonly addressService: AddressService,
         private readonly orderService: OrderService,
         private readonly notificationsService: NotificationsService,
+        private readonly promotionService: PromotionService,
         private router: Router
     ) {
     }
@@ -134,7 +141,27 @@ export class CheckoutComponent implements OnInit {
     }
 
     totalPrice(): number {
+        if (this.promotion) {
+            return Cart.convertTwoDecimals((this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount));
+        }
         return Cart.convertTwoDecimals(this.shippingPrice + this.taxes() + this.subTotalPrice());
+    }
+
+    applyPromotionCode() {
+        const promotionCode = this.formPromotion.value.promotionCode.toString().trim();
+        this.promotionService.checkPromotionCode(promotionCode)
+            .subscribe({
+                next: (promotion: PromotionDto) => {
+                    this.promotion = {
+                        status: 'success',
+                        ...promotion
+                    };
+                },
+                error: () => {
+                    this.promotion = null;
+                    this.formPromotion.controls.promotionCode.setErrors({ invalid: true });
+                }
+            });
     }
 
     submitForm() {

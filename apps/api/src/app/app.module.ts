@@ -14,8 +14,10 @@ import { AuthModule } from './auth/auth.module';
 import { Review } from './review/review.entity';
 import { ReviewModule } from './review/review.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
-import { Newsletter } from "./newsletter/newsletter.entity";
-import { MigrationModule } from "./migration/migration.module";
+import { Newsletter } from './newsletter/newsletter.entity';
+import { MigrationModule } from './migration/migration.module';
+import { PromotionModule } from './promotion/promotion.module';
+import { Promotion } from "./promotion/promotion.entity";
 
 const {
     POSTGRES_HOST,
@@ -35,7 +37,7 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, User, Address, Review, Newsletter],
+            entities: [Product, Order, User, Address, Review, Newsletter, Promotion],
             ssl: true,
         }),
         ProductModule,
@@ -51,7 +53,8 @@ const {
             signOptions: { expiresIn: '1d' },
         }),
         NewsletterModule,
-        MigrationModule
+        MigrationModule,
+        PromotionModule,
     ],
 })
 export class AppModule {

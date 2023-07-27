@@ -33,4 +33,8 @@ export * from './shared/filter';
 export * from './newsletter/send-newsletter';
 export * from './newsletter/newsletter';
 
-export * from './email/transporter';
+export * from './email/transporter'
+
+
+export * from './promotion/promotion';
+export * from './promotion/create-promotion';

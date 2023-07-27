@@ -7,6 +7,7 @@ import { ProductService } from "../product/product.service";
 import { ReviewService } from "../review/review.service";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "../app.module";
+import { PromotionService } from "../promotion/promotion.service";
 
 export const runMigration = async () => {
     const app = await NestFactory.create(AppModule, { cors: true });
@@ -16,6 +17,7 @@ export const runMigration = async () => {
     const orderService = app.get(OrderService);
     const productService = app.get(ProductService);
     const reviewService = app.get(ReviewService);
+    const promotionService = app.get(PromotionService);
 
     const migrationService = new MigrationService(
         addressService,
@@ -23,7 +25,8 @@ export const runMigration = async () => {
         newsletterService,
         orderService,
         productService,
-        reviewService
+        reviewService,
+        promotionService
     );
 
     await migrationService.migrateAllResources();
@@ -40,6 +43,7 @@ export class MigrationService {
         private readonly orderService: OrderService,
         private readonly productService: ProductService,
         private readonly reviewService: ReviewService,
+        private readonly promotionService: PromotionService
     ) {
     }
 
@@ -50,5 +54,6 @@ export class MigrationService {
         this.orderService.migrate();
         this.productService.migrate();
         this.reviewService.migrate();
+        this.promotionService.migrate();
     }
 }

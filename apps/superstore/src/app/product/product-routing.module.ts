@@ -7,7 +7,7 @@ import { ProductComponent } from "./product.component";
 
 const routes: Routes = [
     {
-        path: '',
+        path: 'product',
         component: ProductComponent,
         canActivate: [OptionalAuthGuard],
         children: [
@@ -18,7 +18,6 @@ const routes: Routes = [
             {
                 path: ':slug',
                 component: ViewProductComponent,
-
             }
         ]
     },

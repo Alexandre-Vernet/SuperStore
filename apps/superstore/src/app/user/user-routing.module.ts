@@ -4,10 +4,11 @@ import { ProfileComponent } from "./profile/profile.component";
 import { UserComponent } from "./user.component";
 import { SecurityComponent } from "./security/security.component";
 import { AddressComponent } from "./address/address.component";
+import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
     {
-        path: '',
+        path: 'user',
         component: UserComponent,
         children: [
             {
@@ -18,14 +19,17 @@ const routes: Routes = [
             {
                 path: 'profile',
                 component: ProfileComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'security',
                 component: SecurityComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'address',
                 component: AddressComponent,
+                canActivate: [AuthGuard]
             },
         ]
     }

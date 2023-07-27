@@ -5,18 +5,26 @@ import { CheckoutComponent } from "./checkout/checkout.component";
 import { CheckoutGuard } from "./checkout/checkout.guard";
 import { AuthGuard } from "../auth/auth.guard";
 import { OptionalAuthGuard } from "../auth/optional-auth.guard";
+import { CartComponent } from "./cart.component";
 
 const routes: Routes = [
     {
-        path: '',
-        component: ViewCartComponent,
-        canActivate: [OptionalAuthGuard]
-    },
-    {
-        path: 'checkout',
-        component: CheckoutComponent,
-        canActivate: [CheckoutGuard, AuthGuard]
+        path: 'cart',
+        component: CartComponent,
+        canActivate: [OptionalAuthGuard],
+        children: [
+            {
+                path: 'view-cart',
+                component: ViewCartComponent,
+                canActivate: [OptionalAuthGuard]
+            },
+            {
+                path: 'checkout',
+                component: CheckoutComponent,
+                canActivate: [CheckoutGuard, AuthGuard]
 
+            },
+        ]
     },
 ];
 

@@ -17,6 +17,9 @@ import { UsersPipe } from './users/users.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { AdminSearchBarComponent } from './admin-search-bar/admin-search-bar.component';
 import { SendNewsletterComponent } from './send-newsletter/send-newsletter.component';
+import { EditPromotionComponent } from "./promotions-code/edit-promotion/edit-promotion.component";
+import { ListPromotionsComponent } from "./promotions-code/list-promotions/list-promotions.component";
+import { PromotionsPipe } from "./promotions-code/promotions.pipe";
 
 @NgModule({
     declarations: [
@@ -32,9 +35,12 @@ import { SendNewsletterComponent } from './send-newsletter/send-newsletter.compo
         OrdersPipe,
         ProductsPipe,
         UsersPipe,
+        PromotionsPipe,
         AdminSearchBarComponent,
         AdminSearchBarComponent,
         SendNewsletterComponent,
+        EditPromotionComponent,
+        ListPromotionsComponent,
     ],
     imports: [
         CommonModule,
@@ -43,9 +49,7 @@ import { SendNewsletterComponent } from './send-newsletter/send-newsletter.compo
         FormsModule,
         SharedModule,
     ],
-    exports: [
-        ListProductsComponent
-    ]
+    exports: [ListProductsComponent],
 })
 export class AdminModule {
 }
