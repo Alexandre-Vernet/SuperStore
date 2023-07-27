@@ -48,7 +48,7 @@
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
-                        <tr *ngFor="let promotion of promotions">
+                        <tr *ngFor="let promotion of searchBar | searchPromotions: promotions">
                             <td class="whitespace-nowrap py-4 pl-4 text-center pr-3 text-sm font-medium">
                                 # {{ promotion.id }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PromotionDto } from "@superstore/interfaces";
 import { PromotionService } from "../../../promotion/promotion.service";
+import { AdminService } from "../../admin.service";
 
 @Component({
     selector: 'superstore-list-promotions',
@@ -10,15 +11,21 @@ import { PromotionService } from "../../../promotion/promotion.service";
 export class ListPromotionsComponent implements OnInit {
     promotions: PromotionDto[] = [];
     editedPromotion: PromotionDto;
+    searchBar = '';
     showModalEditPromotion = false;
 
     constructor(
-        private readonly promotionService: PromotionService
+        private readonly promotionService: PromotionService,
+        private readonly adminService: AdminService
     ) {
     }
 
     ngOnInit() {
         this.getAllPromotionCode();
+        this.adminService.searchBar
+            .subscribe((search) => {
+                this.searchBar = search;
+            });
     }
 
     getAllPromotionCode() {
