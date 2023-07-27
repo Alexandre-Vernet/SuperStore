@@ -22,12 +22,20 @@ export class PromotionController {
         return this.promotionService.findOne(label);
     }
 
-    @Put(':label')
+    @Put('use-promotion/:label')
     usePromotionCode(
         @Param('label') label: string,
         @Body() promotion: PromotionDto
     ) {
         return this.promotionService.usePromotionCode(label, promotion);
+    }
+
+    @Put(':id')
+    update(
+        @Param('id') id: number,
+        @Body() promotion: PromotionDto
+    ) {
+        return this.promotionService.update(id, promotion);
     }
 
     @Delete(':id')

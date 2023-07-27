@@ -5,6 +5,7 @@ import { AdminComponent } from "./admin.component";
 import { ListUsersComponent } from "./users/list-users/list-users.component";
 import { ListOrdersComponent } from "./orders/list-orders/list-orders.component";
 import { SendNewsletterComponent } from "./send-newsletter/send-newsletter.component";
+import { ListPromotionsComponent } from "./promotions-code/list-promotions/list-promotions.component";
 
 const routes: Routes = [
     {
@@ -26,6 +27,10 @@ const routes: Routes = [
             {
                 path: 'send-newsletter',
                 component: SendNewsletterComponent
+            },
+            {
+                path: 'list-promotions-code',
+                component: ListPromotionsComponent
             }
         ]
     },

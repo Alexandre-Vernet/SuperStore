@@ -14,6 +14,7 @@ export class TabsComponent {
         { label: 'Orders', link: '/admin/list-orders' },
         { label: 'Users', link: '/admin/list-users' },
         { label: 'Newsletter', link: '/admin/send-newsletter' },
+        { label: 'Promotions', link: '/admin/list-promotions-code' },
     ];
 
     activeTab = this.tabs[0].link;

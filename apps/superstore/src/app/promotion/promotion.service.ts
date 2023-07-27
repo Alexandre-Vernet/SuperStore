@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { tap } from "rxjs";
-import { PromotionDto } from "@superstore/interfaces";
+import { catchError, tap } from "rxjs";
+import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
+import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,25 @@ export class PromotionService {
 
     constructor(
         private http: HttpClient,
+        private readonly notificationService: NotificationsService,
     ) {
+    }
+
+    addPromotion(promotion: CreatePromotionDto) {
+        return this.http.post(`${ this.promotionCodeUrl }`, promotion)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code added successfully');
+                }),
+                catchError(err => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
+    getAllPromotions() {
+        return this.http.get<PromotionDto[]>(this.promotionCodeUrl);
     }
 
     checkPromotionCode(code: string) {
@@ -26,6 +45,32 @@ export class PromotionService {
     }
 
     usePromotionCode(promotion: PromotionDto) {
-        return this.http.put(`${ this.promotionCodeUrl }/${ promotion.label }`, promotion);
+        return this.http.put(`${ this.promotionCodeUrl }/use-promotion/${ promotion.label }`, promotion);
+    }
+
+    updatePromotion(promotion: PromotionDto) {
+        return this.http.put(`${ this.promotionCodeUrl }/${ promotion.id }`, promotion)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code updated successfully');
+                }),
+                catchError(err => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
+    }
+
+    deletePromotion(promotion: PromotionDto) {
+        return this.http.delete(`${ this.promotionCodeUrl }/${ promotion.id }`)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code deleted successfully');
+                }),
+                catchError(err => {
+                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
     }
 }

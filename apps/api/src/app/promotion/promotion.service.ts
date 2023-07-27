@@ -13,7 +13,17 @@ export class PromotionService {
     ) {
     }
 
-    create(createPromotionDto: CreatePromotionDto) {
+    async create(createPromotionDto: CreatePromotionDto) {
+        // Check if promotion code already exists
+        const options = {
+            where: {
+                label: createPromotionDto.label,
+            }
+        };
+        const result = await this.promotionRepository.findOne(options);
+        if (result) {
+            throw new NotFoundException(`Promotion with label ${ createPromotionDto.label } already exists`)
+        }
         return this.promotionRepository.save(createPromotionDto);
     }
 
@@ -41,6 +51,10 @@ export class PromotionService {
                 promotion.count--;
                 this.promotionRepository.update(result.id, promotion);
             });
+    }
+
+    update(id: number, promotion: PromotionDto) {
+        return this.promotionRepository.update(id, promotion);
     }
 
     remove(id: number) {
