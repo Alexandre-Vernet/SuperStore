@@ -251,25 +251,33 @@
                                 </div>
 
                                 <div class="col-span-2">
-                                    <label for="promotion-code" class="block text-sm font-medium text-gray-700">Promotion
-                                        code</label>
-                                    <div class="mt-1">
-                                        <input
-                                                formControlName="promotionCode"
-                                                type="text" name="promotion-code" id="promotion-code" autocomplete="csc"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        <span *ngIf="promotionCodeStatus"
-                                              class="text-xs"
-                                              [ngClass]="{'text-red-500': promotionCodeStatus !== 'The promotion code has been applied', 'text-green-500': promotionCodeStatus === 'The promotion code has been applied'}">
-                                            {{ promotionCodeStatus }}
-                                        </span>
-                                    </div>
-                                    <button
-                                            (click)="applyPromotionCode()"
-                                            type="button"
-                                            class="mt-2 bg-indigo-50 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        Apply
-                                    </button>
+                                    <form [formGroup]="formPromotion"
+                                          (ngSubmit)="formPromotion.valid && applyPromotionCode()">
+                                        <label for="promotion-code" class="block text-sm font-medium text-gray-700">Promotion
+                                            code</label>
+                                        <div class="mt-1">
+                                            <input
+                                                    formControlName="promotionCode"
+                                                    type="text" name="promotion-code" id="promotion-code"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                            <ng-container *ngIf="promotion else noPromotion">
+                                                <span class="text-xs text-green-500">Promotion code applied</span>
+                                            </ng-container>
+                                            <ng-template #noPromotion>
+                                                <span
+                                                        *ngIf="formPromotion.controls.promotionCode.invalid && formPromotion.controls.promotionCode.touched"
+                                                        class="text-xs text-red-500">
+                                                    Invalid promotion code
+                                                </span>
+                                            </ng-template>
+                                        </div>
+                                        <button
+                                                [disabled]="!formPromotion.valid"
+                                                type="submit"
+                                                class="mt-2 bg-indigo-50 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Apply
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -355,16 +363,22 @@
                                         {{ taxes() | convertCurrency }}
                                     </dd>
                                 </div>
+                                <ng-container *ngIf="promotion">
+                                    <div
+                                            *ngIf="promotion.status === 'success'"
+                                            class="flex items-center justify-between border-t border-gray-200 pt-6">
+                                        <dt class="text-sm">
+                                        <span class="font-medium text-green-600">
+                                            {{ promotion.label }}
+                                        </span>
+                                        </dt>
+                                        <dd class="text-sm font-medium text-gray-900">
+                                            - {{ promotion.amount | convertCurrency }}
+                                        </dd>
+                                    </div>
+                                </ng-container>
                                 <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                                     <dt class="text-base font-medium">Total</dt>
-                                    <dd class="text-base font-medium text-gray-900">
-                                        {{ totalPrice() | convertCurrency }}
-                                    </dd>
-                                </div>
-                                <div class="flex items-center justify-between border-t border-gray-200 pt-6">
-                                    <dt class="text-base font-medium">
-                                        Promo code
-                                    </dt>
                                     <dd class="text-base font-medium text-gray-900">
                                         {{ totalPrice() | convertCurrency }}
                                     </dd>

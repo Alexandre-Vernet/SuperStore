@@ -5,7 +5,7 @@ import {
     CreateOrderDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderState, PromotionDto
+    OrderState, PromotionDto, PromotionWithStatus
 } from "@superstore/interfaces";
 import { Cart } from "../cart";
 import { CartService } from "../cart.service";
@@ -41,9 +41,12 @@ export class CheckoutComponent implements OnInit {
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl('', [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required]),
-        promotionCode: new FormControl(''),
     });
-    promotionCodeStatus: string;
+
+    formPromotion = new FormGroup({
+        promotionCode: new FormControl('', [Validators.required])
+    });
+    promotion: PromotionWithStatus;
 
     constructor(
         private readonly cartService: CartService,
@@ -138,7 +141,27 @@ export class CheckoutComponent implements OnInit {
     }
 
     totalPrice(): number {
+        if (this.promotion) {
+            return Cart.convertTwoDecimals((this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount));
+        }
         return Cart.convertTwoDecimals(this.shippingPrice + this.taxes() + this.subTotalPrice());
+    }
+
+    applyPromotionCode() {
+        const promotionCode = this.formPromotion.value.promotionCode.toString().trim();
+        this.promotionService.checkPromotionCode(promotionCode)
+            .subscribe({
+                next: (promotion: PromotionDto) => {
+                    this.promotion = {
+                        status: 'success',
+                        ...promotion
+                    };
+                },
+                error: () => {
+                    this.promotion = null;
+                    this.formPromotion.controls.promotionCode.setErrors({ invalid: true });
+                }
+            });
     }
 
     submitForm() {
@@ -188,25 +211,5 @@ export class CheckoutComponent implements OnInit {
         this.orderService
             .confirmOrder(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
-    }
-
-    applyPromotionCode() {
-        const promotionCode = this.formAddress.value.promotionCode.toString().trim();
-        this.promotionService.checkPromotionCode(promotionCode)
-            .subscribe({
-                next: (promotion: PromotionDto) => {
-                    // TODO: Apply promotion code to decrease subTotalPrice
-                    const amount = promotion.amount;
-                    const subTotalPrice = this.subTotalPrice();
-                    console.log(subTotalPrice)
-                    const totalPrice = subTotalPrice - amount;
-                    console.log(totalPrice)
-
-                    this.promotionCodeStatus = 'The promotion code has been applied';
-                },
-                error: (err) => {
-                    this.promotionCodeStatus = err.error.message;
-                }
-            });
     }
 }
