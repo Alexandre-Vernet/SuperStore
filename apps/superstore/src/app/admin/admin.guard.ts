@@ -26,18 +26,18 @@ export class AdminGuard {
                                 resolve(true);
                             } else {
                                 this.authService.error = 'You must be an admin to access this page';
-                                this.router.navigate(['/sign-in']);
+                                this.router.navigate(['/auth/sign-in']);
                                 reject(false);
                             }
                         },
                         error: () => {
-                            this.router.navigate(['/sign-in']);
+                            this.router.navigate(['/auth/sign-in']);
                             reject(false);
                         }
                     });
             } else {
                 this.authService.error = 'You must be signed in to access this page.';
-                this.router.navigate(['/sign-in']);
+                this.router.navigate(['/auth/sign-in']);
                 reject(false);
             }
         });

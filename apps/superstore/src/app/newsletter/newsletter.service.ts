@@ -27,7 +27,16 @@ export class NewsletterService {
             email,
             isSubscribed: true,
         }
-        return this.http.post<void>(`${ this.newsletterUrl }`, newsletter);
+        return this.http.post<void>(`${ this.newsletterUrl }`, newsletter)
+            .pipe(
+                tap(() => {
+                    this.notificationsService.showSuccessNotification('Success', 'You have been subscribed to our newsletter');
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    throw err;
+                })
+            );
     }
 
     updateSubscription(email: string, isSubscribed: boolean): Observable<void> {

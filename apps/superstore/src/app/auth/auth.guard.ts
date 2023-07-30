@@ -31,7 +31,7 @@ export class AuthGuard {
                     });
             } else {
                 this.authService.error = 'You must be signed in to access this page.';
-                this.router.navigate(['/sign-in']);
+                this.router.navigate(['/auth/sign-in']);
                 reject(false);
             }
         });

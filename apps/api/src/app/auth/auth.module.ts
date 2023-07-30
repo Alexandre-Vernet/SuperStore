@@ -55,6 +55,14 @@ export class AuthModule implements NestModule {
                     path: 'review',
                     method: RequestMethod.ALL
                 },
+                {
+                    path: 'newsletter',
+                    method: RequestMethod.ALL
+                },
+                {
+                    path: 'promotion',
+                    method: RequestMethod.ALL
+                },
             );
     }
 }
