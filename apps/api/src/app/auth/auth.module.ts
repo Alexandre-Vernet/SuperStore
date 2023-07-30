@@ -12,57 +12,61 @@ import { EmailModule } from "../email/email.module";
     controllers: [AuthController],
     exports: [AuthService]
 })
-export class AuthModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthMiddleware)
-            .exclude(
-                {
-                    path: 'user',
-                    method: RequestMethod.POST
-                },
-                {
-                    path: 'product',
-                    method: RequestMethod.GET
-                },
-                {
-                    path: 'product',
-                    method: RequestMethod.POST
-                },
-                {
-                    path: 'review',
-                    method: RequestMethod.GET
-                },
-            )
-            .forRoutes(
-                {
-                    path: 'order',
-                    method: RequestMethod.ALL
-                },
-                {
-                    path: 'address',
-                    method: RequestMethod.ALL
-                },
-                {
-                    path: 'product',
-                    method: RequestMethod.ALL,
-                },
-                {
-                    path: 'user',
-                    method: RequestMethod.ALL
-                },
-                {
-                    path: 'review',
-                    method: RequestMethod.ALL
-                },
-                {
-                    path: 'newsletter',
-                    method: RequestMethod.ALL
-                },
-                {
-                    path: 'promotion',
-                    method: RequestMethod.ALL
-                },
-            );
-    }
+export class AuthModule  {
+    // configure(consumer: MiddlewareConsumer) {
+    //     consumer
+    //         .apply(AuthMiddleware)
+    //         .exclude(
+    //             {
+    //                 path: 'user',
+    //                 method: RequestMethod.POST
+    //             },
+    //             {
+    //                 path: 'product',
+    //                 method: RequestMethod.GET
+    //             },
+    //             {
+    //                 path: 'product',
+    //                 method: RequestMethod.POST
+    //             },
+    //             {
+    //                 path: 'review',
+    //                 method: RequestMethod.GET
+    //             },
+    //             {
+    //                 path: 'promotion',
+    //                 method: RequestMethod.PUT
+    //             },
+    //         )
+    //         .forRoutes(
+    //             {
+    //                 path: 'order',
+    //                 method: RequestMethod.ALL
+    //             },
+    //             {
+    //                 path: 'address',
+    //                 method: RequestMethod.ALL
+    //             },
+    //             {
+    //                 path: 'product',
+    //                 method: RequestMethod.ALL,
+    //             },
+    //             {
+    //                 path: 'user',
+    //                 method: RequestMethod.ALL
+    //             },
+    //             {
+    //                 path: 'review',
+    //                 method: RequestMethod.ALL
+    //             },
+    //             {
+    //                 path: 'newsletter',
+    //                 method: RequestMethod.ALL
+    //             },
+    //             {
+    //                 path: 'promotion',
+    //                 method: RequestMethod.ALL
+    //             },
+    //         );
+    // }
 }

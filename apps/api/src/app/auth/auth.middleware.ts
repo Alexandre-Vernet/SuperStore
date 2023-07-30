@@ -12,7 +12,7 @@ export class AuthMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
         const NODE_ENV = process.env.NODE_ENV;
         if (NODE_ENV === 'development') {
-            return next();
+            // return next();
         }
 
         const bearer = req.headers.authorization;

@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, ProductDto } from '@superstore/interfaces';
+import { AuthMiddleware } from "../auth/auth.middleware";
+import { Auth } from "../auth/auth.decorator";
 
 @Controller('product')
 export class ProductController {
@@ -25,6 +27,7 @@ export class ProductController {
         return this.productService.findAllProductsWithPagination(pagination);
     }
 
+    @Auth('azdaz')
     @Get()
     findAll() {
         return this.productService.findAll();
