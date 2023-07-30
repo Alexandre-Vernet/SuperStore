@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
@@ -12,6 +12,7 @@ import { UserService } from "../../../user/user.service";
 export class UpdateUserComponent implements OnInit {
 
     @Input() editUser:  UserDto;
+    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
@@ -55,10 +56,10 @@ export class UpdateUserComponent implements OnInit {
         })
             .subscribe(() => this.formUpdateUser.reset());
 
-        this.closeModal();
+        this.closeModalAddProduct();
     }
 
-    closeModal() {
-        this.adminService.closeModal();
+    closeModalAddProduct() {
+        this.closeModal.emit();
     }
 }

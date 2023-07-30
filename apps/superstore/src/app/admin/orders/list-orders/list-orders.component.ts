@@ -37,12 +37,16 @@ export class ListOrdersComponent implements OnInit {
             .subscribe((search) => {
                 this.searchBar = search;
             });
-
-        this.adminService.showModalAddProduct
-            .subscribe((show) => {
-                this.showModalAddProduct = show;
-            });
     }
+
+    openModal() {
+        this.showModalAddProduct = true;
+    }
+
+    closeModal() {
+        this.showModalAddProduct = false;
+    }
+
 
     editOrder(order: OrderWithAddressAndUserAndProductsDto) {
         this.editedOrder = {
@@ -63,7 +67,7 @@ export class ListOrdersComponent implements OnInit {
             products: order.products
         };
 
-        this.adminService.openModal();
+        this.openModal();
     }
 
     deleteOrder(order: OrderDto) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
@@ -11,7 +11,8 @@ import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 })
 export class EditOrderComponent implements OnInit {
 
-    @Input() editOrder : OrderWithAddressAndUserDto;
+    @Input() editOrder: OrderWithAddressAndUserDto;
+    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
         OrderState.CONFIRMED,
@@ -57,11 +58,13 @@ export class EditOrderComponent implements OnInit {
         const { id: orderId, state } = this.formUpdateOrder.value;
 
         this.orderService.updateOrderState(orderId, state)
-            .subscribe(() => this.formUpdateOrder.reset());
-        this.closeModal();
+            .subscribe(() => {
+                this.formUpdateOrder.reset();
+                this.closeModalAddProduct();
+            });
     }
 
-    closeModal() {
-        this.adminService.closeModal();
+    closeModalAddProduct() {
+        this.closeModal.emit();
     }
 }

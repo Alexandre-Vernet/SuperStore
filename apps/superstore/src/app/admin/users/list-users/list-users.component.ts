@@ -31,16 +31,20 @@ export class ListUsersComponent implements OnInit {
             .subscribe((search) => {
                 this.searchBar = search;
             });
-
-        this.adminService.showModalAddProduct
-            .subscribe((show) => {
-                this.showModalAddProduct = show;
-            });
     }
+
+    openModal() {
+        this.showModalAddProduct = true;
+    }
+
+    closeModal() {
+        this.showModalAddProduct = false;
+    }
+
 
     editUser(user: UserDto) {
         this.editedUser = user;
-        this.adminService.openModal();
+        this.openModal();
     }
 
     deleteUser(user: UserDto) {

@@ -32,21 +32,24 @@ export class ListProductsComponent implements OnInit {
             .subscribe((search) => {
                 this.searchBar = search;
             });
-
-        this.adminService.showModalAddProduct
-            .subscribe((show) => {
-                this.showModalAddProduct = show;
-            });
     }
 
-    displayModalAddProduct() {
+    openModal() {
+        this.showModalAddProduct = true;
+    }
+
+    closeModal() {
+        this.showModalAddProduct = false;
+    }
+
+    addProduct() {
         this.editedProduct = null;
-        this.adminService.openModal();
+        this.openModal();
     }
 
     editProduct(product: ProductDto) {
         this.editedProduct = product;
-        this.adminService.openModal();
+        this.openModal();
     }
 
     deleteProduct(product: ProductDto) {

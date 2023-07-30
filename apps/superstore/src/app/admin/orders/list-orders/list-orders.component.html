@@ -99,5 +99,6 @@
     </div>
 </div>
 
-<superstore-edit-order *ngIf="showModalAddProduct" [editOrder]="editedOrder"></superstore-edit-order>
+<superstore-edit-order *ngIf="showModalAddProduct" [editOrder]="editedOrder"
+                       (closeModal)="closeModal()"></superstore-edit-order>
 

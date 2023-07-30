@@ -1,7 +1,6 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "../../../product/product.service";
-import { AdminService } from "../../admin.service";
 import { ProductDto } from "@superstore/interfaces";
 
 @Component({
@@ -12,6 +11,7 @@ import { ProductDto } from "@superstore/interfaces";
 export class AddProductComponent implements OnInit {
 
     @Input() editProduct:  ProductDto | null;
+    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required]),
@@ -22,8 +22,7 @@ export class AddProductComponent implements OnInit {
     });
 
     constructor(
-        private readonly productService: ProductService,
-        private readonly adminService: AdminService
+        private readonly productService: ProductService
     ) {
     }
 
@@ -37,6 +36,10 @@ export class AddProductComponent implements OnInit {
                 images: this.editProduct.images.join(', ')
             });
         }
+    }
+
+    closeModalAddProduct() {
+        this.closeModal.emit();
     }
 
     submitForm() {
@@ -90,7 +93,7 @@ export class AddProductComponent implements OnInit {
             category: categoriesSeparatedByComma,
             images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
-        this.closeModal();
+        this.closeModalAddProduct();
     }
 
     updateProduct({ name, description, price, categories, images }) {
@@ -110,7 +113,7 @@ export class AddProductComponent implements OnInit {
             category: categoriesSeparatedByComma,
             images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
-        this.closeModal();
+        this.closeModalAddProduct();
     }
 
     checkCategories(category: string): boolean {
@@ -139,12 +142,8 @@ export class AddProductComponent implements OnInit {
         return true;
     }
 
-    closeModal() {
-        this.adminService.closeModal();
-    }
-
     // Escape key to close modal
     @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
-        this.closeModal();
+        this.closeModalAddProduct();
     }
 }
