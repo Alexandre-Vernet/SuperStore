@@ -62,5 +62,6 @@
     </div>
 </div>
 
-<superstore-update-user *ngIf="showModalAddProduct" [editUser]="editedUser"></superstore-update-user>
+<superstore-create-user *ngIf="showModalAddProduct" [editUser]="editedUser"
+                        (closeModal)="closeModal()"></superstore-create-user>
 

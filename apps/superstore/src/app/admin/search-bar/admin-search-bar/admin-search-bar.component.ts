@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AdminService } from "../admin.service";
+import { SearchBar } from "../search-bar";
 
 @Component({
     selector: 'superstore-admin-search-bar',
@@ -9,11 +9,6 @@ import { AdminService } from "../admin.service";
 export class AdminSearchBarComponent {
     searchValue = '';
 
-    constructor(
-        private readonly adminService: AdminService
-    ) {
-    }
-
     search(event: Event) {
         const search = (event.target as HTMLInputElement).value;
         if (event instanceof KeyboardEvent && event.key === 'Escape') {
@@ -21,6 +16,6 @@ export class AdminSearchBarComponent {
             this.searchValue = '';
             return;
         }
-        this.adminService.searchBar.next(search);
+        SearchBar.searchBar.next(search);
     }
 }

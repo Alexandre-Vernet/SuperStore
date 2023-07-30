@@ -1,17 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
 @Component({
-    selector: 'superstore-edit-order',
-    templateUrl: './edit-order.component.html',
-    styleUrls: ['./edit-order.component.scss'],
+    selector: 'superstore-create-order',
+    templateUrl: './create-order.component.html',
+    styleUrls: ['./create-order.component.scss'],
 })
-export class EditOrderComponent implements OnInit {
+export class CreateOrderComponent implements OnInit {
 
-    @Input() editOrder : OrderWithAddressAndUserDto;
+    @Input() editOrder: OrderWithAddressAndUserDto;
+    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
         OrderState.CONFIRMED,
@@ -33,7 +33,6 @@ export class EditOrderComponent implements OnInit {
 
 
     constructor(
-        private readonly adminService: AdminService,
         private readonly orderService: OrderService,
     ) {
     }
@@ -57,11 +56,20 @@ export class EditOrderComponent implements OnInit {
         const { id: orderId, state } = this.formUpdateOrder.value;
 
         this.orderService.updateOrderState(orderId, state)
-            .subscribe(() => this.formUpdateOrder.reset());
-        this.closeModal();
+            .subscribe(() => {
+                this.formUpdateOrder.reset();
+                this.closeModalAddProduct();
+            });
     }
 
-    closeModal() {
-        this.adminService.closeModal();
+    closeModalAddProduct() {
+        this.closeModal.emit();
+    }
+
+
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModalAddProduct();
     }
 }

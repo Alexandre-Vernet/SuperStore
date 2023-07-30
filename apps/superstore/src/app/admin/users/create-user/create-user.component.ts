@@ -1,17 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AdminService } from "../../admin.service";
 import { UserService } from "../../../user/user.service";
 
 @Component({
-    selector: 'superstore-update-user',
-    templateUrl: './update-user.component.html',
-    styleUrls: ['./update-user.component.scss'],
+    selector: 'superstore-create-user',
+    templateUrl: './create-user.component.html',
+    styleUrls: ['./create-user.component.scss'],
 })
-export class UpdateUserComponent implements OnInit {
+export class CreateUserComponent implements OnInit {
 
     @Input() editUser:  UserDto;
+    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
@@ -22,7 +22,6 @@ export class UpdateUserComponent implements OnInit {
 
 
     constructor(
-        private readonly adminService: AdminService,
         private readonly userService: UserService,
     ) {
     }
@@ -55,10 +54,15 @@ export class UpdateUserComponent implements OnInit {
         })
             .subscribe(() => this.formUpdateUser.reset());
 
-        this.closeModal();
+        this.closeModalAddProduct();
     }
 
-    closeModal() {
-        this.adminService.closeModal();
+    closeModalAddProduct() {
+        this.closeModal.emit();
+    }
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModalAddProduct();
     }
 }
