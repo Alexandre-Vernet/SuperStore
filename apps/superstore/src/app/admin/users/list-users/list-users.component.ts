@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserService } from "../../../user/user.service";
 import { UserDto } from "@superstore/interfaces";
-import { AdminService } from "../../admin.service";
+import { SearchBar } from "../../search-bar/search-bar";
 
 @Component({
     selector: 'superstore-users',
@@ -16,8 +16,7 @@ export class ListUsersComponent implements OnInit {
     showModalAddProduct = false;
 
     constructor(
-        private readonly userService: UserService,
-        private readonly adminService: AdminService
+        private readonly userService: UserService
     ) {
     }
 
@@ -27,7 +26,7 @@ export class ListUsersComponent implements OnInit {
                 this.users = users;
             });
 
-        this.adminService.searchBar
+        SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
             });

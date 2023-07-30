@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/interfaces";
 import { ProductService } from "../../../product/product.service";
-import { AdminService } from "../../admin.service";
+import { SearchBar } from "../../search-bar/search-bar";
 
 @Component({
     selector: 'superstore-list-products',
@@ -16,8 +16,7 @@ export class ListProductsComponent implements OnInit {
     showModalAddProduct = false;
 
     constructor(
-        private readonly productService: ProductService,
-        private readonly adminService: AdminService
+        private readonly productService: ProductService
     ) {
     }
 
@@ -28,7 +27,7 @@ export class ListProductsComponent implements OnInit {
                 this.products = products;
             });
 
-        this.adminService.searchBar
+        SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
             });

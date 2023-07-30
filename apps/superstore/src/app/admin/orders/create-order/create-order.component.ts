@@ -1,6 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
@@ -34,7 +33,6 @@ export class CreateOrderComponent implements OnInit {
 
 
     constructor(
-        private readonly adminService: AdminService,
         private readonly orderService: OrderService,
     ) {
     }

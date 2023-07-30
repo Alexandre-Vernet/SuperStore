@@ -1,7 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AdminService } from "../../admin.service";
 import { UserService } from "../../../user/user.service";
 
 @Component({
@@ -23,7 +22,6 @@ export class CreateUserComponent implements OnInit {
 
 
     constructor(
-        private readonly adminService: AdminService,
         private readonly userService: UserService,
     ) {
     }
