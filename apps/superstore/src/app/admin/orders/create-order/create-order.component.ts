@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AdminService } from "../../admin.service";
 import { OrderService } from "../../../order/order.service";
 import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 
 @Component({
-    selector: 'superstore-edit-order',
-    templateUrl: './edit-order.component.html',
-    styleUrls: ['./edit-order.component.scss'],
+    selector: 'superstore-create-order',
+    templateUrl: './create-order.component.html',
+    styleUrls: ['./create-order.component.scss'],
 })
-export class EditOrderComponent implements OnInit {
+export class CreateOrderComponent implements OnInit {
 
     @Input() editOrder: OrderWithAddressAndUserDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
@@ -66,5 +66,12 @@ export class EditOrderComponent implements OnInit {
 
     closeModalAddProduct() {
         this.closeModal.emit();
+    }
+
+
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModalAddProduct();
     }
 }

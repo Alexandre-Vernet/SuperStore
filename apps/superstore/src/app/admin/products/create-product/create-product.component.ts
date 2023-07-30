@@ -4,11 +4,11 @@ import { ProductService } from "../../../product/product.service";
 import { ProductDto } from "@superstore/interfaces";
 
 @Component({
-    selector: 'superstore-add-product',
-    templateUrl: './add-product.component.html',
-    styleUrls: ['./add-product.component.scss'],
+    selector: 'superstore-create-product',
+    templateUrl: './create-product.component.html',
+    styleUrls: ['./create-product.component.scss'],
 })
-export class AddProductComponent implements OnInit {
+export class CreateProductComponent implements OnInit {
 
     @Input() editProduct:  ProductDto | null;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
