@@ -7,10 +7,11 @@ import { EmailModule } from "../email/email.module";
 import { UserModule } from "../user/user.module";
 import { AddressModule } from "../address/address.module";
 import { ProductModule } from "../product/product.module";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Order]),
+        TypeOrmModule.forFeature([Order]), AuthModule,
         AddressModule,
         UserModule,
         ProductModule,

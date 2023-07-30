@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
 import { NewsletterService } from './newsletter.service';
 import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
+import { AuthInterceptor } from "../auth/auth.interceptor";
 
 @Controller('newsletter')
 export class NewsletterController {
@@ -19,11 +20,13 @@ export class NewsletterController {
         return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Post('send-email')
     sendNewsletter(@Body() newsletterDto: SendNewsletterDto) {
         return this.newsletterService.sendNewsletter(newsletterDto);
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Get()
     findAll() {
         return this.newsletterService.findAll();
@@ -34,11 +37,13 @@ export class NewsletterController {
         return this.newsletterService.findOne(id);
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Put()
     updateSubscription(@Body() newsletterDto: NewsletterDto) {
         return this.newsletterService.updateSubscription(newsletterDto);
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.newsletterService.remove(id);
