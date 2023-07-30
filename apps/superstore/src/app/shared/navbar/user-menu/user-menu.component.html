@@ -39,13 +39,25 @@
 </ng-container>
 
 <ng-template #noUser>
-    <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-        <a routerLink="/auth/sign-in" class="text-sm font-medium text-gray-700 hover:text-gray-800">
-            Sign in
-        </a>
-        <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
-        <a routerLink="/auth/sign-up" class="text-sm font-medium text-gray-700 hover:text-gray-800">
-            Create account
-        </a>
-    </div>
+    <ng-container *ngIf="getScreenWidth() < 1024; else desktop">
+        <div class="flex flex-col gap-4">
+            <a (click)="redirectTo('/auth/sign-in')" class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">
+                Sign in
+            </a>
+            <a (click)="redirectTo('/auth/sign-up')" class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">
+                Create account
+            </a>
+        </div>
+    </ng-container>
+    <ng-template #desktop>
+        <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+            <a routerLink="/auth/sign-in" class="text-sm font-medium text-gray-700 hover:text-gray-800">
+                Sign in
+            </a>
+            <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
+            <a routerLink="/auth/sign-up" class="text-sm font-medium text-gray-700 hover:text-gray-800">
+                Create account
+            </a>
+        </div>
+    </ng-template>
 </ng-template>
