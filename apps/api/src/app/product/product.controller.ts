@@ -1,12 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, ProductDto } from '@superstore/interfaces';
+import { AuthInterceptor } from "../auth/auth.interceptor";
+import { AdminInterceptor } from "../auth/admin.interceptor";
 
 @Controller('product')
 export class ProductController {
     constructor(private readonly productService: ProductService) {
     }
 
+    @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Post()
     create(@Body() createProductDto: CreateProductDto) {
         return this.productService.create(createProductDto);
@@ -45,11 +49,15 @@ export class ProductController {
         return this.productService.findBySlug(slug);
     }
 
+    @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() updateProductDto: ProductDto) {
         return this.productService.update(id, updateProductDto);
     }
 
+    @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.productService.remove(id);

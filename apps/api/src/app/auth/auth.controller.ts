@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, Post, Put } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Put, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
 import { AuthService } from "./auth.service";
+import { AuthInterceptor } from "./auth.interceptor";
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +29,7 @@ export class AuthController {
         return this.authService.signInWithAccessToken(accessToken);
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Put('update-password')
     updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
         return this.authService.updatePassword(userId, password);

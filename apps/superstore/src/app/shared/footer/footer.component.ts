@@ -49,15 +49,7 @@ export class FooterComponent implements OnInit {
         if (this.formEmailNewsletter.valid) {
             const email = this.formEmailNewsletter.value.email;
             this.newsletterService.storeEmailInDatabase(email)
-                .subscribe({
-                    next: () => {
-                        this.notificationsService.showSuccessNotification('Success', 'You have been subscribed to our newsletter');
-                        this.formEmailNewsletter.reset();
-                    },
-                    error: (err) => {
-                        this.notificationsService.showErrorNotification('Error', err.error.message);
-                    }
-                });
+                .subscribe(() => this.formEmailNewsletter.reset());
         }
     }
 
