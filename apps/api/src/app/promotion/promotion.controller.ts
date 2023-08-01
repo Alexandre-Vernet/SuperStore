@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } fro
 import { PromotionService } from './promotion.service';
 import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
 import { AuthInterceptor } from "../auth/auth.interceptor";
+import { AdminInterceptor } from "../auth/admin.interceptor";
 
 @Controller('promotion')
 export class PromotionController {
@@ -9,6 +10,7 @@ export class PromotionController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Post()
     create(@Body() createPromotionDto: CreatePromotionDto) {
         return this.promotionService.create(createPromotionDto);
@@ -33,6 +35,7 @@ export class PromotionController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(
         @Param('id') id: number,
@@ -42,6 +45,7 @@ export class PromotionController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.promotionService.remove(id);

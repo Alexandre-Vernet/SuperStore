@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } fro
 import { NewsletterService } from './newsletter.service';
 import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 import { AuthInterceptor } from "../auth/auth.interceptor";
+import { AdminInterceptor } from "../auth/admin.interceptor";
 
 @Controller('newsletter')
 export class NewsletterController {
@@ -44,6 +45,7 @@ export class NewsletterController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.newsletterService.remove(id);

@@ -12,7 +12,7 @@ export class AuthInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<ExecutionContext> | Promise<Observable<ExecutionContext>> {
         const NODE_ENV = process.env.NODE_ENV;
         if (NODE_ENV === 'development') {
-            return  next.handle();
+            return next.handle();
         }
 
         const headers = context.switchToHttp().getRequest().headers;
@@ -22,11 +22,16 @@ export class AuthInterceptor implements NestInterceptor {
             this.authService.signInWithAccessToken(token)
                 .then(() => next.handle())
                 .catch(() => {
-                    const response = context.switchToHttp().getResponse();
-                    response.status(401).send({ message: 'Your session has expired. Please sign in again.' })
+                    const message = 'Your session has expired. Please sign in again.'
+                    AuthInterceptor.returnUnauthorized(context, message);
                 });
         }
+        AuthInterceptor.returnUnauthorized(context);
+    }
+
+
+    static returnUnauthorized(context: ExecutionContext, message = 'Unauthorized') {
         const response = context.switchToHttp().getResponse();
-        return response.status(401).send({ message: 'Unauthorized' });
+        response.status(401).send({ message });
     }
 }

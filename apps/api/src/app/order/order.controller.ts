@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } fro
 import { OrderService } from './order.service';
 import { CreateOrderDto, OrderDto } from '@superstore/interfaces';
 import { AuthInterceptor } from "../auth/auth.interceptor";
+import { AdminInterceptor } from "../auth/admin.interceptor";
 
 @Controller('order')
 export class OrderController {
@@ -21,6 +22,7 @@ export class OrderController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Get()
     findAll() {
         return this.orderService.findAll();
@@ -45,12 +47,14 @@ export class OrderController {
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() updateOrderDto: OrderDto) {
         return this.orderService.update(id, updateOrderDto);
     }
 
     @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.orderService.remove(id);
