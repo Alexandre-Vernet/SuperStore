@@ -8,21 +8,24 @@ services:
       - "80:80"
     depends_on:
       - api
+  
   api:
     image: alexv31/superstore:api
     networks:
       - my-network
     ports:
       - "3000:3000"
+  
   db:
     image: postgres
     restart: always
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:
+
 networks:
   my-network:
     driver: bridge
