@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS public.newsletter (
 );
 
 
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE IF NOT EXISTS public.products (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     slug TEXT NOT NULL,
