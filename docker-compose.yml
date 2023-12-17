@@ -1,27 +1,39 @@
 version: '3'
 services:
-  app:
-    image: alexv31/superstore:front
+  superstore-app:
+    image: superstore:front
     networks:
       - my-network
     ports:
       - "80:80"
+
+  superstore-api:
+    image: superstore:api
     depends_on:
-      - api
-  
-  api:
-    image: alexv31/superstore:api
+      - superstore-db
+    env_file:
+      - ./.env
     networks:
       - my-network
     ports:
       - "3000:3000"
-  
-  db:
+
+  superstore-db:
     image: postgres
     restart: always
+    env_file:
+      - ./.env
+    networks:
+      - my-network
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
 
 volumes:
   postgres_data:

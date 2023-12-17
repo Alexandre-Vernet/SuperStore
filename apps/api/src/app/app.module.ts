@@ -38,7 +38,7 @@ const {
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
             entities: [Product, Order, User, Address, Review, Newsletter, Promotion],
-            ssl: true,
+            ssl: false,
         }),
         ProductModule,
         OrderModule,
