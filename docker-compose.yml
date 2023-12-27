@@ -1,7 +1,7 @@
 version: '3'
 services:
   superstore-app:
-    image: superstore:front
+    image: superstore:app
     networks:
       - my-network
     ports:
