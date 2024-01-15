@@ -2,3 +2,12 @@ node_modules
 dist
 .angular
 .idea
+.env
+.env.example
+.eslintignore
+.eslintrc.json
+.gitignore
+.prettierrc
+.prettierignore
+jest.config.ts
+jest.preset.js

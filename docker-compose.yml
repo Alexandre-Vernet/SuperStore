@@ -1,43 +1,53 @@
 version: '3'
 services:
   superstore-app:
-    image: superstore:app
+    image: alexv31/superstore:app
     networks:
-      - my-network
+      - superstore-network
     ports:
-      - "80:80"
+      - "3003:80"
+      - "3004:443"
 
   superstore-api:
-    image: superstore:api
+    image: alexv31/superstore:api
     depends_on:
       - superstore-db
-    env_file:
-      - ./.env
+    environment:
+      - NODE_ENV=
+      - PORT=
+      - JWT_SECRET=
+      - MAIL_USER=
+      - MAIL_PASSWORD=
+      - ALLOWED_ORIGIN=
+      - POSTGRES_HOST=
+      - POSTGRES_PORT=
+      - POSTGRES_USERNAME=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DATABASE=
     networks:
-      - my-network
+      - superstore-network
     ports:
-      - "3000:3000"
+      - "4003:80"
+      - "4004:443"
 
   superstore-db:
     image: postgres
     restart: always
-    env_file:
-      - ./.env
     networks:
-      - my-network
+      - superstore-network
     environment:
-      POSTGRES_DB: ${POSTGRES_DATABASE}
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB=
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
     volumes:
-      - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "5003:5432"
+      - "5004:443"
 
 volumes:
   postgres_data:
 
 networks:
-  my-network:
+  superstore-network:
     driver: bridge

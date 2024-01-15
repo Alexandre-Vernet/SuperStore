@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    backendUrl: 'http://superstore-api:3000/api',
+    backendUrl: 'https://superstore-api.alexandre-vernet.fr/api',
     productUri: () => `${ environment.backendUrl }/product`,
     orderUri: () => `${ environment.backendUrl }/order`,
     authUrl: () => `${ environment.backendUrl }/auth`,
