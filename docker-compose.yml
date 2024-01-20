@@ -5,8 +5,8 @@ services:
     networks:
       - superstore-network
     ports:
-      - "3003:80"
-      - "3004:443"
+      - "3004:80"
+      - "3005:443"
 
   superstore-api:
     image: alexv31/superstore:api
@@ -27,8 +27,8 @@ services:
     networks:
       - superstore-network
     ports:
-      - "4003:80"
-      - "4004:443"
+      - "4004:80"
+      - "4005:443"
 
   superstore-db:
     image: postgres

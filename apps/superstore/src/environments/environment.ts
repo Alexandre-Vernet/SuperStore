@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    backendUrl: 'http://localhost:80/api',
+    backendUrl: 'http://localhost:4004/api',
     productUri: () => `${ environment.backendUrl }/product`,
     orderUri: () => `${ environment.backendUrl }/order`,
     authUrl: () => `${ environment.backendUrl }/auth`,
