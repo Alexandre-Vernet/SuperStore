@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressDto } from "@superstore/interfaces";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AddressService } from "../../address/address.service";
+import { AddressDto } from '@superstore/interfaces';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AddressService } from '../../address/address.service';
 
 @Component({
     selector: 'superstore-address',
     templateUrl: './address.component.html',
-    styleUrls: ['./address.component.scss'],
+    styleUrls: ['./address.component.scss']
 })
 export class AddressComponent implements OnInit {
 
@@ -19,29 +19,31 @@ export class AddressComponent implements OnInit {
         country: new FormControl('', [Validators.required]),
         city: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [Validators.required]),
-        phone: new FormControl('', [Validators.required]),
+        phone: new FormControl('', [Validators.required])
     });
 
     constructor(
-        private readonly addressService: AddressService,
+        private readonly addressService: AddressService
     ) {
     }
 
     ngOnInit() {
         this.addressService.getUserAddresses()
             .subscribe(addresses => {
-                this.addresses = addresses;
-                this.selectedAddress = addresses[0];
+                if (addresses) {
+                    this.addresses = addresses;
+                    this.selectedAddress = addresses[0];
 
-                this.formAddress.patchValue({
-                    company: addresses[0].company,
-                    address: addresses[0]?.address,
-                    apartment: addresses[0].apartment,
-                    country: addresses[0]?.country,
-                    city: addresses[0]?.city,
-                    zipCode: addresses[0]?.zipCode,
-                    phone: addresses[0]?.phone,
-                });
+                    this.formAddress.patchValue({
+                        company: addresses[0].company,
+                        address: addresses[0]?.address,
+                        apartment: addresses[0].apartment,
+                        country: addresses[0]?.country,
+                        city: addresses[0]?.city,
+                        zipCode: addresses[0]?.zipCode,
+                        phone: addresses[0]?.phone
+                    });
+                }
             });
     }
 
@@ -59,7 +61,7 @@ export class AddressComponent implements OnInit {
             country: address.country,
             city: address.city,
             zipCode: address.zipCode,
-            phone: address.phone,
+            phone: address.phone
         });
     }
 

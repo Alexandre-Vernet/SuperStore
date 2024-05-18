@@ -4,11 +4,13 @@ import { WhoWeAreComponent } from "./who-we-are/who-we-are.component";
 import { CompanyComponent } from "./company.component";
 import { PrivacyComponent } from "./privacy/privacy.component";
 import { TermsAndConditionsComponent } from "./terms-and-conditions/terms-and-conditions.component";
+import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 
 const routes: Routes = [
     {
         path: '',
         component: CompanyComponent,
+        canActivate: [OptionalAuthGuard],
         children: [
             {
                 path: '',
