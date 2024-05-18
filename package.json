@@ -38,9 +38,9 @@
     "rxjs": "^7.0.0",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.15",
-    "zone.js": "~0.12.0"
-  },
-  "devDependencies": {
+    "zone.js": "~0.12.0",
+    "nx": "15.9.2",
+    "@nrwl/nx-cloud": "latest",
     "@angular-devkit/build-angular": "~15.2.0",
     "@angular-devkit/core": "~15.2.0",
     "@angular-devkit/schematics": "~15.2.0",
@@ -50,10 +50,12 @@
     "@angular/cli": "~15.2.0",
     "@angular/compiler-cli": "~15.2.0",
     "@angular/language-service": "~15.2.0",
-    "@faker-js/faker": "^7.6.0",
+    "@nrwl/angular": "^15.9.2",
+    "@faker-js/faker": "^7.6.0"
+  },
+  "devDependencies": {
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
-    "@nrwl/angular": "^15.9.2",
     "@nrwl/cypress": "15.9.2",
     "@nrwl/eslint-plugin-nx": "15.9.2",
     "@nrwl/jest": "15.9.2",
@@ -61,7 +63,6 @@
     "@nrwl/linter": "15.9.2",
     "@nrwl/nest": "^15.9.2",
     "@nrwl/node": "15.9.2",
-    "@nrwl/nx-cloud": "latest",
     "@nrwl/web": "15.9.2",
     "@nrwl/webpack": "15.9.2",
     "@nrwl/workspace": "15.9.2",
@@ -78,7 +79,6 @@
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
     "jest-preset-angular": "~13.0.0",
-    "nx": "15.9.2",
     "prettier": "^2.6.2",
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.0.5",
