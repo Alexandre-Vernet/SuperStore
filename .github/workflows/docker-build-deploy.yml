@@ -8,9 +8,9 @@ name: Docker Build and Deploy
 
 on:
   push:
-    branches: [ "ci" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "ci" ]
+    branches: [ "main" ]
 
 env:
   APP_NAME: superstore
