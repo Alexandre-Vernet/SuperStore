@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post, Put, UseInterceptors } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
+import { UserDto } from "@superstore/interfaces";
 import { AuthService } from "./auth.service";
 import { AuthInterceptor } from "./auth.interceptor";
 
@@ -13,13 +13,13 @@ export class AuthController {
 
     @HttpCode(200)
     @Post('sign-up')
-    signUp(@Body() createUserDto: CreateUserDto): Promise<{ accessToken: string, user: UserDto }> {
+    signUp(@Body() createUserDto: Omit<UserDto, 'id'>): Promise<{ accessToken: string, user: UserDto }> {
         return this.authService.signUp(createUserDto);
     }
 
     @HttpCode(200)
     @Post('sign-in')
-    signIn(@Body() signInUserDto: SignInUserDto) {
+    signIn(@Body() signInUserDto: Pick<UserDto, 'email' | 'password'>) {
         return this.authService.signIn(signInUserDto);
     }
 

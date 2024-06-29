@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto, ProductDto } from '@superstore/interfaces';
+import { ProductDto } from '@superstore/interfaces';
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { AdminInterceptor } from "../auth/admin.interceptor";
 
@@ -12,7 +12,7 @@ export class ProductController {
     @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Post()
-    create(@Body() createProductDto: CreateProductDto) {
+    create(@Body() createProductDto: ProductDto) {
         return this.productService.create(createProductDto);
     }
 

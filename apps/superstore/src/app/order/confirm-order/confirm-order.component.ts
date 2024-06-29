@@ -25,24 +25,24 @@ export class ConfirmOrderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderService.getLastOrder()
-            .subscribe((order: OrderDto) => {
-                this.orderService.getOrder(order.id)
-                    .subscribe((order: OrderDto) => {
-
-                        this.productService.getProductFromIds(order.productsId)
-                            .subscribe((products) => {
-
-                                this.addressService.getAddress(order.addressId)
-                                    .subscribe((address: AddressDto) => {
-                                        this.confirmOrder = {
-                                            order,
-                                            address,
-                                            products,
-                                        }
-                                    });
-                            });
-                    });
-            });
+        // this.orderService.getLastOrder()
+        //     .subscribe((order: OrderDto) => {
+        //         this.orderService.getOrder(order.id)
+        //             .subscribe((order: OrderDto) => {
+        //
+        //                 this.productService.getProductFromIds(order.productsId)
+        //                     .subscribe((products) => {
+        //
+        //                         this.addressService.getAddress(order.address.id)
+        //                             .subscribe((address: AddressDto) => {
+        //                                 this.confirmOrder = {
+        //                                     order,
+        //                                     address,
+        //                                     products,
+        //                                 }
+        //                             });
+        //                     });
+        //             });
+        //     });
     }
 }

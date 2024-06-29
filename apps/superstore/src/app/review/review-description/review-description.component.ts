@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewWithUserDto, UserDto } from "@superstore/interfaces";
-import { ReviewService } from "../review.service";
-import { AuthService } from "../../auth/auth.service";
-import { UserService } from "../../user/user.service";
+import { ReviewDto, UserDto } from '@superstore/interfaces';
+import { ReviewService } from '../review.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'superstore-review-description',
     templateUrl: './review-description.component.html',
-    styleUrls: ['./review-description.component.scss'],
+    styleUrls: ['./review-description.component.scss']
 })
 export class ReviewDescriptionComponent implements OnInit {
-    @Input() showTotalReviews;
-    reviews: ReviewWithUserDto[] = [];
+    @Input() showTotalReviews: boolean;
+    reviews: ReviewDto[] = [];
     currentUser: UserDto;
     currentPage = 1;
     totalPage = 1;
@@ -19,8 +18,7 @@ export class ReviewDescriptionComponent implements OnInit {
 
     constructor(
         private readonly reviewService: ReviewService,
-        private readonly authService: AuthService,
-        private readonly userService: UserService,
+        private readonly authService: AuthService
     ) {
         this.currentUser = this.authService.user;
     }
@@ -28,20 +26,13 @@ export class ReviewDescriptionComponent implements OnInit {
     ngOnInit() {
         this.reviewService.reviews
             .subscribe((reviews) => {
-                this.reviews = [];
-                reviews.forEach(review => {
-                    this.userService.getUser(review.userId)
-                        .subscribe(user => {
-                            this.reviews.push({
-                                ...review,
-                                user
-                            });
-
-                            this.totalPage = Math.ceil(this.reviews.length / 10);
-                        });
-                });
-
+                this.reviews = reviews;
+                this.totalPage = Math.ceil(this.reviews.length / 10);
             });
+    }
+
+    reviewHasBeenAddedByCurrentUser(review: ReviewDto): boolean {
+        return review.user === this.authService.user;
     }
 
     deleteReview(reviewId: number) {

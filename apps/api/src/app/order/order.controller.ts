@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto, OrderDto } from '@superstore/interfaces';
+import { OrderDto } from '@superstore/interfaces';
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { AdminInterceptor } from "../auth/admin.interceptor";
 
@@ -11,14 +11,14 @@ export class OrderController {
     }
 
     @Post()
-    create(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
+    create(@Body() createOrderDto: OrderDto): Promise<OrderDto> {
         return this.orderService.create(createOrderDto);
     }
 
     @UseInterceptors(AuthInterceptor)
     @Get('products')
-    findAllOrderWithAddressAndUserAndProducts() {
-        return this.orderService.findAllOrderWithAddressAndUserAndProducts();
+    findAllOrderProducts() {
+        return this.orderService.findAllOrderProducts();
     }
 
     @UseInterceptors(AuthInterceptor)

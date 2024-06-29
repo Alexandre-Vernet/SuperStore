@@ -30,8 +30,8 @@ export class FooterComponent implements OnInit {
         this.productService.products
             .subscribe(products => {
                 products.map(product => {
-                    if (product.category) {
-                        product.category.map(c => {
+                    if (product.categories) {
+                        product.categories.map(c => {
                             if (!this.productCategories.includes(c)) {
                                 this.productCategories.length <= 7 ? this.productCategories.push(c) : null;
                             }

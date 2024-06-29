@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderDto, OrderWithAddressAndUserAndProductsDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
+import { OrderDto, OrderProductDto } from '@superstore/interfaces';
 import { OrderService } from "../../../order/order.service";
 import { SearchBar } from "../../search-bar/search-bar";
 
@@ -10,8 +10,8 @@ import { SearchBar } from "../../search-bar/search-bar";
 })
 export class ListOrdersComponent implements OnInit {
 
-    orders: OrderWithAddressAndUserAndProductsDto[];
-    editedOrder: OrderWithAddressAndUserDto;
+    orders: OrderProductDto[];
+    editedOrder: OrderProductDto;
     searchBar: string;
     showModalAddProduct = false;
 
@@ -41,13 +41,13 @@ export class ListOrdersComponent implements OnInit {
     }
 
 
-    editOrder(order: OrderWithAddressAndUserAndProductsDto) {
+    editOrder(order: OrderProductDto) {
         this.editedOrder = {
             id: order.id,
-            userId: order.user.id,
+            user: order.user,
             state: order.state,
-            addressId: order.addressId,
-            productsId: order.productsId,
+            address: order.address,
+            productIds: order.products.map(product => product.id),
             deliveryMethod: order.deliveryMethod,
             paymentMethod: order.paymentMethod,
             subTotalPrice: order.subTotalPrice,
@@ -55,9 +55,7 @@ export class ListOrdersComponent implements OnInit {
             taxesPrice: order.taxesPrice,
             totalPrice: order.totalPrice,
             createdAt: order.createdAt,
-            address: order.address.address,
-            user: `${ order.user.firstName } ${ order.user.lastName }`,
-            products: order.products
+            products: order.products,
         };
 
         this.openModal();

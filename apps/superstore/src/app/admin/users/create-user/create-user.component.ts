@@ -51,6 +51,7 @@ export class CreateUserComponent implements OnInit {
             lastName,
             email,
             isAdmin,
+            addresses: this.editUser.addresses,
         })
             .subscribe(() => this.formUpdateUser.reset());
 

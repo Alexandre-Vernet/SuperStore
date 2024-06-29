@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
-import {
-    CreateOrderDto,
-    OrderDto,
-    OrderWithAddressAndUserAndProductsDto,
-    OrderWithAddressAndUserDto
-} from "@superstore/interfaces";
-import { catchError, Observable, of, tap } from "rxjs";
-import { environment } from "../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { CartService } from "../cart/cart.service";
-import { AuthService } from "../auth/auth.service";
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { OrderDto, OrderProductDto } from '@superstore/interfaces';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { CartService } from '../cart/cart.service';
+import { AuthService } from '../auth/auth.service';
+import { NotificationsService } from '../shared/notifications/notifications.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,17 +13,17 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class OrderService {
 
     orderUri = environment.orderUri();
-    orders: OrderWithAddressAndUserDto[] = [];
+    orders: OrderProductDto[] = [];
 
     constructor(
         private http: HttpClient,
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly notificationsService: NotificationsService,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
-    confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
+    confirmOrder(order: Omit<OrderDto, 'id'>): Observable<OrderDto> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => {
@@ -42,8 +37,8 @@ export class OrderService {
             );
     }
 
-    getOrders(): Observable<OrderWithAddressAndUserDto[]> {
-        return this.http.get<OrderWithAddressAndUserDto[]>(`${ this.orderUri }`)
+    getOrders(): Observable<OrderProductDto[]> {
+        return this.http.get<OrderProductDto[]>(`${ this.orderUri }`)
             .pipe(
                 tap((orders) => {
                     this.orders = orders;
@@ -55,8 +50,8 @@ export class OrderService {
             );
     }
 
-    getOrdersWithAddressAndUserAndProducts(): Observable<OrderWithAddressAndUserAndProductsDto[]> {
-        return this.http.get<OrderWithAddressAndUserAndProductsDto[]>(`${ this.orderUri }/products`)
+    getOrdersWithAddressAndUserAndProducts(): Observable<OrderProductDto[]> {
+        return this.http.get<OrderProductDto[]>(`${ this.orderUri }/products`)
             .pipe(
                 tap((orders) => {
                     return orders;
@@ -92,8 +87,8 @@ export class OrderService {
         return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);
     }
 
-    updateOrderState(orderId: number, state: string): Observable<OrderWithAddressAndUserDto> {
-        return this.http.put<OrderWithAddressAndUserDto>(`${ this.orderUri }/${ orderId }`, { state })
+    updateOrderState(orderId: number, state: string): Observable<OrderProductDto> {
+        return this.http.put<OrderProductDto>(`${ this.orderUri }/${ orderId }`, { state })
             .pipe(
                 tap((order) => {
                     const orders = this.orders.map((p) => {

@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { OrderService } from "../order.service";
-import { OrderState, OrderWithProductsDto, ProductDto, ProductSizeDto } from "@superstore/interfaces";
-import { ProductService } from "../../product/product.service";
-import { CartService } from "../../cart/cart.service";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { ReviewService } from "../../review/review.service";
-import { PdfService } from "../../shared/pdf/pdf.service";
+import { OrderService } from '../order.service';
+import { OrderProductDto, OrderState, ProductDto, ProductSizeDto } from '@superstore/interfaces';
+import { ProductService } from '../../product/product.service';
+import { CartService } from '../../cart/cart.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { ReviewService } from '../../review/review.service';
+import { PdfService } from '../../shared/pdf/pdf.service';
 
 @Component({
     selector: 'superstore-order-history',
@@ -13,7 +13,7 @@ import { PdfService } from "../../shared/pdf/pdf.service";
     styleUrls: ['./order-history.component.scss'],
 })
 export class OrderHistoryComponent implements OnInit {
-    orders: OrderWithProductsDto[];
+    orders: OrderProductDto[];
     displayOrderOptions = false;
     productToReview: ProductDto;
 
@@ -28,15 +28,15 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        const ordersWithProducts: OrderWithProductsDto[] = [];
+        const ordersWithProducts: OrderProductDto[] = [];
         this.orderService.getOrdersPerUser()
             .subscribe((orders) => {
                 orders.map((order) => {
-                    this.productService.getProductFromIds(order.productsId)
+                    this.productService.getProductFromIds(order.products.map(product => product.id))
                         .subscribe(product => {
                             ordersWithProducts.push({
                                 ...order,
-                                products: product,
+                                productIds: product.map(product => product.id),
                             });
                         });
                 });
@@ -67,7 +67,7 @@ export class OrderHistoryComponent implements OnInit {
         return `assets/order-state/${ state.toLowerCase() }.png`;
     }
 
-    downloadInvoice(order: OrderWithProductsDto) {
+    downloadInvoice(order: OrderProductDto) {
         return this.pdfService.downloadInvoice(order);
     }
 

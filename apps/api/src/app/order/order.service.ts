@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
-import { Order } from "./order.entity";
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { Order } from './order.entity';
 import {
-    CreateOrderDto,
+    AddressDto,
     DeliveryMethodType,
-    OrderDto,
+    OrderDto, OrderProductDto,
     OrderState,
-    OrderWithAddressAndUserAndProductsDto
-} from "@superstore/interfaces";
-import { EmailService } from "../email/email.service";
+    UserDto
+} from '@superstore/interfaces';
+import { EmailService } from '../email/email.service';
 import { faker } from '@faker-js/faker';
-import { UserService } from "../user/user.service";
-import { AddressService } from "../address/address.service";
-import { ProductService } from "../product/product.service";
+import { UserService } from '../user/user.service';
+import { AddressService } from '../address/address.service';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class OrderService {
@@ -27,7 +27,7 @@ export class OrderService {
     ) {
     }
 
-    create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
+    create(createOrderDto: Omit<OrderDto, 'id'>): Promise<OrderDto> {
         return this.orderRepository.save(createOrderDto)
             .then((order: OrderDto) => {
                 const NODE_ENV = process.env.NODE_ENV;
@@ -36,7 +36,7 @@ export class OrderService {
                 }
 
                 // Get user from order id
-                return this.userService.findOne(order.userId)
+                return this.userService.findOne(order.user.id)
                     .then(user => {
                         this.emailService.sendEmailConfirmationOrder(order, user);
                         return order;
@@ -53,40 +53,15 @@ export class OrderService {
         return this.orderRepository.find(options);
     }
 
-    findAllOrderWithAddressAndUserAndProducts(): Promise<OrderWithAddressAndUserAndProductsDto[]> {
+    findAllOrderProducts(): Promise<OrderDto[]> {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
         };
 
         return this.orderRepository.find(options)
             .then((orders: OrderDto[]) => {
-                const promises = orders.map((order: OrderWithAddressAndUserAndProductsDto) => {
-                    const addressPromise = this.addressService.findOne(order.addressId)
-                        .then(address => {
-                            order.address = {
-                                ...address,
-                                shortAddress: `${ address.address } ${ address.city } ${ address.zipCode }`
-                            };
-                            return order;
-                        });
-
-                    const userPromise = this.userService.findOne(order.userId)
-                        .then(user => {
-                            order.user = {
-                                ...user,
-                                shortUser: `${ user.firstName } ${ user.lastName }`
-                            };
-                            return order;
-                        });
-
-                    const productsPromise = this.productService.getProductsByIds(order.productsId)
-                        .then(products => {
-                            order.products = products;
-                        });
-                    return Promise.all([addressPromise, userPromise, productsPromise])
-                        .then(() => order);
-                });
-                return Promise.all(promises);
+                console.log(orders);
+                return orders;
             });
     }
 
@@ -97,7 +72,7 @@ export class OrderService {
         return this.orderRepository.findOne(options);
     }
 
-    update(id: number, updateOrderDto: OrderDto): Promise<OrderDto> {
+    update(id: number, updateOrderDto: OrderDto) {
         return this.orderRepository.update(id, updateOrderDto)
             .then(() => this.findOne(id));
     }
@@ -124,30 +99,13 @@ export class OrderService {
 
     async migrate() {
         console.log('Migrating orders...');
-        await this.orderRepository.query(`
-            CREATE TABLE IF NOT EXISTS public.orders (
-                id SERIAL PRIMARY KEY,
-                user_id INTEGER NOT NULL,
-                address_id INTEGER NOT NULL,
-                products_id INTEGER[] NOT NULL,
-                state TEXT NOT NULL,
-                delivery_method TEXT NOT NULL,
-                payment_method TEXT NOT NULL,
-                sub_total_price DECIMAL NOT NULL,
-                shipping_price DECIMAL NOT NULL,
-                taxes_price DECIMAL NOT NULL,
-                total_price DECIMAL NOT NULL,
-                created_at TIMESTAMP DEFAULT NOW() NOT NULL,
-                updated_at TIMESTAMP DEFAULT NOW() NOT NULL
-        );
-    `);
 
         for (let i = 0; i < 100; i++) {
             // Product id
-            const productsId = [];
+            const productIds = [];
             const randomNumberGenerateProductId = Math.floor(Math.random() * 3) + 1;
             for (let j = 0; j < randomNumberGenerateProductId; j++) {
-                productsId.push(Math.floor(Math.random() * 10) + 1);
+                productIds.push(Math.floor(Math.random() * 10) + 1);
             }
 
             // Delivery method
@@ -181,20 +139,28 @@ export class OrderService {
             const randomNumberGeneratePaymentMethod = Math.floor(Math.random() * 2) + 1;
             const paymentMethod = randomNumberGeneratePaymentMethod === 1 ? 'Paypal' : 'Credit card';
 
-            const order: CreateOrderDto = {
-                userId: Math.floor(Math.random() * 10) + 1,
+            const user: UserDto = new UserDto();
+            user.id = Math.floor(Math.random() * 10) + 1;
+            const address: AddressDto = new AddressDto();
+            address.id = Math.floor(Math.random() * 10) + 1;
+
+
+            const order: Omit<OrderDto, 'id'> = {
+                user,
+                address,
+                productIds,
                 deliveryMethod,
-                addressId: Math.floor(Math.random() * 10) + 1,
-                productsId,
                 state,
                 paymentMethod,
                 taxesPrice: Number(faker.commerce.price()),
                 shippingPrice: Number(faker.commerce.price()),
                 subTotalPrice: Number(faker.commerce.price()),
                 totalPrice: Number(faker.commerce.price()),
+                createdAt: new Date()
             }
 
-            await this.create(order)
+
+            await this.create(order);
         }
     }
 }

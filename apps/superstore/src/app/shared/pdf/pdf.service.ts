@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OrderDto, OrderWithProductsDto } from "@superstore/interfaces";
+import { OrderDto, OrderProductDto } from '@superstore/interfaces';
 import { jsPDF } from "jspdf";
 import { forkJoin } from "rxjs";
 import autoTable from "jspdf-autotable";
@@ -19,7 +19,7 @@ export class PdfService {
     ) {
     }
 
-    downloadInvoice(order: OrderWithProductsDto) {
+    downloadInvoice(order: OrderProductDto) {
         const doc = new jsPDF('p', 'pt');
         doc.setFont('helvetica');
 
@@ -41,7 +41,7 @@ export class PdfService {
         doc.setFontSize(14);
         doc.text(`${ this.datePipe.transform(order.createdAt, 'dd/MM/yyyy') }`, 200, 120);
 
-        this.addressService.getAddress(order.addressId)
+        this.addressService.getAddress(order.address.id)
             .subscribe((address) => {
                 // Billing Address
                 doc.setFontSize(18);
@@ -64,7 +64,7 @@ export class PdfService {
                         products.forEach((p) => {
                             const productName = p.name;
                             const productPrice = p.price;
-                            const productCategories = p.category;
+                            const productCategories = p.categories;
                             const productDescription = p.description;
 
                             productRows.push([

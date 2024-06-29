@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { OrderService } from "../../../order/order.service";
-import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OrderService } from '../../../order/order.service';
+import { AddressDto, OrderProductDto, OrderState, UserDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-create-order',
@@ -10,7 +10,7 @@ import { OrderState, OrderWithAddressAndUserDto } from "@superstore/interfaces";
 })
 export class CreateOrderComponent implements OnInit {
 
-    @Input() editOrder: OrderWithAddressAndUserDto;
+    @Input() editOrder: OrderProductDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
@@ -39,15 +39,20 @@ export class CreateOrderComponent implements OnInit {
 
     ngOnInit() {
         if (this.editOrder?.id) {
+            const user: UserDto = this.editOrder.user;
+            const address: AddressDto = this.editOrder.address;
+            const products = this.editOrder.products;
+
             this.formUpdateOrder.setValue({
+                name: `${ user.firstName } ${ user.lastName }`,
+
                 id: this.editOrder.id,
-                name: this.editOrder.user,
-                address: this.editOrder.address,
-                products: this.editOrder.products,
+                address: `${ address.address }, ${ address.city }, ${ address.zipCode }, ${ address.country }`,
+                products,
                 state: this.editOrder.state,
                 deliveryMethod: this.editOrder.deliveryMethod,
                 paymentMethod: this.editOrder.paymentMethod,
-                price: this.editOrder.totalPrice,
+                price: this.editOrder.totalPrice
             });
         }
     }
@@ -65,8 +70,6 @@ export class CreateOrderComponent implements OnInit {
     closeModalAddProduct() {
         this.closeModal.emit();
     }
-
-
 
     // Escape key to close modal
     @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {

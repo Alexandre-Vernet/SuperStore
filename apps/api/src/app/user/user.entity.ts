@@ -1,12 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Address } from '../address/address.entity';
 
 @Entity({ name: 'users', schema: 'public' })
 export class User {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: 'addresses_id', type: 'integer' })
-    addressesId: number[];
+    @OneToMany(() => Address, (address) => address.id, { nullable: true })
+    @JoinColumn({ name: 'addresses_id' })
+    addresses: Address[];
 
     @Column({ name: 'first_name' })
     firstName: string;

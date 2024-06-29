@@ -1,8 +1,8 @@
-import { ProductDto } from "@superstore/interfaces";
-import { Component, Input, OnInit } from "@angular/core";
-import { AuthService } from "../../auth/auth.service";
-import { ReviewService } from "../review.service";
-import { OrderService } from "../../order/order.service";
+import { ProductDto } from '@superstore/interfaces';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
+import { ReviewService } from '../review.service';
+import { OrderService } from '../../order/order.service';
 
 @Component({
     selector: 'superstore-review-stats',
@@ -35,7 +35,7 @@ export class ReviewStatsComponent implements OnInit {
                 });
             })
 
-        this.userHasBoughtProduct();
+        // this.userHasBoughtProduct();
     }
 
     getTotalReviews() {
@@ -65,12 +65,12 @@ export class ReviewStatsComponent implements OnInit {
 
 
     userHasBoughtProduct() {
-        this.orderService.getOrdersPerUser()
-            .subscribe(orders => {
-                const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
-                const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.userId === this.authService.user?.id && review.productId === this.product?.id);
-                this.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
-            });
+        // this.orderService.getOrdersPerUser()
+        //     .subscribe(orders => {
+        //         const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
+        //         const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.user.map(u => u.id).includes(this.authService.user?.id));
+        //         this.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
+        //     });
     }
 
     toggleAddReviewModal() {

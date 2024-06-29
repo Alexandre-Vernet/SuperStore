@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'products', schema: 'public' })
 export class Product {
@@ -18,7 +18,7 @@ export class Product {
     price: number;
 
     @Column({ type: 'text' })
-    category: string[];
+    categories: string[];
 
     @Column({ type: 'text' })
     images: string[];

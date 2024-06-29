@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { CreateUserDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
+import { UserDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-sign-up',
@@ -34,8 +34,8 @@ export class SignUpComponent {
             confirmPassword,
         } = this.formSignUp.value;
 
-        const user: CreateUserDto = {
-            addressesId: [],
+        const user: Omit<UserDto, 'id'> = {
+            addresses: [],
             firstName,
             lastName,
             email,

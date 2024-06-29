@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
-import { FindManyOptions, FindOneOptions, In, Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Address } from "./address.entity";
+import { AddressDto } from '@superstore/interfaces';
+import { FindManyOptions, FindOneOptions, In, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Address } from './address.entity';
 import { faker } from '@faker-js/faker';
-import { UserService } from "../user/user.service";
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AddressService {
@@ -16,7 +16,7 @@ export class AddressService {
     ) {
     }
 
-    create(createOrderDto: CreateAddressDto, userId: number): Promise<Address> {
+    create(createOrderDto: Omit<AddressDto, 'id'>, userId: number): Promise<Address> {
         const options = {
             where: {
                 company: createOrderDto?.company,
@@ -25,7 +25,7 @@ export class AddressService {
                 country: createOrderDto.country,
                 city: createOrderDto.city,
                 zipCode: createOrderDto.zipCode,
-                phone: createOrderDto.phone,
+                phone: createOrderDto.phone
             }
         };
 
@@ -58,7 +58,7 @@ export class AddressService {
                         })
                         .catch(error => {
                             throw error;
-                        })
+                        });
                 }
                 return address;
             });
@@ -68,7 +68,7 @@ export class AddressService {
         return this.userService.findOne(userId)
             .then(user => {
                 const option: FindManyOptions = {
-                    where: { id: In(user.addressesId) }
+                    where: { id: In(user.addresses) }
                 };
 
                 return this.addressRepository.find(option);
@@ -94,31 +94,15 @@ export class AddressService {
 
     async migrate() {
         console.log('Migrating addresses...');
-        // Create table
-        await this.addressRepository.query(`
-        CREATE TABLE IF NOT EXISTS public.addresses (
-        id SERIAL PRIMARY KEY,
-        company VARCHAR(255) NULL,
-        address VARCHAR(255) NOT NULL,
-        apartment VARCHAR(255) NULL,
-        country VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        zip_code VARCHAR(255) NOT NULL,
-        phone VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-    )
-`);
-
 
         for (let i = 0; i < 25; i++) {
-            const address: CreateAddressDto = {
+            const address: Omit<AddressDto, 'id'> = {
                 address: faker.address.streetAddress(),
                 apartment: faker.address.secondaryAddress(),
                 city: faker.address.city(),
                 country: faker.address.country(),
                 zipCode: faker.address.zipCode(),
-                phone: `06${ faker.phone.number('########') }`,
+                phone: `06${ faker.phone.number('########') }`
             };
 
             const userId = faker.datatype.number({ min: 1, max: 25 });

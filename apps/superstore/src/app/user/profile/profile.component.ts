@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../auth/auth.service";
-import { UpdateUserDto, UserDto } from "@superstore/interfaces";
+import { UserDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../user.service";
 import { NewsletterService } from "../../newsletter/newsletter.service";
@@ -76,12 +76,14 @@ export class ProfileComponent implements OnInit {
     updateUser() {
         const { firstName, lastName, email } = this.formUser.value;
 
-        const user: UpdateUserDto = {
+        const user: UserDto = {
+            addresses: this.user.addresses,
+            password: this.user.password,
             id: this.user.id,
             firstName,
             lastName,
             email,
-            isAdmin: this.user.isAdmin,
+            isAdmin: this.user.isAdmin
         };
 
         this.userService.updateUser(user)

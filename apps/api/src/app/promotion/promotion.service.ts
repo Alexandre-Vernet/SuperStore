@@ -64,17 +64,6 @@ export class PromotionService {
     async migrate() {
         console.log('Migrating promotion...');
 
-        await this.promotionRepository.query(`
-        CREATE TABLE IF NOT EXISTS public.promotions (
-            id SERIAL PRIMARY KEY,
-            label TEXT NOT NULL,
-            amount DECIMAL NOT NULL,
-            count DECIMAL NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-            updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-        );
-    `);
-
         for (let i = 0; i < 300; i++) {
             const promotion: CreatePromotionDto = {
                 label: faker.commerce.productAdjective() + faker.datatype.number({ min: 1, max: 100 }),

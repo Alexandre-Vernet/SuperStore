@@ -2,20 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import {
     AddressDto,
     CartDto,
-    CreateOrderDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderState, PromotionDto, PromotionWithStatus
-} from "@superstore/interfaces";
-import { Cart } from "../cart";
-import { CartService } from "../cart.service";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "../../auth/auth.service";
-import { OrderService } from "../../order/order.service";
-import { Router } from "@angular/router";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { AddressService } from "../../address/address.service";
-import { PromotionService } from "../../promotion/promotion.service";
+    OrderDto,
+    OrderState,
+    PromotionDto,
+    PromotionWithStatus
+} from '@superstore/interfaces';
+import { Cart } from '../cart';
+import { CartService } from '../cart.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../auth/auth.service';
+import { OrderService } from '../../order/order.service';
+import { Router } from '@angular/router';
+import { AddressService } from '../../address/address.service';
+import { PromotionService } from '../../promotion/promotion.service';
 
 @Component({
     selector: 'superstore-checkout',
@@ -53,7 +54,6 @@ export class CheckoutComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly addressService: AddressService,
         private readonly orderService: OrderService,
-        private readonly notificationsService: NotificationsService,
         private readonly promotionService: PromotionService,
         private router: Router
     ) {
@@ -176,19 +176,20 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         } = this.formAddress.value;
 
-        const userId = this.authService.user.id;
+        const user = this.authService.user;
 
-        const order: CreateOrderDto = {
-            userId,
+        const order: Omit<OrderDto, 'id'> = {
+            user,
+            address: this.selectedAddress,
+            products: this.cart,
             state: OrderState.PENDING,
-            addressId: this.selectedAddress?.id,
-            productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
             subTotalPrice: this.subTotalPrice(),
             shippingPrice: this.shippingPrice,
             taxesPrice: this.taxes(),
             totalPrice: this.totalPrice(),
+            createdAt: new Date(),
         };
 
         this.addressService
@@ -202,12 +203,12 @@ export class CheckoutComponent implements OnInit {
                 phone
             })
             .subscribe((address) => {
-                order.addressId = address.id;
+                order.address.id = address.id;
                 this.confirmOrder(order);
             });
     }
 
-    confirmOrder(order: CreateOrderDto) {
+    confirmOrder(order: Omit<OrderDto, 'id'>) {
         this.orderService
             .confirmOrder(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));

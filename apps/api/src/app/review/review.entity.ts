@@ -1,15 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from '../product/product.entity';
+import { User } from '../user/user.entity';
 
 @Entity({ name: 'reviews', schema: 'public' })
 export class Review {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: 'product_id' })
-    productId: number;
+    @ManyToOne(() => Product)
+    @JoinColumn({ name: 'product_id' })
+    product: Product;
 
-    @Column({ name: 'user_id' })
-    userId: number;
+    @OneToOne(() => User, (user) => user.id)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column()
     rating: number;

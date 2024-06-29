@@ -17,7 +17,7 @@ export class ReviewComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.reviewService.getReviewsForProduct(this.product.id)
+        this.reviewService.getReviewsForProduct(this.product)
             .subscribe(reviews => {
                 this.reviewService.reviews.next(reviews);
                 this.reviews = reviews;

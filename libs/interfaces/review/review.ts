@@ -1,12 +1,11 @@
-import { CreateReviewDto } from './create-review';
-import { UserDto } from "../user/user";
+import { UserDto } from '../user/user';
+import { ProductDto } from '../product/product';
 
-export class ReviewDto extends CreateReviewDto {
+export class ReviewDto {
     id: number;
-    createdAt: Date;
-}
-
-
-export class ReviewWithUserDto extends ReviewDto {
+    product: ProductDto;
     user: UserDto;
+    rating: number;
+    description: string;
+    createdAt: Date;
 }

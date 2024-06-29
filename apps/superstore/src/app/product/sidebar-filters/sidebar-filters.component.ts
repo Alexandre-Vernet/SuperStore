@@ -34,8 +34,8 @@ export class SidebarFiltersComponent implements OnInit {
 
                 // List all categories
                 products.map(product => {
-                    if (product.category) {
-                        product.category.map(c => {
+                    if (product.categories) {
+                        product.categories.map(c => {
                             if (!this.categories.map(c => c.label).includes(c)) {
                                 this.categories.push({ label: c, checked: false });
                             }

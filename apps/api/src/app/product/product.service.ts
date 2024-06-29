@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto, ProductDto } from '@superstore/interfaces';
-import { FindOneOptions, In, Repository } from "typeorm";
-import { Product } from "./product.entity";
-import { InjectRepository } from "@nestjs/typeorm";
+import { ProductDto } from '@superstore/interfaces';
+import { FindOneOptions, In, Repository } from 'typeorm';
+import { Product } from './product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ProductService {
     ) {
     }
 
-    create(createProductDto: CreateProductDto): Promise<Product> {
+    create(createProductDto: Omit<ProductDto, 'id'>): Promise<Product> {
         return this.productRepository.save(createProductDto);
     }
 
@@ -26,7 +26,7 @@ export class ProductService {
         const { limit, page } = pagination;
         return this.productRepository.findAndCount({
             skip: limit * (page - 1),
-            take: limit,
+            take: limit
         }).then(([products, total]) => ({ products, total }));
     }
 
@@ -57,41 +57,28 @@ export class ProductService {
     getProductsByIds(ids: number[]) {
         return this.productRepository.find({
             where: {
-                id: In(ids),
-            },
+                id: In(ids)
+            }
         });
     }
 
     async migrate() {
         console.log('Migrating products...');
-        await this.productRepository.query(`
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            slug TEXT NOT NULL,
-            description TEXT NOT NULL,
-            price DECIMAL NOT NULL,
-            category TEXT[] NOT NULL,
-            images TEXT[] NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-            updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-        );
-    `);
 
         for (let i = 0; i < 200; i++) {
             const randomNumberCategories = Math.floor(Math.random() * 3) + 1;
-            const categories = [];
+            const categories: string[] = [];
             for (let j = 0; j < randomNumberCategories; j++) {
                 categories.push(faker.commerce.department());
             }
 
             const productName = faker.commerce.productName();
-            const product: CreateProductDto = {
+            const product: Omit<ProductDto, 'id'> = {
                 name: productName,
                 slug: productName.replace(/ /g, '-').toLowerCase(),
                 description: faker.commerce.productDescription(),
                 price: Number(faker.commerce.price()),
-                category: categories,
+                categories: categories,
                 images: [faker.image.imageUrl()]
             };
 

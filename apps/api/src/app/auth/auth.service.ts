@@ -1,12 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
-import { FindOneOptions, Repository } from "typeorm";
-import { JwtService } from "@nestjs/jwt";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../user/user.entity";
-import bcrypt from "bcrypt";
+import { UserDto } from '@superstore/interfaces';
+import { FindOneOptions, Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user/user.entity';
+import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
-import { EmailService } from "../email/email.service";
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +18,7 @@ export class AuthService {
     ) {
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<{ accessToken: string, user: UserDto }> {
+    async signUp(createUserDto: Omit<UserDto, 'id'>): Promise<{ accessToken: string, user: UserDto }> {
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
@@ -39,10 +39,10 @@ export class AuthService {
             });
     }
 
-    signIn(signInUserDto: SignInUserDto) {
+    signIn(signInUserDto: Pick<UserDto, 'email' | 'password'>) {
         const options: FindOneOptions = {
             where: {
-                email: signInUserDto.email,
+                email: signInUserDto.email
             }
         };
         return this.userRepository.findOne(options)
@@ -59,7 +59,7 @@ export class AuthService {
                 return {
                     accessToken: await this.jwtService.signAsync({ user }),
                     user
-                }
+                };
             });
     }
 
@@ -78,7 +78,7 @@ export class AuthService {
                 return {
                     accessToken: await this.jwtService.signAsync({ user }),
                     user
-                }
+                };
             })
             .catch(() => {
                 throw new ConflictException('Your session has expired. Please sign in again.');
@@ -89,7 +89,7 @@ export class AuthService {
     updatePassword(userId: number, password: string) {
         const options: FindOneOptions = {
             where: {
-                id: userId,
+                id: userId
             }
         };
 
@@ -105,13 +105,13 @@ export class AuthService {
                     throw new ConflictException('Something went wrong. Please try again later.');
                 }
                 return this.userRepository.update(userId, { password: hashedPassword });
-            })
+            });
     }
 
     sendEmailForgotPassword(email: string) {
         const options: FindOneOptions = {
             where: {
-                email,
+                email
             }
         };
 
@@ -130,29 +130,8 @@ export class AuthService {
     async migrate() {
         console.log('Migrating users...');
 
-        await this.userRepository.query(`
-            CREATE TABLE IF NOT EXISTS public.users (
-                id SERIAL PRIMARY KEY,
-                addresses_id INTEGER[],
-                first_name VARCHAR(255) NOT NULL,
-                last_name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(255) NOT NULL,
-                is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-            );
-        `);
-
         for (let i = 0; i < 100; i++) {
-            const addressesId = [];
-            const randomAddressId = Math.floor(Math.random() * 2) + 1;
-            for (let j = 0; j < randomAddressId; j++) {
-                addressesId.push(faker.datatype.number({ min: 1, max: 6 }));
-            }
-
-            const createUserDto: CreateUserDto = {
-                addressesId,
+            const createUserDto: Omit<UserDto, 'id'> = {
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 email: faker.internet.email(),

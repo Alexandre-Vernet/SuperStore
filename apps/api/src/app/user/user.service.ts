@@ -76,12 +76,12 @@ export class UserService {
         return this.userRepository.findOne(options)
             .then(user => {
                 if (user) {
-                    if (user.addressesId.includes(addressId)) {
+                    if (user.addresses.map(e => e.id).includes(addressId)) {
                         return user;
                     }
 
                     return this.userRepository.update(userId, {
-                        addressesId: [...user.addressesId, addressId]
+                        addresses: [...user.addresses, { id: addressId }]
                     })
                         .then(() => {
                             return this.userRepository.findOne(options)

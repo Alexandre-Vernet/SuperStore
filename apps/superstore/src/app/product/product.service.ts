@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, catchError, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
-import { CreateProductDto, ProductDto } from "@superstore/interfaces";
+import { ProductDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 import { ReviewService } from "../review/review.service";
 
@@ -23,7 +23,7 @@ export class ProductService {
         this.getAllProducts().subscribe();
     }
 
-    addProduct(product: CreateProductDto): Observable<ProductDto> {
+    addProduct(product: Omit<ProductDto, 'id'>): Observable<ProductDto> {
         return this.http.post<ProductDto>(this.productUri, product)
             .pipe(
                 tap((product) => {
@@ -87,8 +87,8 @@ export class ProductService {
             case '-rating':
                 const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
                 return this.productsFiltered.value.sort((a, b) => {
-                    const aReviews = reviews.filter((r) => r.productId === a.id);
-                    const bReviews = reviews.filter((r) => r.productId === b.id);
+                    const aReviews = reviews.filter((r) => r.product.id === b.id);
+                    const bReviews = reviews.filter((r) => r.product.id === b.id);
                     const aRating = aReviews.reduce((acc, cur) => acc + cur.rating, 0) / aReviews.length;
                     const bRating = bReviews.reduce((acc, cur) => acc + cur.rating, 0) / bReviews.length;
                     return bRating - aRating;
@@ -127,7 +127,7 @@ export class ProductService {
 
     filterProductsByCategory(category: string) {
         setTimeout(() =>  {
-            const products = this.products.value.filter((p) => p.category.includes(category));
+            const products = this.products.value.filter((p) => p.categories.includes(category));
             this.productsFiltered.next(products);
         }, 2000);
     }

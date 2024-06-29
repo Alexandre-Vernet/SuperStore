@@ -1,21 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { OrderState } from "@superstore/interfaces";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { OrderState } from '@superstore/interfaces';
+import { User } from '../user/user.entity';
+import { Address } from '../address/address.entity';
+import { Product } from '../product/product.entity';
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ name: 'user_id' })
-    userId: number;
+    @OneToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
-    @Column({ name: 'address_id' })
-    addressId: number;
+    @OneToOne(() => Address)
+    @JoinColumn({ name: 'address_id' })
+    address: Address;
 
-    @Column({ name: 'products_id', type: 'integer' })
-    productsId: number[];
+    @Column('int', { name: 'product_ids' })
+    productIds: number[];
 
-    @Column({ name: 'state', type: 'text'})
+    @Column({ name: 'state', type: 'text' })
     state: OrderState;
 
     @Column({ name: 'delivery_method' })

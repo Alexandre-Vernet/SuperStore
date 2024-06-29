@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { catchError, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
-import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
+import { UserDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
@@ -20,7 +20,7 @@ export class AuthService {
     ) {
     }
 
-    signIn(user: SignInUserDto): Observable<{ user: UserDto, accessToken: string }> {
+    signIn(user:  Pick<UserDto, 'email' | 'password'>): Observable<{ user: UserDto, accessToken: string }> {
         return this.http.post<{ user: UserDto, accessToken: string }>(`${ this.authUrl }/sign-in`, user)
             .pipe(
                 tap(res => {
@@ -30,7 +30,7 @@ export class AuthService {
             );
     }
 
-    signUp(user: CreateUserDto): Observable<{ accessToken: string, user: UserDto }> {
+    signUp(user: Omit<UserDto, 'id'>): Observable<{ accessToken: string, user: UserDto }> {
         return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
                 tap((res) => localStorage.setItem('accessToken', res.accessToken))

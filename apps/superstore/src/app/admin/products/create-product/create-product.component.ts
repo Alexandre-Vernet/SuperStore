@@ -32,7 +32,7 @@ export class CreateProductComponent implements OnInit {
                 name: this.editProduct.name,
                 description: this.editProduct.description,
                 price: this.editProduct.price,
-                categories: this.editProduct.category.join(', '),
+                categories: this.editProduct.categories.join(', '),
                 images: this.editProduct.images.join(', ')
             });
         }
@@ -90,7 +90,7 @@ export class CreateProductComponent implements OnInit {
             slug,
             description,
             price,
-            category: categoriesSeparatedByComma,
+            categories: categoriesSeparatedByComma,
             images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
         this.closeModalAddProduct();
@@ -110,7 +110,7 @@ export class CreateProductComponent implements OnInit {
             slug,
             description,
             price,
-            category: categoriesSeparatedByComma,
+            categories: categoriesSeparatedByComma,
             images: imagesSeparatedByComma
         }).subscribe(() => this.formAddProduct.reset());
         this.closeModalAddProduct();

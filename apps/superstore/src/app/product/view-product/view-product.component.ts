@@ -44,7 +44,7 @@ export class ViewProductComponent implements OnInit {
                 this.product = product;
 
                 this.reviewService
-                    .getReviewsForProduct(product.id)
+                    .getReviewsForProduct(product)
                     .subscribe(reviews => {
                         this.reviews = reviews;
                     });

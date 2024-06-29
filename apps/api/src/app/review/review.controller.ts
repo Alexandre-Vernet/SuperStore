@@ -8,8 +8,9 @@ import {
     Delete, UseInterceptors,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { ReviewDto, CreateReviewDto } from "@superstore/interfaces";
+import { ReviewDto } from "@superstore/interfaces";
 import { AuthInterceptor } from "../auth/auth.interceptor";
+import { Product } from '../product/product.entity';
 
 @Controller('review')
 export class ReviewController {
@@ -18,7 +19,7 @@ export class ReviewController {
 
     @UseInterceptors(AuthInterceptor)
     @Post()
-    create(@Body() createReviewDto: CreateReviewDto) {
+    create(@Body() createReviewDto: ReviewDto) {
         return this.reviewService.create(createReviewDto);
     }
 

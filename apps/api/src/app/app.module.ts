@@ -18,6 +18,7 @@ import { Newsletter } from './newsletter/newsletter.entity';
 import { MigrationModule } from './migration/migration.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { Promotion } from "./promotion/promotion.entity";
+import { OrderProduct } from './order-product/order-product.entity';
 
 const {
     POSTGRES_HOST,
@@ -37,7 +38,7 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, User, Address, Review, Newsletter, Promotion],
+            entities: [Product, Order, OrderProduct, User, Address, Review, Newsletter, Promotion],
             ssl: false,
         }),
         ProductModule,

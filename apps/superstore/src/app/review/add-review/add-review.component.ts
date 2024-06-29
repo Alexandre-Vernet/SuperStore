@@ -41,10 +41,11 @@ export class AddReviewComponent {
         const { rating, description } = this.formAddReview.value;
         this.reviewService
             .addReview({
-                productId: this.productToReview.id,
-                userId: this.authService.user.id,
+                product: this.productToReview,
+                user: this.authService.user,
                 rating: Number(rating),
                 description,
+                createdAt: new Date(),
             })
             .subscribe({
                 next: () => this.closeModal(),

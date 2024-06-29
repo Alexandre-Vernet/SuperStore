@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
+import { ProductDto, ReviewDto } from '@superstore/interfaces';
 import { NotificationsService } from "../shared/notifications/notifications.service";
 
 @Injectable({
@@ -20,12 +20,12 @@ export class ReviewService {
     ) {
     }
 
-    addReview(review: CreateReviewDto): Observable<ReviewDto> {
+    addReview(review: Omit<ReviewDto, 'id'>): Observable<ReviewDto> {
         return this.http.post<ReviewDto>(this.reviewUrl, review);
     }
 
-    getReviewsForProduct(productId: number): Observable<ReviewDto[]> {
-        return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product/${ productId }`);
+    getReviewsForProduct(product: ProductDto): Observable<ReviewDto[]> {
+        return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product/${ product.id }`);
     }
 
     getReviewsForAllProducts(): Observable<ReviewDto[]> {
