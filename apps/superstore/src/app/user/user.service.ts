@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from "../auth/auth.service";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { UserDto } from "@superstore/interfaces";
-import { environment } from "../../environments/environment";
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { UserDto } from '@superstore/interfaces';
+import { environment } from '../../environments/environment';
+import { NotificationsService } from '../shared/notifications/notifications.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +15,6 @@ export class UserService {
 
     constructor(
         private readonly http: HttpClient,
-        private readonly authService: AuthService,
         private readonly notificationsService: NotificationsService,
     ) {
         this.getUsers().subscribe();
@@ -35,10 +33,6 @@ export class UserService {
             );
     }
 
-    getUser(userId: number): Observable<UserDto> {
-        return this.http.get<UserDto>(`${ this.userUrl }/${ userId }`);
-    }
-
     updateUser(user: Omit<UserDto, 'password'>): Observable<UserDto> {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
@@ -52,7 +46,6 @@ export class UserService {
                     });
                     this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
                     this.users.next(users);
-                    this.authService.user = user;
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);

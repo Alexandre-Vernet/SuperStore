@@ -1,8 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserDto } from '@superstore/interfaces';
-import { User } from "./user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Not, Repository } from "typeorm";
+import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -13,7 +13,10 @@ export class UserService {
     }
 
     findAll(): Promise<User[]> {
-        return this.userRepository.find()
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        }
+        return this.userRepository.find(options)
             .then((users) => {
                 return users.map((user) => {
                     delete user.password;
@@ -34,6 +37,7 @@ export class UserService {
     }
 
     update(id: number, updateUserDto: UserDto): Promise<UserDto> {
+        console.log(updateUserDto);
         // Check that the email is not already in use
         const options: FindOneOptions = {
             where: {
@@ -43,20 +47,14 @@ export class UserService {
         };
 
         return this.userRepository.findOne(options)
-            .then(user => {
-                if (user && user.id !== id) {
+            .then(emailAlreadyInUse => {
+                if (emailAlreadyInUse) {
                     throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
                 }
 
                 return this.userRepository
                     .update(id, updateUserDto)
-                    .then(() => {
-                        return this.userRepository.findOne({ where: { id } })
-                            .then((user) => {
-                                delete user.password;
-                                return user;
-                            });
-                    })
+                    .then(() => updateUserDto)
                     .catch((err) => {
                         throw new Error(err.message);
                     });

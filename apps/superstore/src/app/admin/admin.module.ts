@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListOrdersComponent } from './orders/list-orders/list-orders.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { ListUsersComponent } from './users/list-users/list-users.component';
-import { CreateUserComponent } from './users/create-user/create-user.component';
+import { UpdateUserComponent } from './users/update-user/update-user.component';
 import { CreateOrderComponent } from './orders/create-order/create-order.component';
 import { OrdersPipe } from './orders/orders.pipe';
 import { ProductsPipe } from './products/products.pipe';
@@ -29,8 +29,8 @@ import { PromotionsPipe } from "./promotions-code/promotions.pipe";
         ListOrdersComponent,
         ListUsersComponent,
         TabsComponent,
-        CreateUserComponent,
-        CreateUserComponent,
+        UpdateUserComponent,
+        UpdateUserComponent,
         CreateOrderComponent,
         OrdersPipe,
         ProductsPipe,

@@ -32,22 +32,22 @@ export class ListUsersComponent implements OnInit {
             });
     }
 
-    openModal() {
+
+    editUser(user: UserDto) {
+        this.editedUser = user;
+        this.openModalUpdateUser();
+    }
+
+    deleteUser(user: UserDto) {
+        this.userService.deleteUser(user.id).subscribe();
+    }
+
+    openModalUpdateUser() {
         this.showModalAddProduct = true;
     }
 
     closeModal() {
         this.showModalAddProduct = false;
-    }
-
-
-    editUser(user: UserDto) {
-        this.editedUser = user;
-        this.openModal();
-    }
-
-    deleteUser(user: UserDto) {
-        this.userService.deleteUser(user.id).subscribe();
     }
 
     // Escape key to clear search bar

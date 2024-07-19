@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../../../user/user.service";
 
 @Component({
-    selector: 'superstore-create-user',
-    templateUrl: './create-user.component.html',
-    styleUrls: ['./create-user.component.scss'],
+    selector: 'superstore-update-user',
+    templateUrl: './update-user.component.html',
+    styleUrls: ['./update-user.component.scss'],
 })
-export class CreateUserComponent implements OnInit {
+export class UpdateUserComponent implements OnInit {
 
     @Input() editUser:  UserDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
@@ -50,7 +50,7 @@ export class CreateUserComponent implements OnInit {
             firstName,
             lastName,
             email,
-            isAdmin,
+            isAdmin: Boolean(isAdmin),
             addresses: this.editUser.addresses,
         })
             .subscribe(() => this.formUpdateUser.reset());
