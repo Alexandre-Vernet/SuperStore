@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { NewsletterService } from "../../newsletter/newsletter.service";
-import { NotificationsService } from "../notifications/notifications.service";
-import { ProductService } from "../../product/product.service";
-import { Router } from "@angular/router";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NewsletterService } from '../../newsletter/newsletter.service';
+import { ProductService } from '../../product/product.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'superstore-footer',
@@ -20,7 +19,6 @@ export class FooterComponent implements OnInit {
 
     constructor(
         private readonly newsletterService: NewsletterService,
-        private readonly notificationsService: NotificationsService,
         private readonly productService: ProductService,
         private router: Router
     ) {
@@ -30,13 +28,11 @@ export class FooterComponent implements OnInit {
         this.productService.products
             .subscribe(products => {
                 products.map(product => {
-                    if (product.categories) {
-                        product.categories.map(c => {
-                            if (!this.productCategories.includes(c)) {
-                                this.productCategories.length <= 7 ? this.productCategories.push(c) : null;
-                            }
-                        });
-                    }
+                    product?.categories?.map(c => {
+                        if (!this.productCategories.includes(c)) {
+                            this.productCategories.push(c);
+                        }
+                    });
                 });
             })
     }

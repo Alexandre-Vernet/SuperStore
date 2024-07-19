@@ -1,24 +1,24 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ProductService } from "../../../product/product.service";
-import { ProductDto } from "@superstore/interfaces";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProductService } from '../../../product/product.service';
+import { ProductDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-create-product',
     templateUrl: './create-product.component.html',
-    styleUrls: ['./create-product.component.scss'],
+    styleUrls: ['./create-product.component.scss']
 })
 export class CreateProductComponent implements OnInit {
 
-    @Input() editProduct:  ProductDto | null;
+    @Input() editProduct: ProductDto | null;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formAddProduct = new FormGroup({
-        name: new FormControl('', [Validators.required]),
+        name: new FormControl('=', [Validators.required]),
         description: new FormControl('', [Validators.required]),
-        price: new FormControl(0, [Validators.required]),
+        price: new FormControl(0, [Validators.required, Validators.min(0)]),
         categories: new FormControl('', [Validators.required]),
-        images: new FormControl('', Validators.required),
+        images: new FormControl('', Validators.required)
     });
 
     constructor(
@@ -51,6 +51,15 @@ export class CreateProductComponent implements OnInit {
             images
         } = this.formAddProduct.value;
 
+        const product: Omit<ProductDto, 'id'> = {
+            name,
+            slug: name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-'), /*Remove all special characters and replace spaces with dash*/
+            description,
+            price,
+            categories: categories.split(',').map(c => c.trim()),
+            images: images.split(',').map(c => c.trim())
+        };
+
 
         // Check if categories is valid
         const isCategoryValid = this.checkCategories(categories);
@@ -60,63 +69,28 @@ export class CreateProductComponent implements OnInit {
 
         if (this.editProduct?.id) {
             this.updateProduct({
-                name,
-                description,
-                price,
-                categories,
-                images
+                ...product,
+                id: this.editProduct.id
             });
         } else {
-            this.addProduct({
-                name,
-                description,
-                price,
-                categories,
-                images
-            });
+            this.addProduct(product);
         }
     }
 
-    addProduct({ name, description, price, categories, images }) {
-        // Remove all spaces and trim
-        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
-        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
+    addProduct(product: Omit<ProductDto, 'id'>) {
+        this.productService.addProduct(product).subscribe(() => this.resetForm());
+    }
 
-        // Slug : Remove all special characters and replace spaces with dash
-        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
+    updateProduct(product: ProductDto) {
+        this.productService.updateProduct(product).subscribe(() => this.resetForm());
+    }
 
-        this.productService.addProduct({
-            name,
-            slug,
-            description,
-            price,
-            categories: categoriesSeparatedByComma,
-            images: imagesSeparatedByComma
-        }).subscribe(() => this.formAddProduct.reset());
+    private resetForm() {
+        this.formAddProduct.reset();
         this.closeModalAddProduct();
     }
 
-    updateProduct({ name, description, price, categories, images }) {
-        // Remove all spaces and trim
-        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
-        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
-
-        // Slug : Remove all special characters and replace spaces with dash
-        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
-
-        this.productService.updateProduct({
-            id: this.editProduct.id,
-            name,
-            slug,
-            description,
-            price,
-            categories: categoriesSeparatedByComma,
-            images: imagesSeparatedByComma
-        }).subscribe(() => this.formAddProduct.reset());
-        this.closeModalAddProduct();
-    }
-
-    checkCategories(category: string): boolean {
+    private checkCategories(category: string): boolean {
         // Check if category is valid (only letters, numbers, comma and space)
         const categoryRegex = /^[a-zA-Z0-9, ]*$/;
         if (!categoryRegex.test(category)) {

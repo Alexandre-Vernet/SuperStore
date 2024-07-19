@@ -23,7 +23,7 @@ export class ListProductsComponent implements OnInit {
     ngOnInit() {
         this.productService.products
             .subscribe((products) => {
-                products.sort((a, b) => a.id - b.id);
+                products.sort((a, b) => a?.id - b?.id);
                 this.products = products;
             });
 

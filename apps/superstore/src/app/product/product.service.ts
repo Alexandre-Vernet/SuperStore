@@ -151,18 +151,11 @@ export class ProductService {
     updateProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.put<ProductDto>(`${ this.productUri }/${ product.id }`, product)
             .pipe(
-                tap((product) => {
-                    const products = this.products.value.map((p) => {
-                        if (p.id === product.id) {
-                            return product;
-                        } else {
-                            return p;
-                        }
-                    });
+                tap(() => {
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
-                    this.products.next(products);
                 }),
                 catchError((err) => {
+                    console.log(err);
                     this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
