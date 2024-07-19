@@ -8,7 +8,7 @@ import { ReviewService } from "../review.service";
     styleUrls: ['./review-stars.component.scss'],
 })
 export class ReviewStarsComponent implements OnInit {
-    @Input() showTotalReviews;
+    @Input() showTotalReviews: boolean;
     @Input() review: ReviewDto;
     reviews: ReviewDto[] = [];
     stars: number[] = [1, 2, 3, 4, 5];
@@ -28,7 +28,7 @@ export class ReviewStarsComponent implements OnInit {
 
     getStarsForOneReview() {
         this.stars = this.stars
-            .map((star, index) => {
+            .map((_, index) => {
                 if (index < this.review.rating) {
                     return 1;
                 }
@@ -49,7 +49,7 @@ export class ReviewStarsComponent implements OnInit {
                 // Around to the nearest whole number
                 const averageRating = Math.round(totalReview / this.reviews.length);
                 this.stars = this.stars
-                    .map((star, index) => {
+                    .map((_, index) => {
                         if (index < averageRating) {
                             return 1;
                         }
