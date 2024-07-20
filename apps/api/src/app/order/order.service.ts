@@ -60,7 +60,6 @@ export class OrderService {
 
         return this.orderRepository.find(options)
             .then((orders: OrderDto[]) => {
-                console.log(orders);
                 return orders;
             });
     }

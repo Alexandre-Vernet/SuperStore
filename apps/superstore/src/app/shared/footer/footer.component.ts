@@ -25,7 +25,7 @@ export class FooterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.products
+        this.productService.products$
             .subscribe(products => {
                 products.map(product => {
                     product?.categories?.map(c => {

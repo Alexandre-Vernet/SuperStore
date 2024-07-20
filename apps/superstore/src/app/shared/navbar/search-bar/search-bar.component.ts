@@ -21,7 +21,7 @@ export class SearchBarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.products
+        this.productService.products$
             .subscribe((products) => {
                 this.products = products;
             });

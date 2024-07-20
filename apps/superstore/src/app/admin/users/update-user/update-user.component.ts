@@ -1,28 +1,28 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { UserDto } from "@superstore/interfaces";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { UserService } from "../../../user/user.service";
+import { UserDto } from '@superstore/interfaces';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../../../user/user.service';
 
 @Component({
     selector: 'superstore-update-user',
     templateUrl: './update-user.component.html',
-    styleUrls: ['./update-user.component.scss'],
+    styleUrls: ['./update-user.component.scss']
 })
 export class UpdateUserComponent implements OnInit {
 
-    @Input() editUser:  UserDto;
+    @Input() editUser: UserDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
         lastName: new FormControl('', [Validators.required]),
         email: new FormControl('', [Validators.required]),
-        isAdmin: new FormControl(false, [Validators.required]),
+        isAdmin: new FormControl(false, [Validators.required])
     });
 
 
     constructor(
-        private readonly userService: UserService,
+        private readonly userService: UserService
     ) {
     }
 
@@ -51,14 +51,13 @@ export class UpdateUserComponent implements OnInit {
             lastName,
             email,
             isAdmin: Boolean(isAdmin),
-            addresses: this.editUser.addresses,
+            addresses: this.editUser.addresses
         })
-            .subscribe(() => this.formUpdateUser.reset());
-
-        this.closeModalAddProduct();
+            .subscribe(() => this.closeModalAddProduct());
     }
 
     closeModalAddProduct() {
+        this.formUpdateUser.reset();
         this.closeModal.emit();
     }
 

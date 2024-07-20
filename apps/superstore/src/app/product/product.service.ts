@@ -12,8 +12,10 @@ import { ReviewService } from "../review/review.service";
 export class ProductService {
 
     productUri = environment.productUri();
-    products = new BehaviorSubject(<ProductDto[]>[]);
-    productsFiltered = new BehaviorSubject(<ProductDto[]>[]);
+    private productsSubject = new BehaviorSubject(<ProductDto[]>[]);
+    private productsSubjectFiltered = new BehaviorSubject(<ProductDto[]>[]);
+    products$ = this.productsSubject.asObservable();
+    productsFiltered$ = this.productsSubjectFiltered.asObservable();
 
     constructor(
         private readonly http: HttpClient,
@@ -27,8 +29,8 @@ export class ProductService {
         return this.http.post<ProductDto>(this.productUri, product)
             .pipe(
                 tap((product) => {
-                    this.products.next([...this.products.value, product]);
-                    this.productsFiltered.next([...this.productsFiltered.value, product]);
+                    this.productsSubject.next([...this.productsSubject.value, product]);
+                    this.productsSubjectFiltered.next([...this.productsSubjectFiltered.value, product]);
                     this.notificationService.showSuccessNotification('Success', 'Product added successfully');
                 }),
                 catchError((err) => {
@@ -42,7 +44,7 @@ export class ProductService {
         return this.http.get<ProductDto[]>(this.productUri)
             .pipe(
                 tap((products) => {
-                    this.products.next(products);
+                    this.productsSubject.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -64,8 +66,8 @@ export class ProductService {
                     total
                 })),
                 tap(({ products }) => {
-                    this.products.next(products);
-                    this.productsFiltered.next(products);
+                    this.productsSubject.next(products);
+                    this.productsSubjectFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
@@ -77,16 +79,16 @@ export class ProductService {
     async sortProducts(orderBy: string): Promise<ProductDto[]> {
         switch (orderBy) {
             case 'price':
-                return this.productsFiltered.value.sort((a, b) => a.price - b.price);
+                return this.productsSubjectFiltered.value.sort((a, b) => a.price - b.price);
             case '-price':
-                return this.productsFiltered.value.sort((a, b) => b.price - a.price);
+                return this.productsSubjectFiltered.value.sort((a, b) => b.price - a.price);
             case 'name':
-                return this.productsFiltered.value.sort((a, b) => a.name.localeCompare(b.name));
+                return this.productsSubjectFiltered.value.sort((a, b) => a.name.localeCompare(b.name));
             case '-name':
-                return this.productsFiltered.value.sort((a, b) => b.name.localeCompare(a.name));
+                return this.productsSubjectFiltered.value.sort((a, b) => b.name.localeCompare(a.name));
             case '-rating':
                 const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
-                return this.productsFiltered.value.sort((a, b) => {
+                return this.productsSubjectFiltered.value.sort((a, b) => {
                     const aReviews = reviews.filter((r) => r.product.id === b.id);
                     const bReviews = reviews.filter((r) => r.product.id === b.id);
                     const aRating = aReviews.reduce((acc, cur) => acc + cur.rating, 0) / aReviews.length;
@@ -94,46 +96,46 @@ export class ProductService {
                     return bRating - aRating;
                 });
             default:
-                return this.productsFiltered.value;
+                return this.productsSubjectFiltered.value;
         }
     }
 
     async sortProductsByPrice(label: string): Promise<ProductDto[]> {
         let products: ProductDto[] = [];
-        this.productsFiltered.next(this.products.value);
+        this.productsSubjectFiltered.next(this.productsSubject.value);
         switch (label) {
             case 'under-25':
-                products = this.productsFiltered.value.filter((p) => p.price < 25);
+                products = this.productsSubjectFiltered.value.filter((p) => p.price < 25);
                 break;
             case '25-to-50':
-                products = this.productsFiltered.value.filter((p) => p.price >= 25 && p.price < 50);
+                products = this.productsSubjectFiltered.value.filter((p) => p.price >= 25 && p.price < 50);
                 break;
             case '50-to-100':
-                products = this.productsFiltered.value.filter((p) => p.price >= 50 && p.price < 100);
+                products = this.productsSubjectFiltered.value.filter((p) => p.price >= 50 && p.price < 100);
                 break;
             case '100-to-200':
-                products = this.productsFiltered.value.filter((p) => p.price >= 100 && p.price < 200);
+                products = this.productsSubjectFiltered.value.filter((p) => p.price >= 100 && p.price < 200);
                 break;
             case '200-and-above':
-                products = this.productsFiltered.value.filter((p) => p.price >= 200);
+                products = this.productsSubjectFiltered.value.filter((p) => p.price >= 200);
                 break;
             default:
-                return this.productsFiltered.value;
+                return this.productsSubjectFiltered.value;
         }
 
-        this.productsFiltered.next(products);
+        this.productsSubjectFiltered.next(products);
         return products;
     }
 
     filterProductsByCategory(category: string) {
         setTimeout(() =>  {
-            const products = this.products.value.filter((p) => p.categories.includes(category));
-            this.productsFiltered.next(products);
+            const products = this.productsSubject.value.filter((p) => p.categories.includes(category));
+            this.productsSubjectFiltered.next(products);
         }, 2000);
     }
 
     resetFilters(): void {
-        this.productsFiltered.next(this.products.value);
+        this.productsSubjectFiltered.next(this.productsSubject.value);
     }
 
     getProductFromSlug(slug: string): Observable<ProductDto> {
@@ -155,7 +157,6 @@ export class ProductService {
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
                 }),
                 catchError((err) => {
-                    console.log(err);
                     this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
@@ -167,9 +168,9 @@ export class ProductService {
             .pipe(
                 tap(() => {
                     this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
-                    const products = this.products.value.filter((p) => p.id !== productId);
-                    this.products.next(products);
-                    this.productsFiltered.next(products);
+                    const products = this.productsSubject.value.filter((p) => p.id !== productId);
+                    this.productsSubject.next(products);
+                    this.productsSubjectFiltered.next(products);
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);

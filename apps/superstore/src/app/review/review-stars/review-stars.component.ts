@@ -37,7 +37,7 @@ export class ReviewStarsComponent implements OnInit {
     }
 
     getStarsForAllReview() {
-        this.reviewService.reviews
+        this.reviewService.reviews$
             .subscribe(reviews => {
                 this.reviews = reviews;
                 const totalReview = this.reviews

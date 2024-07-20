@@ -37,7 +37,6 @@ export class UserService {
     }
 
     update(id: number, updateUserDto: UserDto): Promise<UserDto> {
-        console.log(updateUserDto);
         // Check that the email is not already in use
         const options: FindOneOptions = {
             where: {

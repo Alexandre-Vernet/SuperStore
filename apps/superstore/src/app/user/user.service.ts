@@ -11,7 +11,8 @@ import { NotificationsService } from '../shared/notifications/notifications.serv
 export class UserService {
 
     userUrl = environment.userUrl();
-    users = new BehaviorSubject(<UserDto[]>[]);
+    private usersSubject = new BehaviorSubject(<UserDto[]>[]);
+    users$ = this.usersSubject.asObservable();
 
     constructor(
         private readonly http: HttpClient,
@@ -24,7 +25,7 @@ export class UserService {
         return this.http.get<UserDto[]>(`${ this.userUrl }`)
             .pipe(
                 tap((users) => {
-                    this.users.next(users);
+                    this.usersSubject.next(users);
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
@@ -37,7 +38,7 @@ export class UserService {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
                 tap((user) => {
-                    const users = this.users.value.map((p) => {
+                    const users = this.usersSubject.value.map((p) => {
                         if (p.id === user.id) {
                             return user;
                         } else {
@@ -45,7 +46,7 @@ export class UserService {
                         }
                     });
                     this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
-                    this.users.next(users);
+                    this.usersSubject.next(users);
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
@@ -59,8 +60,8 @@ export class UserService {
             .pipe(
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
-                    const users = this.users.value.filter((p) => p.id !== userId);
-                    this.users.next(users);
+                    const users = this.usersSubject.value.filter((p) => p.id !== userId);
+                    this.usersSubject.next(users);
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);

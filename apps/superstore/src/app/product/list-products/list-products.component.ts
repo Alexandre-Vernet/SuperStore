@@ -24,7 +24,7 @@ export class ListProductsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.productsFiltered
+        this.productService.productsFiltered$
             .subscribe(products => this.products = products);
         this.setPagination();
     }

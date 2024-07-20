@@ -21,7 +21,7 @@ export class ListUsersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userService.users
+        this.userService.users$
             .subscribe((users) => {
                 this.users = users;
             });

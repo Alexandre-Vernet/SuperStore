@@ -24,7 +24,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.products
+        this.productService.products$
             .subscribe(products => {
                 // Get category from URL and filter products by category
                 const category = this.getCategoryFromUrl();

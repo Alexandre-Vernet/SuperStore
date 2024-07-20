@@ -24,7 +24,7 @@ export class ReviewDescriptionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.reviewService.reviews
+        this.reviewService.reviews$
             .subscribe((reviews) => {
                 this.reviews = reviews;
                 this.totalPage = Math.ceil(this.reviews.length / 10);
