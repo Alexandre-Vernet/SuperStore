@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Address } from '../address/address.entity';
 
 @Entity({ name: 'users', schema: 'public' })
@@ -6,8 +6,7 @@ export class User {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToMany(() => Address, (address) => address.id, { nullable: true })
-    @JoinColumn({ name: 'addresses_id' })
+    @OneToMany(() => Address, (address) => address.user, { nullable: true })
     addresses: Address[];
 
     @Column({ name: 'first_name' })

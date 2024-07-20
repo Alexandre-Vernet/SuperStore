@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressService } from '../../address/address.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'superstore-address',
@@ -23,7 +24,8 @@ export class AddressComponent implements OnInit {
     });
 
     constructor(
-        private readonly addressService: AddressService
+        private readonly addressService: AddressService,
+        private readonly authService: AuthService
     ) {
     }
 
@@ -35,9 +37,9 @@ export class AddressComponent implements OnInit {
                     this.selectedAddress = addresses[0];
 
                     this.formAddress.patchValue({
-                        company: addresses[0].company,
+                        company: addresses[0]?.company,
                         address: addresses[0]?.address,
-                        apartment: addresses[0].apartment,
+                        apartment: addresses[0]?.apartment,
                         country: addresses[0]?.country,
                         city: addresses[0]?.city,
                         zipCode: addresses[0]?.zipCode,
@@ -76,6 +78,7 @@ export class AddressComponent implements OnInit {
 
         this.addressService
             .createAddress({
+                user: this.authService.user,
                 company: address.company,
                 address: address.address,
                 apartment: address.apartment,

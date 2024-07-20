@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto } from '@superstore/interfaces';
-import { FindManyOptions, FindOneOptions, In, Repository } from 'typeorm';
+import { AddressDto, UserDto } from '@superstore/interfaces';
+import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Address } from './address.entity';
 import { faker } from '@faker-js/faker';
@@ -16,64 +16,14 @@ export class AddressService {
     ) {
     }
 
-    create(createOrderDto: Omit<AddressDto, 'id'>, userId: number): Promise<Address> {
-        const options = {
-            where: {
-                company: createOrderDto?.company,
-                address: createOrderDto.address,
-                apartment: createOrderDto?.apartment,
-                country: createOrderDto.country,
-                city: createOrderDto.city,
-                zipCode: createOrderDto.zipCode,
-                phone: createOrderDto.phone
-            }
-        };
-
-        // Check if address already exists
-        return this.addressRepository.findOne(options)
-            .then(address => {
-                // If address does not exist, create it
-                if (!address) {
-                    return this.addressRepository.save(createOrderDto)
-                        .then(createdAddress => {
-                            const option: FindOneOptions = {
-                                where: {
-                                    id: createdAddress.id
-                                }
-                            };
-
-                            // Get the address id
-                            return this.addressRepository.findOne(option)
-                                .then(address => {
-                                    // Link address to user
-                                    this.userService.linkAddress(userId, address.id)
-                                        .then(() => {
-                                            return createdAddress;
-                                        });
-                                    return createdAddress;
-                                })
-                                .catch(error => {
-                                    throw error;
-                                });
-                        })
-                        .catch(error => {
-                            throw error;
-                        });
-                }
-                return address;
-            });
+    create(createOrderDto: Omit<AddressDto, 'id'>): Promise<AddressDto> {
+       return this.addressRepository.save(createOrderDto)
     }
 
     findAllUserAddress(userId: number): Promise<AddressDto[]> {
-        return this.userService.findOne(userId)
-            .then(user => {
-                const option: FindManyOptions = {
-                    where: { id: In(user.addresses) }
-                };
-
-                return this.addressRepository.find(option);
-            });
+        return this.addressRepository.find({ where: { user: { id: userId } } });
     }
+
 
     findOne(id: number) {
         const options: FindOneOptions = {
@@ -94,9 +44,11 @@ export class AddressService {
 
     async migrate() {
         console.log('Migrating addresses...');
+        const user: UserDto = await this.userService.find(1);
 
         for (let i = 0; i < 25; i++) {
             const address: Omit<AddressDto, 'id'> = {
+                user,
                 address: faker.address.streetAddress(),
                 apartment: faker.address.secondaryAddress(),
                 city: faker.address.city(),
@@ -105,8 +57,7 @@ export class AddressService {
                 phone: `06${ faker.phone.number('########') }`
             };
 
-            const userId = faker.datatype.number({ min: 1, max: 25 });
-            await this.create(address, userId);
+            await this.create(address);
         }
     }
 }

@@ -11,7 +11,7 @@ export class AddressController {
     @UseInterceptors(AuthInterceptor)
     @Post()
     create(@Body() body: { address: AddressDto, userId: number }): Promise<AddressDto> {
-        return this.addressService.create(body.address, body.userId);
+        return this.addressService.create(body.address);
     }
 
     @HttpCode(200)

@@ -36,7 +36,7 @@ export class OrderService {
                 }
 
                 // Get user from order id
-                return this.userService.findOne(order.user.id)
+                return this.userService.find(order.user.id)
                     .then(user => {
                         this.emailService.sendEmailConfirmationOrder(order, user);
                         return order;

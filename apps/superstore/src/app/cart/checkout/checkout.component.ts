@@ -69,6 +69,7 @@ export class CheckoutComponent implements OnInit {
         // Get addresses of user
         this.addressService.getUserAddresses()
             .subscribe(addresses => {
+                console.log(addresses);
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
 
@@ -194,6 +195,7 @@ export class CheckoutComponent implements OnInit {
 
         this.addressService
             .createAddress({
+                user: this.authService.user,
                 company,
                 address,
                 apartment,

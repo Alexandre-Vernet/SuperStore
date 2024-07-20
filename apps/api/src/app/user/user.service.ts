@@ -12,7 +12,7 @@ export class UserService {
     ) {
     }
 
-    findAll(): Promise<User[]> {
+    async findAll(): Promise<User[]> {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
         }
@@ -25,18 +25,16 @@ export class UserService {
             });
     }
 
-    findOne(id: number) {
+    async find(id: number) {
         const options: FindOneOptions = {
-            where: { id }
+            where: { id },
+            relations: ['addresses']
         };
-        return this.userRepository.findOne(options)
-            .then(user => {
-                delete user.password;
-                return user;
-            });
+        const user = await this.userRepository.findOne(options);
+        delete user.password;
     }
 
-    update(id: number, updateUserDto: UserDto): Promise<UserDto> {
+    async update(id: number, updateUserDto: UserDto): Promise<UserDto> {
         // Check that the email is not already in use
         const options: FindOneOptions = {
             where: {
@@ -45,52 +43,21 @@ export class UserService {
             }
         };
 
-        return this.userRepository.findOne(options)
-            .then(emailAlreadyInUse => {
-                if (emailAlreadyInUse) {
-                    throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
-                }
+        const emailAlreadyInUse = await this.userRepository.findOne(options);
+        if (emailAlreadyInUse) {
+            throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
+        }
 
-                return this.userRepository
-                    .update(id, updateUserDto)
-                    .then(() => updateUserDto)
-                    .catch((err) => {
-                        throw new Error(err.message);
-                    });
-            })
+        return this.userRepository
+            .update(id, updateUserDto)
+            .then(() => updateUserDto)
+            .catch((err) => {
+                throw new Error(err.message);
+            });
 
     }
 
     remove(id: number) {
         return this.userRepository.delete(id);
-    }
-
-    linkAddress(userId: number, addressId: number): Promise<UserDto> {
-        const options: FindOneOptions = {
-            where: { id: userId }
-        };
-
-        return this.userRepository.findOne(options)
-            .then(user => {
-                if (user) {
-                    if (user.addresses.map(e => e.id).includes(addressId)) {
-                        return user;
-                    }
-
-                    return this.userRepository.update(userId, {
-                        addresses: [...user.addresses, { id: addressId }]
-                    })
-                        .then(() => {
-                            return this.userRepository.findOne(options)
-                                .then((user) => {
-                                    delete user.password;
-                                    return user;
-                                });
-                        })
-                        .catch((err) => {
-                            throw new Error(err.message);
-                        });
-                }
-            });
     }
 }

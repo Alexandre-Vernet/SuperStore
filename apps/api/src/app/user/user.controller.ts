@@ -21,7 +21,7 @@ export class UserController {
     @UseInterceptors(AuthInterceptor)
     @Get(':id')
     findOne(@Param('id') id: number) {
-        return this.usersService.findOne(id);
+        return this.usersService.find(id);
     }
 
     @HttpCode(200)
