@@ -22,7 +22,7 @@ export class AddressService {
     ) {
     }
 
-    createAddress(address: Omit<AddressDto, 'id'>): Observable<AddressDto> {
+    createAddress(address: AddressDto): Observable<AddressDto> {
         const userId = this.authService.user.id;
         return this.http.post<AddressDto>(this.addressUrl, { address, userId });
     }

@@ -13,7 +13,7 @@ export class AuthController {
 
     @HttpCode(200)
     @Post('sign-up')
-    signUp(@Body() createUserDto: Omit<UserDto, 'id'>): Promise<{ accessToken: string, user: UserDto }> {
+    signUp(@Body() createUserDto: UserDto): Promise<{ accessToken: string, user: UserDto }> {
         return this.authService.signUp(createUserDto);
     }
 

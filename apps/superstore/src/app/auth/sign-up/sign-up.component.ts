@@ -34,7 +34,7 @@ export class SignUpComponent {
             confirmPassword,
         } = this.formSignUp.value;
 
-        const user: Omit<UserDto, 'id'> = {
+        const user: UserDto = {
             addresses: [],
             firstName,
             lastName,

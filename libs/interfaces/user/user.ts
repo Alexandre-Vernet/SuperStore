@@ -1,7 +1,7 @@
 import { AddressDto } from '../address/address';
 
 export class UserDto {
-    id: number;
+    id?: number;
     addresses?: AddressDto[];
     firstName: string;
     lastName: string;

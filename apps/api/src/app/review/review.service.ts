@@ -13,7 +13,7 @@ export class ReviewService {
     ) {
     }
 
-    create(createReviewDto: Omit<ReviewDto, 'id'>): Promise<ReviewDto> {
+    create(createReviewDto:ReviewDto): Promise<ReviewDto> {
         return this.reviewRepository.save(createReviewDto)
             .then(review => {
                 return this.findOne(review.id);
@@ -59,7 +59,7 @@ export class ReviewService {
             user.id = faker.datatype.number({ min: 1, max: 100 });
             const product: ProductDto = new ProductDto();
             product.id = faker.datatype.number({ min: 1, max: 150 });
-            const review: Omit<ReviewDto, 'id'> = {
+            const review: ReviewDto = {
                 user: user,
                 product: product,
                 rating: faker.datatype.number({ min: 1, max: 5 }),

@@ -16,7 +16,7 @@ export class AddressService {
     ) {
     }
 
-    create(createOrderDto: Omit<AddressDto, 'id'>): Promise<AddressDto> {
+    create(createOrderDto: AddressDto): Promise<AddressDto> {
        return this.addressRepository.save(createOrderDto)
     }
 
@@ -47,7 +47,7 @@ export class AddressService {
         const user: UserDto = await this.userService.find(1);
 
         for (let i = 0; i < 25; i++) {
-            const address: Omit<AddressDto, 'id'> = {
+            const address: AddressDto = {
                 user,
                 address: faker.address.streetAddress(),
                 apartment: faker.address.secondaryAddress(),

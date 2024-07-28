@@ -18,7 +18,7 @@ export class AuthService {
     ) {
     }
 
-    async signUp(createUserDto: Omit<UserDto, 'id'>): Promise<{ accessToken: string, user: UserDto }> {
+    async signUp(createUserDto: UserDto): Promise<{ accessToken: string, user: UserDto }> {
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
@@ -131,7 +131,7 @@ export class AuthService {
         console.log('Migrating users...');
 
         for (let i = 0; i < 100; i++) {
-            const createUserDto: Omit<UserDto, 'id'> = {
+            const createUserDto: UserDto = {
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 email: faker.internet.email(),

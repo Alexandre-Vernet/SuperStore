@@ -61,18 +61,19 @@ export class NewsletterService {
             });
     }
 
-    updateSubscription(newsletterDto: NewsletterDto): Promise<NewsletterDto> {
+    async updateSubscription(newsletterDto: NewsletterDto): Promise<NewsletterDto> {
         const options: FindOneOptions = {
             where: { email: newsletterDto.email }
         };
 
-        return this.newsletterRepository.findOne(options)
-            .then((newsletter) => {
-                return this.newsletterRepository.update(newsletter.id, { isSubscribed: !newsletter.isSubscribed })
-                    .then(() => {
-                        newsletter.isSubscribed = !newsletter.isSubscribed;
-                        return newsletter;
-                    });
+        const newsletter = await this.newsletterRepository.findOne(options);
+        if (!newsletter) {
+            return this.storeEmailInDatabase(newsletterDto);
+        }
+        return this.newsletterRepository.update(newsletter, { isSubscribed: !newsletter.isSubscribed })
+            .then(() => {
+                newsletter.isSubscribed = !newsletter.isSubscribed;
+                return newsletter;
             });
     }
 

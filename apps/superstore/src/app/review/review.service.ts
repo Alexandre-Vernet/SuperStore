@@ -21,7 +21,7 @@ export class ReviewService {
     ) {
     }
 
-    addReview(review: Omit<ReviewDto, 'id'>): Observable<ReviewDto> {
+    addReview(review: ReviewDto): Observable<ReviewDto> {
         return this.http.post<ReviewDto>(this.reviewUrl, review);
     }
 

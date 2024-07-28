@@ -30,7 +30,7 @@ export class AuthService {
             );
     }
 
-    signUp(user: Omit<UserDto, 'id'>): Observable<{ accessToken: string, user: UserDto }> {
+    signUp(user:UserDto): Observable<{ accessToken: string, user: UserDto }> {
         return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
                 tap((res) => localStorage.setItem('accessToken', res.accessToken))
