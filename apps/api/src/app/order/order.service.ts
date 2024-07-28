@@ -2,46 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { Order } from './order.entity';
-import {
-    AddressDto,
-    DeliveryMethodType,
-    OrderDto, OrderProductDto,
-    OrderState,
-    UserDto
-} from '@superstore/interfaces';
-import { EmailService } from '../email/email.service';
+import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
 import { faker } from '@faker-js/faker';
-import { UserService } from '../user/user.service';
-import { AddressService } from '../address/address.service';
-import { ProductService } from '../product/product.service';
+import { OrderProductService } from '../order-product/order-product.service';
 
 @Injectable()
 export class OrderService {
     constructor(
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
-        private readonly emailService: EmailService,
-        private readonly userService: UserService,
-        private readonly addressService: AddressService,
-        private readonly productService: ProductService
+        private readonly orderProductService: OrderProductService,
     ) {
     }
 
-    create(createOrderDto: Omit<OrderDto, 'id'>): Promise<OrderDto> {
-        return this.orderRepository.save(createOrderDto)
-            .then((order: OrderDto) => {
-                const NODE_ENV = process.env.NODE_ENV;
-                if (NODE_ENV === 'development') {
-                    return order;
-                }
+    async create(order: OrderDto): Promise<OrderDto> {
+        const createdOrder = await this.orderRepository.save(order);
+        await this.orderProductService.create(order.orderProduct);
+        return createdOrder;
 
-                // Get user from order id
-                return this.userService.find(order.user.id)
-                    .then(user => {
-                        this.emailService.sendEmailConfirmationOrder(order, user);
-                        return order;
-                    })
-            });
+
+        // return this.userService.find(order.user.id)
+        //     .then(user => {
+        //         this.emailService.sendEmailConfirmationOrder(order, user);
+        //         return order;
+        //     });
     }
 
     findAll(): Promise<Order[]> {
@@ -53,15 +37,12 @@ export class OrderService {
         return this.orderRepository.find(options);
     }
 
-    findAllOrderProducts(): Promise<OrderDto[]> {
+    findAllOrderProducts(): Promise<Order[]> {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
         };
 
-        return this.orderRepository.find(options)
-            .then((orders: OrderDto[]) => {
-                return orders;
-            });
+        return this.orderRepository.find(options);
     }
 
     findOne(id: number) {
@@ -72,15 +53,14 @@ export class OrderService {
     }
 
     update(id: number, updateOrderDto: OrderDto) {
-        return this.orderRepository.update(id, updateOrderDto)
-            .then(() => this.findOne(id));
+        return this.orderRepository.update(id, updateOrderDto);
     }
 
     remove(id: number) {
         return this.orderRepository.delete(id);
     }
 
-    findLast(userId: number) {
+    findLastOrder(userId: number) {
         const options: FindOneOptions = {
             where: { userId },
             order: { id: 'DESC' }
@@ -88,7 +68,7 @@ export class OrderService {
         return this.orderRepository.findOne(options);
     }
 
-    findByUser(userId: number) {
+    findOrderByUser(userId: number) {
         const options: FindManyOptions = {
             where: { userId },
             order: { createdAt: 'DESC' }
@@ -144,7 +124,7 @@ export class OrderService {
             address.id = Math.floor(Math.random() * 10) + 1;
 
 
-            const order: Omit<OrderDto, 'id'> = {
+            const order: ProductDto = {
                 user,
                 address,
                 productIds,

@@ -32,6 +32,7 @@ export class UserService {
         };
         const user = await this.userRepository.findOne(options);
         delete user.password;
+        return user;
     }
 
     async update(id: number, updateUserDto: UserDto): Promise<UserDto> {

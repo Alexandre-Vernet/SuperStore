@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from '../../../order/order.service';
-import { AddressDto, OrderProductDto, OrderState, UserDto } from '@superstore/interfaces';
+import { AddressDto, OrderDto, OrderProductDto, OrderState, UserDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-create-order',
@@ -10,7 +10,7 @@ import { AddressDto, OrderProductDto, OrderState, UserDto } from '@superstore/in
 })
 export class CreateOrderComponent implements OnInit {
 
-    @Input() editOrder: OrderProductDto;
+    @Input() editOrder: OrderDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
@@ -41,11 +41,12 @@ export class CreateOrderComponent implements OnInit {
         if (this.editOrder?.id) {
             const user: UserDto = this.editOrder.user;
             const address: AddressDto = this.editOrder.address;
-            const products = this.editOrder.products;
+            const products = this.editOrder.orderProduct.map((orderProduct: OrderProductDto) => {
+                return orderProduct.product.map(product => product.name).join(', ');
+            });
 
             this.formUpdateOrder.setValue({
                 name: `${ user.firstName } ${ user.lastName }`,
-
                 id: this.editOrder.id,
                 address: `${ address.address }, ${ address.city }, ${ address.zipCode }, ${ address.country }`,
                 products,

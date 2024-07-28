@@ -1,13 +1,13 @@
 import { OrderState } from './state';
 import { AddressDto } from '../address/address';
 import { UserDto } from '../user/user';
-import { ProductDto } from '../product/product';
+import { OrderProductDto } from '../order-product/order-product';
 
 export class OrderDto {
-    id: number;
+    id?: number;
     user: UserDto;
     address: AddressDto;
-    products: ProductDto[];
+    orderProduct: OrderProductDto[];
     state: OrderState;
     deliveryMethod: string;
     paymentMethod: string;
@@ -16,8 +16,4 @@ export class OrderDto {
     taxesPrice: number;
     totalPrice: number;
     createdAt: Date;
-}
-
-export class OrderProductDto extends OrderDto {
-    productIds: number[];
 }

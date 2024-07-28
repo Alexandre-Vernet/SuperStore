@@ -23,7 +23,7 @@ export class OrderService {
     ) {
     }
 
-    confirmOrder(order: Omit<OrderDto, 'id'>): Observable<OrderDto> {
+    confirmOrder(order: OrderDto): Observable<OrderDto> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => {
@@ -50,8 +50,8 @@ export class OrderService {
             );
     }
 
-    getOrdersWithAddressAndUserAndProducts(): Observable<OrderProductDto[]> {
-        return this.http.get<OrderProductDto[]>(`${ this.orderUri }/products`)
+    getOrdersWithAddressAndUserAndProducts(): Observable<OrderDto[]> {
+        return this.http.get<OrderDto[]>(`${ this.orderUri }/products`)
             .pipe(
                 tap((orders) => {
                     return orders;

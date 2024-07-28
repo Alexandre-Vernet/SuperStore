@@ -99,7 +99,8 @@
                                 <!-- Products -->
                                 <h4 class="sr-only">Items</h4>
                                 <ul role="list" class="divide-y divide-gray-200">
-                                    <li *ngFor="let product of order.products" class="p-4 sm:p-6">
+                                  <ng-container *ngFor="let orderProducts of order.orderProduct">
+                                    <li *ngFor="let product of orderProducts.product" class="p-4 sm:p-6">
                                         <div class="flex items-center sm:items-start">
                                             <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-40 sm:w-40">
                                                 <a routerLink="/product/{{ product.slug }}">
@@ -147,7 +148,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="flex flex-1 justify-center pl-4">
-                                                    <a (click)="addToCart(product.id)"
+                                                    <a (click)="addToCart(product)"
                                                        class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
                                                         Buy again
                                                     </a>
@@ -155,6 +156,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                  </ng-container>
                                 </ul>
                             </div>
                         </div>

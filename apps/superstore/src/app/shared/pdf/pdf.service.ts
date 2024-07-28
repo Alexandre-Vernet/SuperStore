@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OrderDto, OrderProductDto } from '@superstore/interfaces';
-import { jsPDF } from "jspdf";
-import { forkJoin } from "rxjs";
-import autoTable from "jspdf-autotable";
-import { ProductService } from "../../product/product.service";
-import { DatePipe } from "@angular/common";
-import { AddressService } from "../../address/address.service";
+import { OrderDto } from '@superstore/interfaces';
+import { jsPDF } from 'jspdf';
+import { forkJoin } from 'rxjs';
+import autoTable from 'jspdf-autotable';
+import { ProductService } from '../../product/product.service';
+import { DatePipe } from '@angular/common';
+import { AddressService } from '../../address/address.service';
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +19,7 @@ export class PdfService {
     ) {
     }
 
-    downloadInvoice(order: OrderProductDto) {
+    downloadInvoice(order: OrderDto) {
         const doc = new jsPDF('p', 'pt');
         doc.setFont('helvetica');
 
@@ -53,7 +53,7 @@ export class PdfService {
                 doc.text(address.phone, 50, 270);
 
 
-                const productObservables = order.products.map((product) => {
+                const productObservables = order.orderProduct.map((product) => {
                     return this.productService.getProductFromId(product.id);
                 });
 

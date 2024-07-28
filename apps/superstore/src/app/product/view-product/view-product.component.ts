@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { ProductService } from "../product.service";
-import { Observable } from "rxjs";
-import { CartService } from "../../cart/cart.service";
-import { ProductDto, productSize, ProductSizeDto, ReviewDto } from "@superstore/interfaces";
-import { ReviewService } from "../../review/review.service";
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../product.service';
+import { Observable } from 'rxjs';
+import { CartService } from '../../cart/cart.service';
+import { ProductDto, productSize, ProductSizeDto, ReviewDto } from '@superstore/interfaces';
+import { ReviewService } from '../../review/review.service';
 
 @Component({
     selector: 'superstore-view-product',
@@ -60,8 +60,8 @@ export class ViewProductComponent implements OnInit {
         this.selectedSize = size;
     }
 
-    addToCart(productId: number) {
-        const size = this.selectedSize;
-        this.cartService.addToCart(productId, size);
+    addToCart(product: ProductDto) {
+        product.size = this.selectedSize;
+        this.cartService.addToCart(product);
     }
 }

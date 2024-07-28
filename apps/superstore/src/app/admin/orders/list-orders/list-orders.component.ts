@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderDto, OrderProductDto } from '@superstore/interfaces';
-import { OrderService } from "../../../order/order.service";
-import { SearchBar } from "../../search-bar/search-bar";
+import { OrderDto } from '@superstore/interfaces';
+import { OrderService } from '../../../order/order.service';
+import { SearchBar } from '../../search-bar/search-bar';
 
 @Component({
     selector: 'superstore-orders',
@@ -10,8 +10,8 @@ import { SearchBar } from "../../search-bar/search-bar";
 })
 export class ListOrdersComponent implements OnInit {
 
-    orders: OrderProductDto[];
-    editedOrder: OrderProductDto;
+    orders: OrderDto[];
+    editedOrder: OrderDto;
     searchBar: string;
     showModalAddProduct = false;
 
@@ -41,13 +41,13 @@ export class ListOrdersComponent implements OnInit {
     }
 
 
-    editOrder(order: OrderProductDto) {
+    editOrder(order: OrderDto) {
         this.editedOrder = {
             id: order.id,
             user: order.user,
+            orderProduct: order.orderProduct,
             state: order.state,
             address: order.address,
-            productIds: order.products.map(product => product.id),
             deliveryMethod: order.deliveryMethod,
             paymentMethod: order.paymentMethod,
             subTotalPrice: order.subTotalPrice,
@@ -55,7 +55,6 @@ export class ListOrdersComponent implements OnInit {
             taxesPrice: order.taxesPrice,
             totalPrice: order.totalPrice,
             createdAt: order.createdAt,
-            products: order.products,
         };
 
         this.openModal();

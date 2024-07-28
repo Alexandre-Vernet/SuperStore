@@ -14,7 +14,7 @@ export class ProductService {
     ) {
     }
 
-    create(createProductDto: Omit<ProductDto, 'id'>): Promise<Product> {
+    create(createProductDto: ProductDto): Promise<Product> {
         return this.productRepository.save(createProductDto);
     }
 
@@ -73,7 +73,7 @@ export class ProductService {
             }
 
             const productName = faker.commerce.productName();
-            const product: Omit<ProductDto, 'id'> = {
+            const product: ProductDto = {
                 name: productName,
                 slug: productName.replace(/ /g, '-').toLowerCase(),
                 description: faker.commerce.productDescription(),

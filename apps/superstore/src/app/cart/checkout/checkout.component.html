@@ -290,12 +290,12 @@
                         <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
                             <h3 class="sr-only">Items in your cart</h3>
                             <ul role="list" class="divide-y divide-gray-200">
-                                <ng-container *ngFor="let item of cart">
+                                <ng-container *ngFor="let product of cart">
                                     <li class="flex py-6 px-4 sm:px-6">
                                         <div class="flex-shrink-0">
-                                            <a routerLink="/product/{{ item?.slug }}">
-                                                <img [src]="item?.images[0]"
-                                                     [alt]="item?.name" class="w-20 rounded-md">
+                                            <a routerLink="/product/{{ product?.slug }}">
+                                                <img [src]="product?.images[0]"
+                                                     [alt]="product?.name" class="w-20 rounded-md">
                                             </a>
                                         </div>
 
@@ -303,23 +303,23 @@
                                             <div class="flex">
                                                 <div class="min-w-0 flex-1">
                                                     <h4 class="text-sm">
-                                                        <a routerLink="/product/{{ item?.slug }}"
-                                                           class="font-medium text-gray-700 hover:text-gray-800">{{ item?.name }}</a>
+                                                        <a routerLink="/product/{{ product?.slug }}"
+                                                           class="font-medium text-gray-700 hover:text-gray-800">{{ product?.name }}</a>
                                                     </h4>
                                                     <p class="mt-1 text-sm text-gray-500">
-                                                        {{ item?.size?.name }}
+                                                        {{ product?.size?.name }}
                                                     </p>
                                                     <p class="mt-1 text-sm font-medium text-gray-900">
-                                                        {{ item?.price | convertCurrency }}
+                                                        {{ product?.price | convertCurrency }}
                                                     </p>
                                                 </div>
 
                                                 <div class="ml-4">
                                                     <label for="quantity-1" class="sr-only">Quantity, Basic Tee</label>
                                                     <select
-                                                            [(ngModel)]="item.quantity"
+                                                            [(ngModel)]="product.quantity"
                                                             [ngModelOptions]="{ standalone: true }"
-                                                            (change)="updateQuantity(item, $event)"
+                                                            (change)="updateQuantity(product, $event)"
                                                             id="quantity-1" name="quantity-1"
                                                             class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                                                         <option *ngFor="let value of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
@@ -328,7 +328,7 @@
                                                 </div>
 
                                                 <div class="ml-4 flow-root flex-shrink-0">
-                                                    <button (click)="removeFromCart(item)"
+                                                    <button (click)="removeFromCart(product)"
                                                             type="button"
                                                             class="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500">
                                                         <span class="sr-only">Remove</span>

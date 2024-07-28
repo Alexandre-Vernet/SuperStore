@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AppComponent } from "../../app.component";
-import { CartDto, UserDto } from "@superstore/interfaces";
+import { OrderProductDto, UserDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-navbar',
@@ -10,7 +10,7 @@ import { CartDto, UserDto } from "@superstore/interfaces";
 export class NavbarComponent {
 
     user: UserDto;
-    cart: CartDto[] = [];
+    cart: OrderProductDto[] = [];
 
     toggleResponsiveMenu(): void {
         AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;

@@ -51,7 +51,7 @@ export class CreateProductComponent implements OnInit {
             images
         } = this.formAddProduct.value;
 
-        const product: Omit<ProductDto, 'id'> = {
+        const product: ProductDto = {
             name,
             slug: name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-'), /*Remove all special characters and replace spaces with dash*/
             description,
@@ -77,7 +77,7 @@ export class CreateProductComponent implements OnInit {
         }
     }
 
-    addProduct(product: Omit<ProductDto, 'id'>) {
+    addProduct(product: ProductDto) {
         this.productService.addProduct(product).subscribe(() => this.resetForm());
     }
 

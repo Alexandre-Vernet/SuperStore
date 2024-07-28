@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
     AddressDto,
-    CartDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderDto,
-    OrderState,
+    OrderDto, OrderProductDto,
+    OrderState, ProductDto,
     PromotionDto,
     PromotionWithStatus
 } from '@superstore/interfaces';
@@ -25,7 +24,7 @@ import { PromotionService } from '../../promotion/promotion.service';
 })
 export class CheckoutComponent implements OnInit {
 
-    cart: CartDto[] = [];
+    cart: ProductDto[] = [];
     addresses: AddressDto[] = [];
     deliveryMethods = deliveryMethods;
     shippingPrice = this.deliveryMethods[0].price;
@@ -69,7 +68,6 @@ export class CheckoutComponent implements OnInit {
         // Get addresses of user
         this.addressService.getUserAddresses()
             .subscribe(addresses => {
-                console.log(addresses);
                 this.addresses = addresses;
                 this.selectedAddress = addresses[0];
 
@@ -116,20 +114,17 @@ export class CheckoutComponent implements OnInit {
         this.selectedAddress = null;
     }
 
-    updateQuantity(item: CartDto, event: Event) {
+    updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
     }
 
-    removeFromCart(product: CartDto) {
+    removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
     }
 
     subTotalPrice(): number {
-        let total = 0;
-        this.cart.map(item => {
-            total += item.price * item.quantity;
-        });
+        const total = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
         return Cart.convertTwoDecimals(total);
     }
 
@@ -177,12 +172,23 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         } = this.formAddress.value;
 
-        const user = this.authService.user;
+        const orderTest: OrderDto = new OrderDto();
+        orderTest.id = 2;
 
-        const order: Omit<OrderDto, 'id'> = {
+        const orderProduct: OrderProductDto[] = this.cart.map(product => ({
+            order: orderTest,
+            product: [product],
+        }));
+        // orderProduct.forEach(orderProduct => {
+        //     delete orderProduct.id
+        //     delete orderProduct.order;
+        // });
+
+        const user = this.authService.user;
+        const order: OrderDto = {
             user,
             address: this.selectedAddress,
-            products: this.cart,
+            orderProduct,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
@@ -210,7 +216,8 @@ export class CheckoutComponent implements OnInit {
             });
     }
 
-    confirmOrder(order: Omit<OrderDto, 'id'>) {
+    confirmOrder(order: OrderDto) {
+        console.log(order);
         this.orderService
             .confirmOrder(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));

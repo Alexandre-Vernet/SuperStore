@@ -11,8 +11,8 @@ export class OrderController {
     }
 
     @Post()
-    create(@Body() createOrderDto: OrderDto): Promise<OrderDto> {
-        return this.orderService.create(createOrderDto);
+    create(@Body() order: OrderDto): Promise<OrderDto> {
+        return this.orderService.create(order);
     }
 
     @UseInterceptors(AuthInterceptor)
@@ -31,13 +31,13 @@ export class OrderController {
     @UseInterceptors(AuthInterceptor)
     @Get('user/:userId')
     findByUser(@Param('userId') userId: number) {
-        return this.orderService.findByUser(userId);
+        return this.orderService.findOrderByUser(userId);
     }
 
     @UseInterceptors(AuthInterceptor)
     @Get(':userId/last')
     findLast(@Param('userId') userId: number) {
-        return this.orderService.findLast(userId);
+        return this.orderService.findLastOrder(userId);
     }
 
     @UseInterceptors(AuthInterceptor)

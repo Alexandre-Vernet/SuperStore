@@ -25,7 +25,7 @@ export class ProductService {
         this.getAllProducts().subscribe();
     }
 
-    addProduct(product: Omit<ProductDto, 'id'>): Observable<ProductDto> {
+    addProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.post<ProductDto>(this.productUri, product)
             .pipe(
                 tap((product) => {

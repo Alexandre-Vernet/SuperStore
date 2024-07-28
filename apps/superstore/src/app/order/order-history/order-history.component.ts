@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from '../order.service';
-import { OrderProductDto, OrderState, ProductDto, ProductSizeDto } from '@superstore/interfaces';
+import { OrderDto, OrderState, ProductDto } from '@superstore/interfaces';
 import { ProductService } from '../../product/product.service';
 import { CartService } from '../../cart/cart.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -13,7 +13,7 @@ import { PdfService } from '../../shared/pdf/pdf.service';
     styleUrls: ['./order-history.component.scss'],
 })
 export class OrderHistoryComponent implements OnInit {
-    orders: OrderProductDto[];
+    orders: OrderDto[];
     displayOrderOptions = false;
     productToReview: ProductDto;
 
@@ -28,20 +28,19 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        const ordersWithProducts: OrderProductDto[] = [];
-        this.orderService.getOrdersPerUser()
-            .subscribe((orders) => {
-                orders.map((order) => {
-                    this.productService.getProductFromIds(order.products.map(product => product.id))
-                        .subscribe(product => {
-                            ordersWithProducts.push({
-                                ...order,
-                                productIds: product.map(product => product.id),
-                            });
-                        });
-                });
-                this.orders = ordersWithProducts;
-            });
+        // const orderProduct: OrderProductDto[] = [];
+        // this.orderService.getOrdersPerUser()
+        //     .subscribe((orders) => {
+        //         orders.map((order) => {
+        //             this.productService.getProductFromIds(order.orderProduct.map(product => product.id))
+        //                 .subscribe(product => {
+        //                     orderProduct.push({
+        //                         ...order,
+        //                     });
+        //                 });
+        //         });
+        //         this.orders = orderProduct;
+        //     });
     }
 
     toggleOrderOption() {
@@ -67,16 +66,16 @@ export class OrderHistoryComponent implements OnInit {
         return `assets/order-state/${ state.toLowerCase() }.png`;
     }
 
-    downloadInvoice(order: OrderProductDto) {
+    downloadInvoice(order: OrderDto) {
         return this.pdfService.downloadInvoice(order);
     }
 
-    addToCart(productId: number) {
-        const defaultSize: ProductSizeDto = {
+    addToCart(product: ProductDto) {
+        product.size = {
             name: 'Small',
             tag: 'S',
         };
-        this.cartService.addToCart(productId, defaultSize);
+        this.cartService.addToCart(product);
         this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
     }
 }

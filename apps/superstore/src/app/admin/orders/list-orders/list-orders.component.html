@@ -63,9 +63,11 @@
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.address.address }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                                 <ul>
-                                    <li *ngFor="let product of order.products">
+                                  <ng-container *ngFor="let orderProducts of order.orderProduct">
+                                    <li *ngFor="let product of orderProducts.product">
                                         {{ product.name }}
                                     </li>
+                                  </ng-container>
                                 </ul>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">

@@ -1,12 +1,11 @@
-export * from './cart/cart';
-export * from './cart/create-cart';
-
 export * from './review/review';
 
 export * from './notifications/notifications';
 
 export * from './order/order';
 export * from './order/state';
+
+export * from './order-product/order-product';
 
 
 export * from './product/product';

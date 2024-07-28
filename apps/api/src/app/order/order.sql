@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS public.orders
     id              SERIAL PRIMARY KEY,
     user_id         INTEGER                 NOT NULL,
     address_id      INTEGER                 NOT NULL,
-    product_ids     INTEGER[]               NOT NULL,
     state           TEXT                    NOT NULL,
     delivery_method TEXT                    NOT NULL,
     payment_method  TEXT                    NOT NULL,
