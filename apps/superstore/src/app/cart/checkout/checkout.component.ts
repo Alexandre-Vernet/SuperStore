@@ -6,7 +6,6 @@ import {
     OrderDto, OrderProductDto,
     OrderState, ProductDto,
     PromotionDto,
-    PromotionWithStatus
 } from '@superstore/interfaces';
 import { Cart } from '../cart';
 import { CartService } from '../cart.service';
@@ -46,7 +45,7 @@ export class CheckoutComponent implements OnInit {
     formPromotion = new FormGroup({
         promotionCode: new FormControl('', [Validators.required])
     });
-    promotion: PromotionWithStatus;
+    promotion: PromotionDto;
 
     constructor(
         private readonly cartService: CartService,

@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '../order/order.entity';
 import { Product } from '../product/product.entity';
 
@@ -11,7 +11,11 @@ export class OrderProduct {
     @JoinColumn({ name: 'order_id' })
     order: Order;
 
-    @OneToMany(() => Product, product => product.id)
-    @JoinTable({name: 'product_id'})
+    @ManyToMany(() => Product, product => product.orderProducts)
+    @JoinTable({
+        name: 'order_product_products',
+        joinColumn: { name: 'order_product_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'product_id', referencedColumnName: 'id' }
+    })
     products: Product[];
 }

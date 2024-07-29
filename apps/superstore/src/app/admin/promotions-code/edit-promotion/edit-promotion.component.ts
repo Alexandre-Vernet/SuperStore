@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
+import { PromotionDto } from "@superstore/interfaces";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { PromotionService } from "../../../promotion/promotion.service";
 
@@ -49,7 +49,7 @@ export class EditPromotionComponent implements OnInit {
     }
 
     addPromotion() {
-        const promotion: CreatePromotionDto = {
+        const promotion: PromotionDto = {
             label: this.formUpdatePromotion.value.label,
             amount: this.formUpdatePromotion.value.amount,
             count: this.formUpdatePromotion.value.count,

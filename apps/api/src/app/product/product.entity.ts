@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderProduct } from '../order-product/order-product.entity';
 
 @Entity({ name: 'products', schema: 'public' })
@@ -6,7 +6,7 @@ export class Product {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => OrderProduct, orderProduct => orderProduct.id)
+    @ManyToMany(() => OrderProduct, orderProduct => orderProduct.products)
     orderProducts: OrderProduct[];
 
     @Column({ type: 'text' })

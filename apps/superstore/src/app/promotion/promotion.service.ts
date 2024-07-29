@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { catchError, tap } from "rxjs";
-import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
+import { PromotionDto } from '@superstore/interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,7 @@ export class PromotionService {
     ) {
     }
 
-    addPromotion(promotion: CreatePromotionDto) {
+    addPromotion(promotion: PromotionDto) {
         return this.http.post(`${ this.promotionCodeUrl }`, promotion)
             .pipe(
                 tap(() => {

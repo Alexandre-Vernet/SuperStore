@@ -9,5 +9,5 @@ export class ProductDto {
     categories: string[];
     images: string[];
     quantity?: number;
-    size?: ProductSizeDto
+    size?: ProductSizeDto;
 }

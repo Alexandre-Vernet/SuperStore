@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
 import { PromotionService } from './promotion.service';
-import { CreatePromotionDto, PromotionDto } from "@superstore/interfaces";
+import { PromotionDto } from "@superstore/interfaces";
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { AdminInterceptor } from "../auth/admin.interceptor";
 
@@ -12,7 +12,7 @@ export class PromotionController {
     @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Post()
-    create(@Body() createPromotionDto: CreatePromotionDto) {
+    create(@Body() createPromotionDto: PromotionDto) {
         return this.promotionService.create(createPromotionDto);
     }
 

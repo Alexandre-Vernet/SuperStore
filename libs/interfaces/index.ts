@@ -30,4 +30,3 @@ export * from './email/transporter'
 
 
 export * from './promotion/promotion';
-export * from './promotion/create-promotion';
