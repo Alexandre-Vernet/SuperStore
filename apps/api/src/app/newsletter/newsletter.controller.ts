@@ -13,12 +13,12 @@ export class NewsletterController {
 
     @Get('is-subscribed/:email')
     isUserSubscribed(@Param('email') email: string) {
-        return this.newsletterService.isUserSubscribed(email);
+        return this.newsletterService.isUserSubscribedToNewsletter(email);
     }
 
     @Post()
-    storeEmailInDatabase(@Body() createNewsletterDto: NewsletterDto) {
-        return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
+    subscribeUserToNewsletter(@Body() createNewsletterDto: NewsletterDto) {
+        return this.newsletterService.subscribeUserToNewsletter(createNewsletterDto);
     }
 
     @UseInterceptors(AuthInterceptor)

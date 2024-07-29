@@ -22,7 +22,7 @@ export class NewsletterService {
         return this.http.get<boolean>(`${ this.newsletterUrl }/is-subscribed/${ email }`);
     }
 
-    storeEmailInDatabase(email: string): Observable<void> {
+    subscribeUserToNewsletter(email: string): Observable<void> {
         const newsletter: NewsletterDto = {
             email,
             isSubscribed: true,
@@ -39,12 +39,7 @@ export class NewsletterService {
             );
     }
 
-    updateSubscription(email: string, isSubscribed: boolean): Observable<void> {
-        const newsletter: NewsletterDto = {
-            email,
-            isSubscribed,
-        };
-
+    updateSubscription(newsletter: NewsletterDto): Observable<void> {
         return this.http.put<void>(`${ this.newsletterUrl }`, newsletter)
             .pipe(
                 tap(() => {

@@ -7,15 +7,16 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'superstore-footer',
     templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss'],
+    styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
 
-    currentYear = this.getCurrentYear();
+    currentYear = new Date().getFullYear();
     formEmailNewsletter = new FormGroup({
-        email: new FormControl('', [Validators.required, Validators.email]),
+        email: new FormControl('', [Validators.required, Validators.email])
     });
     productCategories: string[] = [];
+    MAX_CATEGORIES = 10;
 
     constructor(
         private readonly newsletterService: NewsletterService,
@@ -28,13 +29,13 @@ export class FooterComponent implements OnInit {
         this.productService.products$
             .subscribe(products => {
                 products.map(product => {
-                    product?.categories?.map(c => {
-                        if (!this.productCategories.includes(c)) {
-                            this.productCategories.push(c);
+                    product?.categories?.forEach((category) => {
+                        if (!this.productCategories.includes(category) && this.productCategories.length < this.MAX_CATEGORIES) {
+                            this.productCategories.push(category);
                         }
                     });
                 });
-            })
+            });
     }
 
     filterProductsByCategory(category: string) {
@@ -44,12 +45,11 @@ export class FooterComponent implements OnInit {
     submitEmailNewsletter() {
         if (this.formEmailNewsletter.valid) {
             const email = this.formEmailNewsletter.value.email;
-            this.newsletterService.storeEmailInDatabase(email)
-                .subscribe(() => this.formEmailNewsletter.reset());
+            this.newsletterService.subscribeUserToNewsletter(email)
+                .subscribe({
+                    next: () => this.formEmailNewsletter.reset(),
+                    error: (err) => this.formEmailNewsletter.setErrors({ error: err.error.message })
+                });
         }
-    }
-
-    getCurrentYear(): number {
-        return new Date().getFullYear();
     }
 }

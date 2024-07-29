@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../auth/auth.service";
-import { UserDto } from "@superstore/interfaces";
+import { NewsletterDto, UserDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../user.service";
 import { NewsletterService } from "../../newsletter/newsletter.service";
@@ -43,12 +43,20 @@ export class ProfileComponent implements OnInit {
     }
 
     toggleNewsletterSubscription() {
-        const isSubscribedToNewsletter = this.formUser.value.isSubscribedToNewsletter;
+        this.formUser.patchValue({ isSubscribedToNewsletter: !this.formUser.value.isSubscribedToNewsletter });
+        const isSubscribed = this.formUser.value.isSubscribedToNewsletter;
         const email = this.user.email;
-        this.newsletterService.updateSubscription(email, isSubscribedToNewsletter)
-            .subscribe(() => {
-                this.userIsSubscribedToNewsletter();
-            });
+
+
+        const newsletter: NewsletterDto = {
+            email,
+            isSubscribed,
+        };
+
+        console.log(newsletter.isSubscribed);
+
+        this.newsletterService.updateSubscription(newsletter)
+            .subscribe();
     }
 
     getCurrency() {

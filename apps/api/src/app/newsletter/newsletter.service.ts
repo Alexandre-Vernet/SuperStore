@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Repository } from "typeorm";
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Newsletter } from "./newsletter.entity";
-import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
-import { EmailService } from "../email/email.service";
+import { Newsletter } from './newsletter.entity';
+import { NewsletterDto, SendNewsletterDto } from '@superstore/interfaces';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class NewsletterService {
@@ -15,7 +15,14 @@ export class NewsletterService {
     ) {
     }
 
-    storeEmailInDatabase(createNewsletterDto: NewsletterDto): Promise<NewsletterDto> {
+    async subscribeUserToNewsletter(createNewsletterDto: NewsletterDto): Promise<NewsletterDto> {
+        const options: FindOneOptions = {
+            where: { email: createNewsletterDto.email }
+        };
+        const newsletter = await this.newsletterRepository.findOne(options);
+        if (newsletter) {
+            throw new ConflictException('This email is already subscribed to our newsletter.');
+        }
         createNewsletterDto.isSubscribed = true;
         return this.newsletterRepository.save(createNewsletterDto);
     }
@@ -48,33 +55,26 @@ export class NewsletterService {
         return this.newsletterRepository.delete(id);
     }
 
-    isUserSubscribed(email: string) {
+    async isUserSubscribedToNewsletter(email: string) {
         const options: FindOneOptions = {
             where: { email }
         };
-        return this.newsletterRepository.findOne(options)
-            .then(newsletter => {
-                if (newsletter) {
-                    return newsletter.isSubscribed;
-                }
-                return false;
-            });
+        const newsletter = await this.newsletterRepository.findOne(options);
+        if (!newsletter) {
+            return false;
+        }
+        return newsletter.isSubscribed;
     }
 
-    async updateSubscription(newsletterDto: NewsletterDto): Promise<NewsletterDto> {
+    async updateSubscription(newsletterToUpdate: NewsletterDto) {
         const options: FindOneOptions = {
-            where: { email: newsletterDto.email }
+            where: { email: newsletterToUpdate.email },
+
         };
 
         const newsletter = await this.newsletterRepository.findOne(options);
-        if (!newsletter) {
-            return this.storeEmailInDatabase(newsletterDto);
-        }
-        return this.newsletterRepository.update(newsletter, { isSubscribed: !newsletter.isSubscribed })
-            .then(() => {
-                newsletter.isSubscribed = !newsletter.isSubscribed;
-                return newsletter;
-            });
+        newsletter.isSubscribed = newsletterToUpdate.isSubscribed;
+        return this.newsletterRepository.update(newsletter.id, newsletter);
     }
 
     async migrate() {
@@ -86,7 +86,7 @@ export class NewsletterService {
                 isSubscribed: faker.datatype.boolean(),
             };
 
-            await this.storeEmailInDatabase(newsletter);
+            await this.subscribeUserToNewsletter(newsletter);
         }
     }
 }
