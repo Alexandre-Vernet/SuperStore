@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { UserDto } from '@superstore/interfaces';
 import { environment } from '../../environments/environment';
 import { NotificationsService } from '../shared/notifications/notifications.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class UserService {
     constructor(
         private readonly http: HttpClient,
         private readonly notificationsService: NotificationsService,
+        private readonly authService: AuthService
     ) {
         this.getUsers().subscribe();
     }
@@ -45,8 +47,15 @@ export class UserService {
                             return p;
                         }
                     });
-                    this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
+
                     this.usersSubject.next(users);
+
+                    if (user.id === this.authService.user.id) {
+                        this.authService.user = user;
+                        this.notificationsService.showSuccessNotification('Success', 'Your profile has been updated');
+                    } else {
+                        this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
+                    }
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
@@ -59,9 +68,15 @@ export class UserService {
         return this.http.delete<void>(`${ this.userUrl }/${ userId }`)
             .pipe(
                 tap(() => {
-                    this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
                     const users = this.usersSubject.value.filter((p) => p.id !== userId);
                     this.usersSubject.next(users);
+
+                    if (userId === this.authService.user.id) {
+                        this.authService.signOut();
+                        this.notificationsService.showSuccessNotification('Success', 'Your account has been deleted');
+                    } else {
+                        this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
+                    }
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);

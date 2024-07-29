@@ -46,9 +46,6 @@ export class SecurityComponent {
 
     deleteAccount() {
         this.userService.deleteUser(this.authService.user.id)
-            .subscribe(() => {
-                this.authService.signOut();
-                this.router.navigateByUrl('/');
-            });
+            .subscribe(() => this.router.navigateByUrl('/'));
     }
 }
