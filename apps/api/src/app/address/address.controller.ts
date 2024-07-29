@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseInterce
 import { AddressService } from './address.service';
 import { AddressDto } from "@superstore/interfaces";
 import { AuthInterceptor } from "../auth/auth.interceptor";
+import { AdminInterceptor } from '../auth/admin.interceptor';
 
 @Controller('address')
 export class AddressController {
@@ -14,7 +15,7 @@ export class AddressController {
         return this.addressService.create(body.address);
     }
 
-    @HttpCode(200)
+    @UseInterceptors(AuthInterceptor)
     @Post('/find-all')
     findAllUserAddress(@Body() { userId }: { userId: number }) {
         return this.addressService.findAllUserAddress(userId);

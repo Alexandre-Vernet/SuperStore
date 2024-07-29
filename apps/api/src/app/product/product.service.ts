@@ -4,6 +4,7 @@ import { FindOneOptions, In, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
+import { AdminGuard } from '../../../../superstore/src/app/admin/admin.guard';
 
 @Injectable()
 export class ProductService {
@@ -52,14 +53,6 @@ export class ProductService {
         };
 
         return this.productRepository.findOne(options);
-    }
-
-    getProductsByIds(ids: number[]) {
-        return this.productRepository.find({
-            where: {
-                id: In(ids)
-            }
-        });
     }
 
     async migrate() {

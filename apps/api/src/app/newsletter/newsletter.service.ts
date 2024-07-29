@@ -29,7 +29,7 @@ export class NewsletterService {
 
     sendNewsletter(newsletter: SendNewsletterDto) {
         // Send newsletter to all subscribed users
-        this.findAll()
+        this.newsletterRepository.find()
             .then(newsletters => {
                 newsletters.forEach(n => {
                     if (n.isSubscribed) {
@@ -38,21 +38,6 @@ export class NewsletterService {
                 });
                 return this.emailService.sendNewsletter(newsletter);
             });
-    }
-
-    findAll() {
-        return this.newsletterRepository.find();
-    }
-
-    findOne(id: number) {
-        const options: FindOneOptions = {
-            where: { id }
-        };
-        return this.newsletterRepository.findOne(options);
-    }
-
-    remove(id: number) {
-        return this.newsletterRepository.delete(id);
     }
 
     async isUserSubscribedToNewsletter(email: string) {

@@ -9,7 +9,6 @@ export class ProductController {
     constructor(private readonly productService: ProductService) {
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Post()
     create(@Body() createProductDto: ProductDto) {
@@ -34,11 +33,6 @@ export class ProductController {
         return this.productService.findAll();
     }
 
-    @Post('get-by-ids')
-    getProductsByIds(@Body('ids') ids: number[]) {
-        return this.productService.getProductsByIds(ids);
-    }
-
     @Get(':id')
     findOne(@Param('id') id: number) {
         return this.productService.findOne(id);
@@ -49,14 +43,12 @@ export class ProductController {
         return this.productService.findBySlug(slug);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() updateProductDto: ProductDto) {
         return this.productService.update(id, updateProductDto);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {

@@ -1,16 +1,7 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete, UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { ReviewDto } from "@superstore/interfaces";
-import { AuthInterceptor } from "../auth/auth.interceptor";
-import { Product } from '../product/product.entity';
+import { ReviewDto } from '@superstore/interfaces';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 
 @Controller('review')
 export class ReviewController {

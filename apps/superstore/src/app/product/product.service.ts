@@ -146,10 +146,6 @@ export class ProductService {
         return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`);
     }
 
-    getProductFromIds(ids: number[]): Observable<ProductDto[]> {
-        return this.http.post<ProductDto[]>(`${ this.productUri }/get-by-ids`, { ids });
-    }
-
     updateProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.put<ProductDto>(`${ this.productUri }/${ product.id }`, product)
             .pipe(
