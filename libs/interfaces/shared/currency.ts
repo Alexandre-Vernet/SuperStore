@@ -1,3 +1,5 @@
+import { Currency } from '../../../apps/superstore/src/app/shared/currency/currency';
+
 export class CurrencyDto {
     name: string;
     flag: string;
@@ -5,11 +7,11 @@ export class CurrencyDto {
 
 export const currencies: CurrencyDto[] = [
     {
-        name: 'EUR',
+        name: Currency.EUR,
         flag: 'assets/icons/flags/EU.png'
     },
     {
-        name: 'USD',
+        name: Currency.USD,
         flag: 'assets/icons/flags/US.png'
     }
 ];

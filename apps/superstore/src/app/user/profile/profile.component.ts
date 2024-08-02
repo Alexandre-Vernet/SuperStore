@@ -4,6 +4,7 @@ import { NewsletterDto, UserDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../user.service";
 import { NewsletterService } from "../../newsletter/newsletter.service";
+import { Currency } from '../../shared/currency/currency';
 
 @Component({
     selector: 'superstore-profile',
@@ -12,13 +13,15 @@ import { NewsletterService } from "../../newsletter/newsletter.service";
 })
 export class ProfileComponent implements OnInit {
 
+    protected readonly Currency = Currency;
     user: UserDto;
+
     formUser = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
         lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
         email: new FormControl('', [Validators.required, Validators.email]),
         isSubscribedToNewsletter: new FormControl(false),
-        currency: new FormControl(localStorage.getItem('currency') || 'USD'),
+        currency: new FormControl(localStorage.getItem('currency') || Currency.USD),
     });
 
     constructor(
@@ -63,12 +66,12 @@ export class ProfileComponent implements OnInit {
 
     toggleCurrency() {
         const currency = this.formUser.value.currency;
-        if (currency === 'EUR') {
-            localStorage.setItem('currency', 'USD');
-            this.formUser.patchValue({ currency: 'USD' })
+        if (currency === Currency.USD) {
+            localStorage.setItem('currency', Currency.USD);
+            this.formUser.patchValue({ currency: Currency.USD })
         } else {
-            localStorage.setItem('currency', 'EUR');
-            this.formUser.patchValue({ currency: 'EUR' })
+            localStorage.setItem('currency', Currency.EUR);
+            this.formUser.patchValue({ currency: Currency.EUR })
         }
     }
 
