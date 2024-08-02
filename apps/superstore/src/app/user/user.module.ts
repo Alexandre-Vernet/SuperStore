@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
 import { SecurityComponent } from './security/security.component';
 import { AddressComponent } from './address/address.component';
+import { ErrorModule } from '../error/error.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,6 @@ import { AddressComponent } from './address/address.component';
     SecurityComponent,
     AddressComponent,
   ],
-  imports: [CommonModule, UserRoutingModule, ReactiveFormsModule],
+    imports: [CommonModule, UserRoutingModule, ReactiveFormsModule, ErrorModule]
 })
 export class UserModule {}

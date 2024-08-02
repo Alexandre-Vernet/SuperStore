@@ -43,7 +43,7 @@ export class PromotionService {
         }
         const result = await this.promotionRepository.findOne(options);
         if (!result) {
-            throw new NotFoundException(`Promotion with label ${ label } not found`)
+            throw new NotFoundException('Promotion not found')
         }
         return result;
     }

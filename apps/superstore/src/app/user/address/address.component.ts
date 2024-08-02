@@ -93,9 +93,11 @@ export class AddressComponent implements OnInit {
                     this.selectAddress(newAddress);
                     return;
                 }
+                const index = this.addresses.findIndex(a => a.id === newAddress.id);
                 this.addresses.find(a => a.id === newAddress.id) ?
-                    this.addresses[this.addresses.findIndex(a => a.id === newAddress.id)] = newAddress :
+                    this.addresses[index] = newAddress :
                     this.addresses.push(newAddress);
+                this.clearFormAddress();
             });
     }
 
@@ -104,7 +106,9 @@ export class AddressComponent implements OnInit {
             .subscribe(() => {
                 this.addresses = this.addresses.filter(a => a.id !== address.id);
                 this.clearFormAddress();
-                this.selectAddress(this.addresses[0]);
+                if (this.addresses[0]) {
+                    this.selectAddress(this.addresses[0]);
+                }
             });
     }
 }

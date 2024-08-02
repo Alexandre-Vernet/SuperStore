@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseInterceptors, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { AddressService } from './address.service';
-import { AddressDto } from "@superstore/interfaces";
-import { AuthInterceptor } from "../auth/auth.interceptor";
-import { AdminInterceptor } from '../auth/admin.interceptor';
+import { AddressDto } from '@superstore/interfaces';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 
 @Controller('address')
 export class AddressController {

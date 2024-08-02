@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS public.orders
     updated_at      TIMESTAMP DEFAULT NOW() NOT NULL,
 
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES addresses (id)
+    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES addresses (id) ON DELETE CASCADE
 );
