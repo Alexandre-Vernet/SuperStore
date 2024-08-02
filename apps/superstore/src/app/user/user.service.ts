@@ -36,11 +36,10 @@ export class UserService {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
                 tap((updatedUser) => {
-                    const users = this.usersSubject.value;
-                    const index = users.findIndex((user) => user.id === updatedUser.id);
-                    users[index] = updatedUser;
-                    this.usersSubject.next([...users]);
-
+                    const users = this.usersSubject.value.map(p =>
+                        p.id === updatedUser.id ? updatedUser : p
+                    );
+                    this.usersSubject.next(users);
                     if (updatedUser.id === this.authService.user.id) {
                         this.authService.user = updatedUser;
                         this.notificationsService.showSuccessNotification('Success', 'Your profile has been updated');
@@ -49,7 +48,6 @@ export class UserService {
                     }
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -70,7 +68,6 @@ export class UserService {
                     }
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );

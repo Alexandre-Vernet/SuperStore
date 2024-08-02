@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductDto } from "@superstore/interfaces";
 import { ProductService } from "../../../product/product.service";
 import { SearchBar } from "../../search-bar/search-bar";
+import { ErrorService } from '../../../error/error.service';
 
 @Component({
     selector: 'superstore-list-products',
@@ -16,7 +17,8 @@ export class ListProductsComponent implements OnInit {
     showModalAddProduct = false;
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly errorService: ErrorService
     ) {
     }
 
@@ -52,6 +54,9 @@ export class ListProductsComponent implements OnInit {
     }
 
     deleteProduct(product: ProductDto) {
-        this.productService.deleteProduct(product.id).subscribe();
+        this.productService.deleteProduct(product.id)
+            .subscribe({
+                error: (error) => this.errorService.setError('Error', error.error.message),
+            });
     }
 }

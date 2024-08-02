@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { filter } from "rxjs";
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'superstore-tabs',
@@ -20,7 +20,6 @@ export class TabsComponent {
     activeTab = this.tabs[0].link;
 
     constructor(
-        private activatedRoute: ActivatedRoute,
         private router: Router
     ) {
         this.router.events.pipe(

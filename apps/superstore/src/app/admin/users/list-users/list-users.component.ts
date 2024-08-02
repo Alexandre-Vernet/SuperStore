@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { UserService } from "../../../user/user.service";
 import { UserDto } from "@superstore/interfaces";
 import { SearchBar } from "../../search-bar/search-bar";
+import { ErrorService } from '../../../error/error.service';
 
 @Component({
     selector: 'superstore-users',
@@ -16,7 +17,8 @@ export class ListUsersComponent implements OnInit {
     showModalAddProduct = false;
 
     constructor(
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly errorService: ErrorService
     ) {
     }
 
@@ -39,7 +41,10 @@ export class ListUsersComponent implements OnInit {
     }
 
     deleteUser(user: UserDto) {
-        this.userService.deleteUser(user.id).subscribe();
+        this.userService.deleteUser(user.id)
+            .subscribe({
+                error: (error) => this.errorService.setError('Error', error.error.message),
+            });
     }
 
     openModalUpdateUser() {

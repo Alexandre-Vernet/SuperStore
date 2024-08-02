@@ -8,7 +8,7 @@ export class PromotionController {
     constructor(private readonly promotionService: PromotionService) {
     }
 
-    @UseInterceptors(AdminInterceptor)
+    // @UseInterceptors(AdminInterceptor)
     @Post()
     create(@Body() createPromotionDto: PromotionDto) {
         return this.promotionService.create(createPromotionDto);
@@ -21,7 +21,7 @@ export class PromotionController {
 
     @Get(':label')
     findOne(@Param('label') label: string) {
-        return this.promotionService.findBy(label);
+        return this.promotionService.findBy('label', label);
     }
 
     @Put('use-promotion/:label')
@@ -29,7 +29,7 @@ export class PromotionController {
         return this.promotionService.usePromotionCode(label, promotion);
     }
 
-    @UseInterceptors(AdminInterceptor)
+    // @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() promotion: PromotionDto) {
         return this.promotionService.update(id, promotion);

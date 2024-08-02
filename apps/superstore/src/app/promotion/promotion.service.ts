@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../environments/environment";
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
 
 @Injectable({
@@ -38,7 +38,6 @@ export class PromotionService {
                     this.promotionSubject.next([...this.promotionSubject.value, createdPromotion]);
                 }),
                 catchError(err => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -61,15 +60,13 @@ export class PromotionService {
         return this.http.put<PromotionDto>(`${ this.promotionCodeUrl }/${ promotion.id }`, promotion)
             .pipe(
                 tap((updatedPromotion) => {
-                    this.notificationService.showSuccessNotification('Success', 'Promotion code updated successfully');
-                    const promotions = this.promotionSubject.value;
-                    const index = promotions.findIndex(promotion => promotion.id === updatedPromotion.id);
-                    promotions[index] = updatedPromotion;
+                    const promotions = this.promotionSubject.value.map(promotion =>
+                        promotion.id === updatedPromotion.id ? updatedPromotion : promotion
+                    );
                     this.promotionSubject.next(promotions);
-
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code updated successfully');
                 }),
                 catchError(err => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -79,10 +76,11 @@ export class PromotionService {
         return this.http.delete(`${ this.promotionCodeUrl }/${ promotion.id }`)
             .pipe(
                 tap(() => {
+                    const promotions = this.promotionSubject.value.filter((p) => p.id !== promotion.id);
+                    this.promotionSubject.next(promotions);
                     this.notificationService.showSuccessNotification('Success', 'Promotion code deleted successfully');
                 }),
                 catchError(err => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );

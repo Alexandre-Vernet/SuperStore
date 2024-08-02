@@ -18,23 +18,23 @@ import { LoaderInterceptor } from './shared/loader/loader.interceptor';
         BrowserModule,
         RouterModule.forRoot(appRoutes, {
             initialNavigation: 'enabledBlocking',
-            scrollPositionRestoration: 'enabled',
+            scrollPositionRestoration: 'enabled'
         }),
         HttpClientModule,
         SharedModule,
         ProductModule,
         CartModule,
         AuthModule,
-        UserModule,
+        UserModule
     ],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: LoaderInterceptor,
-            multi: true,
-        },
+            multi: true
+        }
     ],
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

@@ -48,8 +48,9 @@ export class ListPromotionsComponent implements OnInit {
 
     deletePromotion(promotion: PromotionDto){
         this.promotionService.deletePromotion(promotion)
-            .subscribe(() => {
-                this.promotions = this.promotions.filter((p) => p.id !== promotion.id);
+            .subscribe({
+                next: () => this.closeModalEditPromotion(),
+                error: () => console.error('Error deleting promotion')
             });
     }
 }

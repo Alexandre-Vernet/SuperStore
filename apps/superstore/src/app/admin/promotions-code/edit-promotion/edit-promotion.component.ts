@@ -80,7 +80,6 @@ export class EditPromotionComponent implements OnInit {
             .subscribe({
                 next: () => this.closeModalEditPromotion(),
                 error: (err) => {
-                    console.log(err);
                     this.formUpdatePromotion.setErrors({
                         [err.error.field ? err.error.field : 'label']: err.error.field,
                         error: err.error.message

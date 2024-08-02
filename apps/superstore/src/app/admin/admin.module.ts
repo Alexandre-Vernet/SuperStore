@@ -20,6 +20,8 @@ import { SendNewsletterComponent } from './send-newsletter/send-newsletter.compo
 import { EditPromotionComponent } from "./promotions-code/edit-promotion/edit-promotion.component";
 import { ListPromotionsComponent } from "./promotions-code/list-promotions/list-promotions.component";
 import { PromotionsPipe } from "./promotions-code/promotions.pipe";
+import { AppModule } from '../app.module';
+import { ErrorModule } from '../error/error.module';
 
 @NgModule({
     declarations: [
@@ -48,6 +50,7 @@ import { PromotionsPipe } from "./promotions-code/promotions.pipe";
         ReactiveFormsModule,
         FormsModule,
         SharedModule,
+        ErrorModule
     ],
     exports: [ListProductsComponent],
 })

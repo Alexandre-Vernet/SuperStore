@@ -42,8 +42,7 @@ export class ProductService {
                 tap((products) => {
                     this.productsSubject.next(products);
                 }),
-                catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
+                catchError(err => {
                     throw err;
                 })
             );
@@ -66,7 +65,6 @@ export class ProductService {
                     this.productsSubjectFiltered.next(products);
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
@@ -145,13 +143,16 @@ export class ProductService {
     updateProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.put<ProductDto>(`${ this.productUri }/${ product.id }`, product)
             .pipe(
-                tap((updateProduct) => {
-                    const products = this.productsSubject.value;
-                    const index = products.findIndex(product => product.id === updateProduct.id);
-                    products[index] = updateProduct;
-                    this.productsSubject.next([...products]);
+                tap((updatedProduct) => {
+                    const products = this.productsSubject.value.map(p =>
+                        p.id === updatedProduct.id ? updatedProduct : p
+                    );
+                    this.productsSubject.next(products);
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
                 }),
+                catchError((err) => {
+                    throw err;
+                })
             );
     }
 
@@ -159,13 +160,12 @@ export class ProductService {
         return this.http.delete<void>(`${ this.productUri }/${ productId }`)
             .pipe(
                 tap(() => {
-                    this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                     const products = this.productsSubject.value.filter((p) => p.id !== productId);
                     this.productsSubject.next(products);
                     this.productsSubjectFiltered.next(products);
+                    this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                 }),
                 catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
                     throw err;
                 })
             );
