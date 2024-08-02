@@ -56,7 +56,7 @@ export class ListProductsComponent implements OnInit {
     deleteProduct(product: ProductDto) {
         this.productService.deleteProduct(product.id)
             .subscribe({
-                error: (error) => this.errorService.setError('Error', error.error.message),
+                error: (error) => this.errorService.setError(error.error.message),
             });
     }
 }

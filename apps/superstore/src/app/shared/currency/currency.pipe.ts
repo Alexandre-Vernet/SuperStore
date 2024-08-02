@@ -8,7 +8,7 @@ import { Currency } from './currency';
 export class CurrencyPipe implements PipeTransform {
     transform(price: number) {
         // Get the currency from local storage
-        const currency = localStorage.getItem('currency');
+        const currency = localStorage.getItem(Currency.CURRENCY);
         if (currency) {
             // If currency is USD, convert to USD
             if (currency === Currency.USD) {
@@ -16,7 +16,7 @@ export class CurrencyPipe implements PipeTransform {
             }
         } else {
             // If no currency is set, set it to EUR
-            localStorage.setItem('currency', Currency.USD);
+            localStorage.setItem(Currency.CURRENCY, Currency.USD);
         }
         return `${ price } €`;
     }

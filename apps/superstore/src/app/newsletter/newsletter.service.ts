@@ -4,6 +4,7 @@ import { environment } from "../../environments/environment";
 import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
 import { catchError, Observable, tap } from "rxjs";
 import { NotificationsService } from "../shared/notifications/notifications.service";
+import { ErrorService } from '../error/error.service';
 
 
 @Injectable({
@@ -14,7 +15,8 @@ export class NewsletterService {
 
     constructor(
         private readonly http: HttpClient,
-        private readonly notificationsService: NotificationsService
+        private readonly notificationsService: NotificationsService,
+        private readonly errorService: ErrorService,
     ) {
     }
 
@@ -46,7 +48,7 @@ export class NewsletterService {
                     this.notificationsService.showSuccessNotification('Success', 'Subscription updated', 2000);
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );
@@ -59,7 +61,7 @@ export class NewsletterService {
                     this.notificationsService.showSuccessNotification('Success', 'Newsletter sent successfully!');
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );

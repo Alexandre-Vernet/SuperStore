@@ -5,6 +5,7 @@ import { UserDto } from '@superstore/interfaces';
 import { environment } from '../../environments/environment';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { AuthService } from '../auth/auth.service';
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,8 @@ export class UserService {
     constructor(
         private readonly http: HttpClient,
         private readonly notificationsService: NotificationsService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly errorService: ErrorService,
     ) {
         this.getUsers().subscribe();
     }
@@ -48,6 +50,7 @@ export class UserService {
                     }
                 }),
                 catchError((err) => {
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );
@@ -68,6 +71,7 @@ export class UserService {
                     }
                 }),
                 catchError((err) => {
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );

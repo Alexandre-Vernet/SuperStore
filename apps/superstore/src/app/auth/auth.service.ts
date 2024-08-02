@@ -4,6 +4,7 @@ import { catchError, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { UserDto } from "@superstore/interfaces";
 import { NotificationsService } from "../shared/notifications/notifications.service";
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private readonly notificationService: NotificationsService,
+        private readonly errorService: ErrorService,
     ) {
     }
 
@@ -59,7 +61,7 @@ export class AuthService {
                     this.notificationService.showSuccessNotification('Success', 'Password updated successfully');
                 }),
                 catchError(err => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );

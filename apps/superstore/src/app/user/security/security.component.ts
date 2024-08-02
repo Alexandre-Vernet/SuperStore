@@ -39,9 +39,7 @@ export class SecurityComponent {
         }
 
         this.authService.updatePassword(password)
-            .subscribe(() => {
-                this.formPassword.reset();
-            });
+            .subscribe(() => this.formPassword.reset());
     }
 
     deleteAccount() {

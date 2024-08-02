@@ -27,7 +27,7 @@ export class AddressService {
         return this.http.post<AddressDto>(this.addressUrl, { address, userId })
             .pipe(
                 catchError((err) => {
-                    this.errorService.setError('error', err.error.message);
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );
@@ -49,7 +49,7 @@ export class AddressService {
                     this.notificationService.showSuccessNotification('Success', 'Address deleted successfully');
                 }),
                 catchError((err) => {
-                    this.errorService.setError('error', err.error.message);
+                    this.errorService.setError(err.error.message);
                     throw err;
                 })
             );

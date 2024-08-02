@@ -43,7 +43,7 @@ export class ListUsersComponent implements OnInit {
     deleteUser(user: UserDto) {
         this.userService.deleteUser(user.id)
             .subscribe({
-                error: (error) => this.errorService.setError('Error', error.error.message),
+                error: (error) => this.errorService.setError(error.error.message),
             });
     }
 
