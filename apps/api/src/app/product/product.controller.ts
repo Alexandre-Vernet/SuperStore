@@ -8,7 +8,7 @@ export class ProductController {
     constructor(private readonly productService: ProductService) {
     }
 
-    // @UseInterceptors(AdminInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Post()
     @HttpCode(201)
     create(@Body() createProductDto: ProductDto) {
@@ -43,7 +43,7 @@ export class ProductController {
         return this.productService.findBy('slug', slug);
     }
 
-    // @UseInterceptors(AdminInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Put(':id')
     async update(@Param('id') id: number, @Body() updateProductDto: ProductDto): Promise<ProductDto> {
         return await this.productService.update(id, updateProductDto);

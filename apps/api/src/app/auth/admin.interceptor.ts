@@ -1,34 +1,32 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { AuthService } from "./auth.service";
-import { AuthInterceptor } from "./auth.interceptor";
+import { Observable, of } from 'rxjs';
+import { AuthService } from './auth.service';
 import { returnUnauthorized } from './returnUnauthorized';
 
 @Injectable()
 export class AdminInterceptor implements NestInterceptor {
     constructor(
-        private readonly authService: AuthService,
+        private readonly authService: AuthService
     ) {
     }
 
-    intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
-        const headers = context.switchToHttp().getRequest().headers;
+    async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<boolean>> {
+        const request = context.switchToHttp().getRequest();
+        const headers = request.headers;
         const bearer = headers.authorization;
         const token = bearer?.split(' ')[1];
 
-        if (token) {
-            return this.authService.signInWithAccessToken(token)
-                .then(({ user }) => {
-                    if (user.isAdmin === true) {
-                        next.handle().subscribe();
-                    } else {
-                        returnUnauthorized(context);
-                    }
-                })
-                .catch(() => {
-                    returnUnauthorized(context);
-                });
+        if (!token) {
+            returnUnauthorized(context);
+            return of(false);
+        }
+
+        const { user } = await this.authService.signInWithAccessToken(token);
+        if (user.isAdmin) {
+            return next.handle();
         } else {
             returnUnauthorized(context);
+            return of(false);
         }
     }
 }

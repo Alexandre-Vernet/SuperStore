@@ -13,8 +13,8 @@ export class NewsletterController {
 
     @UseInterceptors(AdminInterceptor)
     @Get('is-subscribed/:email')
-    isUserSubscribed(@Param('email') email: string) {
-        return this.newsletterService.isUserSubscribedToNewsletter(email);
+    async isUserSubscribed(@Param('email') email: string) {
+        return await this.newsletterService.isUserSubscribedToNewsletter(email);
     }
 
     @Post()

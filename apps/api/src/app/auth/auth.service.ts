@@ -63,7 +63,7 @@ export class AuthService {
             });
     }
 
-    signInWithAccessToken(accessToken: string) {
+    async signInWithAccessToken(accessToken: string) {
         return this.jwtService.verifyAsync(accessToken)
             .then(async (decoded) => {
                 const user = await this.userRepository.findOne({

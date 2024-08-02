@@ -8,7 +8,7 @@ export class PromotionController {
     constructor(private readonly promotionService: PromotionService) {
     }
 
-    // @UseInterceptors(AdminInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Post()
     create(@Body() createPromotionDto: PromotionDto) {
         return this.promotionService.create(createPromotionDto);
@@ -29,7 +29,7 @@ export class PromotionController {
         return this.promotionService.usePromotionCode(label, promotion);
     }
 
-    // @UseInterceptors(AdminInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() promotion: PromotionDto) {
         return this.promotionService.update(id, promotion);

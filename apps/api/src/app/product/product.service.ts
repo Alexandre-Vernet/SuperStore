@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { Product } from './product.entity';
