@@ -75,7 +75,7 @@ export class CreateProductComponent implements OnInit {
         this.productService.addProduct(product).subscribe({
             next: () => this.resetForm(),
             error: (err) => this.formAddProduct.setErrors({
-                [err.error.field]: err.error.field,
+                [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
             })
         });
@@ -85,7 +85,7 @@ export class CreateProductComponent implements OnInit {
         this.productService.updateProduct(product).subscribe({
             next: () => this.resetForm(),
             error: (err) => this.formAddProduct.setErrors({
-                [err.error.field]: err.error.field,
+                [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
             })
         });

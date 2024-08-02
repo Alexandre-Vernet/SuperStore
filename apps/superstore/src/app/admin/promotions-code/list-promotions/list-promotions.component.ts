@@ -21,8 +21,9 @@ export class ListPromotionsComponent implements OnInit {
 
     ngOnInit() {
         this.promotionService.promotions$
-            .subscribe((promotion) => {
-                this.promotions = promotion;
+            .subscribe((promotions) => {
+                promotions.sort((a, b) => a?.id - b?.id);
+                this.promotions = promotions;
             });
 
         SearchBar.searchBar

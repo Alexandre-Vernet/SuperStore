@@ -56,7 +56,7 @@ export class UpdateUserComponent implements OnInit {
             .subscribe({
                 next: () => this.closeModalAddProduct(),
                 error: (err) => this.formUpdateUser.setErrors({
-                    [err.error.field]: err.error.field,
+                    [err.error.field ? err.error.field : 'firstName']: err.error.field,
                     error: err.error.message
                 })
             });

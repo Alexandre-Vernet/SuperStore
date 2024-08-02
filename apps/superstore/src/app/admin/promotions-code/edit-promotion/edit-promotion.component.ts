@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PromotionDto } from "@superstore/interfaces";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { PromotionService } from "../../../promotion/promotion.service";
+import { PromotionDto } from '@superstore/interfaces';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PromotionService } from '../../../promotion/promotion.service';
 
 @Component({
     selector: 'superstore-edit-promotion',
     templateUrl: './edit-promotion.component.html',
-    styleUrls: ['./edit-promotion.component.scss'],
+    styleUrls: ['./edit-promotion.component.scss']
 })
 export class EditPromotionComponent implements OnInit {
 
@@ -15,9 +15,9 @@ export class EditPromotionComponent implements OnInit {
 
     formUpdatePromotion = new FormGroup({
         label: new FormControl('', [Validators.required]),
-        amount: new FormControl(0, [Validators.required]),
-        count: new FormControl(0, [Validators.required]),
-    })
+        amount: new FormControl(0, [Validators.required, Validators.min(5)]),
+        count: new FormControl(0, [Validators.required, Validators.min(0)])
+    });
 
     constructor(
         private readonly promotionService: PromotionService
@@ -29,7 +29,7 @@ export class EditPromotionComponent implements OnInit {
             this.formUpdatePromotion.patchValue({
                 amount: this.editPromotion.amount,
                 count: this.editPromotion.count,
-                label: this.editPromotion.label,
+                label: this.editPromotion.label
             });
         }
     }
@@ -52,19 +52,18 @@ export class EditPromotionComponent implements OnInit {
         const promotion: PromotionDto = {
             label: this.formUpdatePromotion.value.label,
             amount: this.formUpdatePromotion.value.amount,
-            count: this.formUpdatePromotion.value.count,
+            count: this.formUpdatePromotion.value.count
         };
 
         this.promotionService.addPromotion(promotion)
             .subscribe(
                 {
-                    next: () => {
-                        this.closeModalEditPromotion();
-                    },
+                    next: () => this.closeModalEditPromotion(),
                     error: (err) => {
-                        if (err.error.error === 'Not Found') {
-                            this.formUpdatePromotion.controls.label.setErrors({ notUnique: err.error.message });
-                        }
+                        this.formUpdatePromotion.setErrors({
+                            [err.error.field ? err.error.field : 'label']: err.error.field,
+                            error: err.error.message
+                        });
                     }
                 });
     }
@@ -74,12 +73,19 @@ export class EditPromotionComponent implements OnInit {
             id: this.editPromotion.id,
             label: this.formUpdatePromotion.value.label,
             amount: this.formUpdatePromotion.value.amount,
-            count: this.formUpdatePromotion.value.count,
+            count: this.formUpdatePromotion.value.count
         };
 
         this.promotionService.updatePromotion(promotion)
-            .subscribe(() => {
-                this.closeModalEditPromotion();
+            .subscribe({
+                next: () => this.closeModalEditPromotion(),
+                error: (err) => {
+                    console.log(err);
+                    this.formUpdatePromotion.setErrors({
+                        [err.error.field ? err.error.field : 'label']: err.error.field,
+                        error: err.error.message
+                    })
+                }
             });
     }
 }
