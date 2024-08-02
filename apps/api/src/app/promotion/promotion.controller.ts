@@ -21,7 +21,7 @@ export class PromotionController {
 
     @Get(':label')
     findOne(@Param('label') label: string) {
-        return this.promotionService.findOne(label);
+        return this.promotionService.findBy(label);
     }
 
     @Put('use-promotion/:label')

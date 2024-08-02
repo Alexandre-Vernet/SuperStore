@@ -28,10 +28,6 @@ export class UserService {
             .pipe(
                 tap((users) => {
                     this.usersSubject.next(users);
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
                 })
             );
     }
@@ -39,19 +35,14 @@ export class UserService {
     updateUser(user: Omit<UserDto, 'password'>): Observable<UserDto> {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
-                tap((user) => {
-                    const users = this.usersSubject.value.map((p) => {
-                        if (p.id === user.id) {
-                            return user;
-                        } else {
-                            return p;
-                        }
-                    });
+                tap((updatedUser) => {
+                    const users = this.usersSubject.value;
+                    const index = users.findIndex((user) => user.id === updatedUser.id);
+                    users[index] = updatedUser;
+                    this.usersSubject.next([...users]);
 
-                    this.usersSubject.next(users);
-
-                    if (user.id === this.authService.user.id) {
-                        this.authService.user = user;
+                    if (updatedUser.id === this.authService.user.id) {
+                        this.authService.user = updatedUser;
                         this.notificationsService.showSuccessNotification('Success', 'Your profile has been updated');
                     } else {
                         this.notificationsService.showSuccessNotification('Success', 'User updated successfully');

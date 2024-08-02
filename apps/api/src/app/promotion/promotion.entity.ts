@@ -5,7 +5,7 @@ export class Promotion {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     label: string;
 
     @Column({ type: 'decimal' })

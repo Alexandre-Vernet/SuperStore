@@ -9,10 +9,10 @@ export class Product {
     @ManyToMany(() => OrderProduct, orderProduct => orderProduct.products)
     orderProducts: OrderProduct[];
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     slug: string;
 
     @Column({ type: 'text' })

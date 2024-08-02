@@ -16,7 +16,7 @@ export class UpdateUserComponent implements OnInit {
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
         lastName: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
         isAdmin: new FormControl(false, [Validators.required])
     });
 
@@ -53,7 +53,13 @@ export class UpdateUserComponent implements OnInit {
             isAdmin: Boolean(isAdmin),
             addresses: this.editUser.addresses
         })
-            .subscribe(() => this.closeModalAddProduct());
+            .subscribe({
+                next: () => this.closeModalAddProduct(),
+                error: (err) => this.formUpdateUser.setErrors({
+                    [err.error.field]: err.error.field,
+                    error: err.error.message
+                })
+            });
     }
 
     closeModalAddProduct() {

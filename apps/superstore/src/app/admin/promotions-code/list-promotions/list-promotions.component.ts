@@ -20,17 +20,14 @@ export class ListPromotionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getAllPromotionCode();
+        this.promotionService.promotions$
+            .subscribe((promotion) => {
+                this.promotions = promotion;
+            });
+
         SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
-            });
-    }
-
-    getAllPromotionCode() {
-        this.promotionService.getAllPromotions()
-            .subscribe((promotion) => {
-                this.promotions = promotion;
             });
     }
 
@@ -41,7 +38,6 @@ export class ListPromotionsComponent implements OnInit {
     closeModalEditPromotion(): void {
         this.showModalEditPromotion = false;
         this.editedPromotion = null;
-        this.getAllPromotionCode();
     }
 
     editPromotion(promotion: PromotionDto){

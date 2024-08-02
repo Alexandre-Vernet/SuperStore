@@ -1,6 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthService } from "./auth.service";
+import { returnUnauthorized } from './returnUnauthorized';
 
 @Injectable()
 export class AuthInterceptor implements NestInterceptor {
@@ -23,15 +24,9 @@ export class AuthInterceptor implements NestInterceptor {
                 .then(() => next.handle())
                 .catch(() => {
                     const message = 'Your session has expired. Please sign in again.'
-                    AuthInterceptor.returnUnauthorized(context, message);
+                    returnUnauthorized(context, message);
                 });
         }
-        AuthInterceptor.returnUnauthorized(context);
-    }
-
-
-    static returnUnauthorized(context: ExecutionContext, message = 'Unauthorized') {
-        const response = context.switchToHttp().getResponse();
-        response.status(401).send({ message });
+        returnUnauthorized(context);
     }
 }

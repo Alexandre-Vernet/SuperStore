@@ -2,6 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../product/product.service';
 import { ProductDto } from '@superstore/interfaces';
+import { checkCategoriesValidators } from './check-categories.validators';
 
 @Component({
     selector: 'superstore-create-product',
@@ -14,11 +15,11 @@ export class CreateProductComponent implements OnInit {
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formAddProduct = new FormGroup({
-        name: new FormControl('=', [Validators.required]),
-        description: new FormControl('', [Validators.required]),
+        name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+        description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         price: new FormControl(0, [Validators.required, Validators.min(0)]),
-        categories: new FormControl('', [Validators.required]),
-        images: new FormControl('', Validators.required)
+        categories: new FormControl('', [Validators.required, checkCategoriesValidators(), Validators.maxLength(255)]),
+        images: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });
 
     constructor(
@@ -52,20 +53,13 @@ export class CreateProductComponent implements OnInit {
         } = this.formAddProduct.value;
 
         const product: ProductDto = {
-            name,
-            slug: name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-'), /*Remove all special characters and replace spaces with dash*/
-            description,
+            name: name.trim(),
+            slug: '',
+            description: description.trim(),
             price,
             categories: categories.split(',').map(c => c.trim()),
             images: images.split(',').map(c => c.trim())
         };
-
-
-        // Check if categories is valid
-        const isCategoryValid = this.checkCategories(categories);
-        if (!isCategoryValid) {
-            return;
-        }
 
         if (this.editProduct?.id) {
             this.updateProduct({
@@ -78,42 +72,28 @@ export class CreateProductComponent implements OnInit {
     }
 
     addProduct(product: ProductDto) {
-        this.productService.addProduct(product).subscribe(() => this.resetForm());
+        this.productService.addProduct(product).subscribe({
+            next: () => this.resetForm(),
+            error: (err) => this.formAddProduct.setErrors({
+                [err.error.field]: err.error.field,
+                error: err.error.message
+            })
+        });
     }
 
     updateProduct(product: ProductDto) {
-        this.productService.updateProduct(product).subscribe(() => this.resetForm());
+        this.productService.updateProduct(product).subscribe({
+            next: () => this.resetForm(),
+            error: (err) => this.formAddProduct.setErrors({
+                [err.error.field]: err.error.field,
+                error: err.error.message
+            })
+        });
     }
 
     private resetForm() {
         this.formAddProduct.reset();
         this.closeModalAddProduct();
-    }
-
-    private checkCategories(category: string): boolean {
-        // Check if category is valid (only letters, numbers, comma and space)
-        const categoryRegex = /^[a-zA-Z0-9, ]*$/;
-        if (!categoryRegex.test(category)) {
-            this.formAddProduct.setErrors({
-                invalidCharacters: true
-            });
-            return false;
-        }
-
-
-        // Detect duplicate categories
-        const categories = category.split(',').map(c => c.trim());
-        categories.sort();
-        for (let i = 0; i < categories.length - 1; i++) {
-            if (categories[i] === categories[i + 1]) {
-                this.formAddProduct.setErrors({
-                    duplicateCategories: true
-                });
-                return false;
-            }
-        }
-
-        return true;
     }
 
     // Escape key to close modal

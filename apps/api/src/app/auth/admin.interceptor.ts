@@ -1,6 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { AuthService } from "./auth.service";
 import { AuthInterceptor } from "./auth.interceptor";
+import { returnUnauthorized } from './returnUnauthorized';
 
 @Injectable()
 export class AdminInterceptor implements NestInterceptor {
@@ -20,14 +21,14 @@ export class AdminInterceptor implements NestInterceptor {
                     if (user.isAdmin === true) {
                         next.handle().subscribe();
                     } else {
-                        AuthInterceptor.returnUnauthorized(context);
+                        returnUnauthorized(context);
                     }
                 })
                 .catch(() => {
-                    AuthInterceptor.returnUnauthorized(context);
+                    returnUnauthorized(context);
                 });
         } else {
-            AuthInterceptor.returnUnauthorized(context);
+            returnUnauthorized(context);
         }
     }
 }

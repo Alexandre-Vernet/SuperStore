@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { ProductDto } from '@superstore/interfaces';
-import { FindOneOptions, In, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
-import { AdminGuard } from '../../../../superstore/src/app/admin/admin.guard';
+import { CustomConflictException } from '../exceptions/CustomConflictException';
+import { CustomNotFoundException } from '../exceptions/CustomNotFoundException';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +16,11 @@ export class ProductService {
     ) {
     }
 
-    create(createProductDto: ProductDto): Promise<Product> {
+    async create(createProductDto: ProductDto): Promise<ProductDto> {
+        const productExist = await this.findBy('slug', createProductDto.slug) || await this.findBy('name', createProductDto.name);
+        if (productExist) {
+            throw new CustomConflictException('Product already exists', 'name');
+        }
         return this.productRepository.save(createProductDto);
     }
 
@@ -31,28 +36,33 @@ export class ProductService {
         }).then(([products, total]) => ({ products, total }));
     }
 
-    findOne(id: number) {
+    findBy(key: string, value: string | number) {
         const options: FindOneOptions = {
-            where: { id }
+            where: { [key]: value }
         };
+
         return this.productRepository.findOne(options);
     }
 
-    update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
-        return this.productRepository.update(id, updateProductDto)
-            .then(() => this.findOne(id));
+    async update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
+        const existingProduct = await this.findBy('id', id);
+        if (!existingProduct) {
+            throw new CustomNotFoundException('Product not found', 'name');
+        }
+
+        if (existingProduct.name !== updateProductDto.name) {
+            const productWithSameName = await this.findBy('name', updateProductDto.name);
+            if (productWithSameName) {
+                throw new CustomConflictException('Product already exists', 'name');
+            }
+        }
+
+        await this.productRepository.update(id, updateProductDto);
+        return this.findBy('id', id);
     }
 
     remove(id: number) {
         return this.productRepository.delete(id);
-    }
-
-    findBySlug(slug: string) {
-        const options: FindOneOptions = {
-            where: { slug }
-        };
-
-        return this.productRepository.findOne(options);
     }
 
     async migrate() {

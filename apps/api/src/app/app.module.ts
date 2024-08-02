@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { Product } from './product/product.entity';
@@ -17,11 +17,13 @@ import { NewsletterModule } from './newsletter/newsletter.module';
 import { Newsletter } from './newsletter/newsletter.entity';
 import { MigrationModule } from './migration/migration.module';
 import { PromotionModule } from './promotion/promotion.module';
-import { Promotion } from "./promotion/promotion.entity";
+import { Promotion } from './promotion/promotion.entity';
 import { OrderProduct } from './order-product/order-product.entity';
 import { ProductSize } from './product-size/product.size';
 import { OrderProductModule } from './order-product/order-product.module';
 import { ProductSizeModule } from './product-size/product-size.module';
+import { ProductMiddleware } from './product/product.middleware';
+import { UserMiddleware } from './user/user.middleware';
 
 const {
     POSTGRES_HOST,
@@ -63,5 +65,17 @@ const {
         PromotionModule,
     ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(ProductMiddleware)
+            .forRoutes(
+                { path: 'product/:id', method: RequestMethod.PUT },
+                { path: 'product', method: RequestMethod.POST },
+            );
+
+        consumer.apply(UserMiddleware)
+            .forRoutes(
+                { path: 'user/:id', method: RequestMethod.PUT }
+            );
+    }
 }

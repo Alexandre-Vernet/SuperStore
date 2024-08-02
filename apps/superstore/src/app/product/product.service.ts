@@ -33,10 +33,6 @@ export class ProductService {
                     this.productsSubjectFiltered.next([...this.productsSubjectFiltered.value, product]);
                     this.notificationService.showSuccessNotification('Success', 'Product added successfully');
                 }),
-                catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
             );
     }
 
@@ -149,13 +145,13 @@ export class ProductService {
     updateProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.put<ProductDto>(`${ this.productUri }/${ product.id }`, product)
             .pipe(
-                tap(() => {
+                tap((updateProduct) => {
+                    const products = this.productsSubject.value;
+                    const index = products.findIndex(product => product.id === updateProduct.id);
+                    products[index] = updateProduct;
+                    this.productsSubject.next([...products]);
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
                 }),
-                catchError((err) => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
             );
     }
 

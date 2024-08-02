@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
-import { MoreThan, Repository } from "typeorm";
+import { FindManyOptions, MoreThan, Repository } from 'typeorm';
 import { Promotion } from "./promotion.entity";
 import { faker } from "@faker-js/faker";
 import { PromotionDto } from "@superstore/interfaces";
@@ -28,13 +28,16 @@ export class PromotionService {
     }
 
     findAll() {
-        return this.promotionRepository.find();
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        }
+        return this.promotionRepository.find(options)
     }
 
-    async findOne(label: string) {
+    async findBy(key: string, value: string) {
         const options = {
             where: {
-                label: label,
+                [key]: value,
                 count: MoreThan(0),
             }
         }
@@ -46,15 +49,16 @@ export class PromotionService {
     }
 
     usePromotionCode(label: string, promotion: PromotionDto) {
-        this.findOne(label)
+        this.findBy('label', label)
             .then((result) => {
                 promotion.count--;
                 this.promotionRepository.update(result.id, promotion);
             });
     }
 
-    update(id: number, promotion: PromotionDto) {
-        return this.promotionRepository.update(id, promotion);
+    async update(id: number, promotion: PromotionDto) {
+        await this.promotionRepository.update(id, promotion);
+        return this.findBy('label', promotion.label);
     }
 
     remove(id: number) {

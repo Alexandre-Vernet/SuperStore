@@ -53,8 +53,6 @@ export class ProfileComponent implements OnInit {
             isSubscribed,
         };
 
-        console.log(newsletter.isSubscribed);
-
         this.newsletterService.updateSubscription(newsletter)
             .subscribe();
     }
