@@ -41,10 +41,7 @@ export class AuthService {
 
     signInWithAccessToken(): Observable<{ user: UserDto, accessToken: string }> {
         const accessToken = localStorage.getItem('accessToken');
-        return this.http.post<{
-            user: UserDto,
-            accessToken: string
-        }>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
+        return this.http.post<{user: UserDto,accessToken: string}>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
             .pipe(
                 tap(res => {
                     this.user = res.user;
@@ -82,6 +79,6 @@ export class AuthService {
 
     signOut(): void {
         this.user = null;
-        localStorage.removeItem('accessToken');
+        // localStorage.removeItem('accessToken');
     }
 }

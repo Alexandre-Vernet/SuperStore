@@ -65,6 +65,7 @@ export class UserService {
 
                     if (userId === this.authService.user.id) {
                         this.authService.signOut();
+                        localStorage.clear();
                         this.notificationsService.showSuccessNotification('Success', 'Your account has been deleted');
                     } else {
                         this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');

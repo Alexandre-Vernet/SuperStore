@@ -33,9 +33,9 @@ export class AuthService {
         createUserDto.isAdmin = false;
 
         return this.userRepository.save(createUserDto)
-            .then((user) => {
+            .then(async (user) => {
                 const accessToken = this.jwtService.sign({ user });
-                return this.signInWithAccessToken(accessToken);
+                return await this.signInWithAccessToken(accessToken);
             });
     }
 

@@ -25,8 +25,8 @@ export class AuthController {
 
     @HttpCode(200)
     @Post('sign-in-with-access-token')
-    signInWithAccessToken(@Body() { accessToken }: { accessToken: string }) {
-        return this.authService.signInWithAccessToken(accessToken);
+    async signInWithAccessToken(@Body() { accessToken }: { accessToken: string }) {
+        return await this.authService.signInWithAccessToken(accessToken);
     }
 
     @UseInterceptors(AuthInterceptor)
