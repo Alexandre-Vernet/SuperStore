@@ -7,5 +7,6 @@ export class UserDto {
     lastName: string;
     email: string;
     password: string;
+    confirmPassword?: string;
     isAdmin: boolean;
 }

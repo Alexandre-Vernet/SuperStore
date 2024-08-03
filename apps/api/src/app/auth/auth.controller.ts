@@ -11,9 +11,9 @@ export class AuthController {
     ) {
     }
 
-    @HttpCode(200)
+    @HttpCode(201)
     @Post('sign-up')
-    signUp(@Body() createUserDto: UserDto): Promise<{ accessToken: string, user: UserDto }> {
+    signUp(@Body() createUserDto: UserDto){
         return this.authService.signUp(createUserDto);
     }
 

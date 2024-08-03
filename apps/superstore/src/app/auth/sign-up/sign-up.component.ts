@@ -40,6 +40,7 @@ export class SignUpComponent {
             lastName,
             email,
             password,
+            confirmPassword,
             isAdmin: false,
         }
         if (password !== confirmPassword) {
@@ -49,9 +50,7 @@ export class SignUpComponent {
         this.authService.signUp(user)
             .subscribe({
                 next: () => this.router.navigateByUrl('/'),
-                error: (err) => {
-                    this.formSignUp.setErrors({ error: err.error.message });
-                }
+                error: (err) => this.formSignUp.setErrors({ [err.error.field]: err.error.message })
             });
     }
 }

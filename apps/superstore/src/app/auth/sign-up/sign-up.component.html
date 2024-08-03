@@ -48,6 +48,10 @@
                           class="text-red-600 text-xs">
                         Passwords do not match
                     </span>
+                    <span *ngIf="formSignUp.hasError('password')"
+                          class="text-red-600 text-xs">
+                        {{ formSignUp.getError('password') }}
+                    </span>
                 </div>
 
                 <div>
@@ -61,6 +65,10 @@
                     <span *ngIf="formSignUp.hasError('passwordNotMatch')"
                           class="text-red-600 text-xs">
                         Passwords do not match
+                    </span>
+                    <span *ngIf="formSignUp.hasError('password')"
+                          class="text-red-600 text-xs">
+                        {{ formSignUp.getError('password') }}
                     </span>
                 </div>
 

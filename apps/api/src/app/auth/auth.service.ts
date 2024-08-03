@@ -7,6 +7,7 @@ import { User } from '../user/user.entity';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { EmailService } from '../email/email.service';
+import { CustomBadRequestException } from '../exceptions/CustomBadRequestException';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,10 @@ export class AuthService {
     }
 
     async signUp(createUserDto: UserDto): Promise<{ accessToken: string, user: UserDto }> {
+        if (createUserDto.password.trim() !== createUserDto.confirmPassword.trim()) {
+            throw new CustomBadRequestException('Passwords do not match', 'password');
+        }
+
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
             throw new ConflictException('This email is already taken');
