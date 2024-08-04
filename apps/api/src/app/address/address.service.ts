@@ -25,9 +25,17 @@ export class AddressService {
     }
 
 
-    findOne(id: number) {
+    find(id: number) {
         const options: FindOneOptions = {
             where: { id }
+        };
+
+        return this.addressRepository.findOne(options);
+    }
+
+    findUniqueAddress(address: AddressDto) {
+        const options: FindOneOptions = {
+            where: { address: address.address, country: address.country, city: address.city, zipCode: address.zipCode, phone: address.phone, user: address.user }
         };
 
         return this.addressRepository.findOne(options);

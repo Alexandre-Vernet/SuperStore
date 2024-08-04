@@ -160,16 +160,6 @@ export class CheckoutComponent implements OnInit {
     }
 
     submitForm() {
-        const {
-            company,
-            address,
-            apartment,
-            country,
-            city,
-            zipCode,
-            phone,
-            paymentMethod
-        } = this.formAddress.value;
 
         const orderTest: OrderDto = new OrderDto();
         orderTest.id = 2;
@@ -184,9 +174,32 @@ export class CheckoutComponent implements OnInit {
         // });
 
         const user = this.authService.user;
+
+            const {
+                company,
+                address,
+                apartment,
+                country,
+                city,
+                zipCode,
+                phone,
+                paymentMethod
+            } = this.formAddress.value;
+
+            const newAddress: AddressDto = {
+                user,
+                company,
+                address,
+                apartment,
+                country,
+                city,
+                zipCode,
+                phone
+            };
+
         const order: OrderDto = {
             user,
-            address: this.selectedAddress,
+            address: this.selectedAddress ?? newAddress,
             orderProduct,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
@@ -198,21 +211,7 @@ export class CheckoutComponent implements OnInit {
             createdAt: new Date(),
         };
 
-        this.addressService
-            .createAddress({
-                user: this.authService.user,
-                company,
-                address,
-                apartment,
-                country,
-                city,
-                zipCode,
-                phone
-            })
-            .subscribe((address) => {
-                order.address.id = address.id;
-                this.confirmOrder(order);
-            });
+        this.confirmOrder(order);
     }
 
     confirmOrder(order: OrderDto) {

@@ -5,6 +5,7 @@ import { Order } from './order.entity';
 import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
 import { faker } from '@faker-js/faker';
 import { OrderProductService } from '../order-product/order-product.service';
+import { AddressService } from '../address/address.service';
 
 @Injectable()
 export class OrderService {
@@ -12,20 +13,20 @@ export class OrderService {
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
         private readonly orderProductService: OrderProductService,
+        private readonly addressService: AddressService,
     ) {
     }
 
-    async create(order: OrderDto): Promise<OrderDto> {
+    async create(order: OrderDto) {
+        const existingAddress = await this.addressService.findUniqueAddress(order.address);
+        if (!existingAddress) {
+            const newAddress = await this.addressService.create(order.address);
+            order.address = newAddress;
+        }
+
         const createdOrder = await this.orderRepository.save(order);
         await this.orderProductService.create(order.orderProduct);
         return createdOrder;
-
-
-        // return this.userService.find(order.user.id)
-        //     .then(user => {
-        //         this.emailService.sendEmailConfirmationOrder(order, user);
-        //         return order;
-        //     });
     }
 
     findAll(): Promise<Order[]> {

@@ -23,7 +23,7 @@ export class AddressController {
     @UseInterceptors(AuthInterceptor)
     @Get(':id')
     findOne(@Param('id') id: number) {
-        return this.addressService.findOne(id);
+        return this.addressService.find(id);
     }
 
     @UseInterceptors(AuthInterceptor)

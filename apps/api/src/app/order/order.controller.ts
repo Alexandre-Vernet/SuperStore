@@ -11,7 +11,7 @@ export class OrderController {
     }
 
     @Post()
-    create(@Body() order: OrderDto): Promise<OrderDto> {
+    create(@Body() order: OrderDto){
         return this.orderService.create(order);
     }
 
