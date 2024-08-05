@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
@@ -28,7 +28,7 @@ export class AddressService {
             .pipe(
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -50,7 +50,7 @@ export class AddressService {
                 }),
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }

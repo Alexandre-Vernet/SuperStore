@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
 
@@ -16,7 +16,7 @@ export class PromotionService {
 
     constructor(
         private http: HttpClient,
-        private readonly notificationService: NotificationsService,
+        private readonly notificationService: NotificationsService
     ) {
         this.getAllPromotions().subscribe();
     }
@@ -36,9 +36,6 @@ export class PromotionService {
                 tap((createdPromotion: PromotionDto) => {
                     this.notificationService.showSuccessNotification('Success', 'Promotion code added successfully');
                     this.promotionSubject.next([...this.promotionSubject.value, createdPromotion]);
-                }),
-                catchError(err => {
-                    throw err;
                 })
             );
     }
@@ -60,9 +57,6 @@ export class PromotionService {
                     );
                     this.promotionSubject.next(promotions);
                     this.notificationService.showSuccessNotification('Success', 'Promotion code updated successfully');
-                }),
-                catchError(err => {
-                    throw err;
                 })
             );
     }
@@ -74,9 +68,6 @@ export class PromotionService {
                     const promotions = this.promotionSubject.value.filter((p) => p.id !== promotion.id);
                     this.promotionSubject.next(promotions);
                     this.notificationService.showSuccessNotification('Success', 'Promotion code deleted successfully');
-                }),
-                catchError(err => {
-                    throw err;
                 })
             );
     }

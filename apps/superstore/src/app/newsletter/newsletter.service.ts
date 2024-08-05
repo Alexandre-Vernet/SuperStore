@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
-import { catchError, Observable, tap } from "rxjs";
+import { catchError, Observable, of, tap } from 'rxjs';
 import { NotificationsService } from "../shared/notifications/notifications.service";
 import { ErrorService } from '../error/error.service';
 
@@ -45,7 +45,7 @@ export class NewsletterService {
                 }),
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -58,7 +58,7 @@ export class NewsletterService {
                 }),
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }

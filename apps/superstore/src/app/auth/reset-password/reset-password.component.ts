@@ -52,9 +52,9 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     resetPassword() {
-        const { newPassword: password } = this.formResetPassword.value;
+        const { newPassword: password, confirmPassword } = this.formResetPassword.value;
 
-        this.authService.updatePassword(password)
+        this.authService.updatePassword(password, confirmPassword)
             .subscribe({
                 next: () => {
                     this.formResetPassword.reset();

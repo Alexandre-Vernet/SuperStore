@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, catchError, lastValueFrom, map, Observable, tap } from "rxjs";
-import { environment } from "../../environments/environment";
-import { ProductDto } from "@superstore/interfaces";
-import { NotificationsService } from "../shared/notifications/notifications.service";
-import { ReviewService } from "../review/review.service";
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, lastValueFrom, map, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { ProductDto } from '@superstore/interfaces';
+import { NotificationsService } from '../shared/notifications/notifications.service';
+import { ReviewService } from '../review/review.service';
 
 @Injectable({
     providedIn: 'root'
@@ -42,9 +42,6 @@ export class ProductService {
                 tap((products) => {
                     this.productsSubject.next(products);
                 }),
-                catchError(err => {
-                    throw err;
-                })
             );
     }
 
@@ -64,9 +61,6 @@ export class ProductService {
                     this.productsSubject.next(products);
                     this.productsSubjectFiltered.next(products);
                 }),
-                catchError((err) => {
-                    throw err;
-                })
             );
     }
 
@@ -150,9 +144,6 @@ export class ProductService {
                     this.productsSubject.next(products);
                     this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
                 }),
-                catchError((err) => {
-                    throw err;
-                })
             );
     }
 
@@ -165,9 +156,6 @@ export class ProductService {
                     this.productsSubjectFiltered.next(products);
                     this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                 }),
-                catchError((err) => {
-                    throw err;
-                })
             );
     }
 }

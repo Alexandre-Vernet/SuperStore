@@ -32,7 +32,7 @@ export class OrderService {
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -45,7 +45,7 @@ export class OrderService {
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -58,7 +58,7 @@ export class OrderService {
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -70,7 +70,7 @@ export class OrderService {
                 .pipe(
                     catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        return of(null);
                     })
                 );
         } else {
@@ -113,7 +113,7 @@ export class OrderService {
                 }),
                 catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        return of(null);
                     }
                 )
             );

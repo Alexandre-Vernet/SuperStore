@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { ProductDto, ReviewDto } from '@superstore/interfaces';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 
@@ -48,7 +48,7 @@ export class ReviewService {
                 }),
                 catchError((err) => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }

@@ -31,8 +31,8 @@ export class AuthController {
 
     @UseInterceptors(AuthInterceptor)
     @Put('update-password')
-    updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
-        return this.authService.updatePassword(userId, password);
+    updatePassword(@Body() { userId, password, confirmPassword }: { userId: number, password: string, confirmPassword: string }) {
+        return this.authService.updatePassword(userId, password, confirmPassword);
     }
 
     @HttpCode(200)

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { UserDto } from '@superstore/interfaces';
 import { environment } from '../../environments/environment';
 import { NotificationsService } from '../shared/notifications/notifications.service';
@@ -20,7 +20,7 @@ export class UserService {
         private readonly http: HttpClient,
         private readonly notificationsService: NotificationsService,
         private readonly authService: AuthService,
-        private readonly errorService: ErrorService,
+        private readonly errorService: ErrorService
     ) {
         this.getUsers().subscribe();
     }
@@ -51,7 +51,7 @@ export class UserService {
                 }),
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -73,7 +73,7 @@ export class UserService {
                 }),
                 catchError((err) => {
                     this.errorService.setError(err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
@@ -94,7 +94,7 @@ export class UserService {
                 }),
                 catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        return of(null);
                     }
                 )
             );

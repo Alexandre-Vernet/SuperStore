@@ -91,26 +91,27 @@ export class AuthService {
     }
 
 
-    updatePassword(userId: number, password: string) {
+    async updatePassword(userId: number, password: string, confirmPassword: string) {
+        if (password !== confirmPassword) {
+            throw new CustomBadRequestException('Passwords do not match', 'password');
+        }
         const options: FindOneOptions = {
             where: {
                 id: userId
             }
         };
 
-        return this.userRepository.findOne(options)
-            .then(async user => {
-                if (!user) {
-                    throw new ConflictException('Invalid credentials');
-                }
+        const user = this.userRepository.findOne(options);
+        if (!user) {
+            throw new ConflictException('Invalid credentials');
+        }
 
-                // Hash security
-                const hashedPassword = await bcrypt.hash(password, 10);
-                if (!hashedPassword) {
-                    throw new ConflictException('Something went wrong. Please try again later.');
-                }
-                return this.userRepository.update(userId, { password: hashedPassword });
-            });
+        // Hash security
+        const hashedPassword = await bcrypt.hash(password, 10);
+        if (!hashedPassword) {
+            throw new ConflictException('Something went wrong. Please try again later.');
+        }
+        return this.userRepository.update(userId, { password: hashedPassword });
     }
 
     sendEmailForgotPassword(email: string) {
