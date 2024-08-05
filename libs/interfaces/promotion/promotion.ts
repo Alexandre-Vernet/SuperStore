@@ -3,6 +3,4 @@ export class PromotionDto {
     label: string;
     amount: number;
     count: number;
-    status?: string;
-
 }

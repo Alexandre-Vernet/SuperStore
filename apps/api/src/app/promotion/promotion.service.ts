@@ -20,8 +20,8 @@ export class PromotionService {
                 label: createPromotionDto.label,
             }
         };
-        const result = await this.promotionRepository.findOne(options);
-        if (result) {
+        const promotionExist = await this.promotionRepository.findOne(options);
+        if (promotionExist) {
             throw new NotFoundException(`Promotion with label ${ createPromotionDto.label } already exists`)
         }
         return this.promotionRepository.save(createPromotionDto);
@@ -43,17 +43,18 @@ export class PromotionService {
         }
         const result = await this.promotionRepository.findOne(options);
         if (!result) {
-            throw new NotFoundException('Promotion not found')
+            throw new NotFoundException(' Invalid promotion code')
         }
         return result;
     }
 
-    usePromotionCode(label: string, promotion: PromotionDto) {
-        this.findBy('label', label)
-            .then((result) => {
-                promotion.count--;
-                this.promotionRepository.update(result.id, promotion);
-            });
+    async usePromotionCode(label: string, promotion: PromotionDto): Promise<PromotionDto> {
+        const promotionExisting = await this.findBy('label', label);
+        if (promotionExisting) {
+            promotion.count--;
+            await this.promotionRepository.update(promotion.id, promotion);
+            return promotion;
+        }
     }
 
     async update(id: number, promotion: PromotionDto) {

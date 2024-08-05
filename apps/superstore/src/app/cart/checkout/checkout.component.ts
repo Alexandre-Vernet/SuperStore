@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     AddressDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderDto, OrderProductDto,
-    OrderState, ProductDto,
+    OrderDto,
+    OrderProductDto,
+    OrderState,
+    ProductDto,
     PromotionDto
 } from '@superstore/interfaces';
 import { Cart } from '../cart';
@@ -15,13 +17,14 @@ import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { AddressService } from '../../address/address.service';
 import { PromotionService } from '../../promotion/promotion.service';
+import { catchError, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-checkout',
     templateUrl: './checkout.component.html',
     styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
     addresses: AddressDto[] = [];
@@ -46,6 +49,9 @@ export class CheckoutComponent implements OnInit {
         promotionCode: new FormControl('', [Validators.required])
     });
     promotion: PromotionDto;
+
+    buttonApplyPromotion$ = new Subject<string>();
+    unsubscribe$ = new Subject<void>;
 
     constructor(
         private readonly cartService: CartService,
@@ -80,6 +86,42 @@ export class CheckoutComponent implements OnInit {
                     phone: addresses[0]?.phone
                 });
             });
+
+
+        this.buttonApplyPromotion$.pipe(
+            takeUntil(this.unsubscribe$),
+            distinctUntilChanged(),
+            switchMap((code) =>
+                this.promotionService.checkPromotionCode(code)
+                    .pipe(
+                        catchError((err) => {
+                            this.formPromotion.setErrors({ error: err.error.message });
+                            this.promotion = null;
+                            return of(null);
+                        })
+                    )
+            ),
+            switchMap((promotion) => {
+                    if (promotion) {
+                        return this.promotionService.usePromotionCode(promotion)
+                            .pipe(
+                                catchError((err) => {
+                                    this.formPromotion.setErrors({ error: err.error.message });
+                                    this.promotion = null;
+                                    return of(null);
+                                })
+                            );
+                    } else {
+                        return of(null);
+                    }
+                }
+            )
+        ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     changeAddress(address: AddressDto) {
@@ -144,19 +186,7 @@ export class CheckoutComponent implements OnInit {
 
     applyPromotionCode() {
         const promotionCode = this.formPromotion.value.promotionCode.toString().trim();
-        this.promotionService.checkPromotionCode(promotionCode)
-            .subscribe({
-                next: (promotion: PromotionDto) => {
-                    this.promotion = {
-                        status: 'success',
-                        ...promotion
-                    };
-                },
-                error: () => {
-                    this.promotion = null;
-                    this.formPromotion.controls.promotionCode.setErrors({ invalid: true });
-                }
-            });
+        this.buttonApplyPromotion$.next(promotionCode);
     }
 
     submitForm() {

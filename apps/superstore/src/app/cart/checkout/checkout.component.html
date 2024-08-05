@@ -260,16 +260,14 @@
                                                     formControlName="promotionCode"
                                                     type="text" name="promotion-code" id="promotion-code"
                                                     class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <ng-container *ngIf="promotion else noPromotion">
+                                            <ng-container *ngIf="promotion">
                                                 <span class="text-xs text-green-500">Promotion code applied</span>
                                             </ng-container>
-                                            <ng-template #noPromotion>
-                                                <span
-                                                        *ngIf="formPromotion.controls.promotionCode.invalid && formPromotion.controls.promotionCode.touched"
-                                                        class="text-xs text-red-500">
-                                                    Invalid promotion code
+                                            <ng-container>
+                                                <span *ngIf="formPromotion.errors" class="text-xs text-red-500">
+                                                    {{ formPromotion.getError('error') }}
                                                 </span>
-                                            </ng-template>
+                                            </ng-container>
                                         </div>
                                         <button
                                                 [disabled]="!formPromotion.valid"
@@ -364,9 +362,7 @@
                                     </dd>
                                 </div>
                                 <ng-container *ngIf="promotion">
-                                    <div
-                                            *ngIf="promotion.status === 'success'"
-                                            class="flex items-center justify-between border-t border-gray-200 pt-6">
+                                    <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                                         <dt class="text-sm">
                                         <span class="font-medium text-green-600">
                                             {{ promotion.label }}

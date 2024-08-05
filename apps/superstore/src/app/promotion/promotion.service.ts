@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
 
@@ -43,17 +43,12 @@ export class PromotionService {
             );
     }
 
-    checkPromotionCode(code: string) {
-        return this.http.get(`${ this.promotionCodeUrl }/${ code }`)
-            .pipe(
-                tap((promotion: PromotionDto) => {
-                    return this.usePromotionCode(promotion).subscribe();
-                })
-            )
+    checkPromotionCode(code: string): Observable<PromotionDto> {
+        return this.http.get<PromotionDto>(`${ this.promotionCodeUrl }/${ code }`);
     }
 
-    usePromotionCode(promotion: PromotionDto) {
-        return this.http.put(`${ this.promotionCodeUrl }/use-promotion/${ promotion.label }`, promotion);
+    usePromotionCode(promotion: PromotionDto): Observable<PromotionDto> {
+        return this.http.put<PromotionDto>(`${ this.promotionCodeUrl }/use-promotion/${ promotion.label }`, promotion);
     }
 
     updatePromotion(promotion: PromotionDto) {
