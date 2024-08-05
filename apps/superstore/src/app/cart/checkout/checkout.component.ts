@@ -17,7 +17,7 @@ import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { AddressService } from '../../address/address.service';
 import { PromotionService } from '../../promotion/promotion.service';
-import { catchError, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-checkout',
@@ -101,19 +101,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                         })
                     )
             ),
+            filter(response => response !== null),
             switchMap((promotion) => {
-                    if (promotion) {
-                        return this.promotionService.usePromotionCode(promotion)
-                            .pipe(
-                                catchError((err) => {
-                                    this.formPromotion.setErrors({ error: err.error.message });
-                                    this.promotion = null;
-                                    return of(null);
-                                })
-                            );
-                    } else {
-                        return of(null);
-                    }
+                    return this.promotionService.usePromotionCode(promotion)
+                        .pipe(
+                            catchError((err) => {
+                                this.formPromotion.setErrors({ error: err.error.message });
+                                this.promotion = null;
+                                return of(null);
+                            })
+                        );
                 }
             )
         ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
