@@ -34,10 +34,6 @@ export class NewsletterService {
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'You have been subscribed to our newsletter');
                 }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
             );
     }
 
