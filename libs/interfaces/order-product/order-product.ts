@@ -3,6 +3,6 @@ import { OrderDto } from '../order/order';
 
 export class OrderProductDto {
     id?: number;
-    order: OrderDto;
-    product: ProductDto[];
+    order?: OrderDto;
+    products: ProductDto[];
 }

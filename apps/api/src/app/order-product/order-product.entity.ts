@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '../order/order.entity';
 import { Product } from '../product/product.entity';
 
@@ -7,7 +7,7 @@ export class OrderProduct {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToOne(() => Order)
+    @ManyToOne(() => Order, order => order.orderProducts)
     @JoinColumn({ name: 'order_id' })
     order: Order;
 

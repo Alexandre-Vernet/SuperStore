@@ -2,7 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { Order } from './order.entity';
-import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
+import {
+    AddressDto,
+    DeliveryMethodType,
+    OrderDto,
+    OrderProductDto,
+    OrderState,
+    ProductDto,
+    UserDto
+} from '@superstore/interfaces';
 import { faker } from '@faker-js/faker';
 import { OrderProductService } from '../order-product/order-product.service';
 import { AddressService } from '../address/address.service';
@@ -25,7 +33,15 @@ export class OrderService {
         }
 
         const createdOrder = await this.orderRepository.save(order);
-        await this.orderProductService.create(order.orderProduct);
+
+        for (const orderProduct of order.orderProducts) {
+            const orderProductDto: OrderProductDto = {
+                order: createdOrder,
+                products: orderProduct.products,
+            };
+            await this.orderProductService.create(orderProductDto); // Utilisez 'await' pour s'assurer que la sauvegarde est terminée
+        }
+
         return createdOrder;
     }
 

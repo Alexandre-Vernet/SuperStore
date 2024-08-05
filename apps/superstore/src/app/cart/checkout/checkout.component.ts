@@ -5,7 +5,7 @@ import {
     deliveryMethods,
     OrderDto, OrderProductDto,
     OrderState, ProductDto,
-    PromotionDto,
+    PromotionDto
 } from '@superstore/interfaces';
 import { Cart } from '../cart';
 import { CartService } from '../cart.service';
@@ -19,7 +19,7 @@ import { PromotionService } from '../../promotion/promotion.service';
 @Component({
     selector: 'superstore-checkout',
     templateUrl: './checkout.component.html',
-    styleUrls: ['./checkout.component.scss'],
+    styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
 
@@ -39,7 +39,7 @@ export class CheckoutComponent implements OnInit {
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl('', [Validators.required]),
-        paymentMethod: new FormControl('CB', [Validators.required]),
+        paymentMethod: new FormControl('CB', [Validators.required])
     });
 
     formPromotion = new FormGroup({
@@ -61,7 +61,7 @@ export class CheckoutComponent implements OnInit {
         this.cart = this.cartService.cart;
         this.selectedDeliveryMethod = this.deliveryMethods[0];
         this.formAddress.patchValue({
-            deliveryMethod: this.selectedDeliveryMethod.name,
+            deliveryMethod: this.selectedDeliveryMethod.name
         });
 
         // Get addresses of user
@@ -77,7 +77,7 @@ export class CheckoutComponent implements OnInit {
                     country: addresses[0]?.country,
                     city: addresses[0]?.city,
                     zipCode: addresses[0]?.zipCode,
-                    phone: addresses[0]?.phone,
+                    phone: addresses[0]?.phone
                 });
             });
     }
@@ -91,14 +91,14 @@ export class CheckoutComponent implements OnInit {
             country: address.country,
             city: address.city,
             zipCode: address.zipCode,
-            phone: address.phone,
+            phone: address.phone
         });
     }
 
     changeDeliveryMethod(deliveryMethod: DeliveryMethod) {
         this.selectedDeliveryMethod = deliveryMethod;
         this.formAddress.patchValue({
-            deliveryMethod: deliveryMethod.name,
+            deliveryMethod: deliveryMethod.name
         });
 
         this.updateShippingPrice(deliveryMethod.price);
@@ -108,7 +108,7 @@ export class CheckoutComponent implements OnInit {
         this.formAddress.reset();
         this.formAddress.patchValue({
             paymentMethod: 'CB',
-            deliveryMethod: this.deliveryMethods[0].name,
+            deliveryMethod: this.deliveryMethods[0].name
         });
         this.selectedAddress = null;
     }
@@ -160,47 +160,40 @@ export class CheckoutComponent implements OnInit {
     }
 
     submitForm() {
-
-        const orderTest: OrderDto = new OrderDto();
-        orderTest.id = 2;
-
-        const orderProduct: OrderProductDto[] = this.cart.map(product => ({
-            order: orderTest,
-            product: [product],
+        // Cast price to number
+        this.cart.map(c => c.price = Number(c.price));
+        const orderProducts: OrderProductDto[] = this.cart.map(product => ({
+            products: [product]
         }));
-        // orderProduct.forEach(orderProduct => {
-        //     delete orderProduct.id
-        //     delete orderProduct.order;
-        // });
 
         const user = this.authService.user;
 
-            const {
-                company,
-                address,
-                apartment,
-                country,
-                city,
-                zipCode,
-                phone,
-                paymentMethod
-            } = this.formAddress.value;
+        const {
+            company,
+            address,
+            apartment,
+            country,
+            city,
+            zipCode,
+            phone,
+            paymentMethod
+        } = this.formAddress.value;
 
-            const newAddress: AddressDto = {
-                user,
-                company,
-                address,
-                apartment,
-                country,
-                city,
-                zipCode,
-                phone
-            };
+        const newAddress: AddressDto = {
+            user,
+            company,
+            address,
+            apartment,
+            country,
+            city,
+            zipCode,
+            phone
+        };
 
         const order: OrderDto = {
             user,
             address: this.selectedAddress ?? newAddress,
-            orderProduct,
+            orderProducts,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
@@ -208,7 +201,7 @@ export class CheckoutComponent implements OnInit {
             shippingPrice: this.shippingPrice,
             taxesPrice: this.taxes(),
             totalPrice: this.totalPrice(),
-            createdAt: new Date(),
+            createdAt: new Date()
         };
 
         this.confirmOrder(order);

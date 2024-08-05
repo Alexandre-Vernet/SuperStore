@@ -45,7 +45,7 @@ export class ListOrdersComponent implements OnInit {
         this.editedOrder = {
             id: order.id,
             user: order.user,
-            orderProduct: order.orderProduct,
+            orderProducts: order.orderProducts,
             state: order.state,
             address: order.address,
             deliveryMethod: order.deliveryMethod,

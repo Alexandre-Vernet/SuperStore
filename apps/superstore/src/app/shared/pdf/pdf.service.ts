@@ -53,7 +53,7 @@ export class PdfService {
                 doc.text(address.phone, 50, 270);
 
 
-                const productObservables = order.orderProduct.map((product) => {
+                const productObservables = order.orderProducts.map((product) => {
                     return this.productService.getProductFromId(product.id);
                 });
 

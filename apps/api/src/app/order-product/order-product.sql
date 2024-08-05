@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS public.order_products
     order_id   INTEGER            NOT NULL,
     product_id INTEGER            NOT NULL,
 
-    CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders (id),
-    CONSTRAINT fk_product_id FOREIGN KEY (order_id) REFERENCES products (id)
+    CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    CONSTRAINT fk_product_id FOREIGN KEY (order_id) REFERENCES products (id) ON DELETE CASCADE
 );

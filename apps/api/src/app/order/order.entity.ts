@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderState } from '@superstore/interfaces';
 import { User } from '../user/user.entity';
 import { Address } from '../address/address.entity';
@@ -17,8 +17,8 @@ export class Order {
     @JoinColumn({ name: 'address_id' })
     address: Address;
 
-    @OneToOne(() => OrderProduct)
-    orderProducts: OrderProduct;
+    @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
+    orderProducts: OrderProduct[];
 
     @Column({ name: 'state', type: 'text' })
     state: OrderState;
