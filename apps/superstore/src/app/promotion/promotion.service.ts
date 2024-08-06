@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,9 +17,12 @@ export class PromotionService {
 
     constructor(
         private http: HttpClient,
-        private readonly notificationService: NotificationsService
+        private readonly notificationService: NotificationsService,
+        private readonly authService: AuthService
     ) {
-        this.getAllPromotions().subscribe();
+        if (this.authService.user.isAdmin) {
+            this.getAllPromotions().subscribe();
+        }
     }
 
     getAllPromotions() {
