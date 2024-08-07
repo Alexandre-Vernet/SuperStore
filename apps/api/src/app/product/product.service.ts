@@ -57,8 +57,7 @@ export class ProductService {
             }
         }
 
-        await this.productRepository.update(id, updateProductDto);
-        return this.findBy('id', id);
+        return this.productRepository.save({id, ...updateProductDto});
     }
 
     remove(id: number) {

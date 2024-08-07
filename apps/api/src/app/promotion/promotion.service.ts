@@ -1,28 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
+import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, MoreThan, Repository } from 'typeorm';
-import { Promotion } from "./promotion.entity";
-import { faker } from "@faker-js/faker";
-import { PromotionDto } from "@superstore/interfaces";
+import { Promotion } from './promotion.entity';
+import { faker } from '@faker-js/faker';
+import { PromotionDto } from '@superstore/interfaces';
 
 @Injectable()
 export class PromotionService {
     constructor(
         @InjectRepository(Promotion)
-        private readonly promotionRepository: Repository<Promotion>,
+        private readonly promotionRepository: Repository<Promotion>
     ) {
     }
 
-    async create(createPromotionDto: PromotionDto) {
+    async create(createPromotionDto: PromotionDto): Promise<PromotionDto> {
         // Check if promotion code already exists
         const options = {
             where: {
-                label: createPromotionDto.label,
+                label: createPromotionDto.label
             }
         };
         const promotionExist = await this.promotionRepository.findOne(options);
         if (promotionExist) {
-            throw new NotFoundException(`Promotion with label ${ createPromotionDto.label } already exists`)
+            throw new NotFoundException(`Promotion with label ${ createPromotionDto.label } already exists`);
         }
         return this.promotionRepository.save(createPromotionDto);
     }
@@ -30,20 +30,20 @@ export class PromotionService {
     findAll() {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
-        }
-        return this.promotionRepository.find(options)
+        };
+        return this.promotionRepository.find(options);
     }
 
     async findBy(key: string, value: string) {
         const options = {
             where: {
                 [key]: value,
-                count: MoreThan(0),
+                count: MoreThan(0)
             }
-        }
+        };
         const result = await this.promotionRepository.findOne(options);
         if (!result) {
-            throw new NotFoundException(' Invalid promotion code')
+            throw new NotFoundException(' Invalid promotion code');
         }
         return result;
     }
@@ -57,9 +57,8 @@ export class PromotionService {
         }
     }
 
-    async update(id: number, promotion: PromotionDto) {
-        await this.promotionRepository.update(id, promotion);
-        return this.findBy('label', promotion.label);
+    update(id: number, promotion: PromotionDto): Promise<PromotionDto> {
+        return this.promotionRepository.save({ id, ...promotion });
     }
 
     remove(id: number) {
@@ -74,7 +73,7 @@ export class PromotionService {
                 label: faker.commerce.productAdjective() + faker.datatype.number({ min: 1, max: 100 }),
                 amount: faker.datatype.number({ min: 1, max: 50 }),
                 count: faker.datatype.number({ min: 1, max: 20000 })
-            }
+            };
 
             this.create(promotion);
         }
