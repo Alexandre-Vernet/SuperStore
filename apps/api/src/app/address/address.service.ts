@@ -16,8 +16,12 @@ export class AddressService {
     ) {
     }
 
-    create(createOrderDto: AddressDto): Promise<AddressDto> {
-       return this.addressRepository.save(createOrderDto)
+    async create(address: AddressDto): Promise<AddressDto> {
+        const addressExist = await this.findUniqueAddress(address);
+        if (addressExist) {
+            throw new Error('Address already exist');
+        }
+        return this.addressRepository.save(addressExist);
     }
 
     findAllUserAddress(userId: number): Promise<AddressDto[]> {
@@ -41,8 +45,8 @@ export class AddressService {
         return this.addressRepository.findOne(options);
     }
 
-    update(id: number, updateAddress: AddressDto) {
-        return this.addressRepository.update(id, updateAddress);
+    async update(id: number, updateAddress: AddressDto): Promise<AddressDto> {
+        return this.addressRepository.save({ id, ...updateAddress });
     }
 
     remove(id: number) {

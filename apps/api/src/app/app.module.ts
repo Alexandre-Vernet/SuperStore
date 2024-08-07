@@ -24,6 +24,7 @@ import { OrderProductModule } from './order-product/order-product.module';
 import { ProductSizeModule } from './product-size/product-size.module';
 import { ProductMiddleware } from './product/product.middleware';
 import { UserMiddleware } from './user/user.middleware';
+import { AddressMiddleware } from './address/address.middleware';
 
 const {
     POSTGRES_HOST,
@@ -74,8 +75,11 @@ export class AppModule implements NestModule {
             );
 
         consumer.apply(UserMiddleware)
-            .forRoutes(
-                { path: 'user/:id', method: RequestMethod.PUT }
-            );
+            .forRoutes({ path: 'user/:id', method: RequestMethod.PUT });
+
+        consumer.apply(AddressMiddleware)
+            .forRoutes({ path: 'address/:id', method: RequestMethod.PUT },
+                { path: 'address', method: RequestMethod.POST },
+                );
     }
 }

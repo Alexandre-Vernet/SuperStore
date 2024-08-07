@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressService } from '../../address/address.service';
 import { AuthService } from '../../auth/auth.service';
+import { map, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-address',
     templateUrl: './address.component.html',
     styleUrls: ['./address.component.scss']
 })
-export class AddressComponent implements OnInit {
+export class AddressComponent implements OnInit, OnDestroy {
 
     addresses: AddressDto[] = [];
     selectedAddress: AddressDto;
@@ -22,6 +23,9 @@ export class AddressComponent implements OnInit {
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required])
     });
+
+    buttonAddAddress$ = new Subject<void>();
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly addressService: AddressService,
@@ -47,6 +51,51 @@ export class AddressComponent implements OnInit {
                     });
                 }
             });
+
+        this.buttonAddAddress$.pipe(
+            takeUntil(this.unsubscribe$),
+            map(() => this.formAddress.value),
+            switchMap((address) => {
+                    const addressDto: AddressDto = {
+                        user: this.authService.user,
+                        company: address.company,
+                        address: address.address,
+                        apartment: address.apartment,
+                        country: address.country,
+                        city: address.city,
+                        zipCode: address.zipCode,
+                        phone: address.phone
+                    };
+
+                    if (this.selectedAddress && this.selectedAddress.id) {
+                        return this.addressService.updateAddress({
+                            id: this.selectedAddress.id,
+                            ...addressDto
+                        });
+                    } else {
+                        return this.addressService.createAddress(addressDto);
+                    }
+                }
+            )
+        )
+            .subscribe({
+                next: (newAddress) => {
+                    if (this.selectedAddress && this.selectedAddress.id) {
+                        const index = this.addresses.findIndex(a => a.id === newAddress.id);
+                        this.addresses[index] = newAddress;
+                    } else {
+                        this.addresses.push(newAddress);
+                    }
+                    this.clearFormAddress();
+                    this.selectAddress(newAddress);
+                },
+                error: (err) => this.formAddress.setErrors({ [err.error.field ?? 'address']: err.error.message })
+            });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     clearFormAddress() {
@@ -65,40 +114,6 @@ export class AddressComponent implements OnInit {
             zipCode: address.zipCode,
             phone: address.phone
         });
-    }
-
-    submitForm() {
-        if (this.formAddress.valid) {
-            this.createAddress();
-        }
-    }
-
-    createAddress() {
-        const address = this.formAddress.value;
-
-        this.addressService
-            .createAddress({
-                user: this.authService.user,
-                company: address.company,
-                address: address.address,
-                apartment: address.apartment,
-                country: address.country,
-                city: address.city,
-                zipCode: address.zipCode,
-                phone: address.phone
-            })
-            .subscribe((newAddress) => {
-                if (this.addresses.length === 0) {
-                    this.addresses.push(newAddress);
-                    this.selectAddress(newAddress);
-                    return;
-                }
-                const index = this.addresses.findIndex(a => a.id === newAddress.id);
-                this.addresses.find(a => a.id === newAddress.id) ?
-                    this.addresses[index] = newAddress :
-                    this.addresses.push(newAddress);
-                this.clearFormAddress();
-            });
     }
 
     removeAddress(address: AddressDto) {

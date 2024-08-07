@@ -24,13 +24,7 @@ export class AddressService {
 
     createAddress(address: AddressDto): Observable<AddressDto> {
         const userId = this.authService.user.id;
-        return this.http.post<AddressDto>(this.addressUrl, { address, userId })
-            .pipe(
-                catchError((err) => {
-                    this.errorService.setError(err.error.message);
-                    return of(null);
-                })
-            );
+        return this.http.post<AddressDto>(this.addressUrl, { address, userId });
     }
 
     getUserAddresses(): Observable<AddressDto[]> {
@@ -40,6 +34,15 @@ export class AddressService {
 
     getAddress(addressId: number): Observable<AddressDto> {
         return this.http.get<AddressDto>(`${ this.addressUrl }/${ addressId }`);
+    }
+
+    updateAddress(address: AddressDto): Observable<AddressDto> {
+        return this.http.put<AddressDto>(`${ this.addressUrl }/${ address.id }`, address)
+            .pipe(
+                tap(() => {
+                    this.notificationService.showSuccessNotification('Success', 'Address updated successfully');
+                })
+            );
     }
 
     deleteAddress(address: AddressDto) {

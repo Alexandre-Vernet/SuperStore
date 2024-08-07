@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { AddressDto } from '@superstore/interfaces';
 import { AuthInterceptor } from '../auth/auth.interceptor';
@@ -27,8 +27,8 @@ export class AddressController {
     }
 
     @UseInterceptors(AuthInterceptor)
-    @Patch(':id')
-    update(@Param('id') id: number, @Body() updateAddressDto: AddressDto) {
+    @Put(':id')
+    update(@Param('id') id: number, @Body() updateAddressDto: AddressDto): Promise<AddressDto> {
         return this.addressService.update(id, updateAddressDto);
     }
 
