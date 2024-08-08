@@ -52,13 +52,15 @@ export class CreateProductComponent implements OnInit {
             images
         } = this.formAddProduct.value;
 
+
         const product: ProductDto = {
             name: name.trim(),
             slug: '',
             description: description.trim(),
             price,
             categories: categories.split(',').map(c => c.trim()),
-            images: images.split(',').map(c => c.trim())
+            images: images.split(',').map(url => ({ url })
+            )
         };
 
         if (this.editProduct?.id) {

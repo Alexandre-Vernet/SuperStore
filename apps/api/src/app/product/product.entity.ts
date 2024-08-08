@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderProduct } from '../order-product/order-product.entity';
+import { Image } from '../image/image.entity';
 
 @Entity({ name: 'products', schema: 'public' })
 export class Product {
@@ -8,6 +9,9 @@ export class Product {
 
     @ManyToMany(() => OrderProduct, orderProduct => orderProduct.products)
     orderProducts: OrderProduct[];
+
+    @OneToMany(() => Image, image => image.product, { cascade: true, eager: true })
+    images: Image[];
 
     @Column({ type: 'text', unique: true })
     name: string;
@@ -23,9 +27,6 @@ export class Product {
 
     @Column({ type: 'text' })
     categories: string[];
-
-    @Column({ type: 'text' })
-    images: string[];
 
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;

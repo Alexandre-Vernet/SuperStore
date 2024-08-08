@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS products
     description TEXT        NOT NULL,
     price       DECIMAL     NOT NULL,
     categories  TEXT[]      NOT NULL,
-    images      TEXT[]      NOT NULL,
     created_at  TIMESTAMP   NOT NULL DEFAULT NOW(),
     updated_at  TIMESTAMP   NOT NULL DEFAULT NOW()
 );

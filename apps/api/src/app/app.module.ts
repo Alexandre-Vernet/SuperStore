@@ -25,6 +25,7 @@ import { ProductSizeModule } from './product-size/product-size.module';
 import { ProductMiddleware } from './product/product.middleware';
 import { UserMiddleware } from './user/user.middleware';
 import { AddressMiddleware } from './address/address.middleware';
+import { Image } from './image/image.entity';
 
 const {
     POSTGRES_HOST,
@@ -44,7 +45,7 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, OrderProduct, ProductSize, User, Address, Review, Newsletter, Promotion],
+            entities: [Product, Order, OrderProduct, ProductSize, User, Address, Review, Newsletter, Promotion, Image],
             ssl: false,
         }),
         ProductModule,

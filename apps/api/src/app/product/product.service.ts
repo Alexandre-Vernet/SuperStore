@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProductDto } from '@superstore/interfaces';
+import { ImageDto, ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,13 +16,25 @@ export class ProductService {
     ) {
     }
 
-    async create(createProductDto: ProductDto): Promise<ProductDto> {
+    async create(createProductDto: ProductDto): Promise<Product> {
         const productExist = await this.findBy('slug', createProductDto.slug) || await this.findBy('name', createProductDto.name);
         if (productExist) {
             throw new CustomConflictException('Product already exists', 'name');
         }
-        return this.productRepository.save(createProductDto);
+
+        const product: ProductDto = {
+            name: createProductDto.name.trim(),
+            slug: createProductDto.name.trim().replace(/ /g, '-').toLowerCase(),
+            description: createProductDto.description.trim(),
+            price: createProductDto.price,
+            categories: createProductDto.categories.map(c => c.trim()),
+            images: createProductDto.images.map(i => ({ url: i.url.trim() }))
+        };
+
+        // Save product and cascade save images
+        return this.productRepository.save(product);
     }
+
 
     findAll(): Promise<Product[]> {
         return this.productRepository.find();
@@ -45,6 +57,7 @@ export class ProductService {
     }
 
     async update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
+        console.log(updateProductDto);
         const existingProduct = await this.findBy('id', id);
         if (!existingProduct) {
             throw new CustomNotFoundException('Product not found', 'name');
@@ -57,7 +70,7 @@ export class ProductService {
             }
         }
 
-        return this.productRepository.save({id, ...updateProductDto});
+        return this.productRepository.save({ id, ...updateProductDto });
     }
 
     remove(id: number) {
@@ -74,17 +87,22 @@ export class ProductService {
                 categories.push(faker.commerce.department());
             }
 
-            const productName = faker.commerce.productName();
+            const images: ImageDto[] = [];
+            for (let j = 0; j < 3; j++) {
+                images.push({
+                    url: faker.image.imageUrl()
+                });
+            }
             const product: ProductDto = {
-                name: productName,
-                slug: productName.replace(/ /g, '-').toLowerCase(),
+                name: faker.commerce.productName(),
+                slug: faker.commerce.productName().replace(/ /g, '-').toLowerCase(),
                 description: faker.commerce.productDescription(),
-                price: Number(faker.commerce.price()),
+                price: parseFloat(faker.commerce.price()),
                 categories: categories,
-                images: [faker.image.imageUrl()]
+                images
             };
 
-            this.create(product);
+            await this.create(product);
         }
     }
 }
