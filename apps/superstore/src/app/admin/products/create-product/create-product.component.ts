@@ -34,7 +34,7 @@ export class CreateProductComponent implements OnInit {
                 description: this.editProduct.description,
                 price: this.editProduct.price,
                 categories: this.editProduct.categories.join(', '),
-                images: this.editProduct.images.join(', ')
+                images: this.editProduct.images.map(i => i.url).join(', ')
             });
         }
     }
@@ -55,7 +55,6 @@ export class CreateProductComponent implements OnInit {
 
         const product: ProductDto = {
             name: name.trim(),
-            slug: '',
             description: description.trim(),
             price,
             categories: categories.split(',').map(c => c.trim()),

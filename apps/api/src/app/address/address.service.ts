@@ -37,7 +37,7 @@ export class AddressService {
         return this.addressRepository.findOne(options);
     }
 
-    findUniqueAddress(address: AddressDto) {
+    findUniqueAddress(address: AddressDto): Promise<AddressDto> {
         const options: FindOneOptions = {
             where: { address: address.address, country: address.country, city: address.city, zipCode: address.zipCode, phone: address.phone, user: address.user }
         };

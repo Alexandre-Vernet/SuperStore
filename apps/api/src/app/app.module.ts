@@ -20,7 +20,6 @@ import { PromotionModule } from './promotion/promotion.module';
 import { Promotion } from './promotion/promotion.entity';
 import { OrderProduct } from './order-product/order-product.entity';
 import { ProductSize } from './product-size/product.size';
-import { OrderProductModule } from './order-product/order-product.module';
 import { ProductSizeModule } from './product-size/product-size.module';
 import { ProductMiddleware } from './product/product.middleware';
 import { UserMiddleware } from './user/user.middleware';
@@ -50,7 +49,6 @@ const {
         }),
         ProductModule,
         OrderModule,
-        OrderProductModule,
         ProductSizeModule,
         UserModule,
         AddressModule,

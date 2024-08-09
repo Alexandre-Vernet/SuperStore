@@ -13,9 +13,9 @@ export class OrderProduct {
 
     @ManyToMany(() => Product, product => product.orderProducts)
     @JoinTable({
-        name: 'order_product_products',
-        joinColumn: { name: 'order_product_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'product_id', referencedColumnName: 'id' }
+        name: 'order_product_product',
+        joinColumn: { name: 'order_product_id' },
+        inverseJoinColumn: { name: 'product_id' }
     })
     products: Product[];
 }

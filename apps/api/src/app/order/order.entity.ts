@@ -17,7 +17,7 @@ export class Order {
     @JoinColumn({ name: 'address_id' })
     address: Address;
 
-    @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
+    @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { cascade: true, eager: true })
     orderProducts: OrderProduct[];
 
     @Column({ name: 'state', type: 'text' })

@@ -5,7 +5,7 @@ export class ProductDto {
     id?: number;
     images: ImageDto[];
     name: string;
-    slug: string;
+    slug?: string;
     description: string;
     price: number;
     categories: string[];

@@ -2,17 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { Order } from './order.entity';
-import {
-    AddressDto,
-    DeliveryMethodType,
-    OrderDto,
-    OrderProductDto,
-    OrderState,
-    ProductDto,
-    UserDto
-} from '@superstore/interfaces';
+import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
 import { faker } from '@faker-js/faker';
-import { OrderProductService } from '../order-product/order-product.service';
 import { AddressService } from '../address/address.service';
 
 @Injectable()
@@ -20,7 +11,6 @@ export class OrderService {
     constructor(
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
-        private readonly orderProductService: OrderProductService,
         private readonly addressService: AddressService,
     ) {
     }
@@ -32,17 +22,7 @@ export class OrderService {
             order.address = newAddress;
         }
 
-        const createdOrder = await this.orderRepository.save(order);
-
-        for (const orderProduct of order.orderProducts) {
-            const orderProductDto: OrderProductDto = {
-                order: createdOrder,
-                products: orderProduct.products,
-            };
-            await this.orderProductService.create(orderProductDto); // Utilisez 'await' pour s'assurer que la sauvegarde est terminée
-        }
-
-        return createdOrder;
+        return await this.orderRepository.save(order);
     }
 
     findAll(): Promise<Order[]> {
