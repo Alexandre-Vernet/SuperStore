@@ -6,16 +6,16 @@ import { ProfileComponent } from './profile/profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
 import { SecurityComponent } from './security/security.component';
-import { AddressComponent } from './address/address.component';
 import { ErrorModule } from '../error/error.module';
+import { AddressModule } from '../address/address.module';
 
 @NgModule({
-  declarations: [
-    ProfileComponent,
-    UserComponent,
-    SecurityComponent,
-    AddressComponent,
-  ],
-    imports: [CommonModule, UserRoutingModule, ReactiveFormsModule, ErrorModule]
+    declarations: [
+        ProfileComponent,
+        UserComponent,
+        SecurityComponent
+    ],
+    imports: [CommonModule, UserRoutingModule, ReactiveFormsModule, ErrorModule, AddressModule]
 })
-export class UserModule {}
+export class UserModule {
+}

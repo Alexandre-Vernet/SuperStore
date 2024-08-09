@@ -10,14 +10,14 @@ export class AddressController {
 
     @UseInterceptors(AuthInterceptor)
     @Post()
-    create(@Body() body: { address: AddressDto, userId: number }): Promise<AddressDto> {
-        return this.addressService.create(body.address);
+    create(@Body() address: AddressDto): Promise<AddressDto> {
+        return this.addressService.create(address);
     }
 
     @UseInterceptors(AuthInterceptor)
     @Post('/find-all')
     findAllUserAddress(@Body() { userId }: { userId: number }) {
-        return this.addressService.findAllUserAddress(userId);
+        return this.addressService.getUserAddresses(userId);
     }
 
     @UseInterceptors(AuthInterceptor)

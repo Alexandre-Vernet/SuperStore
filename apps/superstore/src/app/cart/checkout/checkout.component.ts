@@ -15,7 +15,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
-import { AddressService } from '../../address/address.service';
 import { PromotionService } from '../../promotion/promotion.service';
 import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
 
@@ -27,11 +26,9 @@ import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeU
 export class CheckoutComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
-    addresses: AddressDto[] = [];
     deliveryMethods = deliveryMethods;
-    shippingPrice = this.deliveryMethods[0].price;
-    selectedAddress: AddressDto;
     selectedDeliveryMethod: DeliveryMethod;
+    shippingPrice = this.deliveryMethods[0].price;
 
     formAddress = new FormGroup({
         company: new FormControl(),
@@ -56,7 +53,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     constructor(
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly addressService: AddressService,
         private readonly orderService: OrderService,
         private readonly promotionService: PromotionService,
         private router: Router
@@ -69,23 +65,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.formAddress.patchValue({
             deliveryMethod: this.selectedDeliveryMethod.name
         });
-
-        // Get addresses of user
-        this.addressService.getUserAddresses()
-            .subscribe(addresses => {
-                this.addresses = addresses;
-                this.selectedAddress = addresses[0];
-
-                this.formAddress.patchValue({
-                    company: addresses[0]?.company,
-                    address: addresses[0]?.address,
-                    apartment: addresses[0]?.apartment,
-                    country: addresses[0]?.country,
-                    city: addresses[0]?.city,
-                    zipCode: addresses[0]?.zipCode,
-                    phone: addresses[0]?.phone
-                });
-            });
 
 
         this.buttonApplyPromotion$.pipe(
@@ -121,18 +100,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    changeAddress(address: AddressDto) {
-        this.selectedAddress = address;
+    selectAddress(address: AddressDto) {
+        if (!address) {
+            return;
+        }
         this.formAddress.patchValue({
-            company: address.company,
+            company: address?.company,
             address: address.address,
-            apartment: address.apartment,
+            apartment: address?.apartment,
             country: address.country,
             city: address.city,
             zipCode: address.zipCode,
             phone: address.phone
         });
     }
+
 
     changeDeliveryMethod(deliveryMethod: DeliveryMethod) {
         this.selectedDeliveryMethod = deliveryMethod;
@@ -141,15 +123,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         });
 
         this.updateShippingPrice(deliveryMethod.price);
-    }
-
-    clearFormAddress() {
-        this.formAddress.reset();
-        this.formAddress.patchValue({
-            paymentMethod: 'CB',
-            deliveryMethod: this.deliveryMethods[0].name
-        });
-        this.selectedAddress = null;
     }
 
     updateQuantity(item: ProductDto, event: Event) {
@@ -219,7 +192,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         const order: OrderDto = {
             user,
-            address: this.selectedAddress ?? newAddress,
+            address: newAddress,
             orderProducts,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),

@@ -21,10 +21,10 @@ export class AddressService {
         if (addressExist) {
             throw new Error('Address already exist');
         }
-        return this.addressRepository.save(addressExist);
+        return this.addressRepository.save(address);
     }
 
-    findAllUserAddress(userId: number): Promise<AddressDto[]> {
+    getUserAddresses(userId: number): Promise<AddressDto[]> {
         return this.addressRepository.find({ where: { user: { id: userId } } });
     }
 
@@ -39,7 +39,14 @@ export class AddressService {
 
     findUniqueAddress(address: AddressDto): Promise<AddressDto> {
         const options: FindOneOptions = {
-            where: { address: address.address, country: address.country, city: address.city, zipCode: address.zipCode, phone: address.phone, user: address.user }
+            where: {
+                address: address.address,
+                country: address.country,
+                city: address.city,
+                zipCode: address.zipCode,
+                phone: address.phone,
+                user: address.user
+            }
         };
 
         return this.addressRepository.findOne(options);

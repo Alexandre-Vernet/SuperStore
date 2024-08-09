@@ -6,7 +6,6 @@ export class AddressMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: (error?: Error) => void) {
 
         const address: AddressDto = {
-            id: req.body['id'],
             user: req.body['user'],
             address: req.body['address'],
             apartment: req.body['apartment'],
