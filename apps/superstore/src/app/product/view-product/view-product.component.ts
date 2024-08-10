@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService } from '../product.service';
-import { Observable } from 'rxjs';
-import { CartService } from '../../cart/cart.service';
-import { ProductDto, productSize, ProductSizeDto, ReviewDto } from '@superstore/interfaces';
-import { ReviewService } from '../../review/review.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ProductService} from '../product.service';
+import {combineLatest, Observable, of, Subject, switchMap} from 'rxjs';
+import {CartService} from '../../cart/cart.service';
+import {ProductDto, productSize, ProductSizeDto, ReviewDto} from '@superstore/interfaces';
+import {ReviewService} from '../../review/review.service';
 
 @Component({
     selector: 'superstore-view-product',
     templateUrl: './view-product.component.html',
     styleUrls: ['./view-product.component.scss'],
 })
-export class ViewProductComponent implements OnInit {
+export class ViewProductComponent implements OnInit, OnDestroy {
     product: ProductDto;
     reviews: ReviewDto[];
 
     selectedSize: ProductSizeDto;
     productSize = productSize;
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -28,28 +30,31 @@ export class ViewProductComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getProduct();
+        const slug = this.route.snapshot.paramMap.get('slug');
+
+        this.getProductFromSlug(slug)
+            .pipe(
+                switchMap((product: ProductDto) =>
+                    combineLatest([
+                        of(product),
+                        this.reviewService.getReviewsForProduct(product)
+                    ])
+                )
+            ).subscribe(([product, reviews]: [ProductDto, ReviewDto[]]) => {
+            this.product = product;
+            this.reviews = reviews;
+        });
+
         this.selectedSize = this.productSize[0];
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     filterProductsByCategory(category: string) {
         this.router.navigate(['/'], { queryParams: { category } });
-    }
-
-    getProduct() {
-        // Get product slug from the URL
-        const productSlug = this.route.snapshot.paramMap.get('slug');
-        this.getProductFromSlug(productSlug)
-            .subscribe(product => {
-                this.product = product;
-
-                this.reviewService
-                    .getReviewsForProduct(product)
-                    .subscribe(reviews => {
-                        this.reviews = reviews;
-                    });
-            });
-
     }
 
     getProductFromSlug(productSlug: string): Observable<ProductDto> {
