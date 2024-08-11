@@ -16,12 +16,8 @@ export class OrderService {
     }
 
     async create(order: OrderDto) {
-        const existingAddress = await this.addressService.findUniqueAddress(order.address);
-        if (!existingAddress) {
-            const newAddress = await this.addressService.create(order.address);
-            order.address = newAddress;
-        }
-
+        const throwIfExist = false;
+        order.address = await this.addressService.create(order.address, throwIfExist);
 
         // order.orderProducts.map(o => {
         //     o.id = 201;

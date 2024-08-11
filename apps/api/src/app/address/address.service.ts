@@ -16,11 +16,16 @@ export class AddressService {
     ) {
     }
 
-    async create(address: AddressDto): Promise<AddressDto> {
+    async create(address: AddressDto, throwIfExist: boolean = true): Promise<AddressDto> {
         const addressExist = await this.findUniqueAddress(address);
         if (addressExist) {
-            throw new Error('Address already exist');
+            if (throwIfExist) {
+                throw new Error('Address already exist');
+            }
+            return addressExist;
         }
+
+
         return this.addressRepository.save(address);
     }
 
@@ -45,7 +50,9 @@ export class AddressService {
                 city: address.city,
                 zipCode: address.zipCode,
                 phone: address.phone,
-                user: address.user
+                user: {
+                    id: address.user.id
+                }
             }
         };
 

@@ -210,6 +210,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     confirmOrder(order: OrderDto) {
         this.orderService
             .create(order)
-            .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
+            .subscribe({
+                next: () =>  this.router.navigateByUrl('/order/confirm-order')
+            });
     }
 }
