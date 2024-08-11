@@ -58,12 +58,25 @@
 
             <!-- Product image -->
             <div class="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
-                <div class="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
-                    <img [src]="product?.images[0].url"
-                         alt="Light green canvas bag with black straps, handle, front zipper pouch, and drawstring top."
-                         class="h-full w-full object-cover object-center">
+                <div class="relative w-full overflow-hidden rounded-lg">
+                    <div class="flex transition-transform duration-500 ease-in-out"
+                         [style.transform]="'translateX(-' + (currentImageIndex * 100) + '%)'">
+                        <div *ngFor="let image of product?.images" class="w-full flex-shrink-0">
+                            <img [src]="image.url"
+                                 [alt]="image.product?.name"
+                                 class="h-full w-full object-cover object-center">
+                        </div>
+                    </div>
+                    <!-- Navigation Buttons -->
+                    <button (click)="previousImage()" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                        &lt;
+                    </button>
+                    <button (click)="nextImage()" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                        &gt;
+                    </button>
                 </div>
             </div>
+
 
             <div class="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
                 <section aria-labelledby="options-heading">

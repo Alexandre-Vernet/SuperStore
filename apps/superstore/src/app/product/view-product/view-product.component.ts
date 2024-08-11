@@ -18,6 +18,8 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     selectedSize: ProductSizeDto;
     productSize = productSize;
 
+    currentImageIndex = 0;
+
     unsubscribe$ = new Subject<void>();
 
     constructor(
@@ -51,6 +53,22 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    nextImage() {
+        if (this.currentImageIndex < this.product.images.length - 1) {
+            this.currentImageIndex++;
+        } else {
+            this.currentImageIndex = 0;
+        }
+    }
+
+    previousImage() {
+        if (this.currentImageIndex > 0) {
+            this.currentImageIndex--;
+        } else {
+            this.currentImageIndex = this.product.images.length - 1;
+        }
     }
 
     filterProductsByCategory(category: string) {
