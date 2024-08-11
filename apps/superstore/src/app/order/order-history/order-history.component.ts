@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { OrderService } from '../order.service';
 import { OrderDto, OrderState, ProductDto } from '@superstore/interfaces';
-import { ProductService } from '../../product/product.service';
 import { CartService } from '../../cart/cart.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { ReviewService } from '../../review/review.service';
@@ -19,7 +18,6 @@ export class OrderHistoryComponent implements OnInit {
 
     constructor(
         private readonly orderService: OrderService,
-        private readonly productService: ProductService,
         private readonly cartService: CartService,
         private readonly notificationsService: NotificationsService,
         readonly reviewService: ReviewService,
@@ -28,19 +26,10 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        // const orderProduct: OrderProductDto[] = [];
-        // this.orderService.getOrdersPerUser()
-        //     .subscribe((orders) => {
-        //         orders.map((order) => {
-        //             this.productService.getProductFromIds(order.orderProduct.map(product => product.id))
-        //                 .subscribe(product => {
-        //                     orderProduct.push({
-        //                         ...order,
-        //                     });
-        //                 });
-        //         });
-        //         this.orders = orderProduct;
-        //     });
+        this.orderService.getUserOrders()
+            .subscribe((orders) => {
+                this.orders = orders;
+            });
     }
 
     toggleOrderOption() {

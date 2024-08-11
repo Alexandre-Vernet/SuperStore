@@ -14,14 +14,14 @@ export class Order {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @OneToOne(() => Address)
+    @OneToOne(() => Address, { eager: true })
     @JoinColumn({ name: 'address_id' })
     address: Address;
 
     @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { cascade: true, eager: true })
-    orderProducts: OrderProduct[];
+    products: OrderProduct[];
 
-    @OneToOne(() => Promotion)
+    @OneToOne(() => Promotion, { eager: true })
     @JoinColumn({ name: 'promotion_id' })
     promotion: Promotion;
 

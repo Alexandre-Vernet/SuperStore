@@ -15,13 +15,6 @@ export class OrderController {
         return this.orderService.create(order);
     }
 
-    @UseInterceptors(AuthInterceptor)
-    @Get('products')
-    findAllOrderProducts() {
-        return this.orderService.findAllOrderProducts();
-    }
-
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Get()
     findAll() {
@@ -30,8 +23,8 @@ export class OrderController {
 
     @UseInterceptors(AuthInterceptor)
     @Get('user/:userId')
-    findByUser(@Param('userId') userId: number) {
-        return this.orderService.findOrderByUser(userId);
+    getUserOrders(@Param('userId') userId: number) {
+        return this.orderService.getUserOrders(userId);
     }
 
     @UseInterceptors(AuthInterceptor)
@@ -46,14 +39,12 @@ export class OrderController {
         return this.orderService.findOne(id);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
     update(@Param('id') id: number, @Body() updateOrderDto: OrderDto) {
         return this.orderService.update(id, updateOrderDto);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {

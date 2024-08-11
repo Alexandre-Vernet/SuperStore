@@ -41,7 +41,7 @@ export class CreateOrderComponent implements OnInit {
         if (this.editOrder?.id) {
             const user: UserDto = this.editOrder.user;
             const address: AddressDto = this.editOrder.address;
-            const products = this.editOrder.orderProducts.map((orderProduct: OrderProductDto) => {
+            const products = this.editOrder.products.map((orderProduct: OrderProductDto) => {
                 return orderProduct.products.map(product => product.name).join(', ');
             });
 

@@ -8,7 +8,7 @@ export class OrderDto {
     id?: number;
     user: UserDto;
     address: AddressDto;
-    orderProducts: OrderProductDto[];
+    products: OrderProductDto[];
     promotion?: PromotionDto;
     state: OrderState;
     deliveryMethod: string;

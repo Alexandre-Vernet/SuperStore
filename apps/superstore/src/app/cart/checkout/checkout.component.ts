@@ -161,7 +161,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     submitForm() {
         // Cast price to number
         this.cart.map(c => c.price = Number(c.price));
-        const orderProducts: OrderProductDto[] = this.cart.map(product => ({
+        const products: OrderProductDto[] = this.cart.map(product => ({
             products: [product]
         }));
 
@@ -192,7 +192,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const order: OrderDto = {
             user,
             address: newAddress,
-            orderProducts,
+            products,
             promotion: this.promotion,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
@@ -209,7 +209,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     confirmOrder(order: OrderDto) {
         this.orderService
-            .confirmOrder(order)
+            .create(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
     }
 }

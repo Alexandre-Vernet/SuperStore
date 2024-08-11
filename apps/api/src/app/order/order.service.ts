@@ -22,19 +22,18 @@ export class OrderService {
             order.address = newAddress;
         }
 
+
+        // order.orderProducts.map(o => {
+        //     o.id = 201;
+        //     o.order = a;
+        //     o.products = product;
+        // })
+
         return await this.orderRepository.save(order);
     }
 
     findAll(): Promise<Order[]> {
         // Order by id ASC
-        const options: FindManyOptions = {
-            order: { id: 'ASC' }
-        };
-
-        return this.orderRepository.find(options);
-    }
-
-    findAllOrderProducts(): Promise<Order[]> {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
         };
@@ -65,9 +64,13 @@ export class OrderService {
         return this.orderRepository.findOne(options);
     }
 
-    findOrderByUser(userId: number) {
+    getUserOrders(userId: number) {
         const options: FindManyOptions = {
-            where: { userId },
+            where: {
+                user: {
+                    id: userId
+                }
+            },
             order: { createdAt: 'DESC' }
         };
         return this.orderRepository.find(options);

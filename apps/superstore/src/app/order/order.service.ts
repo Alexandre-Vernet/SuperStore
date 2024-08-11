@@ -23,7 +23,7 @@ export class OrderService {
     ) {
     }
 
-    confirmOrder(order: OrderDto): Observable<OrderDto> {
+    create(order: OrderDto): Observable<OrderDto> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => {
@@ -37,33 +37,7 @@ export class OrderService {
             );
     }
 
-    getOrders(): Observable<OrderProductDto[]> {
-        return this.http.get<OrderProductDto[]>(`${ this.orderUri }`)
-            .pipe(
-                tap((orders) => {
-                    this.orders = orders;
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    return of(null);
-                })
-            );
-    }
-
-    getOrdersWithAddressAndUserAndProducts(): Observable<OrderDto[]> {
-        return this.http.get<OrderDto[]>(`${ this.orderUri }/products`)
-            .pipe(
-                tap((orders) => {
-                    return orders;
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    return of(null);
-                })
-            );
-    }
-
-    getOrdersPerUser(): Observable<OrderDto[]> {
+    getUserOrders(): Observable<OrderDto[]> {
         if (this.authService.user) {
             const userId = this.authService.user.id;
             return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)

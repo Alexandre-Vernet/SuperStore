@@ -57,8 +57,7 @@ export class ProductService {
     }
 
     async update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
-        console.log(updateProductDto);
-        const existingProduct = await this.findBy('id', id);
+        const existingProduct: ProductDto = await this.findBy('id', id);
         if (!existingProduct) {
             throw new CustomNotFoundException('Product not found', 'name');
         }
@@ -69,6 +68,11 @@ export class ProductService {
                 throw new CustomConflictException('Product already exists', 'name');
             }
         }
+
+        updateProductDto.images.forEach((image, index) => {
+            image.id = existingProduct.images[index].id;
+            image.product = existingProduct;
+        });
 
         return this.productRepository.save({ id, ...updateProductDto });
     }

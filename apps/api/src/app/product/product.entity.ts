@@ -1,14 +1,10 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { OrderProduct } from '../order-product/order-product.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Image } from '../image/image.entity';
 
 @Entity({ name: 'products', schema: 'public' })
 export class Product {
     @PrimaryGeneratedColumn('increment')
     id: number;
-
-    @ManyToMany(() => OrderProduct, orderProduct => orderProduct.products)
-    orderProducts: OrderProduct[];
 
     @OneToMany(() => Image, image => image.product, { cascade: true, eager: true })
     images: Image[];

@@ -21,11 +21,6 @@ export class ListOrdersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderService.getOrdersWithAddressAndUserAndProducts()
-            .subscribe((orders) => {
-                this.orders = orders;
-            });
-
         SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
@@ -45,7 +40,7 @@ export class ListOrdersComponent implements OnInit {
         this.editedOrder = {
             id: order.id,
             user: order.user,
-            orderProducts: order.orderProducts,
+            products: order.products,
             state: order.state,
             address: order.address,
             deliveryMethod: order.deliveryMethod,
