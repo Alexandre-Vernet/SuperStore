@@ -44,8 +44,11 @@ export class OrderService {
         return this.orderRepository.findOne(options);
     }
 
-    update(id: number, updateOrderDto: OrderDto) {
-        return this.orderRepository.update(id, updateOrderDto);
+    async updateOrderState(id: number, updateOrderDto: OrderState) {
+        await this.orderRepository.update(id, {state: updateOrderDto});
+        return this.orderRepository.findOne({
+            where: { id }
+        });
     }
 
     remove(id: number) {

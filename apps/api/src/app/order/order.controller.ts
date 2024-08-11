@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { OrderDto } from '@superstore/interfaces';
+import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { AdminInterceptor } from "../auth/admin.interceptor";
 
@@ -41,8 +41,8 @@ export class OrderController {
 
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
-    update(@Param('id') id: number, @Body() updateOrderDto: OrderDto) {
-        return this.orderService.update(id, updateOrderDto);
+     updateOrderState(@Param('id') id: number, @Body() { state }: { state: OrderState }) {
+        return this.orderService.updateOrderState(id, state);
     }
 
     @UseInterceptors(AdminInterceptor)

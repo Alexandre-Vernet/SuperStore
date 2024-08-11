@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { OrderDto } from '@superstore/interfaces';
+import { OrderDto, OrderState } from '@superstore/interfaces';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
 import { NotificationsService } from '../shared/notifications/notifications.service';
+import { ErrorService } from "../error/error.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,13 +15,18 @@ export class OrderService {
 
     orderUri = environment.orderUri();
     private ordersSubject = new BehaviorSubject<OrderDto[]>([]);
+    orders$ = this.ordersSubject.asObservable();
 
     constructor(
         private http: HttpClient,
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly notificationsService: NotificationsService
+        private readonly notificationsService: NotificationsService,
+        private readonly errorService: ErrorService
     ) {
+        if (this.authService.user.isAdmin) {
+            this.findAll().subscribe();
+        }
     }
 
     create(order: OrderDto): Observable<OrderDto> {
@@ -70,19 +76,19 @@ export class OrderService {
         return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);
     }
 
-    updateOrderState(orderId: number, state: string): Observable<OrderDto> {
+    updateOrderState(orderId: number, state: OrderState): Observable<OrderDto> {
         return this.http.put<OrderDto>(`${ this.orderUri }/${ orderId }`, { state })
             .pipe(
-                tap((order) => {
-                    const orders = this.ordersSubject.getValue().map((p) => {
-                        if (p.id === order.id) {
-                            return order;
-                        } else {
-                            return p;
-                        }
-                    });
-                    this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
+                tap((updatedOrder) => {
+                    const orders = this.ordersSubject.value.map(p =>
+                        p.id === updatedOrder.id ? updatedOrder : p
+                    );
                     this.ordersSubject.next(orders);
+                    this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    return of(null);
                 })
             );
     }
@@ -96,7 +102,7 @@ export class OrderService {
                     this.ordersSubject.next(orders);
                 }),
                 catchError((err) => {
-                        this.notificationsService.showErrorNotification('Error', err.error.message);
+                    this.errorService.setError(err.error.message);
                         return of(null);
                     }
                 )

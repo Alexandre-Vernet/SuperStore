@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
 import { AuthService } from '../auth/auth.service';
+import { ErrorService } from "../error/error.service";
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,8 @@ export class PromotionService {
     constructor(
         private http: HttpClient,
         private readonly notificationService: NotificationsService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly errorService: ErrorService
     ) {
         if (this.authService.user.isAdmin) {
             this.getAllPromotions().subscribe();
@@ -72,7 +74,12 @@ export class PromotionService {
                     const promotions = this.promotionSubject.value.filter((p) => p.id !== promotion.id);
                     this.promotionSubject.next(promotions);
                     this.notificationService.showSuccessNotification('Success', 'Promotion code deleted successfully');
-                })
+                }),
+                catchError((err) => {
+                        this.errorService.setError(err.error.message);
+                        return of(null);
+                    }
+                )
             );
     }
 }

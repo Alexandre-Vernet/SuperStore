@@ -1,14 +1,14 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from '../../../order/order.service';
-import { AddressDto, OrderDto, OrderProductDto, OrderState, UserDto } from '@superstore/interfaces';
+import { AddressDto, OrderDto, OrderState, UserDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-create-order',
-    templateUrl: './create-order.component.html',
-    styleUrls: ['./create-order.component.scss'],
+    templateUrl: './update-order.component.html',
+    styleUrls: ['./update-order.component.scss'],
 })
-export class CreateOrderComponent implements OnInit {
+export class UpdateOrderComponent implements OnInit {
 
     @Input() editOrder: OrderDto;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
@@ -21,16 +21,14 @@ export class CreateOrderComponent implements OnInit {
     ];
 
     formUpdateOrder = new FormGroup({
-        id: new FormControl(0, [Validators.required]),
+        id: new FormControl(),
         name: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         address: new FormControl({ disabled: true, value: '' }, [Validators.required]),
-        products: new FormControl([], [Validators.required]),
         state: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         paymentMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         price: new FormControl({ disabled: true, value: 0 }, [Validators.required]),
     });
-
 
     constructor(
         private readonly orderService: OrderService,
@@ -41,15 +39,11 @@ export class CreateOrderComponent implements OnInit {
         if (this.editOrder?.id) {
             const user: UserDto = this.editOrder.user;
             const address: AddressDto = this.editOrder.address;
-            const products = this.editOrder.products.map((orderProduct: OrderProductDto) => {
-                return orderProduct.products.map(product => product.name).join(', ');
-            });
 
             this.formUpdateOrder.setValue({
                 name: `${ user.firstName } ${ user.lastName }`,
                 id: this.editOrder.id,
                 address: `${ address.address }, ${ address.city }, ${ address.zipCode }, ${ address.country }`,
-                products,
                 state: this.editOrder.state,
                 deliveryMethod: this.editOrder.deliveryMethod,
                 paymentMethod: this.editOrder.paymentMethod,
@@ -61,11 +55,16 @@ export class CreateOrderComponent implements OnInit {
     updateOrder() {
         const { id: orderId, state } = this.formUpdateOrder.value;
 
-        this.orderService.updateOrderState(orderId, state)
-            .subscribe(() => {
-                this.formUpdateOrder.reset();
-                this.closeModalAddProduct();
-            });
+        if (Object.values(OrderState).includes(state as OrderState)) {
+            const s = state as OrderState;
+            this.orderService.updateOrderState(orderId, s)
+                .subscribe({
+                    next: () => {
+                        this.formUpdateOrder.reset();
+                        this.closeModalAddProduct();
+                    }
+                });
+        }
     }
 
     closeModalAddProduct() {

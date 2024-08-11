@@ -32,25 +32,22 @@ export class ListPromotionsComponent implements OnInit {
             });
     }
 
-    openModalEditPromotion(): void {
+    openModalEditPromotion() {
         this.showModalEditPromotion = true;
     }
 
-    closeModalEditPromotion(): void {
+    closeModalEditPromotion() {
         this.showModalEditPromotion = false;
         this.editedPromotion = null;
     }
 
-    editPromotion(promotion: PromotionDto){
+    editPromotion(promotion: PromotionDto) {
         this.editedPromotion = promotion;
         this.openModalEditPromotion();
     }
 
-    deletePromotion(promotion: PromotionDto){
+    deletePromotion(promotion: PromotionDto) {
         this.promotionService.deletePromotion(promotion)
-            .subscribe({
-                next: () => this.closeModalEditPromotion(),
-                error: () => console.error('Error deleting promotion')
-            });
+            .subscribe();
     }
 }

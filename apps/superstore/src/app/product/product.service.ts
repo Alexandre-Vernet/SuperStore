@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, lastValueFrom, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, lastValueFrom, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ProductDto } from '@superstore/interfaces';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { ReviewService } from '../review/review.service';
+import { ErrorService } from "../error/error.service";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,7 @@ export class ProductService {
         private readonly http: HttpClient,
         private readonly notificationService: NotificationsService,
         private readonly reviewService: ReviewService,
+        private readonly errorService: ErrorService
     ) {
         this.getAllProducts().subscribe();
     }
@@ -156,6 +158,10 @@ export class ProductService {
                     this.productsSubjectFiltered.next(products);
                     this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
                 }),
+                catchError((err) => {
+                    this.errorService.setError(err.error.message);
+                    return of(null);
+                })
             );
     }
 }

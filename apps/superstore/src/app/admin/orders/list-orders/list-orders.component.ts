@@ -24,12 +24,9 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.orderService.findAll().pipe(
+        this.orderService.orders$.pipe(
             takeUntil(this.unsubscribe$)
-        ).subscribe((orders) => {
-            console.log(orders)
-                this.orders = orders;
-            });
+        ).subscribe((orders) => this.orders = orders);
 
         SearchBar.searchBar
             .subscribe((search) => {
@@ -49,7 +46,6 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     closeModal() {
         this.showModalAddProduct = false;
     }
-
 
     editOrder(order: OrderDto) {
         this.editedOrder = {
