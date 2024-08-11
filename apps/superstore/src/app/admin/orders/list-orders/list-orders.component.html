@@ -63,11 +63,11 @@
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.address.address }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                                 <ul>
-                                  <ng-container *ngFor="let orderProducts of order.products">
-                                    <li *ngFor="let product of orderProducts.products">
-                                        {{ product.name }}
+                                    <li *ngFor="let orderProduct of order.products">
+                                        <a [routerLink]="'/product/' + orderProduct.product.slug">
+                                            {{ orderProduct.product.name }}
+                                        </a>
                                     </li>
-                                  </ng-container>
                                 </ul>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">

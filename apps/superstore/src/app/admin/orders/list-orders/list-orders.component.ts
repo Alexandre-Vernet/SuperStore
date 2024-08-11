@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrderDto } from '@superstore/interfaces';
 import { OrderService } from '../../../order/order.service';
 import { SearchBar } from '../../search-bar/search-bar';
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     selector: 'superstore-orders',
     templateUrl: './list-orders.component.html',
     styleUrls: ['./list-orders.component.scss'],
 })
-export class ListOrdersComponent implements OnInit {
+export class ListOrdersComponent implements OnInit, OnDestroy {
 
     orders: OrderDto[];
     editedOrder: OrderDto;
     searchBar: string;
     showModalAddProduct = false;
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly orderService: OrderService
@@ -21,10 +24,22 @@ export class ListOrdersComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.orderService.findAll().pipe(
+            takeUntil(this.unsubscribe$)
+        ).subscribe((orders) => {
+            console.log(orders)
+                this.orders = orders;
+            });
+
         SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
             });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     openModal() {

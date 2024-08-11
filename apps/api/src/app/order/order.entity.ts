@@ -10,7 +10,7 @@ export class Order {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { eager: true })
     @JoinColumn({ name: 'user_id' })
     user: User;
 
