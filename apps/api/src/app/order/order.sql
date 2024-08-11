@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     id              SERIAL PRIMARY KEY,
     user_id         INTEGER                 NOT NULL,
     address_id      INTEGER                 NOT NULL,
+    promotion_id    INTEGER                 NULL,
     state           TEXT                    NOT NULL,
     delivery_method TEXT                    NOT NULL,
     payment_method  TEXT                    NOT NULL,
@@ -14,5 +15,6 @@ CREATE TABLE IF NOT EXISTS public.orders
     updated_at      TIMESTAMP DEFAULT NOW() NOT NULL,
 
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES addresses (id) ON DELETE CASCADE
+    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES addresses (id) ON DELETE CASCADE,
+    CONSTRAINT fk_promotions_id FOREIGN KEY (promotion_id) REFERENCES promotions (id) ON DELETE CASCADE
 );

@@ -56,9 +56,9 @@ export class CreateProductComponent implements OnInit {
         const product: ProductDto = {
             name: name.trim(),
             description: description.trim(),
-            price,
+            price: Number(price),
             categories: categories.split(',').map(c => c.trim()),
-            images: images.split(',').map(url => ({ url })
+            images: images.split(',').map(url => ({ url: url.trim() })
             )
         };
 

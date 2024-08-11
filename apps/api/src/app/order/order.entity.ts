@@ -3,6 +3,7 @@ import { OrderState } from '@superstore/interfaces';
 import { User } from '../user/user.entity';
 import { Address } from '../address/address.entity';
 import { OrderProduct } from '../order-product/order-product.entity';
+import { Promotion } from "../promotion/promotion.entity";
 
 @Entity({ name: 'orders', schema: 'public' })
 export class Order {
@@ -19,6 +20,10 @@ export class Order {
 
     @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { cascade: true, eager: true })
     orderProducts: OrderProduct[];
+
+    @OneToOne(() => Promotion)
+    @JoinColumn({ name: 'promotion_id' })
+    promotion: Promotion;
 
     @Column({ name: 'state', type: 'text' })
     state: OrderState;

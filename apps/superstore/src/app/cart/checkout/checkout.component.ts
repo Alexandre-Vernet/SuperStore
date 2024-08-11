@@ -115,7 +115,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         });
     }
 
-
     changeDeliveryMethod(deliveryMethod: DeliveryMethod) {
         this.selectedDeliveryMethod = deliveryMethod;
         this.formAddress.patchValue({
@@ -194,6 +193,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             user,
             address: newAddress,
             orderProducts,
+            promotion: this.promotion,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
@@ -208,7 +208,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     confirmOrder(order: OrderDto) {
-        console.log(order);
         this.orderService
             .confirmOrder(order)
             .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
