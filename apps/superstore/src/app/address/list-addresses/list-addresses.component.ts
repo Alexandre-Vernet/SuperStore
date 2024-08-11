@@ -25,13 +25,14 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
             this.addressService.addresses$.pipe(distinctUntilChanged())
         ])
             .pipe(
-                takeUntil(this.unsubscribe$)
+                distinctUntilChanged(),
+                takeUntil(this.unsubscribe$),
             )
             .subscribe(([selectedAddress, addresses]) => {
-                if (selectedAddress === null) {
-                    this.selectedAddress.next(null);
-                } else if (!selectedAddress && addresses.length) {
-                    this.selectedAddress.next(addresses[0]);
+                if (!selectedAddress && addresses) {
+                    this.selectAddress(addresses[0]);
+                } else if (!selectedAddress && !addresses) {
+                    this.selectAddress(null);
                 } else {
                     this.selectAddress(selectedAddress);
                 }
@@ -47,10 +48,6 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
 
     selectAddress(address: AddressDto) {
         this.selectedAddress.next(address);
-    }
-
-    addNewAddress() {
-        this.selectedAddress.next(null);
     }
 
     removeAddress(address: AddressDto) {
