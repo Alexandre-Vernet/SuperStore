@@ -24,7 +24,6 @@ export class ReviewService {
     findReviewsForProduct(productId: number) {
         const options: FindManyOptions = {
             where: { product: { id: productId } },
-            relations: ['user', 'product']
         };
 
         return this.reviewRepository.find(options);

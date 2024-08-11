@@ -7,11 +7,11 @@ export class Review {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => Product)
+    @ManyToOne(() => Product, { eager: true })
     @JoinColumn({ name: 'product_id' })
     product: Product;
 
-    @OneToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+    @OneToOne(() => User, (user) => user.id, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: User;
 

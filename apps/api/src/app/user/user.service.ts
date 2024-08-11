@@ -28,7 +28,6 @@ export class UserService {
     async find(id: number) {
         const options: FindOneOptions = {
             where: { id },
-            relations: ['addresses']
         };
         const user = await this.userRepository.findOne(options);
         delete user.password;

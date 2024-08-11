@@ -6,7 +6,7 @@ export class User {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToMany(() => Address, (address) => address.user, { nullable: true })
+    @OneToMany(() => Address, (address) => address.user, { nullable: true, eager: true })
     addresses: Address[];
 
     @Column({ name: 'first_name' })
