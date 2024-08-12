@@ -16,7 +16,7 @@ export class AddressService {
     ) {
     }
 
-    async create(address: AddressDto, throwIfExist: boolean = true): Promise<AddressDto> {
+    async create(address: AddressDto, throwIfExist = true): Promise<AddressDto> {
         const addressExist = await this.findUniqueAddress(address);
         if (addressExist) {
             if (throwIfExist) {
@@ -69,6 +69,7 @@ export class AddressService {
 
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating addresses...');
         const user: UserDto = await this.userService.find(1);
 

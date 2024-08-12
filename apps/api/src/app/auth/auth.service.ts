@@ -134,6 +134,7 @@ export class AuthService {
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating users...');
 
         for (let i = 0; i < 100; i++) {

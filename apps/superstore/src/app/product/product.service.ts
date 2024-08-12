@@ -76,7 +76,7 @@ export class ProductService {
                 return this.productsSubjectFiltered.value.sort((a, b) => a.name.localeCompare(b.name));
             case '-name':
                 return this.productsSubjectFiltered.value.sort((a, b) => b.name.localeCompare(a.name));
-            case '-rating':
+            case '-rating': {
                 const reviews = await lastValueFrom(this.reviewService.getReviewsForAllProducts());
                 return this.productsSubjectFiltered.value.sort((a, b) => {
                     const aReviews = reviews.filter((r) => r.product.id === b.id);
@@ -85,6 +85,7 @@ export class ProductService {
                     const bRating = bReviews.reduce((acc, cur) => acc + cur.rating, 0) / bReviews.length;
                     return bRating - aRating;
                 });
+            }
             default:
                 return this.productsSubjectFiltered.value;
         }

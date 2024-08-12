@@ -46,7 +46,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     getCategoryFromUrl() {
-        const category = this.activatedRoute.snapshot.queryParams['category'];
+        const category = this.activatedRoute.snapshot.queryParams.category;
         // Check category checkbox
         this.categories.map(c => {
             c.checked = c.label === category;

@@ -27,10 +27,7 @@ export class OrderHistoryComponent implements OnInit {
 
     ngOnInit() {
         this.orderService.getUserOrders()
-            .subscribe((orders) => {
-                console.log(orders)
-                this.orders = orders;
-            });
+            .subscribe((orders) => this.orders = orders);
     }
 
     toggleOrderOption() {

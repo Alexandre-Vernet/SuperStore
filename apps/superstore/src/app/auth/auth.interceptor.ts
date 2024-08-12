@@ -5,10 +5,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements AngularHttpInterceptor {
 
-    constructor(
-    ) {
-    }
-
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const token = localStorage.getItem('accessToken');
         if (token) {

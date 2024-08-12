@@ -6,7 +6,8 @@
     "start:app": "nx serve superstore",
     "start:api": "nx serve api",
     "build:app": "nx build superstore",
-    "build:api": "nx build api"
+    "build:api": "nx build api",
+    "lint": "nx run-many --target=lint --all --fix"
   },
   "private": true,
   "dependencies": {

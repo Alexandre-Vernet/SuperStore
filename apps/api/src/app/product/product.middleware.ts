@@ -4,17 +4,17 @@ import { CustomBadRequestException } from '../exceptions/CustomBadRequestExcepti
 
 export class ProductMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: (error?: Error) => void) {
-        const slug = this.setSlug(req.body['name']);
-        req.body['slug'] = slug;
+        const slug = this.setSlug(req.body.name);
+        req.body.slug = slug;
 
         const product: ProductDto = {
-            id: req.body['id'],
-            name: req.body['name'],
+            id: req.body.id,
+            name: req.body.name,
             slug,
-            description: req.body['description'],
-            price: req.body['price'],
-            categories: req.body['categories'],
-            images: req.body['images'],
+            description: req.body.description,
+            price: req.body.price,
+            categories: req.body.categories,
+            images: req.body.images,
         }
 
         if (!product.name) {

@@ -18,13 +18,6 @@ export class OrderService {
     async create(order: OrderDto) {
         const throwIfExist = false;
         order.address = await this.addressService.create(order.address, throwIfExist);
-
-        // order.orderProducts.map(o => {
-        //     o.id = 201;
-        //     o.order = a;
-        //     o.products = product;
-        // })
-
         return await this.orderRepository.save(order);
     }
 
@@ -80,6 +73,7 @@ export class OrderService {
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating orders...');
 
         for (let i = 0; i < 100; i++) {

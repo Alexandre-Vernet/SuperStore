@@ -82,6 +82,7 @@ export class ProductService {
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating products...');
 
         for (let i = 0; i < 200; i++) {

@@ -48,12 +48,12 @@ export class MigrationService {
     }
 
     async migrateAllResources() {
-        // this.newsletterService.migrate();
-        // this.promotionService.migrate();
-        // this.productService.migrate();
-        // this.addressService.migrate();
-        // this.authService.migrate();
-        // this.reviewService.migrate();
-        // this.orderService.migrate();
+        // This.newsletterService.migrate();
+        // This.promotionService.migrate();
+        // This.productService.migrate();
+        // This.addressService.migrate();
+        // This.authService.migrate();
+        // This.reviewService.migrate();
+        // This.orderService.migrate();
     }
 }

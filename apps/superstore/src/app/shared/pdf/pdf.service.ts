@@ -15,7 +15,6 @@ export class PdfService {
     }
 
     downloadInvoice(order: OrderDto) {
-        console.log(order)
         const doc = new jsPDF('p', 'pt');
         doc.setFont('helvetica');
 

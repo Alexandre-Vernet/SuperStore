@@ -51,6 +51,7 @@ export class ReviewService {
 
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating reviews...');
 
         for (let i = 0; i < 300; i++) {

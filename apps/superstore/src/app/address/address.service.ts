@@ -40,10 +40,6 @@ export class AddressService {
             );
     }
 
-    getAddress(addressId: number): Observable<AddressDto> {
-        return this.http.get<AddressDto>(`${ this.addressUrl }/${ addressId }`);
-    }
-
     updateAddress(address: AddressDto): Observable<AddressDto> {
         return this.http.put<AddressDto>(`${ this.addressUrl }/${ address.id }`, address)
             .pipe(

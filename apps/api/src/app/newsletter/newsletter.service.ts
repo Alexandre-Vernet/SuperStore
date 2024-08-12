@@ -63,6 +63,7 @@ export class NewsletterService {
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating newsletter ...');
 
         for (let i = 0; i < 100; i++) {

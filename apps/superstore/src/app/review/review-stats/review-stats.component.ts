@@ -31,7 +31,7 @@ export class ReviewStatsComponent implements OnInit {
                     }
                 });
             });
-        // this.userHasBoughtProduct();
+        // This.userHasBoughtProduct();
     }
 
     calculateSizeProgressBar(rating: number) {
@@ -57,11 +57,11 @@ export class ReviewStatsComponent implements OnInit {
 
 
     userHasBoughtProduct() {
-        // this.orderService.getOrdersPerUser()
+        // This.orderService.getOrdersPerUser()
         //     .subscribe(orders => {
-        //         const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
-        //         const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.user.map(u => u.id).includes(this.authService.user?.id));
-        //         this.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
+        //         Const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
+        //         Const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.user.map(u => u.id).includes(this.authService.user?.id));
+        //         This.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
         //     });
     }
 

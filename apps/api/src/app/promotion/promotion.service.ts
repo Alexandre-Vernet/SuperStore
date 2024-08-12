@@ -66,6 +66,7 @@ export class PromotionService {
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating promotion...');
 
         for (let i = 0; i < 300; i++) {
