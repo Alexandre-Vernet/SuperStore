@@ -4,6 +4,5 @@ import { OrderDto } from '../order/order';
 export class OrderProductDto {
     id?: number;
     order?: OrderDto;
-    product?: ProductDto;
-    products: ProductDto[];
+    product: ProductDto;
 }

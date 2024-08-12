@@ -4,7 +4,6 @@ import {
     DeliveryMethod,
     deliveryMethods,
     OrderDto,
-    OrderProductDto,
     OrderState,
     ProductDto,
     PromotionDto
@@ -161,11 +160,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     submitForm() {
         // Cast price to number
         this.cart.map(c => c.price = Number(c.price));
-        const products: OrderProductDto[] = this.cart.map(product => ({
-            products: [product]
-        }));
-
-        const user = this.authService.user;
 
         const {
             company,
@@ -179,7 +173,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         } = this.formAddress.value;
 
         const newAddress: AddressDto = {
-            user,
+            user: this.authService.user,
             company,
             address,
             apartment,
@@ -190,9 +184,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         };
 
         const order: OrderDto = {
-            user,
+            user: this.authService.user,
             address: newAddress,
-            products,
+            products: this.cart.map(product => ({ product })),
             promotion: this.promotion,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
@@ -204,12 +198,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             createdAt: new Date()
         };
 
-        this.confirmOrder(order);
-    }
 
-    confirmOrder(order: OrderDto) {
-        this.orderService
-            .create(order)
+        this.orderService.create(order)
             .subscribe({
                 next: () =>  this.router.navigateByUrl('/order/confirm-order')
             });

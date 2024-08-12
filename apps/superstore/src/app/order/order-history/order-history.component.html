@@ -97,24 +97,24 @@
                                 <!-- Products -->
                                 <h4 class="sr-only">Items</h4>
                                 <ul role="list" class="divide-y divide-gray-200">
-                                    <li *ngFor="let orderProducts of order.products" class="p-4 sm:p-6">
+                                    <li *ngFor="let orderProduct of order.products" class="p-4 sm:p-6">
                                         <div class="flex items-center sm:items-start">
                                             <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-40 sm:w-40">
-                                                <a routerLink="/product/{{ orderProducts.product.slug }}">
-                                                    <img [src]="orderProducts.product.images[0].url"
-                                                         [alt]="orderProducts.product.name"
+                                                <a routerLink="/product/{{ orderProduct.product.slug }}">
+                                                    <img [src]="orderProduct.product.images[0].url"
+                                                         [alt]="orderProduct.product.name"
                                                          class="h-full w-full object-cover object-center">
                                                 </a>
                                             </div>
                                             <div class="ml-6 flex-1 text-sm">
                                                 <div class="font-medium text-gray-900 sm:flex sm:justify-between">
-                                                    <a routerLink="/product/{{ orderProducts.product.slug }}">
-                                                        <h5>{{ orderProducts.product.name }}</h5>
+                                                    <a routerLink="/product/{{ orderProduct.product.slug }}">
+                                                        <h5>{{ orderProduct.product.name }}</h5>
                                                     </a>
-                                                    <p class="mt-2 sm:mt-0">{{ orderProducts.product.price | convertCurrency }}</p>
+                                                    <p class="mt-2 sm:mt-0">{{ orderProduct.product.price | convertCurrency }}</p>
                                                 </div>
                                                 <p class="hidden text-gray-500 sm:mt-2 sm:block">
-                                                    {{ orderProducts.product.description }}
+                                                    {{ orderProduct.product.description }}
                                                 </p>
                                             </div>
                                         </div>
@@ -132,19 +132,19 @@
                                                 <div *ngIf="order.state === 'DELIVERED'"
                                                      class="flex flex-1 justify-center pl-4">
                                                     <span
-                                                            (click)="toggleAddReviewModal(orderProducts.product)"
+                                                            (click)="toggleAddReviewModal(orderProduct.product)"
                                                             class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
                                                         Add a review
                                                     </span>
                                                 </div>
                                                 <div class="flex flex-1 justify-center pl-4">
-                                                    <a routerLink="/product/{{ orderProducts.product.slug }}"
+                                                    <a routerLink="/product/{{ orderProduct.product.slug }}"
                                                        class="whitespace-nowrap text-indigo-600 hover:text-indigo-500">
                                                         View product
                                                     </a>
                                                 </div>
                                                 <div class="flex flex-1 justify-center pl-4">
-                                                    <a (click)="addToCart(orderProducts.product)"
+                                                    <a (click)="addToCart(orderProduct.product)"
                                                        class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
                                                         Buy again
                                                     </a>
