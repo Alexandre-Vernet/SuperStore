@@ -8,8 +8,6 @@ RUN npm install --production
 
 COPY . .
 
-RUN npm run lint
-
 RUN npm run build:app
 
 
