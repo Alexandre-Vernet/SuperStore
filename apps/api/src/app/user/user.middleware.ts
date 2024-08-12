@@ -5,12 +5,12 @@ import { CustomBadRequestException } from '../exceptions/CustomBadRequestExcepti
 export class UserMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: (error?: Error) => void) {
         const user: Omit<UserDto, 'password' | 'addresses'> = {
-            id: req.body.id,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            isAdmin: req.body.isAdmin
-        }
+            id: req.body['id'],
+            firstName: req.body['firstName'],
+            lastName: req.body['lastName'],
+            email: req.body['email'],
+            isAdmin: req.body['isAdmin']
+        };
 
         if (!user.firstName) {
             throw new CustomBadRequestException('First name is required', 'firstName');

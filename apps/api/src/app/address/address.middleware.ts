@@ -6,14 +6,14 @@ export class AddressMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: (error?: Error) => void) {
 
         const address: AddressDto = {
-            user: req.body.user,
-            address: req.body.address,
-            apartment: req.body.apartment,
-            company: req.body.company,
-            zipCode: req.body.zipCode,
-            city: req.body.city,
-            country: req.body.country,
-            phone: req.body.phone
+            user: req.body['user'],
+            address: req.body['address'],
+            apartment: req.body['apartment'],
+            company: req.body['company'],
+            zipCode: req.body['zipCode'],
+            city: req.body['city'],
+            country: req.body['country'],
+            phone: req.body['phone']
         };
 
         if (!address.address) {
