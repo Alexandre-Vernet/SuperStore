@@ -29,8 +29,8 @@ export class OrderController {
 
     @UseInterceptors(AuthInterceptor)
     @Get(':userId/last')
-    findLast(@Param('userId') userId: number) {
-        return this.orderService.findLastOrder(userId);
+    getLastOrder(@Param('userId') userId: number) {
+        return this.orderService.getLastOrder(userId);
     }
 
     @UseInterceptors(AuthInterceptor)

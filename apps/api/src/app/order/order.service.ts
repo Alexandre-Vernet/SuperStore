@@ -55,10 +55,14 @@ export class OrderService {
         return this.orderRepository.delete(id);
     }
 
-    findLastOrder(userId: number) {
+    getLastOrder(userId: number) {
         const options: FindOneOptions = {
-            where: { userId },
-            order: { id: 'DESC' }
+            where: {
+                user: {
+                    id: userId
+                }
+            },
+            order: { createdAt: 'DESC' }
         };
         return this.orderRepository.findOne(options);
     }
