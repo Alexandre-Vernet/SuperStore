@@ -133,10 +133,6 @@ export class ProductService {
         return this.http.get<ProductDto>(`${ this.productUri }/slug/${ slug }`);
     }
 
-    getProductFromId(productId: number): Observable<ProductDto> {
-        return this.http.get<ProductDto>(`${ this.productUri }/${ productId }`);
-    }
-
     updateProduct(product: ProductDto): Observable<ProductDto> {
         return this.http.put<ProductDto>(`${ this.productUri }/${ product.id }`, product)
             .pipe(
