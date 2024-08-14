@@ -186,7 +186,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const order: OrderDto = {
             user: this.authService.user,
             address: newAddress,
-            products: this.cart.map(product => ({ product })),
+            products: this.cart.map(product => ({
+                product,
+                size: product.size,
+                quantity: product.quantity
+            })),
             promotion: this.promotion,
             state: OrderState.PENDING,
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),

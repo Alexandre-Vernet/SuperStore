@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from '../order/order.entity';
 import { Product } from '../product/product.entity';
 
@@ -14,4 +14,10 @@ export class OrderProduct {
     @ManyToOne(() => Product, { cascade: true, eager: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'product_id' })
     product: Product;
+
+    @Column()
+    quantity: number;
+
+    @Column({ nullable: true, length: 3 })
+    size: string;
 }

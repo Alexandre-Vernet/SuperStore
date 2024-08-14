@@ -5,4 +5,6 @@ export class OrderProductDto {
     id?: number;
     order?: OrderDto;
     product: ProductDto;
+    quantity: number;
+    size?: string;
 }

@@ -84,7 +84,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     }
 
     addToCart(product: ProductDto) {
-        product.size = this.selectedSize;
+        product.size = this.selectedSize.tag;
         this.cartService.addToCart(product);
     }
 }

@@ -58,10 +58,6 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     addToCart(product: ProductDto) {
-        product.size = {
-            name: 'Small',
-            tag: 'S',
-        };
         this.cartService.addToCart(product);
         this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
     }

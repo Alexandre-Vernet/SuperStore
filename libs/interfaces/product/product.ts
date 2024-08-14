@@ -1,4 +1,3 @@
-import { ProductSizeDto } from './product-size';
 import { ImageDto } from '../image/image';
 
 export class ProductDto {
@@ -10,5 +9,5 @@ export class ProductDto {
     price: number;
     categories: string[];
     quantity?: number;
-    size?: ProductSizeDto;
+    size?: string;
 }
