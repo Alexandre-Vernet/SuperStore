@@ -1,29 +1,29 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderState } from '@superstore/interfaces';
-import { User } from '../user/user.entity';
-import { Address } from '../address/address.entity';
-import { OrderProduct } from '../order-product/order-product.entity';
-import { Promotion } from "../promotion/promotion.entity";
+import { UserEntity } from '../user/user.entity';
+import { AddressEntity } from '../address/address.entity';
+import { OrderProductEntity } from '../order-product/order-product.entity';
+import { PromotionEntity } from "../promotion/promotion.entity";
 
 @Entity({ name: 'orders', schema: 'public' })
-export class Order {
+export class OrderEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToOne(() => User, { eager: true })
+    @OneToOne(() => UserEntity, { eager: true })
     @JoinColumn({ name: 'user_id' })
-    user: User;
+    user: UserEntity;
 
-    @OneToOne(() => Address, { eager: true })
+    @OneToOne(() => AddressEntity, { eager: true })
     @JoinColumn({ name: 'address_id' })
-    address: Address;
+    address: AddressEntity;
 
-    @OneToMany(() => OrderProduct, orderProduct => orderProduct.order, { cascade: true, eager: true })
-    products: OrderProduct[];
+    @OneToMany(() => OrderProductEntity, orderProduct => orderProduct.order, { cascade: true, eager: true })
+    products: OrderProductEntity[];
 
-    @OneToOne(() => Promotion, { eager: true })
+    @OneToOne(() => PromotionEntity, { eager: true })
     @JoinColumn({ name: 'promotion_id' })
-    promotion: Promotion;
+    promotion: PromotionEntity;
 
     @Column({ name: 'state', type: 'text' })
     state: OrderState;

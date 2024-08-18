@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, MoreThan, Repository } from 'typeorm';
-import { Promotion } from './promotion.entity';
+import { PromotionEntity } from './promotion.entity';
 import { faker } from '@faker-js/faker';
 import { PromotionDto } from '@superstore/interfaces';
 
 @Injectable()
 export class PromotionService {
     constructor(
-        @InjectRepository(Promotion)
-        private readonly promotionRepository: Repository<Promotion>
+        @InjectRepository(PromotionEntity)
+        private readonly promotionRepository: Repository<PromotionEntity>
     ) {
     }
 

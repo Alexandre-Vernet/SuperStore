@@ -1,19 +1,19 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Order } from '../order/order.entity';
-import { Product } from '../product/product.entity';
+import { OrderEntity } from '../order/order.entity';
+import { ProductEntity } from '../product/product.entity';
 
 @Entity({ name: 'order_products', schema: 'public' })
-export class OrderProduct {
+export class OrderProductEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => Order, order => order.products)
+    @ManyToOne(() => OrderEntity, order => order.products)
     @JoinColumn({ name: 'order_id' })
-    order: Order;
+    order: OrderEntity;
 
-    @ManyToOne(() => Product, { cascade: true, eager: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => ProductEntity, { cascade: true, eager: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'product_id' })
-    product: Product;
+    product: ProductEntity;
 
     @Column()
     quantity: number;

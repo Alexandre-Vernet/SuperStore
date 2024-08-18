@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { Order } from './order.entity';
+import { OrderEntity } from './order.entity';
 import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
 import { faker } from '@faker-js/faker';
 import { AddressService } from '../address/address.service';
@@ -9,8 +9,8 @@ import { AddressService } from '../address/address.service';
 @Injectable()
 export class OrderService {
     constructor(
-        @InjectRepository(Order)
-        private readonly orderRepository: Repository<Order>,
+        @InjectRepository(OrderEntity)
+        private readonly orderRepository: Repository<OrderEntity>,
         private readonly addressService: AddressService,
     ) {
     }
@@ -21,7 +21,7 @@ export class OrderService {
         return await this.orderRepository.save(order);
     }
 
-    findAll(): Promise<Order[]> {
+    findAll(): Promise<OrderEntity[]> {
         // Order by id ASC
         const options: FindManyOptions = {
             order: { id: 'ASC' }

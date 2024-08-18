@@ -2,15 +2,15 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Newsletter } from './newsletter.entity';
+import { NewsletterEntity } from './newsletter.entity';
 import { NewsletterDto, SendNewsletterDto } from '@superstore/interfaces';
 import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class NewsletterService {
     constructor(
-        @InjectRepository(Newsletter)
-        private readonly newsletterRepository: Repository<Newsletter>,
+        @InjectRepository(NewsletterEntity)
+        private readonly newsletterRepository: Repository<NewsletterEntity>,
         private readonly emailService: EmailService
     ) {
     }

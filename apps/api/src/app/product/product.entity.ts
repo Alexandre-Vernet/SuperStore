@@ -1,13 +1,13 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Image } from '../image/image.entity';
+import { ImageEntity } from '../image/image.entity';
 
 @Entity({ name: 'products', schema: 'public' })
-export class Product {
+export class ProductEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToMany(() => Image, image => image.product, { cascade: true, eager: true })
-    images: Image[];
+    @OneToMany(() => ImageEntity, image => image.product, { cascade: true, eager: true })
+    images: ImageEntity[];
 
     @Column({ type: 'text', unique: true })
     name: string;

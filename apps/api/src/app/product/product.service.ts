@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ImageDto, ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
-import { Product } from './product.entity';
+import { ProductEntity } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
 import { CustomConflictException } from '../exceptions/CustomConflictException';
@@ -11,12 +11,12 @@ import { CustomNotFoundException } from '../exceptions/CustomNotFoundException';
 export class ProductService {
 
     constructor(
-        @InjectRepository(Product)
-        private readonly productRepository: Repository<Product>
+        @InjectRepository(ProductEntity)
+        private readonly productRepository: Repository<ProductEntity>
     ) {
     }
 
-    async create(createProductDto: ProductDto): Promise<Product> {
+    async create(createProductDto: ProductDto): Promise<ProductEntity> {
         const productExist = await this.findBy('slug', createProductDto.slug) || await this.findBy('name', createProductDto.name);
         if (productExist) {
             throw new CustomConflictException('Product already exists', 'name');
@@ -36,11 +36,11 @@ export class ProductService {
     }
 
 
-    findAll(): Promise<Product[]> {
+    findAll(): Promise<ProductEntity[]> {
         return this.productRepository.find();
     }
 
-    findAllProductsWithPagination(pagination): Promise<{ products: Product[], total: number }> {
+    findAllProductsWithPagination(pagination): Promise<{ products: ProductEntity[], total: number }> {
         const { limit, page } = pagination;
         return this.productRepository.findAndCount({
             skip: limit * (page - 1),

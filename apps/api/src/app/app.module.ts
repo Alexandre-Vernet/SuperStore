@@ -1,30 +1,28 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
-import { Product } from './product/product.entity';
-import { Order } from './order/order.entity';
-import { User } from './user/user.entity';
+import { ProductEntity } from './product/product.entity';
+import { OrderEntity } from './order/order.entity';
+import { UserEntity } from './user/user.entity';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { AddressModule } from './address/address.module';
-import { Address } from './address/address.entity';
+import { AddressEntity } from './address/address.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
-import { Review } from './review/review.entity';
+import { ReviewEntity } from './review/review.entity';
 import { ReviewModule } from './review/review.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
-import { Newsletter } from './newsletter/newsletter.entity';
+import { NewsletterEntity } from './newsletter/newsletter.entity';
 import { MigrationModule } from './migration/migration.module';
 import { PromotionModule } from './promotion/promotion.module';
-import { Promotion } from './promotion/promotion.entity';
-import { OrderProduct } from './order-product/order-product.entity';
-import { ProductSize } from './product-size/product.size';
-import { ProductSizeModule } from './product-size/product-size.module';
+import { PromotionEntity } from './promotion/promotion.entity';
+import { OrderProductEntity } from './order-product/order-product.entity';
 import { ProductMiddleware } from './product/product.middleware';
 import { UserMiddleware } from './user/user.middleware';
 import { AddressMiddleware } from './address/address.middleware';
-import { Image } from './image/image.entity';
+import { ImageEntity } from './image/image.entity';
 
 const {
     POSTGRES_HOST,
@@ -32,7 +30,7 @@ const {
     POSTGRES_USERNAME,
     POSTGRES_PASSWORD,
     POSTGRES_DATABASE,
-    JWT_SECRET,
+    JWT_SECRET
 } = process.env;
 
 @Module({
@@ -44,12 +42,21 @@ const {
             username: POSTGRES_USERNAME,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DATABASE,
-            entities: [Product, Order, OrderProduct, ProductSize, User, Address, Review, Newsletter, Promotion, Image],
-            ssl: false,
+            entities: [
+                ProductEntity,
+                OrderEntity,
+                OrderProductEntity,
+                UserEntity,
+                AddressEntity,
+                ReviewEntity,
+                NewsletterEntity,
+                PromotionEntity,
+                ImageEntity
+            ],
+            ssl: false
         }),
         ProductModule,
         OrderModule,
-        ProductSizeModule,
         UserModule,
         AddressModule,
         EmailModule,
@@ -58,19 +65,19 @@ const {
         JwtModule.register({
             global: true,
             secret: JWT_SECRET,
-            signOptions: { expiresIn: '1d' },
+            signOptions: { expiresIn: '1d' }
         }),
         NewsletterModule,
         MigrationModule,
-        PromotionModule,
-    ],
+        PromotionModule
+    ]
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(ProductMiddleware)
             .forRoutes(
                 { path: 'product/:id', method: RequestMethod.PUT },
-                { path: 'product', method: RequestMethod.POST },
+                { path: 'product', method: RequestMethod.POST }
             );
 
         consumer.apply(UserMiddleware)
@@ -78,7 +85,7 @@ export class AppModule implements NestModule {
 
         consumer.apply(AddressMiddleware)
             .forRoutes({ path: 'address/:id', method: RequestMethod.PUT },
-                { path: 'address', method: RequestMethod.POST },
-                );
+                { path: 'address', method: RequestMethod.POST }
+            );
     }
 }

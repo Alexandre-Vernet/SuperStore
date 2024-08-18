@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AddressDto, UserDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Address } from './address.entity';
+import { AddressEntity } from './address.entity';
 import { faker } from '@faker-js/faker';
 import { UserService } from '../user/user.service';
 
@@ -10,8 +10,8 @@ import { UserService } from '../user/user.service';
 export class AddressService {
 
     constructor(
-        @InjectRepository(Address)
-        private readonly addressRepository: Repository<Address>,
+        @InjectRepository(AddressEntity)
+        private readonly addressRepository: Repository<AddressEntity>,
         private readonly userService: UserService
     ) {
     }

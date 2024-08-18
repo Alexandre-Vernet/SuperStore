@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ProductDto, ReviewDto, UserDto } from '@superstore/interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { Review } from './review.entity';
+import { ReviewEntity } from './review.entity';
 import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ReviewService {
     constructor(
-        @InjectRepository(Review)
-        private readonly reviewRepository: Repository<Review>
+        @InjectRepository(ReviewEntity)
+        private readonly reviewRepository: Repository<ReviewEntity>
     ) {
     }
 

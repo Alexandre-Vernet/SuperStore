@@ -1,14 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'addresses', schema: 'public' })
-export class Address {
+export class AddressEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => User, (user) => user.addresses, { onDelete: 'CASCADE' })
+    @ManyToOne(() => UserEntity, (user) => user.addresses, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
-    user: User;
+    user: UserEntity;
 
     @Column({ nullable: true })
     company: string;

@@ -3,7 +3,7 @@ import { UserDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { EmailService } from '../email/email.service';
@@ -12,8 +12,8 @@ import { CustomBadRequestException } from '../exceptions/CustomBadRequestExcepti
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
         private jwtService: JwtService,
         private readonly emailService: EmailService
     ) {

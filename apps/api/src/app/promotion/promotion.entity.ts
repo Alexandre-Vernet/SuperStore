@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'promotions', schema: 'public' })
-export class Promotion {
+export class PromotionEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 

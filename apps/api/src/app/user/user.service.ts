@@ -1,21 +1,21 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserDto } from '@superstore/interfaces';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
     ) {
     }
 
-    async findAll(): Promise<User[]> {
+    async findAll(): Promise<UserEntity[]> {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
-        }
+        };
         return this.userRepository.find(options)
             .then((users) => {
                 return users.map((user) => {
