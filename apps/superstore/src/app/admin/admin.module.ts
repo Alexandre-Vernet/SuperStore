@@ -9,8 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListOrdersComponent } from './orders/list-orders/list-orders.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { ListUsersComponent } from './users/list-users/list-users.component';
-import { CreateUserComponent } from './users/create-user/create-user.component';
-import { CreateOrderComponent } from './orders/create-order/create-order.component';
+import { UpdateUserComponent } from './users/update-user/update-user.component';
+import { UpdateOrderComponent } from './orders/update-order/update-order.component';
 import { OrdersPipe } from './orders/orders.pipe';
 import { ProductsPipe } from './products/products.pipe';
 import { UsersPipe } from './users/users.pipe';
@@ -20,6 +20,7 @@ import { SendNewsletterComponent } from './send-newsletter/send-newsletter.compo
 import { EditPromotionComponent } from "./promotions-code/edit-promotion/edit-promotion.component";
 import { ListPromotionsComponent } from "./promotions-code/list-promotions/list-promotions.component";
 import { PromotionsPipe } from "./promotions-code/promotions.pipe";
+import { ErrorModule } from '../error/error.module';
 
 @NgModule({
     declarations: [
@@ -29,9 +30,9 @@ import { PromotionsPipe } from "./promotions-code/promotions.pipe";
         ListOrdersComponent,
         ListUsersComponent,
         TabsComponent,
-        CreateUserComponent,
-        CreateUserComponent,
-        CreateOrderComponent,
+        UpdateUserComponent,
+        UpdateUserComponent,
+        UpdateOrderComponent,
         OrdersPipe,
         ProductsPipe,
         UsersPipe,
@@ -48,6 +49,7 @@ import { PromotionsPipe } from "./promotions-code/promotions.pipe";
         ReactiveFormsModule,
         FormsModule,
         SharedModule,
+        ErrorModule
     ],
     exports: [ListProductsComponent],
 })

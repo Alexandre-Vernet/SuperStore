@@ -1,26 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProductDto, ReviewDto } from "@superstore/interfaces";
-import { ReviewService } from "./review.service";
+import { ProductDto, ReviewDto } from '@superstore/interfaces';
+import { ReviewService } from './review.service';
 
 @Component({
     selector: 'superstore-review',
     templateUrl: './review.component.html',
-    styleUrls: ['./review.component.scss'],
+    styleUrls: ['./review.component.scss']
 })
 export class ReviewComponent implements OnInit {
     @Input() product: ProductDto;
     reviews: ReviewDto[] = [];
 
     constructor(
-        private readonly reviewService: ReviewService,
+        private readonly reviewService: ReviewService
     ) {
     }
 
     ngOnInit() {
-        this.reviewService.getReviewsForProduct(this.product.id)
-            .subscribe(reviews => {
-                this.reviewService.reviews.next(reviews);
-                this.reviews = reviews;
-            });
+        this.reviewService.getReviewsForProduct(this.product)
+            .subscribe(reviews => this.reviews = reviews);
     }
 }

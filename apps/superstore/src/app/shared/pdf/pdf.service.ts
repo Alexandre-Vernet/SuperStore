@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { OrderDto, OrderWithProductsDto } from "@superstore/interfaces";
-import { jsPDF } from "jspdf";
-import { forkJoin } from "rxjs";
-import autoTable from "jspdf-autotable";
-import { ProductService } from "../../product/product.service";
-import { DatePipe } from "@angular/common";
-import { AddressService } from "../../address/address.service";
+import { OrderDto } from '@superstore/interfaces';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
@@ -13,13 +10,11 @@ import { AddressService } from "../../address/address.service";
 export class PdfService {
 
     constructor(
-        private readonly productService: ProductService,
-        private readonly addressService: AddressService,
         private datePipe: DatePipe
     ) {
     }
 
-    downloadInvoice(order: OrderWithProductsDto) {
+    downloadInvoice(order: OrderDto) {
         const doc = new jsPDF('p', 'pt');
         doc.setFont('helvetica');
 
@@ -41,61 +36,51 @@ export class PdfService {
         doc.setFontSize(14);
         doc.text(`${ this.datePipe.transform(order.createdAt, 'dd/MM/yyyy') }`, 200, 120);
 
-        this.addressService.getAddress(order.addressId)
-            .subscribe((address) => {
-                // Billing Address
-                doc.setFontSize(18);
-                doc.text('Billing Address', 50, 170);
-                doc.setFontSize(14);
-                doc.text(address.country, 50, 190);
-                doc.text(`${ address.address } \n${ address.apartment }`, 50, 210);
-                doc.text(address.zipCode, 50, 250);
-                doc.text(address.phone, 50, 270);
+        // Billing Address
+        doc.setFontSize(18);
+        doc.text('Billing Address', 50, 170);
+        doc.setFontSize(14);
+        doc.text(order.address.country, 50, 190);
+        doc.text(`${ order.address.address } \n${ order.address.apartment }`, 50, 210);
+        doc.text(order.address.zipCode, 50, 250);
+        doc.text(order.address.phone, 50, 270);
 
 
-                const productObservables = order.products.map((product) => {
-                    return this.productService.getProductFromId(product.id);
-                });
+        const productRows = [];
 
-                forkJoin(productObservables)
-                    .subscribe((products) => {
-                        const productRows = [];
+        order.products.forEach((p) => {
+            const productName = p.product.name;
+            const productPrice = p.product.price;
+            const productCategories = p.product.categories;
+            const productDescription = p.product.description;
 
-                        products.forEach((p) => {
-                            const productName = p.name;
-                            const productPrice = p.price;
-                            const productCategories = p.category;
-                            const productDescription = p.description;
+            productRows.push([
+                productName,
+                `${ productPrice } €`,
+                productCategories,
+                productDescription,
+            ]);
+        });
 
-                            productRows.push([
-                                productName,
-                                `${ productPrice } €`,
-                                productCategories,
-                                productDescription,
-                            ]);
-                        });
+        const header = ['Product', 'Price', 'Categories', 'Description'];
+        autoTable(doc, {
+            head: [header],
+            body: productRows,
+            startY: 300,
+            didParseCell: function (table) {
+                table.column.minWidth = 5;
+            },
+        });
 
-                        const header = ['Product', 'Price', 'Categories', 'Description'];
-                        autoTable(doc, {
-                            head: [header],
-                            body: productRows,
-                            startY: 300,
-                            didParseCell: function (table) {
-                                table.column.minWidth = 5;
-                            },
-                        });
+        const productTableHeight = productRows.length * 100;
+        if (productTableHeight > 500) {
+            doc.addPage();
+            this.displayPriceOnBottomPage(doc, 50, order);
+        } else {
+            this.displayPriceOnBottomPage(doc, productTableHeight + 300, order);
+        }
 
-                        const productTableHeight = productRows.length * 100;
-                        if (productTableHeight > 500) {
-                            doc.addPage();
-                            this.displayPriceOnBottomPage(doc, 50, order);
-                        } else {
-                            this.displayPriceOnBottomPage(doc, productTableHeight + 300, order);
-                        }
-
-                        doc.save(`invoice-${ new Date().getTime() }.pdf`);
-                    });
-            });
+        doc.save(`invoice-${ new Date().getTime() }.pdf`);
     }
 
     displayPriceOnBottomPage(doc, priceY: number, order: OrderDto) {

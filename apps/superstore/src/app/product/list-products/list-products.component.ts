@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from "../product.service";
-import { ProductDto } from "@superstore/interfaces";
+import { ProductService } from '../product.service';
+import { ProductDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-list-products',
     templateUrl: './list-products.component.html',
-    styleUrls: ['./list-products.component.scss'],
+    styleUrls: ['./list-products.component.scss']
 })
 export class ListProductsComponent implements OnInit {
 
@@ -14,7 +14,7 @@ export class ListProductsComponent implements OnInit {
         page: 1,
         limit: localStorage.getItem('limit') ? parseInt(localStorage.getItem('limit'), 10) : 10,
         pages: [],
-        totalProduct: 0,
+        totalProduct: 0
     };
     limitOptions = [10, 25, 50, 100];
 
@@ -24,11 +24,8 @@ export class ListProductsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.productsFiltered
-            .subscribe(products => {
-                this.products = products;
-            });
-
+        this.productService.productsFiltered$
+            .subscribe(products => this.products = products);
         this.setPagination();
     }
 
@@ -40,7 +37,7 @@ export class ListProductsComponent implements OnInit {
         return this.productService
             .getProducts(
                 this.pagination.limit,
-                page,
+                page
             )
             .subscribe(result => {
                 const { total } = result;
@@ -66,7 +63,7 @@ export class ListProductsComponent implements OnInit {
                 { length: endPage - startPage + 1 },
                 (_, i) => startPage + i
             ),
-            totalProduct: totalProduct,
+            totalProduct: totalProduct
         };
     }
 

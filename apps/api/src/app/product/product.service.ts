@@ -1,101 +1,113 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto, ProductDto } from '@superstore/interfaces';
-import { FindOneOptions, In, Repository } from "typeorm";
-import { Product } from "./product.entity";
-import { InjectRepository } from "@nestjs/typeorm";
+import { ImageDto, ProductDto } from '@superstore/interfaces';
+import { FindOneOptions, Repository } from 'typeorm';
+import { ProductEntity } from './product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
+import { CustomConflictException } from '../exceptions/CustomConflictException';
+import { CustomNotFoundException } from '../exceptions/CustomNotFoundException';
 
 @Injectable()
 export class ProductService {
 
     constructor(
-        @InjectRepository(Product)
-        private readonly productRepository: Repository<Product>
+        @InjectRepository(ProductEntity)
+        private readonly productRepository: Repository<ProductEntity>
     ) {
     }
 
-    create(createProductDto: CreateProductDto): Promise<Product> {
-        return this.productRepository.save(createProductDto);
+    async create(createProductDto: ProductDto): Promise<ProductEntity> {
+        const productExist = await this.findBy('slug', createProductDto.slug) || await this.findBy('name', createProductDto.name);
+        if (productExist) {
+            throw new CustomConflictException('Product already exists', 'name');
+        }
+
+        const product: ProductDto = {
+            name: createProductDto.name.trim(),
+            slug: createProductDto.name.trim().replace(/ /g, '-').toLowerCase(),
+            description: createProductDto.description.trim(),
+            price: createProductDto.price,
+            categories: createProductDto.categories.map(c => c.trim()),
+            images: createProductDto.images.map(i => ({ url: i.url.trim() }))
+        };
+
+        // Save product and cascade save images
+        return this.productRepository.save(product);
     }
 
-    findAll(): Promise<Product[]> {
+
+    findAll(): Promise<ProductEntity[]> {
         return this.productRepository.find();
     }
 
-    findAllProductsWithPagination(pagination): Promise<{ products: Product[], total: number }> {
+    findAllProductsWithPagination(pagination): Promise<{ products: ProductEntity[], total: number }> {
         const { limit, page } = pagination;
         return this.productRepository.findAndCount({
             skip: limit * (page - 1),
-            take: limit,
+            take: limit
         }).then(([products, total]) => ({ products, total }));
     }
 
-    findOne(id: number) {
+    findBy(key: string, value: string | number) {
         const options: FindOneOptions = {
-            where: { id }
+            where: { [key]: value }
         };
+
         return this.productRepository.findOne(options);
     }
 
-    update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
-        return this.productRepository.update(id, updateProductDto)
-            .then(() => this.findOne(id));
+    async update(id: number, updateProductDto: ProductDto): Promise<ProductDto> {
+        const existingProduct: ProductDto = await this.findBy('id', id);
+        if (!existingProduct) {
+            throw new CustomNotFoundException('Product not found', 'name');
+        }
+
+        if (existingProduct.name !== updateProductDto.name) {
+            const productWithSameName = await this.findBy('name', updateProductDto.name);
+            if (productWithSameName) {
+                throw new CustomConflictException('Product already exists', 'name');
+            }
+        }
+
+        updateProductDto.images.forEach((image, index) => {
+            image.id = existingProduct.images[index].id;
+            image.product = existingProduct;
+        });
+
+        return this.productRepository.save({ id, ...updateProductDto });
     }
 
     remove(id: number) {
         return this.productRepository.delete(id);
     }
 
-    findBySlug(slug: string) {
-        const options: FindOneOptions = {
-            where: { slug }
-        };
-
-        return this.productRepository.findOne(options);
-    }
-
-    getProductsByIds(ids: number[]) {
-        return this.productRepository.find({
-            where: {
-                id: In(ids),
-            },
-        });
-    }
-
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating products...');
-        await this.productRepository.query(`
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            slug TEXT NOT NULL,
-            description TEXT NOT NULL,
-            price DECIMAL NOT NULL,
-            category TEXT[] NOT NULL,
-            images TEXT[] NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-            updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-        );
-    `);
 
         for (let i = 0; i < 200; i++) {
             const randomNumberCategories = Math.floor(Math.random() * 3) + 1;
-            const categories = [];
+            const categories: string[] = [];
             for (let j = 0; j < randomNumberCategories; j++) {
                 categories.push(faker.commerce.department());
             }
 
-            const productName = faker.commerce.productName();
-            const product: CreateProductDto = {
-                name: productName,
-                slug: productName.replace(/ /g, '-').toLowerCase(),
+            const images: ImageDto[] = [];
+            for (let j = 0; j < 3; j++) {
+                images.push({
+                    url: faker.image.imageUrl()
+                });
+            }
+            const product: ProductDto = {
+                name: faker.commerce.productName(),
+                slug: faker.commerce.productName().replace(/ /g, '-').toLowerCase(),
                 description: faker.commerce.productDescription(),
-                price: Number(faker.commerce.price()),
-                category: categories,
-                images: [faker.image.imageUrl()]
+                price: parseFloat(faker.commerce.price()),
+                categories: categories,
+                images
             };
 
-            this.create(product);
+            await this.create(product);
         }
     }
 }

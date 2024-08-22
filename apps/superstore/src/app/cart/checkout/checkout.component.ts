@@ -1,35 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     AddressDto,
-    CartDto,
-    CreateOrderDto,
     DeliveryMethod,
     deliveryMethods,
-    OrderState, PromotionDto, PromotionWithStatus
-} from "@superstore/interfaces";
-import { Cart } from "../cart";
-import { CartService } from "../cart.service";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "../../auth/auth.service";
-import { OrderService } from "../../order/order.service";
-import { Router } from "@angular/router";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { AddressService } from "../../address/address.service";
-import { PromotionService } from "../../promotion/promotion.service";
+    OrderDto,
+    OrderState,
+    ProductDto,
+    PromotionDto
+} from '@superstore/interfaces';
+import { Cart } from '../cart';
+import { CartService } from '../cart.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../auth/auth.service';
+import { OrderService } from '../../order/order.service';
+import { Router } from '@angular/router';
+import { PromotionService } from '../../promotion/promotion.service';
+import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-checkout',
     templateUrl: './checkout.component.html',
-    styleUrls: ['./checkout.component.scss'],
+    styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
 
-    cart: CartDto[] = [];
-    addresses: AddressDto[] = [];
+    cart: ProductDto[] = [];
     deliveryMethods = deliveryMethods;
-    shippingPrice = this.deliveryMethods[0].price;
-    selectedAddress: AddressDto;
     selectedDeliveryMethod: DeliveryMethod;
+    shippingPrice = this.deliveryMethods[0].price;
 
     formAddress = new FormGroup({
         company: new FormControl(),
@@ -40,20 +38,21 @@ export class CheckoutComponent implements OnInit {
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl('', [Validators.required]),
-        paymentMethod: new FormControl('CB', [Validators.required]),
+        paymentMethod: new FormControl('CB', [Validators.required])
     });
 
     formPromotion = new FormGroup({
         promotionCode: new FormControl('', [Validators.required])
     });
-    promotion: PromotionWithStatus;
+    promotion: PromotionDto;
+
+    buttonApplyPromotion$ = new Subject<string>();
+    unsubscribe$ = new Subject<void>;
 
     constructor(
         private readonly cartService: CartService,
         private readonly authService: AuthService,
-        private readonly addressService: AddressService,
         private readonly orderService: OrderService,
-        private readonly notificationsService: NotificationsService,
         private readonly promotionService: PromotionService,
         private router: Router
     ) {
@@ -63,72 +62,78 @@ export class CheckoutComponent implements OnInit {
         this.cart = this.cartService.cart;
         this.selectedDeliveryMethod = this.deliveryMethods[0];
         this.formAddress.patchValue({
-            deliveryMethod: this.selectedDeliveryMethod.name,
+            deliveryMethod: this.selectedDeliveryMethod.name
         });
 
-        // Get addresses of user
-        this.addressService.getUserAddresses()
-            .subscribe(addresses => {
-                this.addresses = addresses;
-                this.selectedAddress = addresses[0];
 
-                this.formAddress.patchValue({
-                    company: addresses[0]?.company,
-                    address: addresses[0]?.address,
-                    apartment: addresses[0]?.apartment,
-                    country: addresses[0]?.country,
-                    city: addresses[0]?.city,
-                    zipCode: addresses[0]?.zipCode,
-                    phone: addresses[0]?.phone,
-                });
-            });
+        this.buttonApplyPromotion$.pipe(
+            takeUntil(this.unsubscribe$),
+            distinctUntilChanged(),
+            switchMap((code) =>
+                this.promotionService.checkPromotionCode(code)
+                    .pipe(
+                        catchError((err) => {
+                            this.formPromotion.setErrors({ error: err.error.message });
+                            this.promotion = null;
+                            return of(null);
+                        })
+                    )
+            ),
+            filter(response => response !== null),
+            switchMap((promotion) => {
+                    return this.promotionService.usePromotionCode(promotion)
+                        .pipe(
+                            catchError((err) => {
+                                this.formPromotion.setErrors({ error: err.error.message });
+                                this.promotion = null;
+                                return of(null);
+                            })
+                        );
+                }
+            )
+        ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
     }
 
-    changeAddress(address: AddressDto) {
-        this.selectedAddress = address;
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
+    selectAddress(address: AddressDto) {
+        if (!address) {
+            return;
+        }
         this.formAddress.patchValue({
-            company: address.company,
+            company: address?.company,
             address: address.address,
-            apartment: address.apartment,
+            apartment: address?.apartment,
             country: address.country,
             city: address.city,
             zipCode: address.zipCode,
-            phone: address.phone,
+            phone: address.phone
         });
     }
 
     changeDeliveryMethod(deliveryMethod: DeliveryMethod) {
         this.selectedDeliveryMethod = deliveryMethod;
         this.formAddress.patchValue({
-            deliveryMethod: deliveryMethod.name,
+            deliveryMethod: deliveryMethod.name
         });
 
         this.updateShippingPrice(deliveryMethod.price);
     }
 
-    clearFormAddress() {
-        this.formAddress.reset();
-        this.formAddress.patchValue({
-            paymentMethod: 'CB',
-            deliveryMethod: this.deliveryMethods[0].name,
-        });
-        this.selectedAddress = null;
-    }
-
-    updateQuantity(item: CartDto, event: Event) {
+    updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
     }
 
-    removeFromCart(product: CartDto) {
+    removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
     }
 
     subTotalPrice(): number {
-        let total = 0;
-        this.cart.map(item => {
-            total += item.price * item.quantity;
-        });
+        const total = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
         return Cart.convertTwoDecimals(total);
     }
 
@@ -149,22 +154,13 @@ export class CheckoutComponent implements OnInit {
 
     applyPromotionCode() {
         const promotionCode = this.formPromotion.value.promotionCode.toString().trim();
-        this.promotionService.checkPromotionCode(promotionCode)
-            .subscribe({
-                next: (promotion: PromotionDto) => {
-                    this.promotion = {
-                        status: 'success',
-                        ...promotion
-                    };
-                },
-                error: () => {
-                    this.promotion = null;
-                    this.formPromotion.controls.promotionCode.setErrors({ invalid: true });
-                }
-            });
+        this.buttonApplyPromotion$.next(promotionCode);
     }
 
     submitForm() {
+        // Cast price to number
+        this.cart.map(c => c.price = Number(c.price));
+
         const {
             company,
             address,
@@ -176,40 +172,40 @@ export class CheckoutComponent implements OnInit {
             paymentMethod
         } = this.formAddress.value;
 
-        const userId = this.authService.user.id;
+        const newAddress: AddressDto = {
+            user: this.authService.user,
+            company,
+            address,
+            apartment,
+            country,
+            city,
+            zipCode,
+            phone
+        };
 
-        const order: CreateOrderDto = {
-            userId,
+        const order: OrderDto = {
+            user: this.authService.user,
+            address: newAddress,
+            products: this.cart.map(product => ({
+                product,
+                size: product.size,
+                quantity: product.quantity
+            })),
+            promotion: this.promotion,
             state: OrderState.PENDING,
-            addressId: this.selectedAddress?.id,
-            productsId: this.cart.map(item => item.id),
             deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
             paymentMethod,
             subTotalPrice: this.subTotalPrice(),
             shippingPrice: this.shippingPrice,
             taxesPrice: this.taxes(),
             totalPrice: this.totalPrice(),
+            createdAt: new Date()
         };
 
-        this.addressService
-            .createAddress({
-                company,
-                address,
-                apartment,
-                country,
-                city,
-                zipCode,
-                phone
-            })
-            .subscribe((address) => {
-                order.addressId = address.id;
-                this.confirmOrder(order);
-            });
-    }
 
-    confirmOrder(order: CreateOrderDto) {
-        this.orderService
-            .confirmOrder(order)
-            .subscribe(() => this.router.navigateByUrl('/order/confirm-order'));
+        this.orderService.create(order)
+            .subscribe({
+                next: () =>  this.router.navigateByUrl('/order/confirm-order')
+            });
     }
 }

@@ -1,5 +1,13 @@
-import { CreateAddressDto } from "./create-address";
+import { UserDto } from '../user/user';
 
-export class AddressDto extends CreateAddressDto {
-    id: number;
+export class AddressDto {
+    id?: number;
+    user: UserDto;
+    company?: string;
+    address: string;
+    apartment?: string;
+    country: string;
+    city: string;
+    zipCode: string;
+    phone: string;
 }

@@ -1,11 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'promotions', schema: 'public' })
-export class Promotion {
+export class PromotionEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     label: string;
 
     @Column({ type: 'decimal' })

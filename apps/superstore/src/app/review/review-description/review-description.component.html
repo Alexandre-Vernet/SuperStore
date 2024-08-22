@@ -26,7 +26,7 @@
                             <p class="sr-only">{{ review.rating }} out of 5 stars</p>
                         </div>
 
-                        <div *ngIf="currentUser?.id === review.user.id"
+                        <div *ngIf="review.user.id === currentUser.id"
                              class="ml-10 gap-4">
                             <button type="button"
                                     (click)="deleteReview(review.id)"

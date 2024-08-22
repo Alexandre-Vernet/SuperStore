@@ -1,19 +1,22 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserDto } from '@superstore/interfaces';
-import { User } from "./user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Not, Repository } from "typeorm";
+import { UserEntity } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
     ) {
     }
 
-    findAll(): Promise<User[]> {
-        return this.userRepository.find()
+    async findAll(): Promise<UserEntity[]> {
+        const options: FindManyOptions = {
+            order: { id: 'ASC' }
+        };
+        return this.userRepository.find(options)
             .then((users) => {
                 return users.map((user) => {
                     delete user.password;
@@ -22,18 +25,16 @@ export class UserService {
             });
     }
 
-    findOne(id: number) {
+    async find(id: number) {
         const options: FindOneOptions = {
-            where: { id }
+            where: { id },
         };
-        return this.userRepository.findOne(options)
-            .then(user => {
-                delete user.password;
-                return user;
-            });
+        const user = await this.userRepository.findOne(options);
+        delete user.password;
+        return user;
     }
 
-    update(id: number, updateUserDto: UserDto): Promise<UserDto> {
+    async update(id: number, updateUserDto: UserDto): Promise<UserDto> {
         // Check that the email is not already in use
         const options: FindOneOptions = {
             where: {
@@ -42,58 +43,21 @@ export class UserService {
             }
         };
 
-        return this.userRepository.findOne(options)
-            .then(user => {
-                if (user && user.id !== id) {
-                    throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
-                }
+        const emailAlreadyInUse = await this.userRepository.findOne(options);
+        if (emailAlreadyInUse) {
+            throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
+        }
 
-                return this.userRepository
-                    .update(id, updateUserDto)
-                    .then(() => {
-                        return this.userRepository.findOne({ where: { id } })
-                            .then((user) => {
-                                delete user.password;
-                                return user;
-                            });
-                    })
-                    .catch((err) => {
-                        throw new Error(err.message);
-                    });
-            })
+        return this.userRepository
+            .update(id, updateUserDto)
+            .then(() => updateUserDto)
+            .catch((err) => {
+                throw new Error(err.message);
+            });
 
     }
 
     remove(id: number) {
         return this.userRepository.delete(id);
-    }
-
-    linkAddress(userId: number, addressId: number): Promise<UserDto> {
-        const options: FindOneOptions = {
-            where: { id: userId }
-        };
-
-        return this.userRepository.findOne(options)
-            .then(user => {
-                if (user) {
-                    if (user.addressesId.includes(addressId)) {
-                        return user;
-                    }
-
-                    return this.userRepository.update(userId, {
-                        addressesId: [...user.addressesId, addressId]
-                    })
-                        .then(() => {
-                            return this.userRepository.findOne(options)
-                                .then((user) => {
-                                    delete user.password;
-                                    return user;
-                                });
-                        })
-                        .catch((err) => {
-                            throw new Error(err.message);
-                        });
-                }
-            });
     }
 }

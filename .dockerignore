@@ -4,8 +4,6 @@ dist
 .idea
 .env
 .env.example
-.eslintignore
-.eslintrc.json
 .gitignore
 .prettierrc
 .prettierignore

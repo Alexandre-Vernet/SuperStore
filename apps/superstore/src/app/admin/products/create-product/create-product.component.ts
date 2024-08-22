@@ -1,24 +1,25 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ProductService } from "../../../product/product.service";
-import { ProductDto } from "@superstore/interfaces";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProductService } from '../../../product/product.service';
+import { ProductDto } from '@superstore/interfaces';
+import { checkCategoriesValidators } from './check-categories.validators';
 
 @Component({
     selector: 'superstore-create-product',
     templateUrl: './create-product.component.html',
-    styleUrls: ['./create-product.component.scss'],
+    styleUrls: ['./create-product.component.scss']
 })
 export class CreateProductComponent implements OnInit {
 
-    @Input() editProduct:  ProductDto | null;
+    @Input() editProduct: ProductDto | null;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formAddProduct = new FormGroup({
-        name: new FormControl('', [Validators.required]),
-        description: new FormControl('', [Validators.required]),
-        price: new FormControl(0, [Validators.required]),
-        categories: new FormControl('', [Validators.required]),
-        images: new FormControl('', Validators.required),
+        name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+        description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+        price: new FormControl(0, [Validators.required, Validators.min(0)]),
+        categories: new FormControl('', [Validators.required, checkCategoriesValidators(), Validators.maxLength(255)]),
+        images: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });
 
     constructor(
@@ -32,8 +33,8 @@ export class CreateProductComponent implements OnInit {
                 name: this.editProduct.name,
                 description: this.editProduct.description,
                 price: this.editProduct.price,
-                categories: this.editProduct.category.join(', '),
-                images: this.editProduct.images.join(', ')
+                categories: this.editProduct.categories.join(', '),
+                images: this.editProduct.images.map(i => i.url).join(', ')
             });
         }
     }
@@ -52,94 +53,48 @@ export class CreateProductComponent implements OnInit {
         } = this.formAddProduct.value;
 
 
-        // Check if categories is valid
-        const isCategoryValid = this.checkCategories(categories);
-        if (!isCategoryValid) {
-            return;
-        }
+        const product: ProductDto = {
+            name: name.trim(),
+            description: description.trim(),
+            price: Number(price),
+            categories: categories.split(',').map(c => c.trim()),
+            images: images.split(',').map(url => ({ url: url.trim() })
+            )
+        };
 
         if (this.editProduct?.id) {
             this.updateProduct({
-                name,
-                description,
-                price,
-                categories,
-                images
+                ...product,
+                id: this.editProduct.id
             });
         } else {
-            this.addProduct({
-                name,
-                description,
-                price,
-                categories,
-                images
-            });
+            this.addProduct(product);
         }
     }
 
-    addProduct({ name, description, price, categories, images }) {
-        // Remove all spaces and trim
-        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
-        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
+    addProduct(product: ProductDto) {
+        this.productService.addProduct(product).subscribe({
+            next: () => this.resetForm(),
+            error: (err) => this.formAddProduct.setErrors({
+                [err.error.field ? err.error.field : 'name']: err.error.field,
+                error: err.error.message
+            })
+        });
+    }
 
-        // Slug : Remove all special characters and replace spaces with dash
-        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
+    updateProduct(product: ProductDto) {
+        this.productService.updateProduct(product).subscribe({
+            next: () => this.resetForm(),
+            error: (err) => this.formAddProduct.setErrors({
+                [err.error.field ? err.error.field : 'name']: err.error.field,
+                error: err.error.message
+            })
+        });
+    }
 
-        this.productService.addProduct({
-            name,
-            slug,
-            description,
-            price,
-            category: categoriesSeparatedByComma,
-            images: imagesSeparatedByComma
-        }).subscribe(() => this.formAddProduct.reset());
+    private resetForm() {
+        this.formAddProduct.reset();
         this.closeModalAddProduct();
-    }
-
-    updateProduct({ name, description, price, categories, images }) {
-        // Remove all spaces and trim
-        const categoriesSeparatedByComma: string[] = categories.split(',').map(c => c.trim());
-        const imagesSeparatedByComma: string[] = images.split(',').map(c => c.trim());
-
-        // Slug : Remove all special characters and replace spaces with dash
-        const slug = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '-');
-
-        this.productService.updateProduct({
-            id: this.editProduct.id,
-            name,
-            slug,
-            description,
-            price,
-            category: categoriesSeparatedByComma,
-            images: imagesSeparatedByComma
-        }).subscribe(() => this.formAddProduct.reset());
-        this.closeModalAddProduct();
-    }
-
-    checkCategories(category: string): boolean {
-        // Check if category is valid (only letters, numbers, comma and space)
-        const categoryRegex = /^[a-zA-Z0-9, ]*$/;
-        if (!categoryRegex.test(category)) {
-            this.formAddProduct.setErrors({
-                invalidCharacters: true
-            });
-            return false;
-        }
-
-
-        // Detect duplicate categories
-        const categories = category.split(',').map(c => c.trim());
-        categories.sort();
-        for (let i = 0; i < categories.length - 1; i++) {
-            if (categories[i] === categories[i + 1]) {
-                this.formAddProduct.setErrors({
-                    duplicateCategories: true
-                });
-                return false;
-            }
-        }
-
-        return true;
     }
 
     // Escape key to close modal

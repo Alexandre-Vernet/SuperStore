@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
-import { catchError, Observable, tap } from "rxjs";
+import { catchError, Observable, of, tap } from 'rxjs';
 import { NotificationsService } from "../shared/notifications/notifications.service";
+import { ErrorService } from '../error/error.service';
 
 
 @Injectable({
@@ -14,7 +15,8 @@ export class NewsletterService {
 
     constructor(
         private readonly http: HttpClient,
-        private readonly notificationsService: NotificationsService
+        private readonly notificationsService: NotificationsService,
+        private readonly errorService: ErrorService,
     ) {
     }
 
@@ -22,7 +24,7 @@ export class NewsletterService {
         return this.http.get<boolean>(`${ this.newsletterUrl }/is-subscribed/${ email }`);
     }
 
-    storeEmailInDatabase(email: string): Observable<void> {
+    subscribeUserToNewsletter(email: string): Observable<void> {
         const newsletter: NewsletterDto = {
             email,
             isSubscribed: true,
@@ -32,27 +34,18 @@ export class NewsletterService {
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'You have been subscribed to our newsletter');
                 }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
             );
     }
 
-    updateSubscription(email: string, isSubscribed: boolean): Observable<void> {
-        const newsletter: NewsletterDto = {
-            email,
-            isSubscribed,
-        };
-
+    updateSubscription(newsletter: NewsletterDto): Observable<void> {
         return this.http.put<void>(`${ this.newsletterUrl }`, newsletter)
             .pipe(
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'Subscription updated', 2000);
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.errorService.setError(err.error.message);
+                    return of(null);
                 })
             );
     }
@@ -64,8 +57,8 @@ export class NewsletterService {
                     this.notificationsService.showSuccessNotification('Success', 'Newsletter sent successfully!');
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.errorService.setError(err.error.message);
+                    return of(null);
                 })
             );
     }

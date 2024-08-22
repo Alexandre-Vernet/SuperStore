@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from "./profile/profile.component";
 import { UserComponent } from "./user.component";
 import { SecurityComponent } from "./security/security.component";
-import { AddressComponent } from "./address/address.component";
+import { CreateAddressComponent } from "../address/create-address/create-address.component";
 import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
@@ -28,7 +28,7 @@ const routes: Routes = [
             },
             {
                 path: 'address',
-                component: AddressComponent,
+                component: CreateAddressComponent,
                 canActivate: [AuthGuard]
             },
         ]

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { currencies, CurrencyDto } from "@superstore/interfaces";
+import { Currency } from '../currency';
 
 @Component({
     selector: 'superstore-change-currency',
@@ -12,7 +13,7 @@ export class ChangeCurrencyComponent implements OnInit {
     currentCurrency: CurrencyDto;
 
     ngOnInit(): void {
-        const currency = localStorage.getItem('currency');
+        const currency = localStorage.getItem(Currency.CURRENCY);
         if (currency) {
             this.currentCurrency = this.currencies.find(c => c.name === currency);
         } else {
@@ -22,6 +23,6 @@ export class ChangeCurrencyComponent implements OnInit {
 
     changeCurrency(currency: string): void {
         this.currentCurrency = this.currencies.find(c => c.name === currency);
-        localStorage.setItem('currency', currency);
+        localStorage.setItem(Currency.CURRENCY, currency);
     }
 }

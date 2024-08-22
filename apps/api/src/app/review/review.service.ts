@@ -1,22 +1,19 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { CreateReviewDto, ReviewDto } from "@superstore/interfaces";
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, Repository } from "typeorm";
-import { Review } from "./review.entity";
+import { Injectable } from '@nestjs/common';
+import { ProductDto, ReviewDto, UserDto } from '@superstore/interfaces';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
+import { ReviewEntity } from './review.entity';
 import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ReviewService {
     constructor(
-        @InjectRepository(Review)
-        private readonly reviewRepository: Repository<Review>
+        @InjectRepository(ReviewEntity)
+        private readonly reviewRepository: Repository<ReviewEntity>
     ) {
     }
 
-    create(createReviewDto: CreateReviewDto): Promise<ReviewDto> {
-        if (createReviewDto.description.length > 1000) {
-            throw new HttpException('Description is too long', 400);
-        }
+    create(createReviewDto:ReviewDto): Promise<ReviewDto> {
         return this.reviewRepository.save(createReviewDto)
             .then(review => {
                 return this.findOne(review.id);
@@ -26,7 +23,7 @@ export class ReviewService {
 
     findReviewsForProduct(productId: number) {
         const options: FindManyOptions = {
-            where: { productId },
+            where: { product: { id: productId } },
         };
 
         return this.reviewRepository.find(options);
@@ -35,8 +32,8 @@ export class ReviewService {
 
     findOne(id: number) {
         const options = {
-            where: { id },
-        }
+            where: { id }
+        };
         return this.reviewRepository.findOne(options);
     }
 
@@ -54,27 +51,21 @@ export class ReviewService {
 
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating reviews...');
 
-        await this.reviewRepository.query(`
-        CREATE TABLE IF NOT EXISTS public.reviews (
-            id SERIAL PRIMARY KEY,
-            product_id INTEGER NOT NULL,
-            user_id INTEGER NOT NULL,
-            rating INTEGER NOT NULL,
-            description TEXT NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-            updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-        );
-    `);
-
         for (let i = 0; i < 300; i++) {
-            const review: CreateReviewDto = {
-                productId: faker.datatype.number({ min: 1, max: 150 }),
-                description: faker.lorem.paragraph(),
+            const user: UserDto = new UserDto();
+            user.id = faker.datatype.number({ min: 1, max: 100 });
+            const product: ProductDto = new ProductDto();
+            product.id = faker.datatype.number({ min: 1, max: 150 });
+            const review: ReviewDto = {
+                user: user,
+                product: product,
                 rating: faker.datatype.number({ min: 1, max: 5 }),
-                userId: faker.datatype.number({ min: 1, max: 80 }),
-            }
+                description: faker.lorem.paragraph(),
+                createdAt: faker.date.past()
+            };
 
             this.create(review);
         }

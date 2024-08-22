@@ -1,81 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto, CreateAddressDto } from "@superstore/interfaces";
-import { FindManyOptions, FindOneOptions, In, Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Address } from "./address.entity";
+import { AddressDto, UserDto } from '@superstore/interfaces';
+import { FindOneOptions, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AddressEntity } from './address.entity';
 import { faker } from '@faker-js/faker';
-import { UserService } from "../user/user.service";
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AddressService {
 
     constructor(
-        @InjectRepository(Address)
-        private readonly addressRepository: Repository<Address>,
+        @InjectRepository(AddressEntity)
+        private readonly addressRepository: Repository<AddressEntity>,
         private readonly userService: UserService
     ) {
     }
 
-    create(createOrderDto: CreateAddressDto, userId: number): Promise<Address> {
-        const options = {
-            where: {
-                company: createOrderDto?.company,
-                address: createOrderDto.address,
-                apartment: createOrderDto?.apartment,
-                country: createOrderDto.country,
-                city: createOrderDto.city,
-                zipCode: createOrderDto.zipCode,
-                phone: createOrderDto.phone,
+    async create(address: AddressDto, throwIfExist = true): Promise<AddressDto> {
+        const addressExist = await this.findUniqueAddress(address);
+        if (addressExist) {
+            if (throwIfExist) {
+                throw new Error('Address already exist');
             }
-        };
+            return addressExist;
+        }
 
-        // Check if address already exists
-        return this.addressRepository.findOne(options)
-            .then(address => {
-                // If address does not exist, create it
-                if (!address) {
-                    return this.addressRepository.save(createOrderDto)
-                        .then(createdAddress => {
-                            const option: FindOneOptions = {
-                                where: {
-                                    id: createdAddress.id
-                                }
-                            };
 
-                            // Get the address id
-                            return this.addressRepository.findOne(option)
-                                .then(address => {
-                                    // Link address to user
-                                    this.userService.linkAddress(userId, address.id)
-                                        .then(() => {
-                                            return createdAddress;
-                                        });
-                                    return createdAddress;
-                                })
-                                .catch(error => {
-                                    throw error;
-                                });
-                        })
-                        .catch(error => {
-                            throw error;
-                        })
-                }
-                return address;
-            });
+        return this.addressRepository.save(address);
     }
 
-    findAllUserAddress(userId: number): Promise<AddressDto[]> {
-        return this.userService.findOne(userId)
-            .then(user => {
-                const option: FindManyOptions = {
-                    where: { id: In(user.addressesId) }
-                };
-
-                return this.addressRepository.find(option);
-            });
+    getUserAddresses(userId: number): Promise<AddressDto[]> {
+        return this.addressRepository.find({ where: { user: { id: userId } } });
     }
 
-    findOne(id: number) {
+
+    find(id: number) {
         const options: FindOneOptions = {
             where: { id }
         };
@@ -83,8 +42,25 @@ export class AddressService {
         return this.addressRepository.findOne(options);
     }
 
-    update(id: number, updateAddress: AddressDto) {
-        return this.addressRepository.update(id, updateAddress);
+    findUniqueAddress(address: AddressDto): Promise<AddressDto> {
+        const options: FindOneOptions = {
+            where: {
+                address: address.address,
+                country: address.country,
+                city: address.city,
+                zipCode: address.zipCode,
+                phone: address.phone,
+                user: {
+                    id: address.user.id
+                }
+            }
+        };
+
+        return this.addressRepository.findOne(options);
+    }
+
+    async update(id: number, updateAddress: AddressDto): Promise<AddressDto> {
+        return this.addressRepository.save({ id, ...updateAddress });
     }
 
     remove(id: number) {
@@ -93,36 +69,22 @@ export class AddressService {
 
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating addresses...');
-        // Create table
-        await this.addressRepository.query(`
-        CREATE TABLE IF NOT EXISTS public.addresses (
-        id SERIAL PRIMARY KEY,
-        company VARCHAR(255) NULL,
-        address VARCHAR(255) NOT NULL,
-        apartment VARCHAR(255) NULL,
-        country VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        zip_code VARCHAR(255) NOT NULL,
-        phone VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-    )
-`);
-
+        const user: UserDto = await this.userService.find(1);
 
         for (let i = 0; i < 25; i++) {
-            const address: CreateAddressDto = {
+            const address: AddressDto = {
+                user,
                 address: faker.address.streetAddress(),
                 apartment: faker.address.secondaryAddress(),
                 city: faker.address.city(),
                 country: faker.address.country(),
                 zipCode: faker.address.zipCode(),
-                phone: `06${ faker.phone.number('########') }`,
+                phone: `06${ faker.phone.number('########') }`
             };
 
-            const userId = faker.datatype.number({ min: 1, max: 25 });
-            await this.create(address, userId);
+            await this.create(address);
         }
     }
 }

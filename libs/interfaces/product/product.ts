@@ -1,5 +1,13 @@
-import { CreateProductDto } from './create-product';
+import { ImageDto } from '../image/image';
 
-export class ProductDto extends CreateProductDto {
-    id: number;
+export class ProductDto {
+    id?: number;
+    images: ImageDto[];
+    name: string;
+    slug?: string;
+    description: string;
+    price: number;
+    categories: string[];
+    quantity?: number;
+    size?: string;
 }

@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post, Put, UseInterceptors } from '@nestjs/common';
-import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
+import { UserDto } from "@superstore/interfaces";
 import { AuthService } from "./auth.service";
 import { AuthInterceptor } from "./auth.interceptor";
 
@@ -11,28 +11,28 @@ export class AuthController {
     ) {
     }
 
-    @HttpCode(200)
+    @HttpCode(201)
     @Post('sign-up')
-    signUp(@Body() createUserDto: CreateUserDto): Promise<{ accessToken: string, user: UserDto }> {
+    signUp(@Body() createUserDto: UserDto){
         return this.authService.signUp(createUserDto);
     }
 
     @HttpCode(200)
     @Post('sign-in')
-    signIn(@Body() signInUserDto: SignInUserDto) {
+    signIn(@Body() signInUserDto: Pick<UserDto, 'email' | 'password'>) {
         return this.authService.signIn(signInUserDto);
     }
 
     @HttpCode(200)
     @Post('sign-in-with-access-token')
-    signInWithAccessToken(@Body() { accessToken }: { accessToken: string }) {
-        return this.authService.signInWithAccessToken(accessToken);
+    async signInWithAccessToken(@Body() { accessToken }: { accessToken: string }) {
+        return await this.authService.signInWithAccessToken(accessToken);
     }
 
     @UseInterceptors(AuthInterceptor)
     @Put('update-password')
-    updatePassword(@Body() { userId, password }: { userId: number, password: string }) {
-        return this.authService.updatePassword(userId, password);
+    updatePassword(@Body() { userId, password, confirmPassword }: { userId: number, password: string, confirmPassword: string }) {
+        return this.authService.updatePassword(userId, password, confirmPassword);
     }
 
     @HttpCode(200)

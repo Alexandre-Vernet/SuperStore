@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-    CreateOrderDto,
-    OrderDto,
-    OrderWithAddressAndUserAndProductsDto,
-    OrderWithAddressAndUserDto
-} from "@superstore/interfaces";
-import { catchError, Observable, of, tap } from "rxjs";
-import { environment } from "../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { CartService } from "../cart/cart.service";
-import { AuthService } from "../auth/auth.service";
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { OrderDto, OrderState } from '@superstore/interfaces';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { CartService } from '../cart/cart.service';
+import { AuthService } from '../auth/auth.service';
+import { NotificationsService } from '../shared/notifications/notifications.service';
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,17 +14,22 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class OrderService {
 
     orderUri = environment.orderUri();
-    orders: OrderWithAddressAndUserDto[] = [];
+    private ordersSubject = new BehaviorSubject<OrderDto[]>([]);
+    orders$ = this.ordersSubject.asObservable();
 
     constructor(
         private http: HttpClient,
         private readonly cartService: CartService,
         private readonly authService: AuthService,
         private readonly notificationsService: NotificationsService,
+        private readonly errorService: ErrorService
     ) {
+        if (this.authService.user.isAdmin) {
+            this.findAll().subscribe();
+        }
     }
 
-    confirmOrder(order: CreateOrderDto): Observable<OrderDto> {
+    create(order: OrderDto): Observable<OrderDto> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
                 tap(() => {
@@ -37,45 +38,28 @@ export class OrderService {
                 }),
                 catchError((err) => {
                     this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }
 
-    getOrders(): Observable<OrderWithAddressAndUserDto[]> {
-        return this.http.get<OrderWithAddressAndUserDto[]>(`${ this.orderUri }`)
+    findAll(): Observable<OrderDto[]> {
+        return this.http.get<OrderDto[]>(this.orderUri)
             .pipe(
                 tap((orders) => {
-                    this.orders = orders;
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.ordersSubject.next(orders);
                 })
             );
     }
 
-    getOrdersWithAddressAndUserAndProducts(): Observable<OrderWithAddressAndUserAndProductsDto[]> {
-        return this.http.get<OrderWithAddressAndUserAndProductsDto[]>(`${ this.orderUri }/products`)
-            .pipe(
-                tap((orders) => {
-                    return orders;
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
-            );
-    }
-
-    getOrdersPerUser(): Observable<OrderDto[]> {
+    getUserOrders(): Observable<OrderDto[]> {
         if (this.authService.user) {
             const userId = this.authService.user.id;
             return this.http.get<OrderDto[]>(`${ this.orderUri }/user/${ userId }`)
                 .pipe(
                     catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        return of(null);
                     })
                 );
         } else {
@@ -92,19 +76,19 @@ export class OrderService {
         return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);
     }
 
-    updateOrderState(orderId: number, state: string): Observable<OrderWithAddressAndUserDto> {
-        return this.http.put<OrderWithAddressAndUserDto>(`${ this.orderUri }/${ orderId }`, { state })
+    updateOrderState(orderId: number, state: OrderState): Observable<OrderDto> {
+        return this.http.put<OrderDto>(`${ this.orderUri }/${ orderId }`, { state })
             .pipe(
-                tap((order) => {
-                    const orders = this.orders.map((p) => {
-                        if (p.id === order.id) {
-                            return order;
-                        } else {
-                            return p;
-                        }
-                    });
+                tap((updatedOrder) => {
+                    const orders = this.ordersSubject.value.map(p =>
+                        p.id === updatedOrder.id ? updatedOrder : p
+                    );
+                    this.ordersSubject.next(orders);
                     this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
-                    this.orders = orders;
+                }),
+                catchError((err) => {
+                    this.notificationsService.showErrorNotification('Error', err.error.message);
+                    return of(null);
                 })
             );
     }
@@ -114,13 +98,19 @@ export class OrderService {
             .pipe(
                 tap(() => {
                     this.notificationsService.showSuccessNotification('Success', 'Order deleted successfully');
-                    this.orders = this.orders.filter((p) => p.id !== orderId);
+                    const orders = this.ordersSubject.getValue().filter((p) => p.id !== orderId);
+                    this.ordersSubject.next(orders);
                 }),
                 catchError((err) => {
-                        this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        this.errorService.setError(err.error.message);
+                        return of(null);
                     }
                 )
             );
+    }
+
+    userCanAddReview(productId: number): Observable<boolean> {
+        const userId = this.authService.user.id;
+        return this.http.get<boolean>(`${ this.orderUri }/${ productId }/${ userId }`);
     }
 }

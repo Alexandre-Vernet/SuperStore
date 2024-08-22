@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { NewsletterService } from './newsletter.service';
-import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
-import { AuthInterceptor } from "../auth/auth.interceptor";
-import { AdminInterceptor } from "../auth/admin.interceptor";
+import { NewsletterDto, SendNewsletterDto } from '@superstore/interfaces';
+import { AuthInterceptor } from '../auth/auth.interceptor';
+import { AdminInterceptor } from '../auth/admin.interceptor';
 
 @Controller('newsletter')
 export class NewsletterController {
@@ -11,43 +11,26 @@ export class NewsletterController {
     ) {
     }
 
+    @UseInterceptors(AuthInterceptor)
     @Get('is-subscribed/:email')
-    isUserSubscribed(@Param('email') email: string) {
-        return this.newsletterService.isUserSubscribed(email);
+    async isUserSubscribed(@Param('email') email: string) {
+        return await this.newsletterService.isUserSubscribedToNewsletter(email);
     }
 
     @Post()
-    storeEmailInDatabase(@Body() createNewsletterDto: NewsletterDto) {
-        return this.newsletterService.storeEmailInDatabase(createNewsletterDto);
+    subscribeUserToNewsletter(@Body() createNewsletterDto: NewsletterDto) {
+        return this.newsletterService.subscribeUserToNewsletter(createNewsletterDto);
     }
 
-    @UseInterceptors(AuthInterceptor)
+    @UseInterceptors(AdminInterceptor)
     @Post('send-email')
     sendNewsletter(@Body() newsletterDto: SendNewsletterDto) {
         return this.newsletterService.sendNewsletter(newsletterDto);
     }
 
     @UseInterceptors(AuthInterceptor)
-    @Get()
-    findAll() {
-        return this.newsletterService.findAll();
-    }
-
-    @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.newsletterService.findOne(id);
-    }
-
-    @UseInterceptors(AuthInterceptor)
     @Put()
     updateSubscription(@Body() newsletterDto: NewsletterDto) {
         return this.newsletterService.updateSubscription(newsletterDto);
-    }
-
-    @UseInterceptors(AuthInterceptor)
-    @UseInterceptors(AdminInterceptor)
-    @Delete(':id')
-    remove(@Param('id') id: number) {
-        return this.newsletterService.remove(id);
     }
 }

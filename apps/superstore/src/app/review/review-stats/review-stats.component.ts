@@ -1,31 +1,27 @@
-import { ProductDto } from "@superstore/interfaces";
-import { Component, Input, OnInit } from "@angular/core";
-import { AuthService } from "../../auth/auth.service";
-import { ReviewService } from "../review.service";
-import { OrderService } from "../../order/order.service";
+import { ProductDto } from '@superstore/interfaces';
+import { Component, Input, OnInit } from '@angular/core';
+import { ReviewService } from '../review.service';
 
 @Component({
     selector: 'superstore-review-stats',
     templateUrl: './review-stats.component.html',
-    styleUrls: ['./review-stats.component.scss'],
+    styleUrls: ['./review-stats.component.scss']
 })
 export class ReviewStatsComponent implements OnInit {
 
     @Input() product: ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
-    userCanAddReview: boolean;
+    totalReviews: number;
 
     constructor(
-        readonly reviewService: ReviewService,
-        private readonly authService: AuthService,
-        private readonly orderService: OrderService
+        private readonly reviewService: ReviewService
     ) {
     }
 
     ngOnInit() {
-        this.getTotalReviews();
-        this.reviewService.reviews
+        this.reviewService.reviews$
             .subscribe(reviews => {
+                this.totalReviews = reviews.length;
                 this.rating.forEach(rating => rating.count = 0);
                 reviews.forEach(review => {
                     const ratingItem = this.rating.find(item => item.rating === review.rating);
@@ -33,17 +29,11 @@ export class ReviewStatsComponent implements OnInit {
                         ratingItem.count++;
                     }
                 });
-            })
-
-        this.userHasBoughtProduct();
-    }
-
-    getTotalReviews() {
-        return this.reviewService.reviews.value.length;
+            });
     }
 
     calculateSizeProgressBar(rating: number) {
-        const totalReviews = this.getTotalReviews();
+        const totalReviews = this.totalReviews;
         if (totalReviews === 0) {
             return 'width: 0%';
         }
@@ -53,7 +43,7 @@ export class ReviewStatsComponent implements OnInit {
     }
 
     calculatePercentage(rating: number) {
-        const totalReviews = this.getTotalReviews();
+        const totalReviews = this.totalReviews;
         if (totalReviews === 0) {
             return '0%';
         }
@@ -61,19 +51,5 @@ export class ReviewStatsComponent implements OnInit {
         const ratingCount = ratingItem ? ratingItem.count : 0;
         const percentage = Math.round((ratingCount / totalReviews) * 100);
         return `${ percentage }%`;
-    }
-
-
-    userHasBoughtProduct() {
-        this.orderService.getOrdersPerUser()
-            .subscribe(orders => {
-                const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
-                const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.userId === this.authService.user?.id && review.productId === this.product?.id);
-                this.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
-            });
-    }
-
-    toggleAddReviewModal() {
-        this.reviewService.openAddReviewModal();
     }
 }

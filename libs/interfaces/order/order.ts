@@ -1,26 +1,21 @@
-import { CreateOrderDto } from './create-order';
-import { ProductDto } from "../product/product";
-import { AddressWithShortAddressDto } from "../address/create-address";
-import { UserWithShortUserDto } from "../user/create-user";
+import { OrderState } from './state';
+import { AddressDto } from '../address/address';
+import { UserDto } from '../user/user';
+import { OrderProductDto } from '../order-product/order-product';
+import { PromotionDto } from "../promotion/promotion";
 
-export class OrderDto extends CreateOrderDto {
-    id: number;
+export class OrderDto {
+    id?: number;
+    user: UserDto;
+    address: AddressDto;
+    products: OrderProductDto[];
+    promotion?: PromotionDto;
+    state: OrderState;
+    deliveryMethod: string;
+    paymentMethod: string;
+    subTotalPrice: number;
+    shippingPrice: number;
+    taxesPrice: number;
+    totalPrice: number;
     createdAt: Date;
-}
-
-export class OrderWithProductsDto extends OrderDto {
-    products: ProductDto[];
-}
-
-export class OrderWithAddressAndUserDto extends OrderDto {
-    address: string;
-    user: string;
-    products: ProductDto[];
-}
-
-
-export class OrderWithAddressAndUserAndProductsDto extends OrderDto {
-    address: AddressWithShortAddressDto;
-    user: UserWithShortUserDto;
-    products: ProductDto[];
 }

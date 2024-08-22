@@ -20,28 +20,25 @@ export class ListPromotionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getAllPromotionCode();
+        this.promotionService.promotions$
+            .subscribe((promotions) => {
+                promotions.sort((a, b) => a?.id - b?.id);
+                this.promotions = promotions;
+            });
+
         SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
             });
     }
 
-    getAllPromotionCode() {
-        this.promotionService.getAllPromotions()
-            .subscribe((promotion) => {
-                this.promotions = promotion;
-            });
-    }
-
-    public openModalEditPromotion(): void {
+    openModalEditPromotion() {
         this.showModalEditPromotion = true;
     }
 
-    public closeModalEditPromotion(): void {
+    closeModalEditPromotion() {
         this.showModalEditPromotion = false;
         this.editedPromotion = null;
-        this.getAllPromotionCode();
     }
 
     editPromotion(promotion: PromotionDto) {
@@ -51,8 +48,6 @@ export class ListPromotionsComponent implements OnInit {
 
     deletePromotion(promotion: PromotionDto) {
         this.promotionService.deletePromotion(promotion)
-            .subscribe(() => {
-                this.promotions = this.promotions.filter((p) => p.id !== promotion.id);
-            });
+            .subscribe();
     }
 }

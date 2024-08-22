@@ -6,6 +6,18 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "no-console": "error",
+        "no-empty": "error",
+        "no-empty-function": "error",
+        "no-eq-null": "error",
+        "no-var": "error",
+        "prefer-const": "error",
+        "camelcase": "error",
+        "capitalized-comments": "warn",
+        "default-case": "error",
+        "dot-notation": "warn",
+        "no-alert": "error",
+        "semi": "error",
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {

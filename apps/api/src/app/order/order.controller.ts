@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto, OrderDto } from '@superstore/interfaces';
+import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { AdminInterceptor } from "../auth/admin.interceptor";
 
@@ -11,17 +11,10 @@ export class OrderController {
     }
 
     @Post()
-    create(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
-        return this.orderService.create(createOrderDto);
+    create(@Body() order: OrderDto){
+        return this.orderService.create(order);
     }
 
-    @UseInterceptors(AuthInterceptor)
-    @Get('products')
-    findAllOrderWithAddressAndUserAndProducts() {
-        return this.orderService.findAllOrderWithAddressAndUserAndProducts();
-    }
-
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Get()
     findAll() {
@@ -30,14 +23,14 @@ export class OrderController {
 
     @UseInterceptors(AuthInterceptor)
     @Get('user/:userId')
-    findByUser(@Param('userId') userId: number) {
-        return this.orderService.findByUser(userId);
+    getUserOrders(@Param('userId') userId: number) {
+        return this.orderService.getUserOrders(userId);
     }
 
     @UseInterceptors(AuthInterceptor)
     @Get(':userId/last')
-    findLast(@Param('userId') userId: number) {
-        return this.orderService.findLast(userId);
+    getLastOrder(@Param('userId') userId: number) {
+        return this.orderService.getLastOrder(userId);
     }
 
     @UseInterceptors(AuthInterceptor)
@@ -46,17 +39,21 @@ export class OrderController {
         return this.orderService.findOne(id);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
-    update(@Param('id') id: number, @Body() updateOrderDto: OrderDto) {
-        return this.orderService.update(id, updateOrderDto);
+     updateOrderState(@Param('id') id: number, @Body() { state }: { state: OrderState }) {
+        return this.orderService.updateOrderState(id, state);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.orderService.remove(id);
+    }
+
+    @UseInterceptors(AuthInterceptor)
+    @Get(':productId/:userId')
+    userCanAddReview(@Param('productId') productId: number, @Param('userId') userId: number) {
+        return this.orderService.userCanAddReview(productId, userId);
     }
 }

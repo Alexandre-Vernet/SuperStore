@@ -1,18 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto, ProductDto } from '@superstore/interfaces';
-import { AuthInterceptor } from "../auth/auth.interceptor";
-import { AdminInterceptor } from "../auth/admin.interceptor";
+import { ProductDto } from '@superstore/interfaces';
+import { AdminInterceptor } from '../auth/admin.interceptor';
 
 @Controller('product')
 export class ProductController {
     constructor(private readonly productService: ProductService) {
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Post()
-    create(@Body() createProductDto: CreateProductDto) {
+    @HttpCode(201)
+    create(@Body() createProductDto: ProductDto) {
         return this.productService.create(createProductDto);
     }
 
@@ -30,33 +29,26 @@ export class ProductController {
     }
 
     @Get()
-    findAll() {
+    findAll(): Promise<ProductDto[]> {
         return this.productService.findAll();
     }
 
-    @Post('get-by-ids')
-    getProductsByIds(@Body('ids') ids: number[]) {
-        return this.productService.getProductsByIds(ids);
-    }
-
     @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.productService.findOne(id);
+    findOne(@Param('id') id: number) : Promise<ProductDto>{
+        return this.productService.findBy('id', id);
     }
 
     @Get('slug/:id')
-    findBySlug(@Param('id') slug: string) {
-        return this.productService.findBySlug(slug);
+    findBySlug(@Param('id') slug: string): Promise<ProductDto> {
+        return this.productService.findBy('slug', slug);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
-    update(@Param('id') id: number, @Body() updateProductDto: ProductDto) {
-        return this.productService.update(id, updateProductDto);
+    async update(@Param('id') id: number, @Body() updateProductDto: ProductDto): Promise<ProductDto> {
+        return await this.productService.update(id, updateProductDto);
     }
 
-    @UseInterceptors(AuthInterceptor)
     @UseInterceptors(AdminInterceptor)
     @Delete(':id')
     remove(@Param('id') id: number) {

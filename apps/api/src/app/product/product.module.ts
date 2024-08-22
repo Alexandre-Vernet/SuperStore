@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
-import { Product } from "./product.entity";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "../auth/auth.module";
+import { ProductEntity } from './product.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
+import { ImageEntity } from '../image/image.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Product]), AuthModule],
+    imports: [
+        TypeOrmModule.forFeature([ProductEntity, ImageEntity]),
+        AuthModule
+    ],
     controllers: [ProductController],
     providers: [ProductService],
     exports: [ProductService]

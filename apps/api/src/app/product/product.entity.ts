@@ -1,14 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ImageEntity } from '../image/image.entity';
+import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'products', schema: 'public' })
-export class Product {
+export class ProductEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ type: 'text' })
+    @OneToMany(() => ImageEntity, image => image.product, { cascade: true, eager: true })
+    images: ImageEntity[];
+
+    @OneToMany(() => ReviewEntity, review => review.product)
+    reviews: ReviewEntity[];
+
+    @Column({ type: 'text', unique: true })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     slug: string;
 
     @Column({ type: 'text' })
@@ -18,10 +26,7 @@ export class Product {
     price: number;
 
     @Column({ type: 'text' })
-    category: string[];
-
-    @Column({ type: 'text' })
-    images: string[];
+    categories: string[];
 
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;

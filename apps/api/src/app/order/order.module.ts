@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { Order } from "./order.entity";
-import { EmailModule } from "../email/email.module";
-import { UserModule } from "../user/user.module";
-import { AddressModule } from "../address/address.module";
-import { ProductModule } from "../product/product.module";
-import { AuthModule } from "../auth/auth.module";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrderEntity } from './order.entity';
+import { EmailModule } from '../email/email.module';
+import { UserModule } from '../user/user.module';
+import { AddressModule } from '../address/address.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Order]), AuthModule,
+        TypeOrmModule.forFeature([OrderEntity]),
+        AuthModule,
         AddressModule,
         UserModule,
-        ProductModule,
         EmailModule,
-        UserModule
+        UserModule,
     ],
     controllers: [OrderController],
     providers: [OrderService],

@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { OrderDto, OrderWithAddressAndUserAndProductsDto, OrderWithAddressAndUserDto } from "@superstore/interfaces";
-import { OrderService } from "../../../order/order.service";
-import { SearchBar } from "../../search-bar/search-bar";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { OrderDto } from '@superstore/interfaces';
+import { OrderService } from '../../../order/order.service';
+import { SearchBar } from '../../search-bar/search-bar';
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     selector: 'superstore-orders',
     templateUrl: './list-orders.component.html',
     styleUrls: ['./list-orders.component.scss'],
 })
-export class ListOrdersComponent implements OnInit {
+export class ListOrdersComponent implements OnInit, OnDestroy {
 
-    orders: OrderWithAddressAndUserAndProductsDto[];
-    editedOrder: OrderWithAddressAndUserDto;
+    orders: OrderDto[];
+    editedOrder: OrderDto;
     searchBar: string;
     showModalAddProduct = false;
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly orderService: OrderService
@@ -21,15 +24,19 @@ export class ListOrdersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.orderService.getOrdersWithAddressAndUserAndProducts()
-            .subscribe((orders) => {
-                this.orders = orders;
-            });
+        this.orderService.orders$.pipe(
+            takeUntil(this.unsubscribe$)
+        ).subscribe((orders) => this.orders = orders);
 
         SearchBar.searchBar
             .subscribe((search) => {
                 this.searchBar = search;
             });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     openModal() {
@@ -40,14 +47,13 @@ export class ListOrdersComponent implements OnInit {
         this.showModalAddProduct = false;
     }
 
-
-    editOrder(order: OrderWithAddressAndUserAndProductsDto) {
+    editOrder(order: OrderDto) {
         this.editedOrder = {
             id: order.id,
-            userId: order.user.id,
+            user: order.user,
+            products: order.products,
             state: order.state,
-            addressId: order.addressId,
-            productsId: order.productsId,
+            address: order.address,
             deliveryMethod: order.deliveryMethod,
             paymentMethod: order.paymentMethod,
             subTotalPrice: order.subTotalPrice,
@@ -55,9 +61,6 @@ export class ListOrdersComponent implements OnInit {
             taxesPrice: order.taxesPrice,
             totalPrice: order.totalPrice,
             createdAt: order.createdAt,
-            address: order.address.address,
-            user: `${ order.user.firstName } ${ order.user.lastName }`,
-            products: order.products
         };
 
         this.openModal();

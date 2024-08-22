@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from "../cart.service";
-import { Cart } from "../cart";
-import { CartDto } from "@superstore/interfaces";
+import { CartService } from '../cart.service';
+import { Cart } from '../cart';
+import { ProductDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-view-cart',
@@ -10,7 +10,7 @@ import { CartDto } from "@superstore/interfaces";
 })
 export class ViewCartComponent implements OnInit {
 
-    cart: CartDto[] = [];
+    cart: ProductDto[] = [];
 
     constructor(
         private readonly cartService: CartService,
@@ -21,11 +21,11 @@ export class ViewCartComponent implements OnInit {
         this.cart = this.cartService.cart;
     }
 
-    getPricePerItem(item: CartDto): number {
+    getPricePerItem(item: ProductDto): number {
         return Cart.convertTwoDecimals(item.price * item.quantity);
     }
 
-    removeFromCart(product: CartDto) {
+    removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
     }
 
@@ -53,7 +53,7 @@ export class ViewCartComponent implements OnInit {
         return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
     }
 
-    updateQuantity(item: CartDto, event: Event) {
+    updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
     }

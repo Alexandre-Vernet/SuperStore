@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'newsletter', schema: 'public' })
-export class Newsletter {
+export class NewsletterEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     email: string;
 
-    @Column({ name: 'is_subscribed', default: true })
+    @Column({ name: 'is_subscribed', default: false })
     isSubscribed: boolean;
 
     @Column({ name: 'updated_at', type: 'timestamp' })

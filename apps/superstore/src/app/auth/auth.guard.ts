@@ -16,7 +16,6 @@ export class AuthGuard {
 
     canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return new Promise((resolve, reject) => {
-            // Check for access token
             const accessToken = localStorage.getItem('accessToken');
             if (accessToken) {
                 this.authService

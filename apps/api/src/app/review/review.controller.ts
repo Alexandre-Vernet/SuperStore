@@ -1,15 +1,7 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete, UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { ReviewDto, CreateReviewDto } from "@superstore/interfaces";
-import { AuthInterceptor } from "../auth/auth.interceptor";
+import { ReviewDto } from '@superstore/interfaces';
+import { AuthInterceptor } from '../auth/auth.interceptor';
 
 @Controller('review')
 export class ReviewController {
@@ -18,7 +10,7 @@ export class ReviewController {
 
     @UseInterceptors(AuthInterceptor)
     @Post()
-    create(@Body() createReviewDto: CreateReviewDto) {
+    create(@Body() createReviewDto: ReviewDto) {
         return this.reviewService.create(createReviewDto);
     }
 

@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { SignInUserDto } from "@superstore/interfaces";
+import { UserDto } from "@superstore/interfaces";
 import { Router } from "@angular/router";
 
 @Component({
@@ -35,7 +35,7 @@ export class SignInComponent implements AfterViewInit {
             password,
         } = this.formSignIn.value;
 
-        const user: SignInUserDto = {
+        const user: Pick<UserDto, 'email' | 'password'> = {
             email,
             password,
         }

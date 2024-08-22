@@ -16,14 +16,14 @@ export class ListProductsComponent implements OnInit {
     showModalAddProduct = false;
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
     ) {
     }
 
     ngOnInit() {
-        this.productService.products
+        this.productService.products$
             .subscribe((products) => {
-                products.sort((a, b) => a.id - b.id);
+                products.sort((a, b) => a?.id - b?.id);
                 this.products = products;
             });
 
@@ -52,6 +52,7 @@ export class ListProductsComponent implements OnInit {
     }
 
     deleteProduct(product: ProductDto) {
-        this.productService.deleteProduct(product.id).subscribe();
+        this.productService.deleteProduct(product.id)
+            .subscribe();
     }
 }

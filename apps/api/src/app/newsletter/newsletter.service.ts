@@ -1,28 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindOneOptions, Repository } from "typeorm";
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Newsletter } from "./newsletter.entity";
-import { NewsletterDto, SendNewsletterDto } from "@superstore/interfaces";
-import { EmailService } from "../email/email.service";
+import { NewsletterEntity } from './newsletter.entity';
+import { NewsletterDto, SendNewsletterDto } from '@superstore/interfaces';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class NewsletterService {
     constructor(
-        @InjectRepository(Newsletter)
-        private readonly newsletterRepository: Repository<Newsletter>,
+        @InjectRepository(NewsletterEntity)
+        private readonly newsletterRepository: Repository<NewsletterEntity>,
         private readonly emailService: EmailService
     ) {
     }
 
-    storeEmailInDatabase(createNewsletterDto: NewsletterDto): Promise<NewsletterDto> {
+    async subscribeUserToNewsletter(createNewsletterDto: NewsletterDto): Promise<NewsletterDto> {
+        const options: FindOneOptions = {
+            where: { email: createNewsletterDto.email }
+        };
+        const newsletter = await this.newsletterRepository.findOne(options);
+        if (newsletter) {
+            throw new ConflictException('This email is already subscribed to our newsletter.');
+        }
         createNewsletterDto.isSubscribed = true;
         return this.newsletterRepository.save(createNewsletterDto);
     }
 
     sendNewsletter(newsletter: SendNewsletterDto) {
         // Send newsletter to all subscribed users
-        this.findAll()
+        this.newsletterRepository.find()
             .then(newsletters => {
                 newsletters.forEach(n => {
                     if (n.isSubscribed) {
@@ -33,60 +40,31 @@ export class NewsletterService {
             });
     }
 
-    findAll() {
-        return this.newsletterRepository.find();
-    }
-
-    findOne(id: number) {
-        const options: FindOneOptions = {
-            where: { id }
-        };
-        return this.newsletterRepository.findOne(options);
-    }
-
-    remove(id: number) {
-        return this.newsletterRepository.delete(id);
-    }
-
-    isUserSubscribed(email: string) {
+    async isUserSubscribedToNewsletter(email: string) {
         const options: FindOneOptions = {
             where: { email }
         };
-        return this.newsletterRepository.findOne(options)
-            .then(newsletter => {
-                if (newsletter) {
-                    return newsletter.isSubscribed;
-                }
-                return false;
-            });
+        const newsletter = await this.newsletterRepository.findOne(options);
+        if (!newsletter) {
+            return false;
+        }
+        return newsletter.isSubscribed;
     }
 
-    updateSubscription(newsletterDto: NewsletterDto): Promise<NewsletterDto> {
+    async updateSubscription(newsletterToUpdate: NewsletterDto) {
         const options: FindOneOptions = {
-            where: { email: newsletterDto.email }
+            where: { email: newsletterToUpdate.email },
+
         };
 
-        return this.newsletterRepository.findOne(options)
-            .then((newsletter) => {
-                return this.newsletterRepository.update(newsletter.id, { isSubscribed: !newsletter.isSubscribed })
-                    .then(() => {
-                        newsletter.isSubscribed = !newsletter.isSubscribed;
-                        return newsletter;
-                    });
-            });
+        const newsletter = await this.newsletterRepository.findOne(options);
+        newsletter.isSubscribed = newsletterToUpdate.isSubscribed;
+        return this.newsletterRepository.update(newsletter.id, newsletter);
     }
 
     async migrate() {
+        // eslint-disable-next-line no-console
         console.log('Migrating newsletter ...');
-        await this.newsletterRepository.query(`
-            CREATE TABLE IF NOT EXISTS public.newsletter (
-                id SERIAL PRIMARY KEY,
-                email TEXT NOT NULL,
-                is_subscribed BOOLEAN DEFAULT FALSE NOT NULL,
-                created_at TIMESTAMP DEFAULT NOW() NOT NULL,
-                updated_at TIMESTAMP DEFAULT NOW() NOT NULL
-            );
-        `);
 
         for (let i = 0; i < 100; i++) {
             const newsletter: NewsletterDto = {
@@ -94,7 +72,7 @@ export class NewsletterService {
                 isSubscribed: faker.datatype.boolean(),
             };
 
-            await this.storeEmailInDatabase(newsletter);
+            await this.subscribeUserToNewsletter(newsletter);
         }
     }
 }

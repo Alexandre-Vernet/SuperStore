@@ -38,17 +38,15 @@ export class SecurityComponent {
             return;
         }
 
-        this.authService.updatePassword(password)
-            .subscribe(() => {
-                this.formPassword.reset();
+        this.authService.updatePassword(password,confirmPassword)
+            .subscribe({
+                next: () => this.formPassword.reset(),
+                error: (err) => this.formPassword.setErrors({ [err.error.field]: err.error.message })
             });
     }
 
     deleteAccount() {
         this.userService.deleteUser(this.authService.user.id)
-            .subscribe(() => {
-                this.authService.signOut();
-                this.router.navigateByUrl('/');
-            });
+            .subscribe(() => this.router.navigateByUrl('/'));
     }
 }

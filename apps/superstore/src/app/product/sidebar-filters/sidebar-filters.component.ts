@@ -24,7 +24,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.products
+        this.productService.products$
             .subscribe(products => {
                 // Get category from URL and filter products by category
                 const category = this.getCategoryFromUrl();
@@ -34,8 +34,8 @@ export class SidebarFiltersComponent implements OnInit {
 
                 // List all categories
                 products.map(product => {
-                    if (product.category) {
-                        product.category.map(c => {
+                    if (product.categories) {
+                        product.categories.map(c => {
                             if (!this.categories.map(c => c.label).includes(c)) {
                                 this.categories.push({ label: c, checked: false });
                             }
@@ -46,7 +46,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     getCategoryFromUrl() {
-        const category = this.activatedRoute.snapshot.queryParams['category'];
+        const { category } = this.activatedRoute.snapshot.queryParams;
         // Check category checkbox
         this.categories.map(c => {
             c.checked = c.label === category;

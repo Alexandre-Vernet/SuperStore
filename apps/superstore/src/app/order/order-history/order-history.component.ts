@@ -1,11 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { OrderService } from "../order.service";
-import { OrderState, OrderWithProductsDto, ProductDto, ProductSizeDto } from "@superstore/interfaces";
-import { ProductService } from "../../product/product.service";
-import { CartService } from "../../cart/cart.service";
-import { NotificationsService } from "../../shared/notifications/notifications.service";
-import { ReviewService } from "../../review/review.service";
-import { PdfService } from "../../shared/pdf/pdf.service";
+import { OrderService } from '../order.service';
+import { OrderDto, OrderState, ProductDto } from '@superstore/interfaces';
+import { CartService } from '../../cart/cart.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { ReviewService } from '../../review/review.service';
+import { PdfService } from '../../shared/pdf/pdf.service';
 
 @Component({
     selector: 'superstore-order-history',
@@ -13,13 +12,12 @@ import { PdfService } from "../../shared/pdf/pdf.service";
     styleUrls: ['./order-history.component.scss'],
 })
 export class OrderHistoryComponent implements OnInit {
-    orders: OrderWithProductsDto[];
+    orders: OrderDto[];
     displayOrderOptions = false;
     productToReview: ProductDto;
 
     constructor(
         private readonly orderService: OrderService,
-        private readonly productService: ProductService,
         private readonly cartService: CartService,
         private readonly notificationsService: NotificationsService,
         readonly reviewService: ReviewService,
@@ -28,20 +26,8 @@ export class OrderHistoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        const ordersWithProducts: OrderWithProductsDto[] = [];
-        this.orderService.getOrdersPerUser()
-            .subscribe((orders) => {
-                orders.map((order) => {
-                    this.productService.getProductFromIds(order.productsId)
-                        .subscribe(product => {
-                            ordersWithProducts.push({
-                                ...order,
-                                products: product,
-                            });
-                        });
-                });
-                this.orders = ordersWithProducts;
-            });
+        this.orderService.getUserOrders()
+            .subscribe((orders) => this.orders = orders);
     }
 
     toggleOrderOption() {
@@ -67,16 +53,12 @@ export class OrderHistoryComponent implements OnInit {
         return `assets/order-state/${ state.toLowerCase() }.png`;
     }
 
-    downloadInvoice(order: OrderWithProductsDto) {
+    downloadInvoice(order: OrderDto) {
         return this.pdfService.downloadInvoice(order);
     }
 
-    addToCart(productId: number) {
-        const defaultSize: ProductSizeDto = {
-            name: 'Small',
-            tag: 'S',
-        };
-        this.cartService.addToCart(productId, defaultSize);
+    addToCart(product: ProductDto) {
+        this.cartService.addToCart(product);
         this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
     }
 }

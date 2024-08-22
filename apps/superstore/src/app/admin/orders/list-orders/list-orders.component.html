@@ -59,12 +59,14 @@
                         <tr *ngFor="let order of searchBar | searchOrders: orders">
                             <td class="whitespace-nowrap py-4 pl-4 text-center pr-3 text-sm font-medium">
                                 # {{ order.id }}</td>
-                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.user.shortUser }}</td>
-                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.address.shortAddress }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.user.firstName }} {{ order.user.lastName }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">{{ order.address.address }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                                 <ul>
-                                    <li *ngFor="let product of order.products">
-                                        {{ product.name }}
+                                    <li *ngFor="let orderProduct of order.products">
+                                        <a [routerLink]="'/product/' + orderProduct.product.slug">
+                                            {{ orderProduct.product.name }}
+                                        </a>
                                     </li>
                                 </ul>
                             </td>

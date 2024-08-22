@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../auth/auth.service";
-import { UpdateUserDto, UserDto } from "@superstore/interfaces";
+import { NewsletterDto, UserDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../user.service";
 import { NewsletterService } from "../../newsletter/newsletter.service";
+import { Currency } from '../../shared/currency/currency';
 
 @Component({
     selector: 'superstore-profile',
@@ -12,13 +13,15 @@ import { NewsletterService } from "../../newsletter/newsletter.service";
 })
 export class ProfileComponent implements OnInit {
 
+    protected readonly Currency = Currency;
     user: UserDto;
+
     formUser = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
         lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
         email: new FormControl('', [Validators.required, Validators.email]),
         isSubscribedToNewsletter: new FormControl(false),
-        currency: new FormControl(localStorage.getItem('currency') || 'USD'),
+        currency: new FormControl(localStorage.getItem(Currency.CURRENCY) || Currency.USD),
     });
 
     constructor(
@@ -43,26 +46,31 @@ export class ProfileComponent implements OnInit {
     }
 
     toggleNewsletterSubscription() {
-        const isSubscribedToNewsletter = this.formUser.value.isSubscribedToNewsletter;
+        this.formUser.patchValue({ isSubscribedToNewsletter: !this.formUser.value.isSubscribedToNewsletter });
+        const isSubscribed = this.formUser.value.isSubscribedToNewsletter;
         const email = this.user.email;
-        this.newsletterService.updateSubscription(email, isSubscribedToNewsletter)
-            .subscribe(() => {
-                this.userIsSubscribedToNewsletter();
-            });
+
+
+        const newsletter: NewsletterDto = {
+            email,
+            isSubscribed,
+        };
+
+        this.newsletterService.updateSubscription(newsletter).subscribe();
     }
 
     getCurrency() {
-        return localStorage.getItem('currency');
+        return localStorage.getItem(Currency.CURRENCY);
     }
 
     toggleCurrency() {
         const currency = this.formUser.value.currency;
-        if (currency === 'EUR') {
-            localStorage.setItem('currency', 'USD');
-            this.formUser.patchValue({ currency: 'USD' })
+        if (currency === Currency.USD) {
+            localStorage.setItem(Currency.CURRENCY, Currency.USD);
+            this.formUser.patchValue({ currency: Currency.USD })
         } else {
-            localStorage.setItem('currency', 'EUR');
-            this.formUser.patchValue({ currency: 'EUR' })
+            localStorage.setItem(Currency.CURRENCY, Currency.EUR);
+            this.formUser.patchValue({ currency: Currency.EUR })
         }
     }
 
@@ -76,12 +84,14 @@ export class ProfileComponent implements OnInit {
     updateUser() {
         const { firstName, lastName, email } = this.formUser.value;
 
-        const user: UpdateUserDto = {
+        const user: UserDto = {
+            addresses: this.user.addresses,
+            password: this.user.password,
             id: this.user.id,
             firstName,
             lastName,
             email,
-            isAdmin: this.user.isAdmin,
+            isAdmin: this.user.isAdmin
         };
 
         this.userService.updateUser(user)

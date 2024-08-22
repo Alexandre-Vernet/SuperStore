@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { OrderWithAddressAndUserAndProductsDto } from "@superstore/interfaces";
+import { OrderDto } from '@superstore/interfaces';
 
 @Pipe({
     name: 'searchOrders'
 })
 export class OrdersPipe implements PipeTransform {
-    transform(search: string, orders: OrderWithAddressAndUserAndProductsDto[]): OrderWithAddressAndUserAndProductsDto[] {
+    transform(search: string, orders: OrderDto[]): OrderDto[] {
         return orders?.filter(order => {
             return order.id.toString().includes(search?.toLowerCase()) ||
                 Object.values(order.address).includes(search?.toLowerCase()) ||

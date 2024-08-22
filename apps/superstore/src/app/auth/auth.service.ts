@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { catchError, Observable, tap } from "rxjs";
-import { environment } from "../../environments/environment";
-import { CreateUserDto, SignInUserDto, UserDto } from "@superstore/interfaces";
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { HttpClient } from '@angular/common/http';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { UserDto } from '@superstore/interfaces';
+import { NotificationsService } from '../shared/notifications/notifications.service';
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,10 +18,11 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private readonly notificationService: NotificationsService,
+        private readonly errorService: ErrorService
     ) {
     }
 
-    signIn(user: SignInUserDto): Observable<{ user: UserDto, accessToken: string }> {
+    signIn(user: Pick<UserDto, 'email' | 'password'>): Observable<{ user: UserDto, accessToken: string }> {
         return this.http.post<{ user: UserDto, accessToken: string }>(`${ this.authUrl }/sign-in`, user)
             .pipe(
                 tap(res => {
@@ -30,7 +32,7 @@ export class AuthService {
             );
     }
 
-    signUp(user: CreateUserDto): Observable<{ accessToken: string, user: UserDto }> {
+    signUp(user: UserDto): Observable<{ accessToken: string, user: UserDto }> {
         return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
                 tap((res) => localStorage.setItem('accessToken', res.accessToken))
@@ -51,17 +53,13 @@ export class AuthService {
             );
     }
 
-    updatePassword(password: string): Observable<void> {
+    updatePassword(password: string, confirmPassword: string): Observable<void> {
         const userId = this.user.id;
-        return this.http.put<void>(`${ this.authUrl }/update-password`, { userId, password })
+        return this.http.put<void>(`${ this.authUrl }/update-password`, { userId, password, confirmPassword })
             .pipe(
                 tap(() => {
                     this.notificationService.showSuccessNotification('Success', 'Password updated successfully');
                 }),
-                catchError(err => {
-                    this.notificationService.showErrorNotification('Error', err.error.message);
-                    throw err;
-                })
             );
     }
 
@@ -73,7 +71,7 @@ export class AuthService {
                 }),
                 catchError(err => {
                     this.notificationService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    return of(null);
                 })
             );
     }

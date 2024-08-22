@@ -1,15 +1,14 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <main class="bg-white px-4 pt-16 pb-24 sm:px-6 sm:pt-24 lg:px-8 lg:py-16">
     <div class="mx-auto max-w-3xl">
         <div class="max-w-xl">
             <h1 class="text-base font-medium text-indigo-600">Thank you!</h1>
             <p class="mt-2 text-4xl font-bold tracking-tight">It's on the way!</p>
-            <p class="mt-2 text-base text-gray-500">Your order #{{ confirmOrder?.order.id }} has shipped and will be
+            <p class="mt-2 text-base text-gray-500">Your order #{{ order?.id }} has shipped and will be
                 with you soon.</p>
 
             <dl class="mt-12 text-sm font-medium">
                 <dt class="text-gray-900">Tracking number</dt>
-                <dd class="mt-2 text-indigo-600">{{ confirmOrder?.order?.id }}</dd>
+                <dd class="mt-2 text-indigo-600">{{ order?.id }}</dd>
             </dl>
         </div>
 
@@ -18,25 +17,43 @@
 
             <h3 class="sr-only">Items</h3>
 
-            <ng-container *ngFor="let product of confirmOrder?.products">
+            <ng-container *ngFor="let orderProduct of order?.products">
                 <div class="flex space-x-6 border-b border-gray-200 py-10">
-                    <img src="https://tailwindui.com/img/ecommerce-images/confirmation-page-05-product-01.jpg"
+                    <img [src]="orderProduct.product.images[0].url"
                          alt="Glass bottle with black plastic pour top and mesh insert."
                          class="h-20 w-20 flex-none rounded-lg bg-gray-100 object-cover object-center sm:h-40 sm:w-40">
                     <div class="flex flex-auto flex-col">
                         <div>
                             <h4 class="font-medium text-gray-900">
-                                <a routerLink="/product/{{ product?.slug }}">
-                                    {{ product?.name }}
+                                <a routerLink="/product/{{ orderProduct?.product.slug }}">
+                                    {{ orderProduct?.product.name }}
                                 </a>
                             </h4>
-                            <p class="mt-2 text-sm text-gray-600">{{ product?.description }}</p>
+                            <p class="mt-2 text-sm text-gray-600">{{ orderProduct?.product.description }}</p>
                         </div>
+                      <div class="mt-6 flex flex-1 items-end">
+                            <dl class="flex space">
+                                <div class="flex">
+                                    <dt class="font-medium text-gray-900">Quantity :</dt>
+                                    <dd class="ml-2 text-gray-700">{{ orderProduct?.quantity }}</dd>
+                                </div>
+                            </dl>
+                      </div>
+                      <ng-container *ngIf="orderProduct.size">
+                        <div class="mt-6 flex flex-1 items-end">
+                          <dl class="flex space">
+                            <div class="flex">
+                              <dt class="font-medium text-gray-900">Size :</dt>
+                              <dd class="ml-2 text-gray-700">{{ orderProduct?.size }}</dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </ng-container>
                         <div class="mt-6 flex flex-1 items-end">
                             <dl class="flex space-x-4 divide-x divide-gray-200 text-sm sm:space-x-6">
-                                <div class="flex pl-4 sm:pl-6">
+                                <div class="flex">
                                     <dt class="font-medium text-gray-900">Price</dt>
-                                    <dd class="ml-2 text-gray-700">{{product?.price | convertCurrency }}</dd>
+                                    <dd class="ml-2 text-gray-700">{{orderProduct?.product.price | convertCurrency }}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -53,11 +70,11 @@
                         <dt class="font-medium text-gray-900">Shipping address</dt>
                         <dd class="mt-2 text-gray-700">
                             <address class="not-italic">
-                                <span class="block">{{ confirmOrder?.address.country }}</span>
-                                <span class="block">{{ confirmOrder?.address.address }}</span>
-                                <span class="block">{{ confirmOrder?.address.apartment }}</span>
-                                <span class="block">{{ confirmOrder?.address.city }}</span>
-                                <span class="block">{{ confirmOrder?.address.zipCode }}</span>
+                                <span class="block">{{ order?.address.country }}</span>
+                                <span class="block">{{ order?.address.address }}</span>
+                                <span class="block">{{ order?.address.apartment }}</span>
+                                <span class="block">{{ order?.address.city }}</span>
+                                <span class="block">{{ order?.address.zipCode }}</span>
                             </address>
                         </dd>
                     </div>
@@ -65,11 +82,11 @@
                         <dt class="font-medium text-gray-900">Billing address</dt>
                         <dd class="mt-2 text-gray-700">
                             <address class="not-italic">
-                                <span class="block">{{ confirmOrder?.address.country }}</span>
-                                <span class="block">{{ confirmOrder?.address.address }}</span>
-                                <span class="block">{{ confirmOrder?.address.apartment }}</span>
-                                <span class="block">{{ confirmOrder?.address.city }}</span>
-                                <span class="block">{{ confirmOrder?.address.zipCode }}</span>
+                                <span class="block">{{ order?.address.country }}</span>
+                                <span class="block">{{ order?.address.address }}</span>
+                                <span class="block">{{ order?.address.apartment }}</span>
+                                <span class="block">{{ order?.address.city }}</span>
+                                <span class="block">{{ order?.address.zipCode }}</span>
                             </address>
                         </dd>
                     </div>
@@ -80,7 +97,7 @@
                     <div>
                         <dt class="font-medium text-gray-900">Payment method</dt>
                         <dd class="mt-2 text-gray-700">
-                            <p>{{ confirmOrder?.order.paymentMethod }}</p>
+                            <p>{{ order?.paymentMethod }}</p>
                             <p>Mastercard</p>
                             <p><span aria-hidden="true">•••• •••• ••••</span><span class="sr-only">Ending in </span>1545
                             </p>
@@ -90,7 +107,7 @@
                         <dt class="font-medium text-gray-900">Shipping method</dt>
                         <dd class="mt-2 text-gray-700">
                             <p>DHL</p>
-                            <p>{{ confirmOrder?.order.deliveryMethod }}</p>
+                            <p>{{ order?.deliveryMethod }}</p>
                         </dd>
                     </div>
                 </dl>
@@ -101,32 +118,38 @@
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Subtotal</dt>
                         <dd class="text-gray-700">
-                            {{ confirmOrder?.order.subTotalPrice | convertCurrency }}
+                            {{ order?.subTotalPrice | convertCurrency }}
                         </dd>
                     </div>
-                    <!--                    <div class="flex justify-between">-->
-                    <!--                        <dt class="flex font-medium text-gray-900">-->
-                    <!--                            Discount-->
-                    <!--                            <span class="ml-2 rounded-full bg-gray-200 py-0.5 px-2 text-xs text-gray-600">STUDENT50</span>-->
-                    <!--                        </dt>-->
-                    <!--                        <dd class="text-gray-700">-$18.00 (50%)</dd>-->
-                    <!--                    </div>-->
+                    <ng-container *ngIf="order?.promotion">
+                        <div class="flex justify-between">
+                            <dt class="flex font-medium text-gray-900">
+                                Discount
+                                <span class="ml-2 rounded-full bg-gray-200 py-0.5 px-2 text-xs text-gray-600">
+                                    {{order.promotion.label | uppercase}}
+                                </span>
+                            </dt>
+                            <dd class="text-gray-700">
+                                - {{ order.promotion.amount }}
+                            </dd>
+                        </div>
+                    </ng-container>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Shipping</dt>
                         <dd class="text-gray-700">
-                            {{ confirmOrder?.order.shippingPrice | convertCurrency }}
+                            {{ order?.shippingPrice | convertCurrency }}
                         </dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Taxes</dt>
                         <dd class="text-gray-900">
-                            {{ confirmOrder?.order.taxesPrice | convertCurrency }}
+                            {{ order?.taxesPrice | convertCurrency }}
                         </dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-900">Total</dt>
                         <dd class="text-gray-900">
-                            {{ confirmOrder?.order.totalPrice  | convertCurrency }}
+                            {{ order?.totalPrice  | convertCurrency }}
                         </dd>
                     </div>
                 </dl>

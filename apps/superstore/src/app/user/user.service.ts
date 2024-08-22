@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from "../auth/auth.service";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
-import { UpdateUserDto, UserDto } from "@superstore/interfaces";
-import { environment } from "../../environments/environment";
-import { NotificationsService } from "../shared/notifications/notifications.service";
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { UserDto } from '@superstore/interfaces';
+import { environment } from '../../environments/environment';
+import { NotificationsService } from '../shared/notifications/notifications.service';
+import { AuthService } from '../auth/auth.service';
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,12 +13,14 @@ import { NotificationsService } from "../shared/notifications/notifications.serv
 export class UserService {
 
     userUrl = environment.userUrl();
-    users = new BehaviorSubject(<UserDto[]>[]);
+    private usersSubject = new BehaviorSubject(<UserDto[]>[]);
+    users$ = this.usersSubject.asObservable();
 
     constructor(
         private readonly http: HttpClient,
-        private readonly authService: AuthService,
         private readonly notificationsService: NotificationsService,
+        private readonly authService: AuthService,
+        private readonly errorService: ErrorService
     ) {
         this.getUsers().subscribe();
     }
@@ -26,37 +29,29 @@ export class UserService {
         return this.http.get<UserDto[]>(`${ this.userUrl }`)
             .pipe(
                 tap((users) => {
-                    this.users.next(users);
-                }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.usersSubject.next(users);
                 })
             );
     }
 
-    getUser(userId: number): Observable<UserDto> {
-        return this.http.get<UserDto>(`${ this.userUrl }/${ userId }`);
-    }
-
-    updateUser(user: UpdateUserDto): Observable<UserDto> {
+    updateUser(user: Omit<UserDto, 'password'>): Observable<UserDto> {
         return this.http.put<UserDto>(`${ this.userUrl }/${ user.id }`, user)
             .pipe(
-                tap((user) => {
-                    const users = this.users.value.map((p) => {
-                        if (p.id === user.id) {
-                            return user;
-                        } else {
-                            return p;
-                        }
-                    });
-                    this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
-                    this.users.next(users);
-                    this.authService.user = user;
+                tap((updatedUser) => {
+                    const users = this.usersSubject.value.map(p =>
+                        p.id === updatedUser.id ? updatedUser : p
+                    );
+                    this.usersSubject.next(users);
+                    if (updatedUser.id === this.authService.user.id) {
+                        this.authService.user = updatedUser;
+                        this.notificationsService.showSuccessNotification('Success', 'Your profile has been updated');
+                    } else {
+                        this.notificationsService.showSuccessNotification('Success', 'User updated successfully');
+                    }
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.errorService.setError(err.error.message);
+                    return of(null);
                 })
             );
     }
@@ -65,13 +60,20 @@ export class UserService {
         return this.http.delete<void>(`${ this.userUrl }/${ userId }`)
             .pipe(
                 tap(() => {
-                    this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
-                    const users = this.users.value.filter((p) => p.id !== userId);
-                    this.users.next(users);
+                    const users = this.usersSubject.value.filter((p) => p.id !== userId);
+                    this.usersSubject.next(users);
+
+                    if (userId === this.authService.user.id) {
+                        this.authService.signOut();
+                        localStorage.clear();
+                        this.notificationsService.showSuccessNotification('Success', 'Your account has been deleted');
+                    } else {
+                        this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
+                    }
                 }),
                 catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    throw err;
+                    this.errorService.setError(err.error.message);
+                    return of(null);
                 })
             );
     }
@@ -92,7 +94,7 @@ export class UserService {
                 }),
                 catchError((err) => {
                         this.notificationsService.showErrorNotification('Error', err.error.message);
-                        throw err;
+                        return of(null);
                     }
                 )
             );

@@ -1,13 +1,5 @@
-export class CreateUserDto {
-    addressesId: number[];
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    isAdmin: boolean;
-}
+import { UserDto } from './user';
 
-export class UserWithShortUserDto extends CreateUserDto {
-    id: number;
+export class UserWithShortUserDto extends UserDto {
     shortUser: string;
 }
