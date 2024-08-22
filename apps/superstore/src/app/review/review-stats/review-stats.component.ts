@@ -14,7 +14,7 @@ export class ReviewStatsComponent implements OnInit {
     totalReviews: number;
 
     constructor(
-        readonly reviewService: ReviewService
+        private readonly reviewService: ReviewService
     ) {
     }
 

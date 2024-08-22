@@ -22,7 +22,14 @@ export class ReviewService {
     }
 
     addReview(review: ReviewDto): Observable<ReviewDto> {
-        return this.http.post<ReviewDto>(this.reviewUrl, review);
+        return this.http.post<ReviewDto>(this.reviewUrl, review)
+            .pipe(
+                tap(review => {
+                    const reviews = this.reviewsSubject.getValue();
+                    reviews.push(review);
+                    this.reviewsSubject.next(reviews);
+                })
+            );
     }
 
     getReviewsForProduct(product: ProductDto): Observable<ReviewDto[]> {

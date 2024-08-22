@@ -151,3 +151,6 @@
 <ng-container *ngIf="product">
     <superstore-review [product]="product"></superstore-review>
 </ng-container>
+
+<superstore-add-review *ngIf="reviewService.showModalAddReview.value"
+                       [productToReview]="product"></superstore-add-review>

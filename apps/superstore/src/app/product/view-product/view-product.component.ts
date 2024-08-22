@@ -29,7 +29,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
         private readonly cartService: CartService,
-        private readonly reviewService: ReviewService,
+        protected readonly reviewService: ReviewService,
         private readonly router: Router,
         private readonly orderService: OrderService,
     ) {

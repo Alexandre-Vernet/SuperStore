@@ -31,9 +31,6 @@ export class ReviewDescriptionComponent implements OnInit {
             });
     }
 
-    reviewHasBeenAddedByCurrentUser(review: ReviewDto): boolean {
-        return review.user === this.authService.user;
-    }
 
     deleteReview(reviewId: number) {
         this.reviewService.deleteReview(reviewId)

@@ -49,9 +49,7 @@ export class AddReviewComponent {
             })
             .subscribe({
                 next: () => this.closeModal(),
-                error: (e) => {
-                    this.formAddReview.setErrors({ error: e.error.message });
-                }
+                error: (e) => this.formAddReview.setErrors({ error: e.error.message ?? 'An error has occurred' })
             });
     }
 
