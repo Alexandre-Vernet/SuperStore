@@ -11,7 +11,6 @@ export class ReviewStatsComponent implements OnInit {
 
     @Input() product: ProductDto;
     rating = [5, 4, 3, 2, 1].map(rating => ({ rating: rating, count: 0 }));
-    userCanAddReview: boolean;
     totalReviews: number;
 
     constructor(
@@ -31,7 +30,6 @@ export class ReviewStatsComponent implements OnInit {
                     }
                 });
             });
-        // This.userHasBoughtProduct();
     }
 
     calculateSizeProgressBar(rating: number) {
@@ -53,19 +51,5 @@ export class ReviewStatsComponent implements OnInit {
         const ratingCount = ratingItem ? ratingItem.count : 0;
         const percentage = Math.round((ratingCount / totalReviews) * 100);
         return `${ percentage }%`;
-    }
-
-
-    userHasBoughtProduct() {
-        // This.orderService.getOrdersPerUser()
-        //     .subscribe(orders => {
-        //         Const userHasBoughtProduct = orders.find(order => order.productsId.find(productId => productId === this.product?.id));
-        //         Const userHasAlreadyReviewedProduct = this.reviewService.reviews.value.find(review => review.user.map(u => u.id).includes(this.authService.user?.id));
-        //         This.userCanAddReview = userHasBoughtProduct && !userHasAlreadyReviewedProduct;
-        //     });
-    }
-
-    toggleAddReviewModal() {
-        this.reviewService.openAddReviewModal();
     }
 }

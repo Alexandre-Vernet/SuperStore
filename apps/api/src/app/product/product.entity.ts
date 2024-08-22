@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ImageEntity } from '../image/image.entity';
+import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'products', schema: 'public' })
 export class ProductEntity {
@@ -8,6 +9,9 @@ export class ProductEntity {
 
     @OneToMany(() => ImageEntity, image => image.product, { cascade: true, eager: true })
     images: ImageEntity[];
+
+    @OneToMany(() => ReviewEntity, review => review.product)
+    reviews: ReviewEntity[];
 
     @Column({ type: 'text', unique: true })
     name: string;

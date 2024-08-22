@@ -50,4 +50,10 @@ export class OrderController {
     remove(@Param('id') id: number) {
         return this.orderService.remove(id);
     }
+
+    @UseInterceptors(AuthInterceptor)
+    @Get(':productId/:userId')
+    userCanAddReview(@Param('productId') productId: number, @Param('userId') userId: number) {
+        return this.orderService.userCanAddReview(productId, userId);
+    }
 }

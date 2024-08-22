@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
-import { AddressDto, DeliveryMethodType, OrderDto, OrderState, ProductDto, UserDto } from '@superstore/interfaces';
-import { faker } from '@faker-js/faker';
+import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AddressService } from '../address/address.service';
 
 @Injectable()
@@ -71,6 +70,21 @@ export class OrderService {
         };
         return this.orderRepository.find(options);
     }
+
+    async userCanAddReview(productId: number, userId: number): Promise<boolean> {
+        const result = await this.orderRepository.createQueryBuilder('order')
+            .innerJoin('order.products', 'orderProduct')
+            .innerJoin('orderProduct.product', 'product')
+            .leftJoin('product.reviews', 'review', 'review.user.id = :userId', { userId })
+            .where('order.user.id = :userId', { userId })
+            .andWhere('product.id = :productId', { productId })
+            .andWhere('review.id IS NULL') // No review from the user
+            .getCount();
+
+        // User can add a review if he has ordered the product and has not reviewed it yet
+        return result > 0;
+    }
+
 
     // async migrate() {
     //     // eslint-disable-next-line no-console

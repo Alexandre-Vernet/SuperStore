@@ -5,6 +5,7 @@ import {combineLatest, Observable, of, Subject, switchMap} from 'rxjs';
 import {CartService} from '../../cart/cart.service';
 import {ProductDto, productSize, ProductSizeDto, ReviewDto} from '@superstore/interfaces';
 import {ReviewService} from '../../review/review.service';
+import { OrderService } from '../../order/order.service';
 
 @Component({
     selector: 'superstore-view-product',
@@ -20,6 +21,8 @@ export class ViewProductComponent implements OnInit, OnDestroy {
 
     currentImageIndex = 0;
 
+    userCanAddReview: boolean;
+
     unsubscribe$ = new Subject<void>();
 
     constructor(
@@ -28,6 +31,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
         private readonly cartService: CartService,
         private readonly reviewService: ReviewService,
         private readonly router: Router,
+        private readonly orderService: OrderService,
     ) {
     }
 
@@ -39,12 +43,14 @@ export class ViewProductComponent implements OnInit, OnDestroy {
                 switchMap((product: ProductDto) =>
                     combineLatest([
                         of(product),
-                        this.reviewService.getReviewsForProduct(product)
+                        this.reviewService.getReviewsForProduct(product),
+                        this.orderService.userCanAddReview(product.id)
                     ])
-                )
-            ).subscribe(([product, reviews]: [ProductDto, ReviewDto[]]) => {
+                ),
+            ).subscribe(([product, reviews, userHasBoughtProduct]: [ProductDto, ReviewDto[], boolean]) => {
             this.product = product;
             this.reviews = reviews;
+            this.userCanAddReview = userHasBoughtProduct;
         });
 
         this.selectedSize = this.productSize[0];
@@ -86,5 +92,9 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     addToCart(product: ProductDto) {
         product.size = this.selectedSize.tag;
         this.cartService.addToCart(product);
+    }
+
+    toggleAddReviewModal() {
+        this.reviewService.openAddReviewModal();
     }
 }

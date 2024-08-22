@@ -1,45 +1,30 @@
 <dl class="space-y-3">
-    <ng-container *ngFor="let r of rating">
-        <div class="flex items-center text-sm">
-            <dt class="flex flex-1 items-center">
-                <p class="w-3 font-medium text-gray-900">{{ r.rating }}<span class="sr-only"> star reviews</span></p>
-                <div aria-hidden="true" class="ml-1 flex flex-1 items-center">
-                    <svg class="flex-shrink-0 h-5 w-5 text-yellow-400"
-                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                         aria-hidden="true">
-                        <path fill-rule="evenodd"
-                              d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
-                              clip-rule="evenodd"/>
-                    </svg>
+  <ng-container *ngFor="let r of rating">
+    <div class="flex items-center text-sm">
+      <dt class="flex flex-1 items-center">
+        <p class="w-3 font-medium text-gray-900">{{ r.rating }}<span class="sr-only"> star reviews</span></p>
+        <div aria-hidden="true" class="ml-1 flex flex-1 items-center">
+          <svg class="flex-shrink-0 h-5 w-5 text-yellow-400"
+               xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+               aria-hidden="true">
+            <path fill-rule="evenodd"
+                  d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
+                  clip-rule="evenodd" />
+          </svg>
 
-                    <div class="relative ml-3 flex-1">
-                        <div class="h-3 rounded-full border border-gray-200 bg-gray-100"></div>
+          <div class="relative ml-3 flex-1">
+            <div class="h-3 rounded-full border border-gray-200 bg-gray-100"></div>
 
-                        <div [style]="calculateSizeProgressBar(r.rating)"
-                             class="absolute inset-y-0 rounded-full border border-yellow-400 bg-yellow-400"></div>
-                    </div>
-                </div>
-            </dt>
-            <dd class="ml-3 w-10 text-right text-sm tabular-nums text-gray-900">
-                {{ calculatePercentage(r.rating) }}
-            </dd>
+            <div [style]="calculateSizeProgressBar(r.rating)"
+                 class="absolute inset-y-0 rounded-full border border-yellow-400 bg-yellow-400"></div>
+          </div>
         </div>
-    </ng-container>
-
-    <div *ngIf="userCanAddReview"
-         class="mt-10">
-        <h3 class="text-lg font-medium text-gray-900">Share your thoughts</h3>
-        <p class="mt-1 text-sm text-gray-600">
-            If you’ve used this product, share your thoughts with
-            other customers
-        </p>
-
-        <a
-                (click)="toggleAddReviewModal()"
-                class="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full hover:cursor-pointer">
-            Write a review
-        </a>
+      </dt>
+      <dd class="ml-3 w-10 text-right text-sm tabular-nums text-gray-900">
+        {{ calculatePercentage(r.rating) }}
+      </dd>
     </div>
+  </ng-container>
 </dl>
 
 <superstore-add-review *ngIf="reviewService.showModalAddReview.value"

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
 import { NotificationsService } from '../shared/notifications/notifications.service';
-import { ErrorService } from "../error/error.service";
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -102,10 +102,15 @@ export class OrderService {
                     this.ordersSubject.next(orders);
                 }),
                 catchError((err) => {
-                    this.errorService.setError(err.error.message);
+                        this.errorService.setError(err.error.message);
                         return of(null);
                     }
                 )
             );
+    }
+
+    userCanAddReview(productId: number): Observable<boolean> {
+        const userId = this.authService.user.id;
+        return this.http.get<boolean>(`${ this.orderUri }/${ productId }/${ userId }`);
     }
 }
