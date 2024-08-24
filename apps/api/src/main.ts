@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { runMigration } from "./app/migration/migration.service";
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, { cors: true });
@@ -10,6 +11,9 @@ async function bootstrap() {
     app.enableCors({
         origin: process.env.ALLOWED_ORIGIN,
     });
+
+    app.use(bodyParser.json({ limit: '10mb' }));
+    app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);

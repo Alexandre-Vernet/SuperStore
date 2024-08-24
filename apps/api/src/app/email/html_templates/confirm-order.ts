@@ -1,6 +1,6 @@
-import { OrderDto, UserDto } from "@superstore/interfaces";
+import { OrderDto } from "@superstore/interfaces";
 
-export const confirmOrder = (order: OrderDto, user: UserDto) => {
+export const confirmOrder = (order: OrderDto) => {
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -57,15 +57,19 @@ export const confirmOrder = (order: OrderDto, user: UserDto) => {
     <div class="section">
         <h2 class="section-title">Order Confirmation</h2>
         <div class="order-details">
-            <p class="order-info">Dear ${ user.firstName },</p>
-            <p class="order-info">Thank you for placing your order on our e-commerce website. We are delighted to have you as our customer and would like to inform you that your order has been successfully confirmed.</p>
-            <p class="order-info">Here are the details of your order:</p>
-            <p class="order-info">Order Number: <span class="order-number">${ order.id }</span></p>
-            <p class="order-info">Order Total: ${ order.totalPrice } €</p>
-        </div>
+    <p class="order-info">Dear ${ order.user.firstName },</p>
+    <p class="order-info">
+      Thank you for placing your order on our e-commerce website. We are delighted to have you as
+      our customer and would like to inform you that your order has been successfully confirmed.
+    </p>
+    <p class="order-info">
+      We hope you enjoy your shopping experience with us and look forward to serving you again in
+      the future.
+    </p>
+  </div>
     </div>
     <p class="thank-you">Thank you for your trust!</p>
 </body>
 </html>
-`
+`;
 };
