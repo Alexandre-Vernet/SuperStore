@@ -19,9 +19,9 @@ export class PdfService {
         doc.setFont('helvetica');
 
         // Header
-        doc.setFontSize(50);
+        doc.setFontSize(45);
         doc.text('SuperStore', 50, 50);
-        doc.addImage('assets/icon.png', 'PNG', 450, 20, 100, 100)
+        doc.addImage('assets/icon.png', 'PNG', 450, 20, 100, 100);
 
 
         // Order number
@@ -41,28 +41,28 @@ export class PdfService {
         doc.text('Billing Address', 50, 170);
         doc.setFontSize(14);
         doc.text(order.address.country, 50, 190);
-        doc.text(`${ order.address.address } \n${ order.address.apartment }`, 50, 210);
-        doc.text(order.address.zipCode, 50, 250);
-        doc.text(order.address.phone, 50, 270);
+        order.address.company ? doc.text(order.address.company, 50, 210) : null;
+        doc.text(`${ order.address.address } \n${ order.address.apartment }`, 50, 230);
+        doc.text(order.address.zipCode, 50, 270);
+        doc.text(order.address.phone, 50, 290);
 
 
         const productRows = [];
 
-        order.products.forEach((p) => {
-            const productName = p.product.name;
-            const productPrice = p.product.price;
-            const productCategories = p.product.categories;
-            const productDescription = p.product.description;
+        order.products.forEach((orderProduct) => {
+            const product = orderProduct.product.name;
+            const quantity = orderProduct.quantity;
+            const productPrice = `${ orderProduct.product.price } €`;
 
             productRows.push([
-                productName,
-                `${ productPrice } €`,
-                productCategories,
-                productDescription,
+                product,
+                quantity,
+                productPrice,
             ]);
         });
 
-        const header = ['Product', 'Price', 'Categories', 'Description'];
+
+        const header = ['Product', 'Quantity', 'Price'];
         autoTable(doc, {
             head: [header],
             body: productRows,
@@ -73,7 +73,7 @@ export class PdfService {
         });
 
         const productTableHeight = productRows.length * 100;
-        if (productTableHeight > 500) {
+        if (productTableHeight > 450) {
             doc.addPage();
             this.displayPriceOnBottomPage(doc, 50, order);
         } else {
@@ -86,25 +86,25 @@ export class PdfService {
     displayPriceOnBottomPage(doc, priceY: number, order: OrderDto) {
         // Price
         doc.setFontSize(16);
-        doc.text('Subtotal', 400, priceY);
+        doc.text('Subtotal', 350, priceY);
         doc.setFontSize(14);
-        doc.text(`${ order.subTotalPrice } €`, 500, priceY);
+        doc.text(`${ order.subTotalPrice } €`, 450, priceY);
 
         const shippingY = priceY + 25;
         doc.setFontSize(16);
-        doc.text('Shipping', 400, shippingY);
+        doc.text('Shipping', 350, shippingY);
         doc.setFontSize(14);
-        doc.text(`${ order.shippingPrice } €`, 500, shippingY);
+        doc.text(`${ order.shippingPrice } €`, 450, shippingY);
 
         const taxesY = shippingY + 25;
         doc.setFontSize(16);
-        doc.text('Taxes', 400, taxesY);
+        doc.text('Taxes', 350, taxesY);
         doc.setFontSize(14);
-        doc.text(`${ order.taxesPrice } €`, 500, taxesY);
+        doc.text(`${ order.taxesPrice } €`, 450, taxesY);
 
         const totalY = taxesY + 35;
         doc.setFontSize(25);
-        doc.text('Total', 400, totalY);
-        doc.text(`${ order.totalPrice } €`, 500, totalY);
+        doc.text('Total', 350, totalY);
+        doc.text(`${ order.totalPrice } €`, 450, totalY);
     }
 }

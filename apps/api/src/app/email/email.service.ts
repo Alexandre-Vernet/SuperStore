@@ -1,9 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { Transporter, OrderDto, SendNewsletterDto, UserDto } from "@superstore/interfaces";
-import { sendNewsletter } from "./html_templates/send-newsletter";
-import { confirmOrder } from "./html_templates/confirm-order";
-import { sendEmailResetPassword } from "./html_templates/send-email-reset-password";
-import { sendContactEmail } from "./html_templates/sendContactEmail";
+import { OrderDto, SendNewsletterDto, Transporter, UserDto } from '@superstore/interfaces';
+import { sendNewsletter } from './html_templates/send-newsletter';
+import { confirmOrder } from './html_templates/confirm-order';
+import { sendEmailResetPassword } from './html_templates/send-email-reset-password';
+import { sendContactEmail } from './html_templates/sendContactEmail';
 
 @Injectable()
 export class EmailService {
@@ -16,7 +16,8 @@ export class EmailService {
         }
     };
 
-    constructor() {
+    constructor(
+    ) {
         this.initTransporter();
     }
 
@@ -52,6 +53,13 @@ export class EmailService {
             to: order.user.email,
             subject: 'Order Confirmation',
             html: confirmOrder(order),
+            attachments: [
+                {
+                    filename: 'icon.png',
+                    path: 'apps/superstore/src/assets/icon.png',
+                    contentType: 'image/jpeg',
+                },
+            ],
         };
 
         return this.transporter
