@@ -4,6 +4,7 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AddressService } from '../address/address.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class OrderService {
@@ -11,12 +12,14 @@ export class OrderService {
         @InjectRepository(OrderEntity)
         private readonly orderRepository: Repository<OrderEntity>,
         private readonly addressService: AddressService,
+        private readonly emailService: EmailService
     ) {
     }
 
     async create(order: OrderDto) {
         const throwIfExist = false;
         order.address = await this.addressService.create(order.address, throwIfExist);
+        await this.emailService.sendEmailConfirmationOrder(order);
         return await this.orderRepository.save(order);
     }
 

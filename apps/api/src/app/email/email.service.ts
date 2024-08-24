@@ -21,13 +21,13 @@ export class EmailService {
     }
 
     initTransporter() {
-        const { MAIL_USER, MAIL_PASSWORD, NODE_ENV } = process.env;
+        const { NODEMAILER_USERNAME, NODEMAILER_PASSWORD, NODE_ENV } = process.env;
 
         if (NODE_ENV === 'production') {
             this.transporterOptions = {
                 auth: {
-                    user: MAIL_USER,
-                    pass: MAIL_PASSWORD
+                    user: NODEMAILER_USERNAME,
+                    pass: NODEMAILER_PASSWORD
                 },
                 service: 'gmail'
             };
@@ -35,29 +35,29 @@ export class EmailService {
         } else {
             this.transporterOptions = {
                 auth: {
-                    user: MAIL_USER,
-                    pass: MAIL_PASSWORD
+                    user: NODEMAILER_USERNAME,
+                    pass: NODEMAILER_PASSWORD
                 },
                 host: 'sandbox.smtp.mailtrap.io',
                 port: 2525
-            }
+            };
         }
 
-        this.transporter = this.nodemailer.createTransport(this.transporterOptions)
+        this.transporter = this.nodemailer.createTransport(this.transporterOptions);
     }
 
-    sendEmailConfirmationOrder(order: OrderDto, user: UserDto) {
+    sendEmailConfirmationOrder(order: OrderDto) {
         const mailOptions = {
             from: 'superstore@gmail.com',
-            to: user.email,
+            to: order.user.email,
             subject: 'Order Confirmation',
-            html: confirmOrder(order, user),
+            html: confirmOrder(order),
         };
 
         return this.transporter
             .sendMail(mailOptions, (error) => {
                 if (error) {
-                    throw new HttpException(error, 500, { cause: error })
+                    throw new HttpException(error, 500, { cause: error });
                 } else {
                     return { message: 'Email sent successfully' };
                 }
@@ -75,7 +75,7 @@ export class EmailService {
         return this.transporter
             .sendMail(mailOptions, (error) => {
                 if (error) {
-                    throw new HttpException(error, 500, { cause: error })
+                    throw new HttpException(error, 500, { cause: error });
                 } else {
                     return { message: 'Email sent successfully' };
                 }
@@ -93,7 +93,7 @@ export class EmailService {
         return this.transporter
             .sendMail(mailOptions, (error) => {
                 if (error) {
-                    throw new HttpException(error, 500, { cause: error })
+                    throw new HttpException(error, 500, { cause: error });
                 } else {
                     return { message: 'Email sent successfully' };
                 }
@@ -113,13 +113,13 @@ export class EmailService {
             return this.transporter
                 .sendMail(mailOptions, (error) => {
                     if (error) {
-                        throw new HttpException(error, 500, { cause: error })
+                        throw new HttpException(error, 500, { cause: error });
                     } else {
                         return { message: 'Email sent successfully' };
                     }
                 });
         } else {
-            throw new HttpException("Email not sent in development mode", 500)
+            throw new HttpException("Email not sent in development mode", 500);
         }
     }
 }
