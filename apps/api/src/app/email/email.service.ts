@@ -47,7 +47,7 @@ export class EmailService {
         this.transporter = this.nodemailer.createTransport(this.transporterOptions);
     }
 
-    sendEmailConfirmationOrder(order: OrderDto) {
+    sendEmailConfirmationOrder(order: OrderDto, pdfBuffer: Buffer) {
         const mailOptions = {
             from: 'superstore@gmail.com',
             to: order.user.email,
@@ -55,9 +55,9 @@ export class EmailService {
             html: confirmOrder(order),
             attachments: [
                 {
-                    filename: 'icon.png',
-                    path: 'apps/superstore/src/assets/icon.png',
-                    contentType: 'image/jpeg',
+                    filename: `invoice-${ new Date().getTime() }.pdf`,
+                    content: pdfBuffer,
+                    contentType: 'application/pdf',
                 },
             ],
         };

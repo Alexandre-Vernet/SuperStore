@@ -3,6 +3,7 @@ import { OrderDto } from '@superstore/interfaces';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class PdfService {
     ) {
     }
 
-    downloadInvoice(order: OrderDto) {
+    downloadInvoice(order: OrderDto, download = true): Observable<string> {
         const doc = new jsPDF('p', 'pt');
         doc.setFont('helvetica');
 
@@ -80,7 +81,11 @@ export class PdfService {
             this.displayPriceOnBottomPage(doc, productTableHeight + 300, order);
         }
 
-        doc.save(`invoice-${ new Date().getTime() }.pdf`);
+        if (download) {
+            doc.save(`invoice-${ new Date().getTime() }.pdf`);
+        }
+
+        return of(doc.output('datauristring'));
     }
 
     displayPriceOnBottomPage(doc, priceY: number, order: OrderDto) {

@@ -1,18 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderDto, OrderState } from '@superstore/interfaces';
-import { AuthInterceptor } from "../auth/auth.interceptor";
-import { AdminInterceptor } from "../auth/admin.interceptor";
+import { AuthInterceptor } from '../auth/auth.interceptor';
+import { AdminInterceptor } from '../auth/admin.interceptor';
+import { EmailService } from '../email/email.service';
 
 @Controller('order')
 export class OrderController {
 
-    constructor(private readonly orderService: OrderService) {
+    constructor(
+        private readonly orderService: OrderService,
+        private readonly emailService: EmailService,
+    ) {
     }
 
     @Post()
-    create(@Body() order: OrderDto){
+    create(@Body() order: OrderDto) {
         return this.orderService.create(order);
+    }
+
+    @Post('invoice')
+    sendEmailConfirmationOrder(@Body() { order, invoice }: { order: OrderDto, invoice: string }) {
+        const pdfBuffer = Buffer.from(invoice, 'base64');
+        return this.emailService.sendEmailConfirmationOrder(order, pdfBuffer);
     }
 
     @UseInterceptors(AdminInterceptor)
@@ -41,7 +51,7 @@ export class OrderController {
 
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
-     updateOrderState(@Param('id') id: number, @Body() { state }: { state: OrderState }) {
+    updateOrderState(@Param('id') id: number, @Body() { state }: { state: OrderState }) {
         return this.orderService.updateOrderState(id, state);
     }
 

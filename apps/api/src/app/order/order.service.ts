@@ -4,22 +4,18 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AddressService } from '../address/address.service';
-import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class OrderService {
     constructor(
         @InjectRepository(OrderEntity)
         private readonly orderRepository: Repository<OrderEntity>,
-        private readonly addressService: AddressService,
-        private readonly emailService: EmailService
+        private readonly addressService: AddressService
     ) {
     }
 
     async create(order: OrderDto) {
-        const throwIfExist = false;
-        order.address = await this.addressService.create(order.address, throwIfExist);
-        await this.emailService.sendEmailConfirmationOrder(order);
+        order.address = await this.addressService.create(order.address, false);
         return await this.orderRepository.save(order);
     }
 
@@ -40,7 +36,7 @@ export class OrderService {
     }
 
     async updateOrderState(id: number, updateOrderDto: OrderState) {
-        await this.orderRepository.update(id, {state: updateOrderDto});
+        await this.orderRepository.update(id, { state: updateOrderDto });
         return this.orderRepository.findOne({
             where: { id }
         });
