@@ -87,7 +87,7 @@
                 <!-- Contact form -->
                 <div class="py-10 px-6 sm:px-10 lg:col-span-2 xl:p-12">
                     <h3 class="text-lg font-medium text-gray-900">Send us a message</h3>
-                    <form [formGroup]="formContact" (ngSubmit)="submit()" class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                    <form [formGroup]="formContact" (ngSubmit)="formContact.valid && submitForm()" class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                         <div>
                             <label for="first-name" class="block text-sm font-medium text-gray-900">First name</label>
                             <div class="mt-1">
@@ -117,7 +117,7 @@
                                 <span id="phone-optional" class="text-sm text-gray-500">Optional</span>
                             </div>
                             <div class="mt-1">
-                                <input formControlName="phone" type="text" name="phone" id="phone" autocomplete="tel"
+                                <input formControlName="phone" type="number" name="phone" id="phone" autocomplete="tel"
                                        class="block w-full rounded-md border-gray-300 py-3 px-4 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                        aria-describedby="phone-optional">
                             </div>
@@ -139,6 +139,9 @@
                                           class="block w-full rounded-md border-gray-300 py-3 px-4 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                           aria-describedby="message-max"></textarea>
                             </div>
+                          <span *ngIf="formContact.errors" class="text-red-600 text-xs">
+                              {{ formContact.getError('error') }}
+                          </span>
                         </div>
                         <div class="sm:col-span-2 sm:flex sm:justify-end">
                             <button type="submit"

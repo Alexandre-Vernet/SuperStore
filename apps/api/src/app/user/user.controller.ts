@@ -34,7 +34,7 @@ export class UserController {
         subject: string,
         message: string
     }) {
-        return this.emailService.sendContactEmail(body)
+        return this.emailService.sendContactEmail(body);
     }
 
     @UseInterceptors(AuthInterceptor)

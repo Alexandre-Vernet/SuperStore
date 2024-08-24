@@ -7,7 +7,7 @@ import { sendContactEmail } from './html_templates/sendContactEmail';
 
 @Injectable()
 export class EmailService {
-    nodemailer = require("nodemailer");
+    nodemailer = require('nodemailer');
     transporter;
     transporterOptions: Transporter = {
         auth: {
@@ -16,8 +16,7 @@ export class EmailService {
         }
     };
 
-    constructor(
-    ) {
+    constructor() {
         this.initTransporter();
     }
 
@@ -57,9 +56,9 @@ export class EmailService {
                 {
                     filename: `invoice-${ new Date().getTime() }.pdf`,
                     content: pdfBuffer,
-                    contentType: 'application/pdf',
-                },
-            ],
+                    contentType: 'application/pdf'
+                }
+            ]
         };
 
         return this.transporter
@@ -77,7 +76,7 @@ export class EmailService {
             from: 'superstore@gmail.com',
             to: newsletter.emails,
             subject: newsletter.title,
-            html: sendNewsletter(newsletter.title, newsletter.description),
+            html: sendNewsletter(newsletter.title, newsletter.description)
         };
 
         return this.transporter
@@ -95,7 +94,7 @@ export class EmailService {
             from: 'superstore@gmail.com',
             to: user.email,
             subject: 'Reset Password',
-            html: sendEmailResetPassword(user, linkResetPassword),
+            html: sendEmailResetPassword(user, linkResetPassword)
         };
 
         return this.transporter
@@ -108,26 +107,29 @@ export class EmailService {
             });
     }
 
-    sendContactEmail({ email, firstName, lastName, phone, subject, message }) {
-        const NODE_ENV = process.env.NODE_ENV;
-        if (NODE_ENV === 'production') {
-            const mailOptions = {
-                from: email,
-                to: this.transporterOptions.auth.user,
-                subject: subject,
-                html: sendContactEmail(firstName, lastName, email, phone, subject, message),
-            };
+    sendContactEmail({ firstName, lastName, email, phone, subject, message }: {
+        firstName: string,
+        lastName: string,
+        email: string,
+        phone: string,
+        subject: string,
+        message: string
+    }) {
+        const NODEMAILER_EMAIL= process.env.NODEMAILER_EMAIL;
+        const mailOptions = {
+            from: email,
+            to: NODEMAILER_EMAIL,
+            subject: subject,
+            html: sendContactEmail(firstName, lastName, email, phone, subject, message)
+        };
 
-            return this.transporter
-                .sendMail(mailOptions, (error) => {
-                    if (error) {
-                        throw new HttpException(error, 500, { cause: error });
-                    } else {
-                        return { message: 'Email sent successfully' };
-                    }
-                });
-        } else {
-            throw new HttpException("Email not sent in development mode", 500);
-        }
+        return this.transporter
+            .sendMail(mailOptions, (error) => {
+                if (error) {
+                    throw new HttpException(error, 500, { cause: error });
+                } else {
+                    return { message: 'Email sent successfully' };
+                }
+            });
     }
 }

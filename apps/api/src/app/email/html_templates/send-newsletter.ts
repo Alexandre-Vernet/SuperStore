@@ -7,7 +7,6 @@ export const sendNewsletter = (title: string, description: string) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${ title } - Don't Miss the Latest News!</title>
   <style>
-    /* Email-specific styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #f6f6f6;
@@ -71,5 +70,5 @@ export const sendNewsletter = (title: string, description: string) => {
   </div>
 </body>
 </html>
-`
+`;
 };

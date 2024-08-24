@@ -80,7 +80,7 @@ export class UserService {
 
 
     sendContactEmail(firstName: string, lastName: string, email: string, phone: string, subject: string, message: string) {
-        return this.http.post(`${ this.userUrl }/contact`, {
+        return this.http.post<void>(`${ this.userUrl }/contact`, {
             firstName,
             lastName,
             email,
