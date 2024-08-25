@@ -20,9 +20,9 @@ export class AuthService {
     }
 
     async signUp(createUserDto: UserDto): Promise<{ accessToken: string, user: UserDto }> {
-        if (createUserDto.password.trim() !== createUserDto.confirmPassword.trim()) {
-            throw new CustomBadRequestException('Passwords do not match', 'password');
-        }
+        // if (createUserDto.password.trim() !== createUserDto.confirmPassword.trim()) {
+        //     throw new CustomBadRequestException('Passwords do not match', 'password');
+        // }
 
         const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         if (existingUser) {
@@ -137,7 +137,7 @@ export class AuthService {
         // eslint-disable-next-line no-console
         console.log('Migrating users...');
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 299; i++) {
             const createUserDto: UserDto = {
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),

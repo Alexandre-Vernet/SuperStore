@@ -69,9 +69,9 @@ export class PromotionService {
         // eslint-disable-next-line no-console
         console.log('Migrating promotion...');
 
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 100; i++) {
             const promotion: PromotionDto = {
-                label: faker.commerce.productAdjective() + faker.datatype.number({ min: 1, max: 100 }),
+                label: faker.commerce.productAdjective() + faker.datatype.number({ min: 1, max: 100000 }),
                 amount: faker.datatype.number({ min: 1, max: 50 }),
                 count: faker.datatype.number({ min: 1, max: 20000 })
             };

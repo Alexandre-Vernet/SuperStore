@@ -13,17 +13,25 @@ export class ReviewService {
     ) {
     }
 
-    create(createReviewDto:ReviewDto): Promise<ReviewDto> {
-        return this.reviewRepository.save(createReviewDto)
-            .then(review => {
-                return this.findOne(review.id);
-            });
+    async create(createReviewDto: ReviewDto): Promise<ReviewDto> {
+        // Check if review already exists for this user and product
+        const options = {
+            where: {
+                user: { id: createReviewDto.user.id },
+                product: { id: createReviewDto.product.id }
+            }
+        };
+        const reviewExist = await this.reviewRepository.findOne(options);
+        if (reviewExist) {
+            throw new Error('Review already exists');
+        }
+        return this.reviewRepository.save({ id: createReviewDto.id, ...createReviewDto });
     }
 
 
     findReviewsForProduct(productId: number) {
         const options: FindManyOptions = {
-            where: { product: { id: productId } },
+            where: { product: { id: productId } }
         };
 
         return this.reviewRepository.find(options);
@@ -37,10 +45,6 @@ export class ReviewService {
         return this.reviewRepository.findOne(options);
     }
 
-    update(id: number, updateReviewDto: ReviewDto) {
-        return this.reviewRepository.update(id, updateReviewDto);
-    }
-
     remove(id: number) {
         return this.reviewRepository.delete(id);
     }
@@ -52,13 +56,12 @@ export class ReviewService {
 
     async migrate() {
         // eslint-disable-next-line no-console
-        console.log('Migrating reviews...');
 
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 10; i++) {
             const user: UserDto = new UserDto();
-            user.id = faker.datatype.number({ min: 1, max: 100 });
+            user.id = faker.datatype.number({ min: 1, max: 300 });
             const product: ProductDto = new ProductDto();
-            product.id = faker.datatype.number({ min: 1, max: 150 });
+            product.id = 6;
             const review: ReviewDto = {
                 user: user,
                 product: product,
@@ -67,7 +70,7 @@ export class ReviewService {
                 createdAt: faker.date.past()
             };
 
-            this.create(review);
+        await this.create(review);
         }
     }
 }

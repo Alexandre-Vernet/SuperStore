@@ -66,7 +66,7 @@ export class NewsletterService {
         // eslint-disable-next-line no-console
         console.log('Migrating newsletter ...');
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 99; i++) {
             const newsletter: NewsletterDto = {
                 email: faker.internet.email(),
                 isSubscribed: faker.datatype.boolean(),
