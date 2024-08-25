@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'newsletter', schema: 'public' })
 export class NewsletterEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ unique: true })
+    @OneToOne(() => UserEntity, (user) => user.email, { nullable: true })
     email: string;
 
     @Column({ name: 'is_subscribed', default: false })
