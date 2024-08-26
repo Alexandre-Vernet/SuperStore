@@ -26,7 +26,7 @@ export class OrderService {
         private readonly errorService: ErrorService,
         private readonly pdfService: PdfService
     ) {
-        if (this.authService.user.isAdmin) {
+        if (this.authService?.user?.isAdmin) {
             this.findAll().subscribe();
         }
     }
