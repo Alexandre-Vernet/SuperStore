@@ -15,7 +15,6 @@ import { ReviewEntity } from './review/review.entity';
 import { ReviewModule } from './review/review.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { NewsletterEntity } from './newsletter/newsletter.entity';
-import { MigrationModule } from './migration/migration.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { PromotionEntity } from './promotion/promotion.entity';
 import { OrderProductEntity } from './order-product/order-product.entity';
@@ -68,7 +67,6 @@ const {
             signOptions: { expiresIn: '1d' }
         }),
         NewsletterModule,
-        MigrationModule,
         PromotionModule
     ]
 })
