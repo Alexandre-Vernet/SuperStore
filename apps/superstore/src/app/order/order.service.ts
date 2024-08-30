@@ -126,7 +126,11 @@ export class OrderService {
     }
 
     userCanAddReview(productId: number): Observable<boolean> {
-        const userId = this.authService.user.id;
-        return this.http.get<boolean>(`${ this.orderUri }/${ productId }/${ userId }`);
+        const user = this.authService.user;
+        if (user) {
+            return this.http.get<boolean>(`${ this.orderUri }/${ productId }/${ user.id }`);
+        } else {
+            return of(false);
+        }
     }
 }

@@ -47,10 +47,10 @@ export class ViewProductComponent implements OnInit, OnDestroy {
                         this.orderService.userCanAddReview(product.id)
                     ])
                 ),
-            ).subscribe(([product, reviews, userHasBoughtProduct]: [ProductDto, ReviewDto[], boolean]) => {
+            ).subscribe(([product, reviews, userCanAddReview]: [ProductDto, ReviewDto[], boolean]) => {
             this.product = product;
             this.reviews = reviews;
-            this.userCanAddReview = userHasBoughtProduct;
+            this.userCanAddReview = userCanAddReview;
         });
 
         this.selectedSize = this.productSize[0];

@@ -28,6 +28,7 @@ export class ReviewService {
                     const reviews = this.reviewsSubject.getValue();
                     reviews.push(review);
                     this.reviewsSubject.next(reviews);
+                    this.notificationService.showSuccessNotification('Success', 'Review added successfully');
                 })
             );
     }
