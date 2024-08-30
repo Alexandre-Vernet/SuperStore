@@ -18,6 +18,6 @@ export class CurrencyPipe implements PipeTransform {
             // If no currency is set, set it to EUR
             localStorage.setItem(Currency.CURRENCY, Currency.EUR);
         }
-        return `${ price } €`;
+        return `${ Math.round(price * 100) / 100 } €`;
     }
 }
