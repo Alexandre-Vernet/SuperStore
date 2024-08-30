@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/user.entity';
 import bcrypt from 'bcrypt';
-import { faker } from '@faker-js/faker';
 import { EmailService } from '../email/email.service';
 import { CustomBadRequestException } from '../exceptions/CustomBadRequestException';
 
@@ -131,22 +130,5 @@ export class AuthService {
                     return this.emailService.sendEmailResetPassword(user, linkResetPassword);
                 }
             });
-    }
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating users...');
-
-        for (let i = 0; i < 100; i++) {
-            const createUserDto: UserDto = {
-                firstName: faker.name.firstName(),
-                lastName: faker.name.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password(),
-                isAdmin: false
-            };
-
-            await this.signUp(createUserDto);
-        }
     }
 }

@@ -2,7 +2,6 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../product/product.service';
 import { ProductDto } from '@superstore/interfaces';
-import { checkCategoriesValidators } from './check-categories.validators';
 
 @Component({
     selector: 'superstore-create-product',
@@ -18,7 +17,7 @@ export class CreateProductComponent implements OnInit {
         name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         price: new FormControl(0, [Validators.required, Validators.min(0)]),
-        categories: new FormControl('', [Validators.required, checkCategoriesValidators(), Validators.maxLength(255)]),
+        category: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         images: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });
 
@@ -33,7 +32,7 @@ export class CreateProductComponent implements OnInit {
                 name: this.editProduct.name,
                 description: this.editProduct.description,
                 price: this.editProduct.price,
-                categories: this.editProduct.categories.join(', '),
+                category: this.editProduct.category,
                 images: this.editProduct.images.map(i => i.url).join(', ')
             });
         }
@@ -48,7 +47,7 @@ export class CreateProductComponent implements OnInit {
             name,
             description,
             price,
-            categories,
+            category,
             images
         } = this.formAddProduct.value;
 
@@ -57,7 +56,7 @@ export class CreateProductComponent implements OnInit {
             name: name.trim(),
             description: description.trim(),
             price: Number(price),
-            categories: categories.split(',').map(c => c.trim()),
+            category: category.trim(),
             images: images.split(',').map(url => ({ url: url.trim() })
             )
         };

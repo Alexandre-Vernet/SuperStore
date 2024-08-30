@@ -26,7 +26,7 @@ export class OrderService {
         private readonly errorService: ErrorService,
         private readonly pdfService: PdfService
     ) {
-        if (this.authService.user.isAdmin) {
+        if (this.authService?.user?.isAdmin) {
             this.findAll().subscribe();
         }
     }
@@ -85,10 +85,6 @@ export class OrderService {
         } else {
             return of([]);
         }
-    }
-
-    getOrder(orderId: number): Observable<OrderDto> {
-        return this.http.get<OrderDto>(`${ this.orderUri }/${ orderId }`);
     }
 
     getLastOrder(): Observable<OrderDto> {

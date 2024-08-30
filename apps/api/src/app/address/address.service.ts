@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { AddressDto, UserDto } from '@superstore/interfaces';
+import { AddressDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddressEntity } from './address.entity';
-import { faker } from '@faker-js/faker';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AddressService {
 
     constructor(
         @InjectRepository(AddressEntity)
-        private readonly addressRepository: Repository<AddressEntity>,
-        private readonly userService: UserService
+        private readonly addressRepository: Repository<AddressEntity>
     ) {
     }
 
@@ -65,26 +62,5 @@ export class AddressService {
 
     remove(id: number) {
         return this.addressRepository.delete(id);
-    }
-
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating addresses...');
-        const user: UserDto = await this.userService.find(1);
-
-        for (let i = 0; i < 25; i++) {
-            const address: AddressDto = {
-                user,
-                address: faker.address.streetAddress(),
-                apartment: faker.address.secondaryAddress(),
-                city: faker.address.city(),
-                country: faker.address.country(),
-                zipCode: faker.address.zipCode(),
-                phone: `06${ faker.phone.number('########') }`
-            };
-
-            await this.create(address);
-        }
     }
 }

@@ -14,7 +14,6 @@ export class UpdateOrderComponent implements OnInit {
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
-        OrderState.CONFIRMED,
         OrderState.SHIPPED,
         OrderState.DELIVERED,
         OrderState.CANCELED,

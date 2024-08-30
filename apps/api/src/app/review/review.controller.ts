@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseInterceptors } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewDto } from '@superstore/interfaces';
 import { AuthInterceptor } from '../auth/auth.interceptor';
@@ -22,12 +22,6 @@ export class ReviewController {
     @Get('/product/:productId')
     findReviewsForProduct(@Param('productId') productId: number) {
         return this.reviewService.findReviewsForProduct(productId);
-    }
-
-    @UseInterceptors(AuthInterceptor)
-    @Patch(':id')
-    update(@Param('id') id: number, @Body() updateReviewDto: ReviewDto) {
-        return this.reviewService.update(id, updateReviewDto);
     }
 
     @UseInterceptors(AuthInterceptor)

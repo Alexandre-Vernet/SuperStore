@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ProductDto, ReviewDto, UserDto } from '@superstore/interfaces';
+import { ReviewDto } from '@superstore/interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { ReviewEntity } from './review.entity';
-import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ReviewService {
@@ -13,17 +12,25 @@ export class ReviewService {
     ) {
     }
 
-    create(createReviewDto:ReviewDto): Promise<ReviewDto> {
-        return this.reviewRepository.save(createReviewDto)
-            .then(review => {
-                return this.findOne(review.id);
-            });
+    async create(createReviewDto: ReviewDto): Promise<ReviewDto> {
+        // Check if review already exists for this user and product
+        const options = {
+            where: {
+                user: { id: createReviewDto.user.id },
+                product: { id: createReviewDto.product.id }
+            }
+        };
+        const reviewExist = await this.reviewRepository.findOne(options);
+        if (reviewExist) {
+            throw new Error('Review already exists');
+        }
+        return this.reviewRepository.save({ id: createReviewDto.id, ...createReviewDto });
     }
 
 
     findReviewsForProduct(productId: number) {
         const options: FindManyOptions = {
-            where: { product: { id: productId } },
+            where: { product: { id: productId } }
         };
 
         return this.reviewRepository.find(options);
@@ -37,37 +44,11 @@ export class ReviewService {
         return this.reviewRepository.findOne(options);
     }
 
-    update(id: number, updateReviewDto: ReviewDto) {
-        return this.reviewRepository.update(id, updateReviewDto);
-    }
-
     remove(id: number) {
         return this.reviewRepository.delete(id);
     }
 
     findReviewsForAllProducts() {
         return this.reviewRepository.find();
-    }
-
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating reviews...');
-
-        for (let i = 0; i < 300; i++) {
-            const user: UserDto = new UserDto();
-            user.id = faker.datatype.number({ min: 1, max: 100 });
-            const product: ProductDto = new ProductDto();
-            product.id = faker.datatype.number({ min: 1, max: 150 });
-            const review: ReviewDto = {
-                user: user,
-                product: product,
-                rating: faker.datatype.number({ min: 1, max: 5 }),
-                description: faker.lorem.paragraph(),
-                createdAt: faker.date.past()
-            };
-
-            this.create(review);
-        }
     }
 }

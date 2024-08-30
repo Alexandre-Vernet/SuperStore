@@ -46,20 +46,8 @@
                             <div class="mt-1">
                                 <input formControlName="categories" id="categories" type="email" required
                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                <span *ngIf="formAddProduct.controls.categories.value?.trim() === ''"
-                                      class="text-blue-500 text-xs">
-                                  Use ',' to separate categories
-                                </span>
-                                <span *ngIf="formAddProduct.get('categories').hasError('invalidCharacters')"
-                                      class="text-red-500 text-xs">
-                                 Special characters are not allowed
-                                </span>
-                                <span *ngIf="formAddProduct.get('categories').hasError('duplicateCategories')"
-                                      class="text-red-500 text-xs">
-                                  Duplicate categories are not allowed
-                                </span>
                             </div>
-                            <span *ngIf="formAddProduct.hasError('categories')" class="text-red-600 text-xs">
+                            <span *ngIf="formAddProduct.hasError('category')" class="text-red-600 text-xs">
                             {{ formAddProduct.getError('error') }}
                           </span>
                         </div>

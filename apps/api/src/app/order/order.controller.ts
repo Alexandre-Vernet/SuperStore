@@ -43,12 +43,6 @@ export class OrderController {
         return this.orderService.getLastOrder(userId);
     }
 
-    @UseInterceptors(AuthInterceptor)
-    @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.orderService.findOne(id);
-    }
-
     @UseInterceptors(AdminInterceptor)
     @Put(':id')
     updateOrderState(@Param('id') id: number, @Body() { state }: { state: OrderState }) {

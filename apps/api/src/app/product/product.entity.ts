@@ -25,8 +25,8 @@ export class ProductEntity {
     @Column({ type: 'decimal' })
     price: number;
 
-    @Column({ type: 'text' })
-    categories: string[];
+    @Column()
+    category: string;
 
     @Column({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, MoreThan, Repository } from 'typeorm';
 import { PromotionEntity } from './promotion.entity';
-import { faker } from '@faker-js/faker';
 import { PromotionDto } from '@superstore/interfaces';
 
 @Injectable()
@@ -63,20 +62,5 @@ export class PromotionService {
 
     remove(id: number) {
         return this.promotionRepository.delete(id);
-    }
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating promotion...');
-
-        for (let i = 0; i < 300; i++) {
-            const promotion: PromotionDto = {
-                label: faker.commerce.productAdjective() + faker.datatype.number({ min: 1, max: 100 }),
-                amount: faker.datatype.number({ min: 1, max: 50 }),
-                count: faker.datatype.number({ min: 1, max: 20000 })
-            };
-
-            this.create(promotion);
-        }
     }
 }

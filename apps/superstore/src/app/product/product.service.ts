@@ -120,7 +120,7 @@ export class ProductService {
 
     filterProductsByCategory(category: string) {
         setTimeout(() =>  {
-            const products = this.productsSubject.value.filter((p) => p.categories.includes(category));
+            const products = this.productsSubject.value.filter((p) => p.category == category);
             this.productsSubjectFiltered.next(products);
         }, 2000);
     }

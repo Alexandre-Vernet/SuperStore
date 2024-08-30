@@ -1,4 +1,5 @@
 export const environment = {
+    appName: 'SuperStore',
     production: true,
     backendUrl: 'https://superstore-api.alexandre-vernet.fr/api',
     productUri: () => `${ environment.backendUrl }/product`,

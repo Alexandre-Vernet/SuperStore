@@ -8,7 +8,7 @@ import { FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm';
 export class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
+        private readonly userRepository: Repository<UserEntity>
     ) {
     }
 
@@ -16,18 +16,14 @@ export class UserService {
         const options: FindManyOptions = {
             order: { id: 'ASC' }
         };
-        return this.userRepository.find(options)
-            .then((users) => {
-                return users.map((user) => {
-                    delete user.password;
-                    return user;
-                });
-            });
+        const users = await this.userRepository.find(options);
+        users.map(user => delete user.password);
+        return users;
     }
 
     async find(id: number) {
         const options: FindOneOptions = {
-            where: { id },
+            where: { id }
         };
         const user = await this.userRepository.findOne(options);
         delete user.password;
@@ -48,12 +44,7 @@ export class UserService {
             throw new ConflictException(`Email ${ updateUserDto.email } is already in use`);
         }
 
-        return this.userRepository
-            .update(id, updateUserDto)
-            .then(() => updateUserDto)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.userRepository.save({ id, ...updateUserDto });
 
     }
 

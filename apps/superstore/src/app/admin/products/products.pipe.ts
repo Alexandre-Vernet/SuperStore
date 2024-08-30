@@ -11,7 +11,7 @@ export class ProductsPipe implements PipeTransform {
                 product?.name.toLowerCase().includes(search.toLowerCase()) ||
                 product?.description.toLowerCase().includes(search.toLowerCase()) ||
                 product?.price.toString().includes(search.toLowerCase()) ||
-                product?.categories.toString().includes(search.toLowerCase());
+                product?.category.toString().includes(search.toLowerCase());
 
         });
     }
