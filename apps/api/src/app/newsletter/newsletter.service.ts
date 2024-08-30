@@ -1,7 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
-import { faker } from '@faker-js/faker';
 import { NewsletterEntity } from './newsletter.entity';
 import { NewsletterDto, SendNewsletterDto } from '@superstore/interfaces';
 import { EmailService } from '../email/email.service';
@@ -53,26 +52,12 @@ export class NewsletterService {
 
     async updateSubscription(newsletterToUpdate: NewsletterDto) {
         const options: FindOneOptions = {
-            where: { email: newsletterToUpdate.email },
+            where: { email: newsletterToUpdate.email }
 
         };
 
         const newsletter = await this.newsletterRepository.findOne(options);
         newsletter.isSubscribed = newsletterToUpdate.isSubscribed;
         return this.newsletterRepository.update(newsletter.id, newsletter);
-    }
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating newsletter ...');
-
-        for (let i = 0; i < 99; i++) {
-            const newsletter: NewsletterDto = {
-                email: faker.internet.email(),
-                isSubscribed: faker.datatype.boolean(),
-            };
-
-            await this.subscribeUserToNewsletter(newsletter);
-        }
     }
 }

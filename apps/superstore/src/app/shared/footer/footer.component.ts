@@ -33,11 +33,9 @@ export class FooterComponent implements OnInit, OnDestroy {
         this.productService.products$
             .subscribe(products => {
                 products.map(product => {
-                    product?.categories?.forEach((category) => {
-                        if (!this.productCategories.includes(category) && this.productCategories.length < this.MAX_CATEGORIES) {
-                            this.productCategories.push(category);
-                        }
-                    });
+                    if (!this.productCategories.includes(product.category) && this.productCategories.length < this.MAX_CATEGORIES) {
+                        this.productCategories.push(product.category);
+                    }
                 });
             });
 

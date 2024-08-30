@@ -87,10 +87,6 @@ export class OrderService {
         }
     }
 
-    getOrder(orderId: number): Observable<OrderDto> {
-        return this.http.get<OrderDto>(`${ this.orderUri }/${ orderId }`);
-    }
-
     getLastOrder(): Observable<OrderDto> {
         const userId = this.authService.user.id;
         return this.http.get<OrderDto>(`${ this.orderUri }/${ userId }/last`);

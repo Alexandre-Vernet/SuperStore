@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { categories, filterPrice, sortBy } from "@superstore/interfaces";
 import { ProductService } from "../product.service";
 import { ActivatedRoute } from "@angular/router";
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'superstore-sidebar-filters',
@@ -9,6 +10,8 @@ import { ActivatedRoute } from "@angular/router";
     styleUrls: ['./sidebar-filters.component.scss'],
 })
 export class SidebarFiltersComponent implements OnInit {
+    protected readonly environment = environment;
+
     filterPrice = filterPrice;
     sortBy = sortBy;
     sortByOpen = false;
@@ -34,12 +37,8 @@ export class SidebarFiltersComponent implements OnInit {
 
                 // List all categories
                 products.map(product => {
-                    if (product.categories) {
-                        product.categories.map(c => {
-                            if (!this.categories.map(c => c.label).includes(c)) {
-                                this.categories.push({ label: c, checked: false });
-                            }
-                        });
+                    if (!this.categories.find(c => c.label === product.category)) {
+                        this.categories.push({ label: product.category, checked: false });
                     }
                 });
             });

@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ImageDto, ProductDto } from '@superstore/interfaces';
+import { ProductDto } from '@superstore/interfaces';
 import { FindOneOptions, Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { faker } from '@faker-js/faker';
 import { CustomConflictException } from '../exceptions/CustomConflictException';
 import { CustomNotFoundException } from '../exceptions/CustomNotFoundException';
 
@@ -79,35 +78,5 @@ export class ProductService {
 
     remove(id: number) {
         return this.productRepository.delete(id);
-    }
-
-    async migrate() {
-        // eslint-disable-next-line no-console
-        console.log('Migrating products...');
-
-        for (let i = 0; i < 200; i++) {
-            const randomNumberCategories = Math.floor(Math.random() * 3) + 1;
-            const categories: string[] = [];
-            for (let j = 0; j < randomNumberCategories; j++) {
-                categories.push(faker.commerce.department());
-            }
-
-            const images: ImageDto[] = [];
-            for (let j = 0; j < 3; j++) {
-                images.push({
-                    url: faker.image.imageUrl()
-                });
-            }
-            const product: ProductDto = {
-                name: faker.commerce.productName(),
-                slug: faker.commerce.productName().replace(/ /g, '-').toLowerCase(),
-                description: faker.commerce.productDescription(),
-                price: parseFloat(faker.commerce.price()),
-                categories: categories,
-                images
-            };
-
-            await this.create(product);
-        }
     }
 }

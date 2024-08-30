@@ -13,7 +13,7 @@ export class ProductMiddleware implements NestMiddleware {
             slug,
             description: req.body['description'],
             price: req.body['price'],
-            categories: req.body['categories'],
+            category: req.body['category'],
             images: req.body['images'],
         };
 
@@ -29,8 +29,8 @@ export class ProductMiddleware implements NestMiddleware {
             throw new CustomBadRequestException('Product price is required and must be greater than 0', 'price');
         }
 
-        if (!product.categories || !product.categories.length) {
-            throw new CustomBadRequestException('Product categories are required', 'categories');
+        if (!product.category) {
+            throw new CustomBadRequestException('Product category is required', 'category');
         }
 
         if (!product.images || !product.images.length) {

@@ -7,7 +7,7 @@ export class ProductDto {
     slug?: string;
     description: string;
     price: number;
-    categories: string[];
+    category: string;
     quantity?: number;
     size?: string;
 }
