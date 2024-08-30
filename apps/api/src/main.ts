@@ -2,7 +2,6 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
-import { runMigration } from "./app/migration/migration.service";
 import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
@@ -25,6 +24,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-
-runMigration();
