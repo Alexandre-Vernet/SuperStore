@@ -1,0 +1,1 @@
+export const categoriesAllowed = ['Man', 'Women', 'Kid', 'Baby'];

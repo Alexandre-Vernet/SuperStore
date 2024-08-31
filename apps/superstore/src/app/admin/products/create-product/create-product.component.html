@@ -13,7 +13,7 @@
                     <div class="mb-3">
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                         <div class="mt-1">
-                            <input formControlName="name" id="name" type="text" required
+                            <input formControlName="name" id="name" type="text" required placeholder="Blue T-shirt"
                                    class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                         </div>
                         <span *ngIf="formAddProduct.hasError('name')" class="text-red-600 text-xs">
@@ -23,7 +23,7 @@
                     <div class="mb-3">
                         <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                         <div class="mt-1">
-                            <input formControlName="description" id="description" type="text" required
+                            <input formControlName="description" id="description" type="text" required placeholder="A nice blue t-shirt"
                                    class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                         </div>
                         <span *ngIf="formAddProduct.hasError('description')" class="text-red-600 text-xs">
@@ -42,13 +42,16 @@
                           </span>
                         </div>
                         <div>
-                            <label for="categories" class="block text-sm font-medium text-gray-700">Category</label>
+                            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
                             <div class="mt-1">
-                                <input formControlName="categories" id="categories" type="email" required
+                                <input formControlName="category" id="category" type="email" required placeholder="woman"
                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
-                            <span *ngIf="formAddProduct.hasError('category')" class="text-red-600 text-xs">
-                            {{ formAddProduct.getError('error') }}
+                            <span *ngIf="formAddProduct.errors" class="text-red-600 text-xs">
+                            {{ formAddProduct.getError('category') }}
+                          </span>
+                          <span class="text-blue-500 text-xs">
+                            {{ categoriesAllowed }}
                           </span>
                         </div>
                     </div>
