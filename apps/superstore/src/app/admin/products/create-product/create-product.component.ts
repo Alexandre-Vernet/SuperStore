@@ -33,7 +33,7 @@ export class CreateProductComponent implements OnInit {
             this.formAddProduct.setValue({
                 name: this.editProduct.name,
                 description: this.editProduct.description,
-                price: this.editProduct.price,
+                price: Math.round(this.editProduct.price * 100) / 100,
                 category: this.editProduct.category,
                 images: this.editProduct.images.map(i => i.url).join(', ')
             });
