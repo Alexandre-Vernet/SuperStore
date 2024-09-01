@@ -4,7 +4,7 @@ import * as L from 'leaflet';
 @Component({
     selector: 'superstore-find-a-store',
     templateUrl: './find-a-store.component.html',
-    styleUrls: ['./find-a-store.component.scss'],
+    styleUrls: ['./find-a-store.component.scss']
 })
 export class FindAStoreComponent implements OnInit {
 
@@ -36,17 +36,24 @@ export class FindAStoreComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.initMap();
-    }
+        const icon = L.icon({
+            iconUrl: 'assets/leaflet/placeholder.png',
+            shadowUrl: 'assets/leaflet/placeholder.png',
 
-    initMap() {
+            iconSize: [50, 50],
+            shadowSize: [0, 0],
+            iconAnchor: [22, 94],
+            shadowAnchor: [4, 62],
+            popupAnchor: [-3, -76]
+        });
+
         const map = L.map('map').setView([43.61688491566933, 1.4419926337606648], 12.5);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
         this.stores.forEach(c => {
-            L.marker(c.coordinates).addTo(map)
-                .bindPopup(c.address)
+            L.marker(c.coordinates, { icon }).addTo(map)
+                .bindPopup(c.address);
         });
     }
 }
