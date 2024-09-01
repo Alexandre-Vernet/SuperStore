@@ -26,7 +26,7 @@ export class ProductService {
             slug: createProductDto.name.trim().replace(/ /g, '-').toLowerCase(),
             description: createProductDto.description.trim(),
             price: createProductDto.price,
-            categories: createProductDto.categories.map(c => c.trim()),
+            category: createProductDto.category.trim(),
             images: createProductDto.images.map(i => ({ url: i.url.trim() }))
         };
 

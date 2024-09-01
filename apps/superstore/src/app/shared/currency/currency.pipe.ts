@@ -5,7 +5,7 @@ import { Currency } from './currency';
     name: 'convertCurrency',
     pure: false
 })
-export class CurrencyPipe implements PipeTransform {
+export class CustomCurrencyPipe implements PipeTransform {
     transform(price: number) {
         // Get the currency from local storage
         const currency = localStorage.getItem(Currency.CURRENCY);

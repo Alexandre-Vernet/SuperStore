@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewsletterService } from '../../newsletter/newsletter.service';
-import { ProductService } from '../../product/product.service';
 import { Router } from '@angular/router';
 import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { categoriesAllowed } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-footer',
@@ -12,33 +12,22 @@ import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeU
 })
 export class FooterComponent implements OnInit, OnDestroy {
 
+    protected readonly categories = categoriesAllowed;
     currentYear = new Date().getFullYear();
     formEmailNewsletter = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email])
     });
-    productCategories: string[] = [];
-    MAX_CATEGORIES = 10;
 
     buttonSignUpNewsletter$ = new Subject<string>;
     unsubscribe$ = new Subject<void>;
 
     constructor(
         private readonly newsletterService: NewsletterService,
-        private readonly productService: ProductService,
         private router: Router
     ) {
     }
 
     ngOnInit() {
-        this.productService.products$
-            .subscribe(products => {
-                products.map(product => {
-                    if (!this.productCategories.includes(product.category) && this.productCategories.length < this.MAX_CATEGORIES) {
-                        this.productCategories.push(product.category);
-                    }
-                });
-            });
-
         this.buttonSignUpNewsletter$.pipe(
             takeUntil(this.unsubscribe$),
             distinctUntilChanged(),

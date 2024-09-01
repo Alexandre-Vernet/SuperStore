@@ -126,7 +126,7 @@ export class AuthService {
                     // Generate URL with token
                     const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
                     const token = this.jwtService.sign({ user });
-                    const linkResetPassword = `${ ALLOWED_ORIGIN }/reset-password?token=${ token }`;
+                    const linkResetPassword = `${ ALLOWED_ORIGIN }/auth/reset-password?token=${ token }`;
                     return this.emailService.sendEmailResetPassword(user, linkResetPassword);
                 }
             });

@@ -1,5 +1,7 @@
 export * from './review/review';
 
+export * from './categories/categoriesAllowed';
+
 export * from './notifications/notifications';
 
 export * from './order/order';
