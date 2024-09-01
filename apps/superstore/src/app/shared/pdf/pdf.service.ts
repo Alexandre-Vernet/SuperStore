@@ -4,6 +4,7 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { CustomCurrencyPipe } from '../currency/currency.pipe';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,8 @@ import { Observable, of } from 'rxjs';
 export class PdfService {
 
     constructor(
-        private datePipe: DatePipe
+        private readonly datePipe: DatePipe,
+        private readonly currencyPipe: CustomCurrencyPipe
     ) {
     }
 
@@ -53,7 +55,7 @@ export class PdfService {
         order.products.forEach((orderProduct) => {
             const product = orderProduct.product.name;
             const quantity = orderProduct.quantity;
-            const productPrice = `${ orderProduct.product.price } €`;
+            const productPrice = this.currencyPipe.transform(orderProduct.product.price);
 
             productRows.push([
                 product,
