@@ -1,4 +1,4 @@
-<div>
+<div class="pt-16">
     <div class="sm:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <select id="tabs" name="tabs"
@@ -6,7 +6,8 @@
                 class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
             <ng-container *ngFor="let tab of tabs">
                 <option [value]="tab.link"
-                        [selected]="activeTab === tab.link">{{ tab.label }}</option>
+                        [selected]="activeTab === tab.link">{{ tab.label }}
+                </option>
             </ng-container>
         </select>
     </div>
