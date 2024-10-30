@@ -10,7 +10,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { LoaderComponent } from './loader/loader.component';
 import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
 import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
-import { CurrencyPipe } from './currency/currency.pipe';
+import { CustomCurrencyPipe } from './currency/currency.pipe';
 import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
 import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
 import { PdfService } from "./pdf/pdf.service";
@@ -24,9 +24,8 @@ import { PdfService } from "./pdf/pdf.service";
         LoaderComponent,
         SearchBarComponent,
         ChangeCurrencyComponent,
-
         ProductPipe,
-        CurrencyPipe,
+        CustomCurrencyPipe,
         UserMenuComponent,
         CartIconComponent,
     ],
@@ -37,9 +36,9 @@ import { PdfService } from "./pdf/pdf.service";
         FooterComponent,
         NotificationsComponent,
         LoaderComponent,
-        CurrencyPipe,
+        CustomCurrencyPipe,
     ],
-    providers: [PdfService, DatePipe]
+    providers: [PdfService, DatePipe, CustomCurrencyPipe]
 })
 export class SharedModule {
 }

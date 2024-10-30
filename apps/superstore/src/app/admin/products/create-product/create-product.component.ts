@@ -2,6 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../product/product.service';
 import { ProductDto } from '@superstore/interfaces';
+import { categoriesAllowed } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-create-product',
@@ -10,13 +11,14 @@ import { ProductDto } from '@superstore/interfaces';
 })
 export class CreateProductComponent implements OnInit {
 
+    protected readonly categoriesAllowed = categoriesAllowed;
     @Input() editProduct: ProductDto | null;
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-        price: new FormControl(0, [Validators.required, Validators.min(0)]),
+        price: new FormControl(0, [Validators.required, Validators.min(1)]),
         category: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         images: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });
@@ -31,7 +33,7 @@ export class CreateProductComponent implements OnInit {
             this.formAddProduct.setValue({
                 name: this.editProduct.name,
                 description: this.editProduct.description,
-                price: this.editProduct.price,
+                price: Math.round(this.editProduct.price * 100) / 100,
                 category: this.editProduct.category,
                 images: this.editProduct.images.map(i => i.url).join(', ')
             });
@@ -50,6 +52,13 @@ export class CreateProductComponent implements OnInit {
             category,
             images
         } = this.formAddProduct.value;
+
+        if (!categoriesAllowed.map(categories => categories.toLowerCase()).includes(category.toLowerCase())) {
+            this.formAddProduct.setErrors({
+                category: 'Category not allowed'
+            });
+            return;
+        }
 
 
         const product: ProductDto = {

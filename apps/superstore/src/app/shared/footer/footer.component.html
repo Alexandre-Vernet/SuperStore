@@ -19,10 +19,10 @@
                             <h3 class="text-sm font-medium text-gray-900">Categories</h3>
                             <ul role="list" class="mt-6 space-y-6">
                                 <li
-                                  *ngFor="let category of productCategories"
+                                  *ngFor="let category of categories"
                                   class="text-sm">
                                     <a
-                                      (click)="filterProductsByCategory(category)"
+                                      (click)="filterProductsByCategory(category.toLowerCase())"
                                       class="text-gray-500 hover:text-gray-600 hover:cursor-pointer">
                                         {{ category }}
                                     </a>

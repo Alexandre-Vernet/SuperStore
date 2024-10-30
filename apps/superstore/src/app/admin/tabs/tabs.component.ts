@@ -5,7 +5,7 @@ import { filter } from 'rxjs';
 @Component({
     selector: 'superstore-tabs',
     templateUrl: './tabs.component.html',
-    styleUrls: ['./tabs.component.scss'],
+    styleUrls: ['./tabs.component.scss']
 })
 export class TabsComponent {
 
@@ -14,7 +14,7 @@ export class TabsComponent {
         { label: 'Orders', link: '/admin/list-orders' },
         { label: 'Users', link: '/admin/list-users' },
         { label: 'Newsletter', link: '/admin/send-newsletter' },
-        { label: 'Promotions', link: '/admin/list-promotions-code' },
+        { label: 'Promotions', link: '/admin/list-promotions-code' }
     ];
 
     activeTab = this.tabs[0].link;
@@ -24,9 +24,7 @@ export class TabsComponent {
     ) {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
-        ).subscribe((event: NavigationEnd) => {
-            this.activeTab = event.url;
-        });
+        ).subscribe((event: NavigationEnd) => this.activeTab = event.url);
     }
 
     navigateTo(event: Event) {
