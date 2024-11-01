@@ -28,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Deploy to Portainer
         uses: ./  # Assuming the action is in the root of your repository
