@@ -9,6 +9,8 @@ name: Docker Build and Deploy
 on:
   push:
     branches: [ "170-fix-redeploy-container" ]
+    paths:
+      - 'docker-compose.yml'
   pull_request:
     branches: [ "170-fix-redeploy-container" ]
 
