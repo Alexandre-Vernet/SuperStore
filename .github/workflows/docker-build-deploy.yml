@@ -22,13 +22,21 @@ env:
   PORTAINER_ACCESS_TOKEN: ${{ secrets.PORTAINER_ACCESS_TOKEN }}
   PORTAINER_STACK_ID: ${{ secrets.PORTAINER_STACK_ID }}
   PORTAINER_ENDPOINT_ID: ${{ secrets.PORTAINER_ENDPOINT_ID }}
+  SERVER_HOST: ${{ secrets.SERVER_HOST }}
+  SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+  SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+  SERVER_PORT: 22
 
 jobs:
   build-push-images:
     runs-on: ubuntu-latest
     environment: production
     steps:
-        - name: Update Service via Webhook
-          uses: newarifrh/portainer-service-webhook@v1
-          with:
-            webhook_url: ${{ env.PORTAINER_URL }}
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: whoami
