@@ -8,9 +8,9 @@ name: Docker Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "170-fix-redeploy-container" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "170-fix-redeploy-container" ]
 
 env:
   APP_NAME: superstore
@@ -59,16 +59,3 @@ jobs:
           file: apps/api/Dockerfile
           push: true
           tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:api
-
-  redeploy-stack-portainer:
-    needs: build-push-images
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Re-deploy stack
-        uses: wirgen/portainer-stack-redeploy-action@v1.1
-        with:
-          portainerUrl: ${{ env.PORTAINER_URL }}
-          accessToken: ${{ env.PORTAINER_ACCESS_TOKEN }}
-          stackId: ${{ env.PORTAINER_STACK_ID }}
-          endpointId: ${{ env.PORTAINER_ENDPOINT_ID }}

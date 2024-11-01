@@ -1,6 +1,8 @@
 version: '3'
 services:
   superstore-app:
+    build:
+      context: .
     image: alexv31/superstore:app
     networks:
       - superstore-network
