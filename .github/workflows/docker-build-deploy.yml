@@ -28,16 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Clone Repository
-        uses: actions/checkout@v2
-
-      - name: Deploy Stack
-        uses: kgierke/portainer-stack-deployment@v1
+      - name: 'Portainer Deploy'
+        uses: cssnr/portainer-stack-deploy-action@v1
         with:
-          portainer-url: ${{ env.PORTAINER_URL }}
-          portainer-username: ${{ env.PORTAINER_USERNAME }}
-          portainer-password: ${{ env.PORTAINER_PASSWORD }}
-          portainer-endpoint: ${{ secrets.PORTAINER_ENDPOINT_ID }}
-          name: superstore
-          file: /data/compose/${{ secrets.PORTAINER_ENDPOINT_ID }}/docker-compose.yml
-          variables: '{"image": "hello-world"}'
+          token: ${{ env.PORTAINER_ACCESS_TOKEN }}
+          url: ${{ env.PORTAINER_URL }}
+          name: ${{ env.APP_NAME }}
+          file: docker-compose.yml
