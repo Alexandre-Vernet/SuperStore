@@ -10,7 +10,7 @@ on:
   push:
     branches: [ "170-fix-redeploy-container" ]
     paths:
-      - 'docker-compose.yml'
+      - '**/docker-compose.yml'
   pull_request:
     branches: [ "170-fix-redeploy-container" ]
 
