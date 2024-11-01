@@ -28,10 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: 'Portainer Deploy'
-        uses: cssnr/portainer-stack-deploy-action@v1
-        with:
-          token: ${{ env.PORTAINER_ACCESS_TOKEN }}
-          url: ${{ env.PORTAINER_URL }}
-          name: ${{ env.APP_NAME }}
-          file: docker-compose.yml
+        - name: Update Service via Webhook
+          uses: newarifrh/portainer-service-webhook@v1
+          with:
+            webhook_url: ${{ env.PORTAINER_URL }}
