@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
-import { Cart } from '../cart';
 import { ProductDto } from '@superstore/interfaces';
 
 @Component({
@@ -22,7 +21,7 @@ export class ViewCartComponent implements OnInit {
     }
 
     getPricePerItem(item: ProductDto): number {
-        return Cart.convertTwoDecimals(item.price * item.quantity);
+        return item.price * item.quantity;
     }
 
     removeFromCart(product: ProductDto) {
@@ -30,27 +29,23 @@ export class ViewCartComponent implements OnInit {
     }
 
     subTotalPrice(): number {
-        let total = 0;
-        this.cart.map(item => {
-            total += item.price * item.quantity;
-        });
-        return Cart.convertTwoDecimals(total);
+        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
 
     shippingPrice(): number {
         if (this.subTotalPrice()) {
-            return Cart.convertTwoDecimals(20);
+            return 20;
         } else {
-            return Cart.convertTwoDecimals(0);
+            return 0;
         }
     }
 
     taxes(): number {
-        return Cart.convertTwoDecimals(this.subTotalPrice() * 0.25);
+        return this.subTotalPrice() * 0.25;
     }
 
     totalPrice(): number {
-        return Cart.convertTwoDecimals(this.shippingPrice() + this.taxes() + this.subTotalPrice());
+        return this.shippingPrice() + this.taxes() + this.subTotalPrice();
     }
 
     updateQuantity(item: ProductDto, event: Event) {

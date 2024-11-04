@@ -8,7 +8,6 @@ import {
     ProductDto,
     PromotionDto
 } from '@superstore/interfaces';
-import { Cart } from '../cart';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
@@ -133,8 +132,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     subTotalPrice(): number {
-        const total = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        return Cart.convertTwoDecimals(total);
+        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
 
     updateShippingPrice(price: number) {
@@ -142,14 +140,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     taxes(): number {
-        return Cart.convertTwoDecimals(this.subTotalPrice() * 0.25);
+        return this.subTotalPrice() * 0.25;
     }
 
     totalPrice(): number {
         if (this.promotion) {
-            return Cart.convertTwoDecimals((this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount));
+            return this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount;
         }
-        return Cart.convertTwoDecimals(this.shippingPrice + this.taxes() + this.subTotalPrice());
+        return this.shippingPrice + this.taxes() + this.subTotalPrice();
     }
 
     applyPromotionCode() {
