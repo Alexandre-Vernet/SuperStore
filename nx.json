@@ -6,7 +6,7 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "YOUR_NX_C"
+        "accessToken": "NTQ0ZjEwMjQtYWYzZi00NDIwLWFmOWItNzdkOTA5N2Y2ZWIwfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -25,9 +25,7 @@
         "{workspaceRoot}/.eslintignore"
       ]
     },
-    "e2e": {
-      "inputs": ["default", "^production"]
-    }
+    "e2e": { "inputs": ["default", "^production"] }
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
@@ -47,12 +45,7 @@
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
-    "@nrwl/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "scss"
-    }
+    "@nrwl/angular:library": { "linter": "eslint", "unitTestRunner": "jest" },
+    "@nrwl/angular:component": { "style": "scss" }
   }
 }
