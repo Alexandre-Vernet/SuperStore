@@ -53,7 +53,6 @@ export class NewsletterService {
     async updateSubscription(newsletterToUpdate: NewsletterDto) {
         const options: FindOneOptions = {
             where: { email: newsletterToUpdate.email }
-
         };
 
         const newsletter = await this.newsletterRepository.findOne(options);

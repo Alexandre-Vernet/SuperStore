@@ -28,7 +28,7 @@ export class NewsletterService {
         const newsletter: NewsletterDto = {
             email,
             isSubscribed: true,
-        }
+        };
         return this.http.post<void>(`${ this.newsletterUrl }`, newsletter)
             .pipe(
                 tap(() => {

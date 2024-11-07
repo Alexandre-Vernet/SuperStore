@@ -72,21 +72,31 @@ export class EmailService {
     }
 
     sendNewsletter(newsletter: SendNewsletterDto) {
-        const mailOptions = {
+        const mailOptionsBase = {
             from: 'superstore@gmail.com',
-            to: newsletter.emails,
             subject: newsletter.title,
-            html: sendNewsletter(newsletter.title, newsletter.description)
         };
 
-        return this.transporter
-            .sendMail(mailOptions, (error) => {
-                if (error) {
-                    throw new HttpException(error, 500, { cause: error });
-                } else {
-                    return { message: 'Email sent successfully' };
-                }
+
+        setTimeout(() => {
+            newsletter.emails.forEach(email => {
+                const mailOptions = {
+                    ...mailOptionsBase,
+                    to: email,
+                    html: sendNewsletter(email, newsletter.title, newsletter.description)
+                };
+
+                return this.transporter
+                    .sendMail(mailOptions, (error) => {
+                        if (error) {
+                            throw new HttpException(error, 500, { cause: error });
+                        } else {
+                            return { message: 'Email sent successfully' };
+                        }
+                    });
+
             });
+        }, 300000);
     }
 
     sendEmailResetPassword(user: UserDto, linkResetPassword: string) {
@@ -115,7 +125,7 @@ export class EmailService {
         subject: string,
         message: string
     }) {
-        const NODEMAILER_EMAIL= process.env.NODEMAILER_EMAIL;
+        const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL;
         const mailOptions = {
             from: email,
             to: NODEMAILER_EMAIL,
