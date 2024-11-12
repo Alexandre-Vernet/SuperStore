@@ -2,7 +2,7 @@
 
 ## Home
 
-![image](https://github.com/user-attachments/assets/22c1de43-de7a-4655-8b98-b0aa0adeb04f)
+![image](https://github.com/user-attachments/assets/f8aae0b6-fa22-476e-9530-386f01702106)
 
 
 ## View product
@@ -11,14 +11,19 @@
 
 
 ## Reviews
+### View reviews
+![image](https://github.com/user-attachments/assets/765b5a10-2c1a-44a8-910a-2e5800c43cfa)
 
-![image](https://github.com/user-attachments/assets/220bc286-4e1d-4192-8c24-22d6ee330237)
+### Add a review
+
+![image](https://github.com/user-attachments/assets/b9f27c19-daad-4c4d-a78e-f479f0c4b6a9)
 
 
 
 ## Cart
 
-![image](https://github.com/user-attachments/assets/df46031a-c08a-41bc-baaf-f6e67954c0e3)
+![image](https://github.com/user-attachments/assets/05040b68-c022-4044-aea6-d8405644738a)
+
 
 ## Checkout
 
