@@ -30,6 +30,12 @@
 ![image](https://github.com/user-attachments/assets/584313fb-6465-4405-b648-c6eecd445b66)
 
 
+## Order history
+
+![image](https://github.com/user-attachments/assets/6696d642-ff76-49ef-aed7-f8852cccb5a5)
+
+
+
 
 ## User profile
 ### Profile
