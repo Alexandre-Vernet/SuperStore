@@ -5739,3 +5739,15 @@ VALUES (218, 84, 162, 8, 'M'),
        (261, 101, 123, 10, 'M'),
        (223, 85, 65, 2, 'S'),
        (204, 79, 85, 8, 'S');
+
+
+-- Reset sequences
+SELECT setval(pg_get_serial_sequence('addresses', 'id'), (SELECT COALESCE(MAX(id), 1) FROM addresses) + 1, false);
+SELECT setval(pg_get_serial_sequence('images', 'id'), (SELECT COALESCE(MAX(id), 1) FROM images) + 1, false);
+SELECT setval(pg_get_serial_sequence('newsletter', 'id'), (SELECT COALESCE(MAX(id), 1) FROM newsletter) + 1, false);
+SELECT setval(pg_get_serial_sequence('order_products', 'id'), (SELECT COALESCE(MAX(id), 1) FROM order_products) + 1, false);
+SELECT setval(pg_get_serial_sequence('orders', 'id'), (SELECT COALESCE(MAX(id), 1) FROM orders) + 1, false);
+SELECT setval(pg_get_serial_sequence('products', 'id'), (SELECT COALESCE(MAX(id), 1) FROM products) + 1, false);
+SELECT setval(pg_get_serial_sequence('promotions', 'id'), (SELECT COALESCE(MAX(id), 1) FROM promotions) + 1, false);
+SELECT setval(pg_get_serial_sequence('reviews', 'id'), (SELECT COALESCE(MAX(id), 1) FROM reviews) + 1, false);
+SELECT setval(pg_get_serial_sequence('users', 'id'), (SELECT COALESCE(MAX(id), 1) FROM users) + 1, false);
