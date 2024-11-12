@@ -22,12 +22,24 @@
 
 ## Cart
 
-![image](https://github.com/user-attachments/assets/05040b68-c022-4044-aea6-d8405644738a)
+![image](https://github.com/user-attachments/assets/4ccbd86b-9e4f-4ed8-bac4-de1f3384192a)
 
 
 ## Checkout
 
 ![image](https://github.com/user-attachments/assets/584313fb-6465-4405-b648-c6eecd445b66)
+
+## Confirm order
+
+![image](https://github.com/user-attachments/assets/e38c9807-2104-44ea-bf04-852795b5ad77)
+
+![image](https://github.com/user-attachments/assets/8efb2864-3e8a-48da-9fcf-2e993fc8ddf2)
+
+
+## Promotion code
+
+![image](https://github.com/user-attachments/assets/b2905172-f10f-4c77-bd1d-f46a5220aff0)
+
 
 
 ## Order history
