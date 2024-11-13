@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProductDto } from '@superstore/interfaces';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomConflictException } from '../exceptions/CustomConflictException';
@@ -36,7 +36,14 @@ export class ProductService {
 
 
     findAll(): Promise<ProductEntity[]> {
-        return this.productRepository.find();
+        const options: FindManyOptions = {
+            order: {
+                images: {
+                    id: 'ASC'
+                }
+            },
+        };
+        return this.productRepository.find(options);
     }
 
     findAllProductsWithPagination(pagination): Promise<{ products: ProductEntity[], total: number }> {

@@ -58,7 +58,17 @@ export class OrderService {
                     id: userId
                 }
             },
-            order: { createdAt: 'DESC' }
+            order: {
+                createdAt: 'DESC',
+                products: {
+                    product: {
+                        images: {
+                            id: 'ASC'
+                        }
+                    }
+                }
+            },
+            relations: ['products', 'products.product', 'products.product.images']
         };
         return this.orderRepository.find(options);
     }
