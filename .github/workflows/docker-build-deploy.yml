@@ -69,5 +69,5 @@ jobs:
           script: |
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:app
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:api
-            cd /home/debian/apps/superstore/
+            cd /home/debian/apps/${{ env.APP_NAME }}/
             docker-compose up -d
