@@ -1,16 +1,15 @@
 <ng-container *ngIf="{
-        selectedAddress: selectedAddress | async
+        selectedAddress: selectedAddress$ | async
     } as vm">
     <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
         <label
-          (click)="selectAddress(address)"
           *ngFor="let address of addresses"
           class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
           [ngClass]="{'border-transparent ring-2 ring-indigo-500': address.id === vm.selectedAddress?.id, 'border-gray-300': address.id !== vm.selectedAddress?.id}">
             <input type="radio" name="delivery-method" value="Standard" class="sr-only"
                    aria-labelledby="delivery-method-0-label"
                    aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
-            <span class="flex flex-1">
+            <span (click)="vm.selectedAddress = address" class="flex flex-1">
                 <span class="flex flex-col">
                   <span class="block text-sm font-medium text-gray-900">{{ address.country }}</span>
                   <span class="block text-sm font-medium text-gray-900">{{ address?.company }}</span>
@@ -32,7 +31,7 @@
 
         <!--Add new address-->
         <label
-          (click)="this.selectedAddress.next(null)"
+          (click)="vm.selectedAddress = null"
           class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
           [ngClass]="{'border-transparent ring-2 ring-indigo-500': !vm.selectedAddress, 'border-gray-300': vm.selectedAddress}">
             <input type="radio" name="delivery-method" value="Standard" class="sr-only"

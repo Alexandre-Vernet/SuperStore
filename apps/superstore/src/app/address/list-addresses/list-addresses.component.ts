@@ -10,7 +10,7 @@ import { BehaviorSubject, combineLatest, distinctUntilChanged, Subject, takeUnti
 })
 export class ListAddressesComponent implements OnInit, OnDestroy {
     addresses: AddressDto[] = [];
-    @Output() selectedAddress = new BehaviorSubject<AddressDto>(null);
+    @Output() selectedAddress$ = new BehaviorSubject<AddressDto>(null);
 
     unsubscribe$ = new Subject<void>();
 
@@ -21,7 +21,7 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         combineLatest([
-            this.selectedAddress.pipe(distinctUntilChanged()),
+            this.selectedAddress$.pipe(distinctUntilChanged()),
             this.addressService.addresses$.pipe(distinctUntilChanged())
         ])
             .pipe(
@@ -29,6 +29,7 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe$),
             )
             .subscribe(([selectedAddress, addresses]) => {
+                console.log(selectedAddress);
                 if (!selectedAddress && addresses) {
                     this.selectAddress(addresses[0]);
                 } else if (!selectedAddress && !addresses) {
@@ -47,14 +48,15 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     }
 
     selectAddress(address: AddressDto) {
-        this.selectedAddress.next(address);
+        // console.log(address);
+        this.selectedAddress$.next(address);
     }
 
     removeAddress(address: AddressDto) {
         this.addressService.deleteAddress(address)
             .subscribe(() => {
                 if (this.addresses.length) {
-                    this.selectedAddress.next(this.addresses[0]);
+                    this.selectedAddress$.next(this.addresses[0]);
                 }
             });
     }
