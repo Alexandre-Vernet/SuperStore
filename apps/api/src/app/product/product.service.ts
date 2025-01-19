@@ -46,19 +46,6 @@ export class ProductService {
         return this.productRepository.find(options);
     }
 
-    findAllProductsWithPagination(pagination): Promise<{ products: ProductEntity[], total: number }> {
-        const { limit, page } = pagination;
-        return this.productRepository.findAndCount({
-            skip: limit * (page - 1),
-            take: limit,
-            order: {
-                images: {
-                    id: 'ASC'
-                }
-            },
-        }).then(([products, total]) => ({ products, total }));
-    }
-
     findBy(key: string, value: string | number) {
         const options: FindOneOptions = {
             where: { [key]: value },
