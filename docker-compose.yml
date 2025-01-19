@@ -36,12 +36,12 @@ services:
     networks:
       - superstore-network
     environment:
-      - POSTGRES_DB=
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=superstore_local
+      - POSTGRES_USER=superstore-dev
+      - POSTGRES_PASSWORD=superstore-dev
     ports:
-      - "5003:5432"
-      - "5004:443"
+      - "5004:5432"
+      - "5005:443"
 
 volumes:
   postgres_data:
