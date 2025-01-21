@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ProductService} from '../product.service';
-import {combineLatest, Observable, of, Subject, switchMap} from 'rxjs';
-import {CartService} from '../../cart/cart.service';
-import {ProductDto, productSize, ProductSizeDto, ReviewDto} from '@superstore/interfaces';
-import {ReviewService} from '../../review/review.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../product.service';
+import { combineLatest, Observable, of, Subject, switchMap } from 'rxjs';
+import { CartService } from '../../cart/cart.service';
+import { ProductDto, productSize, ProductSizeDto, ReviewDto } from '@superstore/interfaces';
+import { ReviewService } from '../../review/review.service';
 import { OrderService } from '../../order/order.service';
 
 @Component({
     selector: 'superstore-view-product',
     templateUrl: './view-product.component.html',
-    styleUrls: ['./view-product.component.scss'],
+    styleUrls: ['./view-product.component.scss']
 })
 export class ViewProductComponent implements OnInit, OnDestroy {
     product: ProductDto;
@@ -31,7 +31,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
         private readonly cartService: CartService,
         protected readonly reviewService: ReviewService,
         private readonly router: Router,
-        private readonly orderService: OrderService,
+        private readonly orderService: OrderService
     ) {
     }
 
@@ -46,7 +46,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
                         this.reviewService.getReviewsForProduct(product),
                         this.orderService.userCanAddReview(product.id)
                     ])
-                ),
+                )
             ).subscribe(([product, reviews, userCanAddReview]: [ProductDto, ReviewDto[], boolean]) => {
             this.product = product;
             this.reviews = reviews;
@@ -90,8 +90,11 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     }
 
     addToCart(product: ProductDto) {
-        product.size = this.selectedSize.tag;
-        this.cartService.addToCart(product);
+        const productCopy = {
+            ...product,
+            size: this.selectedSize.tag
+        };
+        this.cartService.addToCart(productCopy);
     }
 
     toggleAddReviewModal() {

@@ -143,7 +143,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 };
 
 
-                return this.orderService.create(order)
+                return this.orderService.create(order);
             })
         )
             .subscribe({
