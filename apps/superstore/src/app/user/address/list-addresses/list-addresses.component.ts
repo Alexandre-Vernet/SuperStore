@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { AddressService } from '../address.service';
-import { BehaviorSubject, filter, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
 
 @Component({
     selector: 'superstore-list-addresses',
@@ -11,6 +11,7 @@ import { BehaviorSubject, filter, Subject, tap } from 'rxjs';
 export class ListAddressesComponent implements OnInit, OnDestroy {
     addresses: AddressDto[] = [];
     @Output() selectedAddress$ = new BehaviorSubject<AddressDto>(null);
+    @Output() cleanForm$ = new BehaviorSubject<void>(null);
 
     unsubscribe$ = new Subject<void>();
 
@@ -22,9 +23,8 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.addressService.addresses$
             .pipe(
-                filter(addresses => addresses.length > 0),
+                tap(addresses => (this.addresses = addresses)),
                 tap(addresses => this.emitSelectAddress(addresses[0])),
-                tap(addresses => (this.addresses = addresses))
             )
             .subscribe();
 
@@ -41,10 +41,6 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
 
     removeAddress(address: AddressDto) {
         this.addressService.deleteAddress(address)
-            .subscribe(() => {
-                if (this.addresses.length) {
-                    this.selectedAddress$.next(this.addresses[0]);
-                }
-            });
+            .subscribe(() => this.cleanForm$.next());
     }
 }
