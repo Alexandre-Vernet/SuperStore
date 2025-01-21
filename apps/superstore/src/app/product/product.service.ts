@@ -16,7 +16,6 @@ export class ProductService {
     private productsSubject = new BehaviorSubject(<ProductDto[]>[]);
     private productsSubjectFiltered = new BehaviorSubject(<ProductDto[]>[]);
     products$ = this.productsSubject.asObservable();
-    // productsFiltered$ = this.productsSubjectFiltered.asObservable();
 
     constructor(
         private readonly http: HttpClient,
@@ -46,25 +45,6 @@ export class ProductService {
                 }),
             );
     }
-
-    // getProducts(limit: number, page: number): Observable<{ products: ProductDto[], total: number }> {
-    //     return this.http.get<{ products: ProductDto[], total: number }>(`${ this.productUri }/pagination`, {
-    //         params: {
-    //             limit,
-    //             page: page,
-    //         }
-    //     })
-    //         .pipe(
-    //             map(({ products, total }) => ({
-    //                 products,
-    //                 total
-    //             })),
-    //             tap(({ products }) => {
-    //                 this.productsSubject.next(products);
-    //                 this.productsSubjectFiltered.next(products);
-    //             }),
-    //         );
-    // }
 
     async sortProducts(orderBy: string): Promise<ProductDto[]> {
         switch (orderBy) {
