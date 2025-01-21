@@ -9,7 +9,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.component";
 import { OptionalAuthGuard } from "../auth/optional-auth.guard";
-import { AddressModule } from '../address/address.module';
+import { AddressModule } from '../user/address/address.module';
 
 @NgModule({
     declarations: [

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
-import { NotificationsService } from '../shared/notifications/notifications.service';
-import { ErrorService } from '../error/error.service';
+import { AuthService } from '../../auth/auth.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { ErrorService } from '../../error/error.service';
 
 @Injectable({
     providedIn: 'root'

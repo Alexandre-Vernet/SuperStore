@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressService } from '../address.service';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
