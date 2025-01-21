@@ -77,27 +77,52 @@ export class EmailService {
             subject: newsletter.title,
         };
 
+        const dailyLimit = 200;
+        const delayBetweenEmails = 60000;   // 1 minute
+        const emails = newsletter.emails;
+        const totalEmails = emails.length;
+        let currentIndex = 0;
 
-        setTimeout(() => {
-            newsletter.emails.forEach(email => {
+        const sendBatch = () => {
+            let emailsSentToday = 0;
+
+            const sendNextEmail = () => {
+                if (currentIndex >= totalEmails || emailsSentToday >= dailyLimit) {
+                    if (currentIndex < totalEmails) {
+                        console.log(`Waiting 24 hours for the next batch...`);
+                        setTimeout(sendBatch, 24 * 60 * 60 * 1000); // Wait 24 hours before sending the next batch
+                    } else {
+                        console.log('All emails sent successfully.');
+                    }
+                    return;
+                }
+
+                const email = emails[currentIndex];
                 const mailOptions = {
                     ...mailOptionsBase,
                     to: email,
-                    html: sendNewsletter(email, newsletter.title, newsletter.description)
+                    html: sendNewsletter(email, newsletter.title, newsletter.description),
                 };
 
-                return this.transporter
-                    .sendMail(mailOptions, (error) => {
-                        if (error) {
-                            throw new HttpException(error, 500, { cause: error });
-                        } else {
-                            return { message: 'Email sent successfully' };
-                        }
-                    });
+                this.transporter.sendMail(mailOptions, (error) => {
+                    if (error) {
+                        console.error(`Error sending email to ${email}:`, error);
+                    } else {
+                        console.log(`Email sent successfully to ${email}`);
+                    }
+                });
 
-            });
-        }, 300000);
+                currentIndex++;
+                emailsSentToday++;
+                setTimeout(sendNextEmail, delayBetweenEmails);
+            };
+
+            sendNextEmail();
+        };
+
+        sendBatch();
     }
+
 
     sendEmailResetPassword(user: UserDto, linkResetPassword: string) {
         const mailOptions = {
