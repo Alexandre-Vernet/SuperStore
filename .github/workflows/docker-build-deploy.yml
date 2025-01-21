@@ -3,8 +3,6 @@ name: Docker build images, push to DockerHub and redeploy containers
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 env:
   APP_NAME: superstore
@@ -69,5 +67,6 @@ jobs:
           script: |
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:app
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:api
-            cd /home/debian/apps/superstore/
+            docker system prune -f
+            cd /home/debian/apps/${{ env.APP_NAME }}/
             docker-compose up -d

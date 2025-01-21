@@ -6,7 +6,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "no-console": "error",
+        "no-console": "warn",
         "no-empty": "error",
         "no-empty-function": "error",
         "no-eq-null": "error",

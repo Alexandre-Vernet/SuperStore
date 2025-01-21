@@ -26,17 +26,14 @@ export class NewsletterService {
         return this.newsletterRepository.save(createNewsletterDto);
     }
 
-    sendNewsletter(newsletter: SendNewsletterDto) {
+    async sendNewsletter(newsletter: SendNewsletterDto) {
         // Send newsletter to all subscribed users
-        this.newsletterRepository.find()
-            .then(newsletters => {
-                newsletters.forEach(n => {
-                    if (n.isSubscribed) {
-                        newsletter.emails.push(n.email);
-                    }
-                });
-                return this.emailService.sendNewsletter(newsletter);
-            });
+        const newslettersSubscribed = await this.newsletterRepository.find({
+            where: { isSubscribed: true }
+        });
+
+        newsletter.emails = newslettersSubscribed.map(n => n.email);
+        return this.emailService.sendNewsletter(newsletter);
     }
 
     async isUserSubscribedToNewsletter(email: string) {
@@ -53,7 +50,6 @@ export class NewsletterService {
     async updateSubscription(newsletterToUpdate: NewsletterDto) {
         const options: FindOneOptions = {
             where: { email: newsletterToUpdate.email }
-
         };
 
         const newsletter = await this.newsletterRepository.findOne(options);

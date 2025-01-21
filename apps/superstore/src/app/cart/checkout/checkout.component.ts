@@ -8,7 +8,6 @@ import {
     ProductDto,
     PromotionDto
 } from '@superstore/interfaces';
-import { Cart } from '../cart';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
@@ -47,6 +46,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     promotion: PromotionDto;
 
     buttonApplyPromotion$ = new Subject<string>();
+    buttonCheckout$ = new Subject<void>;
     unsubscribe$ = new Subject<void>;
 
     constructor(
@@ -92,6 +92,63 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 }
             )
         ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
+
+
+        this.buttonCheckout$.pipe(
+            takeUntil(this.unsubscribe$),
+            distinctUntilChanged(),
+            switchMap(() => {
+                // Cast price to number
+                this.cart.map(c => c.price = Number(c.price));
+
+                const {
+                    company,
+                    address,
+                    apartment,
+                    country,
+                    city,
+                    zipCode,
+                    phone,
+                    paymentMethod
+                } = this.formAddress.value;
+
+                const newAddress: AddressDto = {
+                    user: this.authService.user,
+                    company,
+                    address,
+                    apartment,
+                    country,
+                    city,
+                    zipCode,
+                    phone
+                };
+
+                const order: OrderDto = {
+                    user: this.authService.user,
+                    address: newAddress,
+                    products: this.cart.map(product => ({
+                        product,
+                        size: product.size,
+                        quantity: product.quantity
+                    })),
+                    promotion: this.promotion,
+                    state: OrderState.PENDING,
+                    deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
+                    paymentMethod,
+                    subTotalPrice: this.subTotalPrice(),
+                    shippingPrice: this.shippingPrice,
+                    taxesPrice: this.taxes(),
+                    totalPrice: this.totalPrice(),
+                    createdAt: new Date()
+                };
+
+
+                return this.orderService.create(order);
+            })
+        )
+            .subscribe({
+                next: () =>  this.router.navigateByUrl('/order/confirm-order')
+            });
     }
 
     ngOnDestroy() {
@@ -101,6 +158,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     selectAddress(address: AddressDto) {
         if (!address) {
+            this.formAddress.reset();
+            this.formAddress.patchValue({
+                deliveryMethod: deliveryMethods[0].name,
+                paymentMethod: 'CB'
+            });
             return;
         }
         this.formAddress.patchValue({
@@ -133,8 +195,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     subTotalPrice(): number {
-        const total = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        return Cart.convertTwoDecimals(total);
+        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
 
     updateShippingPrice(price: number) {
@@ -142,14 +203,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     taxes(): number {
-        return Cart.convertTwoDecimals(this.subTotalPrice() * 0.25);
+        return this.subTotalPrice() * 0.25;
     }
 
     totalPrice(): number {
         if (this.promotion) {
-            return Cart.convertTwoDecimals((this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount));
+            return this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount;
         }
-        return Cart.convertTwoDecimals(this.shippingPrice + this.taxes() + this.subTotalPrice());
+        return this.shippingPrice + this.taxes() + this.subTotalPrice();
     }
 
     applyPromotionCode() {
@@ -158,54 +219,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     submitForm() {
-        // Cast price to number
-        this.cart.map(c => c.price = Number(c.price));
-
-        const {
-            company,
-            address,
-            apartment,
-            country,
-            city,
-            zipCode,
-            phone,
-            paymentMethod
-        } = this.formAddress.value;
-
-        const newAddress: AddressDto = {
-            user: this.authService.user,
-            company,
-            address,
-            apartment,
-            country,
-            city,
-            zipCode,
-            phone
-        };
-
-        const order: OrderDto = {
-            user: this.authService.user,
-            address: newAddress,
-            products: this.cart.map(product => ({
-                product,
-                size: product.size,
-                quantity: product.quantity
-            })),
-            promotion: this.promotion,
-            state: OrderState.PENDING,
-            deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
-            paymentMethod,
-            subTotalPrice: this.subTotalPrice(),
-            shippingPrice: this.shippingPrice,
-            taxesPrice: this.taxes(),
-            totalPrice: this.totalPrice(),
-            createdAt: new Date()
-        };
-
-
-        this.orderService.create(order)
-            .subscribe({
-                next: () =>  this.router.navigateByUrl('/order/confirm-order')
-            });
+        this.buttonCheckout$.next();
     }
 }

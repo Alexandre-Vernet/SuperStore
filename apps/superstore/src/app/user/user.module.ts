@@ -7,15 +7,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
 import { SecurityComponent } from './security/security.component';
 import { ErrorModule } from '../error/error.module';
-import { AddressModule } from '../address/address.module';
+import { AddressModule } from './address/address.module';
+import { UnsubscribeNewsletterComponent } from './unsubscribe-newsletter/unsubscribe-newsletter.component';
 
 @NgModule({
     declarations: [
         ProfileComponent,
         UserComponent,
-        SecurityComponent
+        SecurityComponent,
+        UnsubscribeNewsletterComponent
     ],
-    imports: [CommonModule, UserRoutingModule, ReactiveFormsModule, ErrorModule, AddressModule]
+    imports: [
+        CommonModule,
+        UserRoutingModule,
+        ReactiveFormsModule,
+        ErrorModule,
+        AddressModule
+    ]
 })
 export class UserModule {
 }

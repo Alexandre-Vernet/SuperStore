@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from '@superstore/interfaces';
 import { AdminInterceptor } from '../auth/admin.interceptor';
@@ -13,19 +13,6 @@ export class ProductController {
     @HttpCode(201)
     create(@Body() createProductDto: ProductDto) {
         return this.productService.create(createProductDto);
-    }
-
-    @Get('pagination')
-    findAllProductsWithPagination(
-        @Query('page') page = 1,
-        @Query('limit') limit = 10,
-    ) {
-        const pagination = {
-            page,
-            limit,
-        };
-
-        return this.productService.findAllProductsWithPagination(pagination);
     }
 
     @Get()

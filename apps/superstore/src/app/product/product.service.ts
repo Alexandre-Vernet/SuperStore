@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, lastValueFrom, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, lastValueFrom, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ProductDto } from '@superstore/interfaces';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { ReviewService } from '../review/review.service';
-import { ErrorService } from "../error/error.service";
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,6 @@ export class ProductService {
     private productsSubject = new BehaviorSubject(<ProductDto[]>[]);
     private productsSubjectFiltered = new BehaviorSubject(<ProductDto[]>[]);
     products$ = this.productsSubject.asObservable();
-    productsFiltered$ = this.productsSubjectFiltered.asObservable();
 
     constructor(
         private readonly http: HttpClient,
@@ -43,25 +42,6 @@ export class ProductService {
             .pipe(
                 tap((products) => {
                     this.productsSubject.next(products);
-                }),
-            );
-    }
-
-    getProducts(limit: number, page: number): Observable<{ products: ProductDto[], total: number }> {
-        return this.http.get<{ products: ProductDto[], total: number }>(`${ this.productUri }/pagination`, {
-            params: {
-                limit,
-                page: page,
-            }
-        })
-            .pipe(
-                map(({ products, total }) => ({
-                    products,
-                    total
-                })),
-                tap(({ products }) => {
-                    this.productsSubject.next(products);
-                    this.productsSubjectFiltered.next(products);
                 }),
             );
     }

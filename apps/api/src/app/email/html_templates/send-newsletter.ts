@@ -1,11 +1,11 @@
-export const sendNewsletter = (title: string, description: string) => {
+export const sendNewsletter = (email: string, title: string, description: string) => {
     return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${ title } - Don't Miss the Latest News!</title>
+  <title>${title} - Don't Miss the Latest News!</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -51,13 +51,18 @@ export const sendNewsletter = (title: string, description: string) => {
       color: #777777;
       margin-bottom: 5px;
     }
+    .unsubscribe {
+      color: #007bff;
+      font-size: 14px;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1 class="title">${ title }</h1>
-      <p class="description">${ description }</p>
+      <h1 class="title">${title}</h1>
+      <p class="description">${description}</p>
     </div>
     <p>Dear Reader,</p>
     <p>I hope this email finds you well and ready to explore the latest exciting news from SuperStore. We are delighted to present our new newsletter, which contains exclusive information, updates, and special offers.</p>
@@ -66,6 +71,7 @@ export const sendNewsletter = (title: string, description: string) => {
       <p>Thank you for your trust and being a part of our community.</p>
       <p>Best regards,</p>
       <p>The SuperStore Team</p>
+      <p><a href="${process.env.ALLOWED_ORIGIN}/unsubscribe-newsletter?email=${encodeURIComponent(email)}" class="unsubscribe">Unsubscribe</a></p>
     </div>
   </div>
 </body>

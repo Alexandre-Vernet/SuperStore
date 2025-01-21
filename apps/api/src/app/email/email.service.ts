@@ -72,22 +72,57 @@ export class EmailService {
     }
 
     sendNewsletter(newsletter: SendNewsletterDto) {
-        const mailOptions = {
+        const mailOptionsBase = {
             from: 'superstore@gmail.com',
-            to: newsletter.emails,
             subject: newsletter.title,
-            html: sendNewsletter(newsletter.title, newsletter.description)
         };
 
-        return this.transporter
-            .sendMail(mailOptions, (error) => {
-                if (error) {
-                    throw new HttpException(error, 500, { cause: error });
-                } else {
-                    return { message: 'Email sent successfully' };
+        const dailyLimit = 200;
+        const delayBetweenEmails = 60000;   // 1 minute
+        const emails = newsletter.emails;
+        const totalEmails = emails.length;
+        let currentIndex = 0;
+
+        const sendBatch = () => {
+            let emailsSentToday = 0;
+
+            const sendNextEmail = () => {
+                if (currentIndex >= totalEmails || emailsSentToday >= dailyLimit) {
+                    if (currentIndex < totalEmails) {
+                        console.log(`Waiting 24 hours for the next batch...`);
+                        setTimeout(sendBatch, 24 * 60 * 60 * 1000); // Wait 24 hours before sending the next batch
+                    } else {
+                        console.log('All emails sent successfully.');
+                    }
+                    return;
                 }
-            });
+
+                const email = emails[currentIndex];
+                const mailOptions = {
+                    ...mailOptionsBase,
+                    to: email,
+                    html: sendNewsletter(email, newsletter.title, newsletter.description),
+                };
+
+                this.transporter.sendMail(mailOptions, (error) => {
+                    if (error) {
+                        console.error(`Error sending email to ${email}:`, error);
+                    } else {
+                        console.log(`Email sent successfully to ${email}`);
+                    }
+                });
+
+                currentIndex++;
+                emailsSentToday++;
+                setTimeout(sendNextEmail, delayBetweenEmails);
+            };
+
+            sendNextEmail();
+        };
+
+        sendBatch();
     }
+
 
     sendEmailResetPassword(user: UserDto, linkResetPassword: string) {
         const mailOptions = {
@@ -115,7 +150,7 @@ export class EmailService {
         subject: string,
         message: string
     }) {
-        const NODEMAILER_EMAIL= process.env.NODEMAILER_EMAIL;
+        const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL;
         const mailOptions = {
             from: email,
             to: NODEMAILER_EMAIL,

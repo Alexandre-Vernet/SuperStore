@@ -20,7 +20,7 @@ export class CreateProductComponent implements OnInit {
         description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         price: new FormControl(0, [Validators.required, Validators.min(1)]),
         category: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-        images: new FormControl('', [Validators.required, Validators.maxLength(255)])
+        images: new FormControl('', [Validators.required, Validators.maxLength(2000)])
     });
 
     constructor(
@@ -106,7 +106,8 @@ export class CreateProductComponent implements OnInit {
     }
 
     // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownHandler() {
         this.closeModalAddProduct();
     }
 }
