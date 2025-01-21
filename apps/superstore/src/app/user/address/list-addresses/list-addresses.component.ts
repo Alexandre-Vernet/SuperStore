@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { AddressService } from '../address.service';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, Subject, tap } from 'rxjs';
 
 @Component({
     selector: 'superstore-list-addresses',
@@ -20,26 +20,14 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        combineLatest([
-            this.selectedAddress$.pipe(distinctUntilChanged()),
-            this.addressService.addresses$.pipe(distinctUntilChanged())
-        ])
+        this.addressService.addresses$
             .pipe(
-                distinctUntilChanged(),
-                takeUntil(this.unsubscribe$),
+                filter(addresses => addresses.length > 0),
+                tap(addresses => this.emitSelectAddress(addresses[0])),
+                tap(addresses => (this.addresses = addresses))
             )
-            .subscribe(([selectedAddress, addresses]) => {
-                console.log(selectedAddress);
-                if (!selectedAddress && addresses) {
-                    this.selectAddress(addresses[0]);
-                } else if (!selectedAddress && !addresses) {
-                    this.selectAddress(null);
-                } else {
-                    this.selectAddress(selectedAddress);
-                }
+            .subscribe();
 
-                this.addresses = addresses;
-            });
     }
 
     ngOnDestroy() {
@@ -47,8 +35,7 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    selectAddress(address: AddressDto) {
-        // console.log(address);
+    emitSelectAddress(address: AddressDto | null) {
         this.selectedAddress$.next(address);
     }
 

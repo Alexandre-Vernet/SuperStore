@@ -3,6 +3,7 @@ import {
     AddressDto,
     DeliveryMethod,
     deliveryMethods,
+    DeliveryMethodType,
     OrderDto,
     OrderState,
     ProductDto,
@@ -158,6 +159,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     selectAddress(address: AddressDto) {
         if (!address) {
+            this.formAddress.reset();
+            this.formAddress.patchValue({
+                deliveryMethod: DeliveryMethodType.STANDARD,
+                paymentMethod: 'CB'
+            });
             return;
         }
         this.formAddress.patchValue({

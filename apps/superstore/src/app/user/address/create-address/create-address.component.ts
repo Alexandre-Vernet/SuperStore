@@ -70,7 +70,7 @@ export class CreateAddressComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    selectAddress(address: AddressDto) {
+    selectAddress(address: AddressDto | null) {
         if (!address) {
             this.clearFormAddress();
             return;
