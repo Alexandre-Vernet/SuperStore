@@ -1,5 +1,17 @@
 # Superstore
 
+## Feature
+| **Categories**              | **Feature**                                                                                   |
+|----------------------------|----------------------------------------------------------------------------------------------- |
+| **Product**                | - List products<br>- Add a product to cart<br>- Select a size                                  |
+| **Reviews**                | - View reviews on a product<br>- Add a review on a purchased product                           |
+| **Cart / Checkout / Orders** | - View cart<br>- Manage product quantity<br>- Confirm order<br>- View orders<br>- Track order<br>- Download invoice<br>- Get a confirmation email (invoice in attachment) |
+| **Admin panel**            | - Manage users<br>- Manage orders<br>- Manage products<br>- Manage promotion code<br>- Send newsletter to all users subscribed |
+| **My profile**             | - Update user info<br>- Change password<br>- Manage addresses                                  |
+| **Search**                 | - Search product (search bar)                                                                  |
+| **Currency**               | - Change currency (euros or dollars)                                                           |
+
+
 ## Home
 
 ![image](https://github.com/user-attachments/assets/f8aae0b6-fa22-476e-9530-386f01702106)
@@ -113,4 +125,10 @@
 ## Footer
 
 ![image](https://github.com/user-attachments/assets/e01fbb5a-7a1f-4ec7-8a3a-ec10ed3d2a71)
+
+
+
+
+## MCD
+![mcd](https://github.com/user-attachments/assets/15cfb424-0958-4b4d-9d2f-519afce1926f)
 
