@@ -1,56 +1,102 @@
 import { Component, OnInit } from '@angular/core';
-import { categories, filterPrice, sortBy } from "@superstore/interfaces";
-import { ProductService } from "../product.service";
-import { ActivatedRoute } from "@angular/router";
+import { ProductService } from '../product.service';
 import { environment } from '../../../environments/environment';
+import { BehaviorSubject, map } from 'rxjs';
 
 @Component({
     selector: 'superstore-sidebar-filters',
     templateUrl: './sidebar-filters.component.html',
-    styleUrls: ['./sidebar-filters.component.scss'],
+    styleUrls: ['./sidebar-filters.component.scss']
 })
 export class SidebarFiltersComponent implements OnInit {
     protected readonly environment = environment;
 
-    filterPrice = filterPrice;
-    sortBy = sortBy;
+    filterPrice = [
+        {
+            label: 'under-25',
+            name: 'Under 25 €',
+            checked: false
+        },
+        {
+            label: '25-to-50',
+            name: '25 € to 50 €',
+            checked: false
+        },
+        {
+            label: '50-to-100',
+            name: '50 € to 100 €',
+            checked: false
+        },
+        {
+            label: '100-to-200',
+            name: '100 € to 200 €',
+            checked: false
+        },
+        {
+            label: '200-and-above',
+            name: '200 € and above',
+            checked: false
+        }
+    ];
+    sortBy = [
+        {
+            label: 'Price: Low to High',
+            name: 'price',
+            checked: false
+        },
+        {
+            label: 'Price: High to Low',
+            name: '-price',
+            checked: false
+        },
+        {
+            label: 'Name: A to Z',
+            name: 'name',
+            checked: false
+        },
+        {
+            label: 'Name: Z to A',
+            name: '-name',
+            checked: false
+        },
+        {
+            label: 'Best rating',
+            name: '-rating',
+            checked: false
+        }
+    ];
     sortByOpen = false;
     sortCurrent = '';
     filterCurrent = '';
     responsiveFilterOpen = false;
-    categories = categories;
+
+    categories$ = new BehaviorSubject<{ label: string, checked: boolean }[]>([]);
 
     constructor(
-        private readonly productService: ProductService,
-        private activatedRoute: ActivatedRoute,
+        private readonly productService: ProductService
     ) {
     }
 
     ngOnInit() {
+        const categorySet = new Set<string>;
         this.productService.products$
-            .subscribe(products => {
-                // Get category from URL and filter products by category
-                const category = this.getCategoryFromUrl();
-                if (category) {
-                    this.productService.filterProductsByCategory(category);
-                }
-
-                // List all categories
+            .subscribe(products =>
                 products.map(product => {
-                    if (!this.categories.find(c => c.label === product.category)) {
-                        this.categories.push({ label: product.category, checked: false });
+                    if (!categorySet.has(product.category)) {
+                        categorySet.add(product.category);
+                        this.categories$.next([
+                            ...this.categories$.getValue(),
+                            {
+                                label: product.category,
+                                checked: false
+                            }
+                        ]);
                     }
-                });
-            });
+                }));
     }
 
-    getCategoryFromUrl() {
-        const { category } = this.activatedRoute.snapshot.queryParams;
-        // Check category checkbox
-        this.categories.map(c => {
-            c.checked = c.label === category;
-        });
-        return category;
+    setCategory(category: string) {
+        this.categories$.subscribe(categories => categories.map(c => c.checked = c.label === category));
     }
 
     toggleSortBy() {
@@ -102,20 +148,20 @@ export class SidebarFiltersComponent implements OnInit {
         }
 
         // Uncheck all other categories
-        this.categories.map(f => {
+        this.categories$.getValue().map(f => {
             f.checked = f.label === category;
         });
 
         this.closeSubMenus();
-
-        this.productService.filterProductsByCategory(category);
     }
 
     resetCategoriesFilter() {
         this.closeSubMenus();
 
         // Uncheck all checkboxes
-        this.categories = categories;
+        this.categories$.pipe(
+            map(c => c.map(categories => categories.checked = false))
+        );
 
         this.productService.resetFilters();
     }

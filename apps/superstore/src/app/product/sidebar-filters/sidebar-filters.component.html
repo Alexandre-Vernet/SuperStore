@@ -130,7 +130,7 @@
                                 <div class="px-4 pt-4 pb-2" id="filter-section-3">
                                     <div class="space-y-6">
                                         <div
-                                                *ngFor="let category of categories"
+                                                *ngFor="let category of categories$ | async"
                                                 class="flex items-center">
                                             <input
                                                     (click)="setCategoriesFilter(category.label, $event)"
@@ -254,7 +254,7 @@
                                     </legend>
                                     <div class="space-y-3 pt-6">
                                         <div
-                                                *ngFor="let category of categories"
+                                                *ngFor="let category of categories$ | async"
                                                 class="flex items-center">
                                             <input
                                                     (click)="setCategoriesFilter(category.label, $event)"
@@ -276,7 +276,7 @@
                 <!-- Product grid -->
                 <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
                     <div class="lg:h-full">
-                        <superstore-list-products></superstore-list-products>
+                        <superstore-list-products (category)="setCategory($event)"></superstore-list-products>
                     </div>
                 </div>
             </div>
