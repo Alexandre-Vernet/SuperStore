@@ -71,6 +71,7 @@ export class SidebarFiltersComponent implements OnInit {
     responsiveFilterOpen = false;
 
     categories$ = new BehaviorSubject<{ label: string, checked: boolean }[]>([]);
+    categoryFilter$: BehaviorSubject<string> = new BehaviorSubject('');
 
     constructor(
         private readonly productService: ProductService
@@ -141,6 +142,7 @@ export class SidebarFiltersComponent implements OnInit {
     }
 
     setCategoriesFilter(category: string, $event) {
+        this.categoryFilter$.next(category);
         // If checkbox is unchecked, reset filter
         if (!$event.target.checked) {
             this.resetCategoriesFilter();
