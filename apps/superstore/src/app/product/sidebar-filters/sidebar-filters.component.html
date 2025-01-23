@@ -258,11 +258,11 @@
                                                 class="flex items-center">
                                             <input
                                                     (click)="setCategoriesFilter(category.label, $event)"
-                                                    [id]="category"
+                                                    [id]="category.label"
                                                     [checked]="category.checked"
                                                     type="checkbox"
                                                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <label [for]="category" class="ml-3 text-sm text-gray-600">
+                                            <label [for]="category.label" class="ml-3 text-sm text-gray-600">
                                                 {{ category.label | titlecase }}
                                             </label>
                                         </div>
