@@ -98,13 +98,6 @@ export class ProductService {
         return products;
     }
 
-    filterProductsByCategory(category: string) {
-        setTimeout(() =>  {
-            const products = this.productsSubject.value.filter((p) => p.category == category);
-            this.productsSubjectFiltered.next(products);
-        }, 2000);
-    }
-
     resetFilters(): void {
         this.productsSubjectFiltered.next(this.productsSubject.value);
     }
