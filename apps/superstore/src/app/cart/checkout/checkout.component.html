@@ -6,16 +6,54 @@
 
                 <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
+                        <!-- Payment -->
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900 mt-4 mb-6">Payment method</h2>
+                            <div id="payment-element"></div>
+                            <div class="mt-6 grid grid-cols-4 gap-y-6 gap-x-4">
+                                <form [formGroup]="formPromotion"
+                                      (ngSubmit)="formPromotion.valid && applyPromotionCode()">
+                                    <label for="promotion-code" class="block text-sm font-medium text-gray-700">Promotion
+                                        code</label>
+                                    <div class="mt-1 flex items-center gap-2">
+                                        <input
+                                            formControlName="promotionCode"
+                                            type="text"
+                                            name="promotion-code"
+                                            id="promotion-code"
+                                            class="block w-96 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            placeholder="SUPERSTORE2025">
+                                        <button
+                                            [disabled]="!formPromotion.valid"
+                                            type="submit"
+                                            class="bg-indigo-50 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            [ngClass]="{'cursor-not-allowed opacity-50': !formPromotion.valid}">
+                                            Apply
+                                        </button>
+                                    </div>
+                                    <ng-container *ngIf="promotion">
+                                        <span class="text-xs text-green-500">Promotion code applied</span>
+                                    </ng-container>
+                                    <ng-container>
+                                          <span *ngIf="formPromotion.errors" class="text-xs text-red-500">
+                                            {{ formPromotion.getError('error') }}
+                                          </span>
+                                    </ng-container>
+                                </form>
+                            </div>
+                        </div>
 
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                        <!--Shipping information-->
+                        <div class="mt-5 border-t border-gray-200">
+                            <h2 class="text-lg font-medium text-gray-900 mt-4 mb-6">Shipping information</h2>
+
                             <div class="sm:col-span-2">
                                 <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="company"
-                                      type="text" name="company" id="company"
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="company"
+                                        type="text" name="company" id="company"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -23,10 +61,10 @@
                                 <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="address"
-                                      type="text" name="address" id="address" autocomplete="street-address"
-                                      required
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="address"
+                                        type="text" name="address" id="address" autocomplete="street-address"
+                                        required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -35,9 +73,9 @@
                                     etc.</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="apartment"
-                                      type="text" name="apartment" id="apartment"
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="apartment"
+                                        type="text" name="apartment" id="apartment"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -45,9 +83,9 @@
                                 <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="country"
-                                      type="text" name="country" id="country" autocomplete="country" required
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="country"
+                                        type="text" name="country" id="country" autocomplete="country" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -55,9 +93,9 @@
                                 <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="city"
-                                      type="text" name="city" id="city" autocomplete="address-level2" required
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="city"
+                                        type="text" name="city" id="city" autocomplete="address-level2" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -66,9 +104,9 @@
                                 <label for="zip-code" class="block text-sm font-medium text-gray-700">Zip code</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="zipCode"
-                                      type="text" name="zip-code" id="zip-code" autocomplete="zip-code"
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="zipCode"
+                                        type="text" name="zip-code" id="zip-code" autocomplete="zip-code"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
 
@@ -76,159 +114,24 @@
                                 <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                                 <div class="mt-1">
                                     <input
-                                      formControlName="phone"
-                                      type="text" name="phone" id="phone" autocomplete="tel"
-                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        formControlName="phone"
+                                        type="text" name="phone" id="phone" autocomplete="tel"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-10 border-t border-gray-200 pt-10">
-                            <fieldset>
-                                <legend class="text-lg font-medium text-gray-900">Addresses</legend>
-                                <superstore-list-addresses (selectedAddress$)="selectAddress($event)"></superstore-list-addresses>
-                            </fieldset>
-                        </div>
-
-                        <div class="mt-10 border-t border-gray-200 pt-10">
-                            <fieldset>
-                                <legend class="text-lg font-medium text-gray-900">Delivery method</legend>
-
-                                <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                                    <label
-                                      *ngFor="let deliveryMethod of deliveryMethods"
-                                      (click)="changeDeliveryMethod(deliveryMethod)"
-                                      [ngClass]="{'border-transparent ring-2 ring-indigo-500': deliveryMethod.name === selectedDeliveryMethod?.name, 'border-gray-300': deliveryMethod.name !== selectedDeliveryMethod?.name}"
-                                      class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
-                                        <input type="radio" name="delivery-method" value="Standard" class="sr-only"
-                                               aria-labelledby="delivery-method-0-label"
-                                               aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
-                                        <span class="flex flex-1">
-                                        <span class="flex flex-col">
-                                          <span id="delivery-method-0-label"
-                                                class="block text-sm font-medium text-gray-900">{{ deliveryMethod.name }}</span>
-                                          <span id="delivery-method-0-description-0"
-                                                class="mt-1 flex items-center text-sm text-gray-500">{{ deliveryMethod.expectedDelivery }}</span>
-                                          <span id="delivery-method-0-description-1"
-                                                class="mt-6 text-sm font-medium text-gray-900">{{ deliveryMethod.price | convertCurrency }}</span>
-                                        </span>
-                                    </span>
-                                        <svg
-                                          *ngIf="deliveryMethod.name === selectedDeliveryMethod?.name"
-                                          class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
-                                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                                  clip-rule="evenodd" />
-                                        </svg>
-                                        <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
-                                              aria-hidden="true"></span>
-                                    </label>
-                                </div>
-                            </fieldset>
-                        </div>
-
-                        <!-- Payment -->
-                        <div class="mt-10 border-t border-gray-200 pt-10">
-                            <h2 class="text-lg font-medium text-gray-900">Payment</h2>
-
-                            <fieldset class="mt-4">
-                                <legend class="sr-only">Payment type</legend>
-                                <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                                    <div class="flex items-center">
-                                        <input id="credit-card" name="payment-type" type="radio" checked
-                                               class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label for="credit-card" class="ml-3 block text-sm font-medium text-gray-700">Credit
-                                            card</label>
-                                    </div>
-
-                                    <div class="flex items-center">
-                                        <input id="paypal" name="payment-type" type="radio"
-                                               class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label for="paypal"
-                                               class="ml-3 block text-sm font-medium text-gray-700">PayPal</label>
-                                    </div>
-
-                                    <div class="flex items-center">
-                                        <input id="etransfer" name="payment-type" type="radio"
-                                               class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label for="etransfer" class="ml-3 block text-sm font-medium text-gray-700">eTransfer</label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <div class="mt-6 grid grid-cols-4 gap-y-6 gap-x-4">
-                                <div class="col-span-4">
-                                    <label for="card-number" class="block text-sm font-medium text-gray-700">Card
-                                        number</label>
-                                    <div class="mt-1">
-                                        <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    </div>
-                                </div>
-
-                                <div class="col-span-4">
-                                    <label for="name-on-card" class="block text-sm font-medium text-gray-700">Name on
-                                        card</label>
-                                    <div class="mt-1">
-                                        <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    </div>
-                                </div>
-
-                                <div class="col-span-3">
-                                    <label for="expiration-date" class="block text-sm font-medium text-gray-700">Expiration
-                                        date (MM/YY)</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="expiration-date" id="expiration-date"
-                                               autocomplete="cc-exp"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="cvc" id="cvc" autocomplete="csc"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    </div>
-                                </div>
-
-                                <div class="col-span-2">
-                                    <form [formGroup]="formPromotion"
-                                          (ngSubmit)="formPromotion.valid && applyPromotionCode()">
-                                        <label for="promotion-code" class="block text-sm font-medium text-gray-700">Promotion
-                                            code</label>
-                                        <div class="mt-1">
-                                            <input
-                                              formControlName="promotionCode"
-                                              type="text" name="promotion-code" id="promotion-code"
-                                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <ng-container *ngIf="promotion">
-                                                <span class="text-xs text-green-500">Promotion code applied</span>
-                                            </ng-container>
-                                            <ng-container>
-                                                <span *ngIf="formPromotion.errors" class="text-xs text-red-500">
-                                                    {{ formPromotion.getError('error') }}
-                                                </span>
-                                            </ng-container>
-                                        </div>
-                                        <button
-                                          [disabled]="!formPromotion.valid"
-                                          type="submit"
-                                          class="mt-2 bg-indigo-50 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Apply
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                        <div class="mt-7 border-t border-gray-200">
+                            <h2 class="text-lg font-medium text-gray-900 mt-4 mb-6">Addresses</h2>
+                            <superstore-list-addresses
+                                (selectedAddress$)="selectAddress($event)"></superstore-list-addresses>
                         </div>
                     </div>
 
-                    <!-- Order summary -->
-                    <div class="mt-10 lg:mt-0">
-                        <h2 class="text-lg font-medium text-gray-900">Order summary</h2>
 
+                    <div class="mt-10 lg:mt-0">
+                        <!-- Order summary -->
+                        <h2 class="text-lg font-medium text-gray-900">Order summary</h2>
                         <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
                             <h3 class="sr-only">Items in your cart</h3>
                             <ul role="list" class="divide-y divide-gray-200">
@@ -259,11 +162,11 @@
                                                 <div class="ml-4">
                                                     <label for="quantity-1" class="sr-only">Quantity, Basic Tee</label>
                                                     <select
-                                                      [(ngModel)]="product.quantity"
-                                                      [ngModelOptions]="{ standalone: true }"
-                                                      (change)="updateQuantity(product, $event)"
-                                                      id="quantity-1" name="quantity-1"
-                                                      class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                                        [(ngModel)]="product.quantity"
+                                                        [ngModelOptions]="{ standalone: true }"
+                                                        (change)="updateQuantity(product, $event)"
+                                                        id="quantity-1" name="quantity-1"
+                                                        class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                                                         <option *ngFor="let value of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
                                                                 [value]="value">{{ value }}
                                                         </option>
@@ -293,7 +196,7 @@
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm">Subtotal</dt>
                                     <dd
-                                      class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}
+                                        class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between">
@@ -335,6 +238,42 @@
                                         class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                                     Confirm order
                                 </button>
+                            </div>
+                        </div>
+
+                        <!--Delivery method-->
+                        <div class="mt-7 border-t border-gray-200 pt-5">
+                            <h2 class="text-lg font-medium text-gray-900">Delivery method</h2>
+                            <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                <label
+                                    *ngFor="let deliveryMethod of deliveryMethods"
+                                    (click)="changeDeliveryMethod(deliveryMethod)"
+                                    [ngClass]="{'border-transparent ring-2 ring-indigo-500': deliveryMethod.name === selectedDeliveryMethod?.name, 'border-gray-300': deliveryMethod.name !== selectedDeliveryMethod?.name}"
+                                    class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
+                                    <input type="radio" name="delivery-method" value="Standard" class="sr-only"
+                                           aria-labelledby="delivery-method-0-label"
+                                           aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1">
+                                    <span class="flex flex-1">
+                                        <span class="flex flex-col">
+                                          <span id="delivery-method-0-label"
+                                                class="block text-sm font-medium text-gray-900">{{ deliveryMethod.name }}</span>
+                                          <span id="delivery-method-0-description-0"
+                                                class="mt-1 flex items-center text-sm text-gray-500">{{ deliveryMethod.expectedDelivery }}</span>
+                                          <span id="delivery-method-0-description-1"
+                                                class="mt-6 text-sm font-medium text-gray-900">{{ deliveryMethod.price | convertCurrency }}</span>
+                                        </span>
+                                    </span>
+                                    <svg
+                                        *ngIf="deliveryMethod.name === selectedDeliveryMethod?.name"
+                                        class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                                              clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
+                                          aria-hidden="true"></span>
+                                </label>
                             </div>
                         </div>
                     </div>

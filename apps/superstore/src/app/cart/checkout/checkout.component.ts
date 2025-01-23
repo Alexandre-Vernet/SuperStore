@@ -1,13 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-    AddressDto,
-    DeliveryMethod,
-    deliveryMethods,
-    OrderDto,
-    OrderState,
-    ProductDto,
-    PromotionDto
-} from '@superstore/interfaces';
+import { AddressDto, DeliveryMethod, OrderDto, OrderState, ProductDto, PromotionDto } from '@superstore/interfaces';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
@@ -15,6 +7,8 @@ import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { PromotionService } from '../../promotion/promotion.service';
 import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'superstore-checkout',
@@ -24,8 +18,19 @@ import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeU
 export class CheckoutComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
-    deliveryMethods = deliveryMethods;
-    selectedDeliveryMethod: DeliveryMethod;
+    deliveryMethods: DeliveryMethod[] = [
+        {
+            name: 'STANDARD',
+            expectedDelivery: '3-5 days',
+            price: 5
+        },
+        {
+            name: 'EXPRESS',
+            expectedDelivery: '1-2 days',
+            price: 16
+        }
+    ];
+    selectedDeliveryMethod: DeliveryMethod = this.deliveryMethods[0];
     shippingPrice = this.deliveryMethods[0].price;
 
     formAddress = new FormGroup({
@@ -36,7 +41,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         city: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
-        deliveryMethod: new FormControl('', [Validators.required]),
+        deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required]),
         paymentMethod: new FormControl('CB', [Validators.required])
     });
 
@@ -45,28 +50,36 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
     promotion: PromotionDto;
 
-    buttonApplyPromotion$ = new Subject<string>();
+    private stripe: Stripe | null = null;
+
+    promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
     unsubscribe$ = new Subject<void>;
+
 
     constructor(
         private readonly cartService: CartService,
         private readonly authService: AuthService,
         private readonly orderService: OrderService,
         private readonly promotionService: PromotionService,
-        private router: Router
+        private readonly router: Router
     ) {
     }
 
     ngOnInit() {
         this.cart = this.cartService.cart;
-        this.selectedDeliveryMethod = this.deliveryMethods[0];
-        this.formAddress.patchValue({
-            deliveryMethod: this.selectedDeliveryMethod.name
-        });
+        const cartAmount = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+        this.orderService.createPaymentIntent(cartAmount)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(async ({ paymentIntent }) => {
+                this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
+                const elements = this.stripe.elements({ clientSecret: paymentIntent.clientSecret });
+                const paymentElement = elements.create('payment');
+                paymentElement.mount('#payment-element');
+            });
 
-        this.buttonApplyPromotion$.pipe(
+        this.promotionCode$.pipe(
             takeUntil(this.unsubscribe$),
             distinctUntilChanged(),
             switchMap((code) =>
@@ -80,16 +93,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     )
             ),
             filter(response => response !== null),
-            switchMap((promotion) => {
-                    return this.promotionService.usePromotionCode(promotion)
-                        .pipe(
-                            catchError((err) => {
-                                this.formPromotion.setErrors({ error: err.error.message });
-                                this.promotion = null;
-                                return of(null);
-                            })
-                        );
-                }
+            switchMap((promotion) =>
+                this.promotionService.usePromotionCode(promotion)
+                    .pipe(
+                        catchError((err) => {
+                            this.formPromotion.setErrors({ error: err.error.message });
+                            this.promotion = null;
+                            return of(null);
+                        })
+                    )
             )
         ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
 
@@ -147,7 +159,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             })
         )
             .subscribe({
-                next: () =>  this.router.navigateByUrl('/order/confirm-order')
+                next: () => this.router.navigateByUrl('/order/confirm-order')
             });
     }
 
@@ -160,7 +172,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if (!address) {
             this.formAddress.reset();
             this.formAddress.patchValue({
-                deliveryMethod: deliveryMethods[0].name,
+                deliveryMethod: this.deliveryMethods[0].name,
                 paymentMethod: 'CB'
             });
             return;
@@ -215,7 +227,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     applyPromotionCode() {
         const promotionCode = this.formPromotion.value.promotionCode.toString().trim();
-        this.buttonApplyPromotion$.next(promotionCode);
+        this.promotionCode$.next(promotionCode);
     }
 
     submitForm() {

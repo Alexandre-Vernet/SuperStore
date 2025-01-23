@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrderDto, OrderState } from '@superstore/interfaces';
-import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from '../cart/cart.service';
@@ -31,6 +31,16 @@ export class OrderService {
         }
     }
 
+    createPaymentIntent(amount: number) {
+        return this.http.post<{ paymentIntent: {client_secret: string} }>(`${ this.orderUri }/create-payment-intent`, { amount })
+            .pipe(
+                map(res => ({
+                    paymentIntent: {
+                        clientSecret: res.paymentIntent.client_secret
+                    }
+                }))
+        );
+    }
 
     create(order: OrderDto): Observable<void> {
         return this.http.post<OrderDto>(this.orderUri, order)
@@ -66,9 +76,7 @@ export class OrderService {
     findAll(): Observable<OrderDto[]> {
         return this.http.get<OrderDto[]>(this.orderUri)
             .pipe(
-                tap((orders) => {
-                    this.ordersSubject.next(orders);
-                })
+                tap((orders) => this.ordersSubject.next(orders))
             );
     }
 

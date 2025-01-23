@@ -10,8 +10,13 @@ export class OrderController {
 
     constructor(
         private readonly orderService: OrderService,
-        private readonly emailService: EmailService,
+        private readonly emailService: EmailService
     ) {
+    }
+
+    @Post('create-payment-intent')
+    createPaymentIntent(@Body() { amount }: { amount: number }) {
+        return this.orderService.createPaymentIntent(amount, false);
     }
 
     @Post()
