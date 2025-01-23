@@ -1,20 +1,22 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProductService } from '../product.service';
 import { ProductDto } from '@superstore/interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-list-products',
     templateUrl: './list-products.component.html',
     styleUrls: ['./list-products.component.scss']
 })
-export class ListProductsComponent implements OnInit {
+export class ListProductsComponent implements OnInit, OnDestroy {
 
     products: ProductDto[] = [];
 
     @Input() categoryFilter$: BehaviorSubject<string> = new BehaviorSubject('');
     @Output() category$: BehaviorSubject<string> = new BehaviorSubject('');
+
+    unsubscribe$ = new Subject<void>();
 
 
     constructor(
@@ -31,6 +33,7 @@ export class ListProductsComponent implements OnInit {
             this.activatedRoute.queryParams
         ])
             .pipe(
+                takeUntil(this.unsubscribe$),
                 map(([products, categoryFilter, param]: [ProductDto[], string, { category: string }]) => ({
                     products,
                     category: categoryFilter ? categoryFilter : param.category
@@ -51,6 +54,11 @@ export class ListProductsComponent implements OnInit {
                     queryParamsHandling: 'merge'
                 });
             });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     filterCategory(products: ProductDto[], category: string) {

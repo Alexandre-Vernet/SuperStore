@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-sidebar-filters',
     templateUrl: './sidebar-filters.component.html',
     styleUrls: ['./sidebar-filters.component.scss']
 })
-export class SidebarFiltersComponent implements OnInit {
+export class SidebarFiltersComponent implements OnInit, OnDestroy {
     protected readonly environment = environment;
 
     filterPrice = [
@@ -72,6 +72,7 @@ export class SidebarFiltersComponent implements OnInit {
 
     categories$ = new BehaviorSubject<{ label: string, checked: boolean }[]>([]);
     categoryFilter$: BehaviorSubject<string> = new BehaviorSubject('');
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly productService: ProductService
@@ -81,6 +82,7 @@ export class SidebarFiltersComponent implements OnInit {
     ngOnInit() {
         const categorySet = new Set<string>;
         this.productService.products$
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe(products =>
                 products.map(product => {
                     if (!categorySet.has(product.category)) {
@@ -94,6 +96,11 @@ export class SidebarFiltersComponent implements OnInit {
                         ]);
                     }
                 }));
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     setCategory(category: string) {
