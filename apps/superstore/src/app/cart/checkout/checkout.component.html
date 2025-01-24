@@ -202,7 +202,9 @@
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm">Shipping</dt>
                                     <dd class="text-sm font-medium text-gray-900">
-                                        {{ shippingPrice | convertCurrency }}
+                                        <span [ngClass]="{'font-medium text-green-600': this.subTotalPrice() >= 100}">
+                                            {{ shippingPrice() | convertCurrency }}
+                                        </span>
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between">

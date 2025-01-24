@@ -31,7 +31,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }
     ];
     selectedDeliveryMethod: DeliveryMethod = this.deliveryMethods[0];
-    shippingPrice = this.deliveryMethods[0].price;
 
     formAddress = new FormGroup({
         company: new FormControl(),
@@ -148,12 +147,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
                     paymentMethod,
                     subTotalPrice: this.subTotalPrice(),
-                    shippingPrice: this.shippingPrice,
+                    shippingPrice: this.shippingPrice(),
                     taxesPrice: this.taxes(),
                     totalPrice: this.totalPrice(),
                     createdAt: new Date()
                 };
-
 
                 return this.orderService.create(order);
             })
@@ -193,8 +191,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.formAddress.patchValue({
             deliveryMethod: deliveryMethod.name
         });
-
-        this.updateShippingPrice(deliveryMethod.price);
     }
 
     updateQuantity(item: ProductDto, event: Event) {
@@ -210,8 +206,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
 
-    updateShippingPrice(price: number) {
-        this.shippingPrice = price;
+    shippingPrice() {
+        if (this.subTotalPrice() >= 100) {
+            return 0;
+        }
+        return this.selectedDeliveryMethod.price;
     }
 
     taxes(): number {
@@ -220,9 +219,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     totalPrice(): number {
         if (this.promotion) {
-            return this.shippingPrice + this.taxes() + this.subTotalPrice() - this.promotion.amount;
+            return this.shippingPrice() + this.taxes() + this.subTotalPrice() - this.promotion.amount;
         }
-        return this.shippingPrice + this.taxes() + this.subTotalPrice();
+        return this.shippingPrice() + this.taxes() + this.subTotalPrice();
     }
 
     applyPromotionCode() {
