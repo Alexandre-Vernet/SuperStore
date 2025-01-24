@@ -6,8 +6,8 @@ import { AuthService } from '../../auth/auth.service';
 import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { PromotionService } from '../../promotion/promotion.service';
-import { catchError, distinctUntilChanged, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { catchError, distinctUntilChanged, filter, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -49,7 +49,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
     promotion: PromotionDto;
 
-    private stripe: Stripe | null = null;
+    stripe: Stripe;
+    stripeElement: StripeElements;
+    stripeError = new FormControl('');
 
     promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
@@ -73,8 +75,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
-                const elements = this.stripe.elements({ clientSecret: paymentIntent.clientSecret });
-                const paymentElement = elements.create('payment');
+                this.stripeElement = this.stripe.elements({ clientSecret: paymentIntent.clientSecret });
+                const paymentElement = this.stripeElement.create('payment', { layout: 'tabs' });
                 paymentElement.mount('#payment-element');
             });
 
@@ -99,16 +101,31 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                             this.formPromotion.setErrors({ error: err.error.message });
                             this.promotion = null;
                             return of(null);
-                        })
+                        }),
+                        filter(res => !!res)
                     )
             )
-        ).subscribe((promotion: PromotionDto) => this.promotion = promotion);
+        ).subscribe(promotion => this.promotion = promotion);
 
 
         this.buttonCheckout$.pipe(
             takeUntil(this.unsubscribe$),
-            distinctUntilChanged(),
-            switchMap(() => {
+            switchMap(() => this.stripe.confirmPayment({
+                elements: this.stripeElement,
+                redirect: 'if_required'
+            })),
+            map(({ error }) => {
+                if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
+                    this.stripeError.setErrors({ error: error.message });
+                    return false;
+                } else if (error) {
+                    this.stripeError.setErrors({ error: 'An unexpected error occurred.' });
+                    return false;
+                }
+                return true;
+            }),
+            filter(formSuccess => formSuccess),
+            map(() => {
                 // Cast price to number
                 this.cart.map(c => c.price = Number(c.price));
 
@@ -153,12 +170,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     createdAt: new Date()
                 };
 
-                return this.orderService.create(order);
+                return order;
+            }),
+            switchMap((order) => this.orderService.create(order)),
+            filter(formSuccess => formSuccess),
+            tap(() => this.router.navigateByUrl('/order/confirm-order')),
+            catchError((err) => {
+                this.stripeError.setErrors({ error: err.error.message ?? 'An unexpected error occurred.' });
+                return of(false);
             })
-        )
-            .subscribe({
-                next: () => this.router.navigateByUrl('/order/confirm-order')
-            });
+        ).subscribe();
     }
 
     ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
@@ -42,8 +42,9 @@ export class OrderService {
         const { paymentIntent } = await this.createPaymentIntent(amount, true);
 
         if (paymentIntent.status !== 'succeeded') {
-            console.error('Payment failed');
-            throw new Error('Payment failed');
+            throw new HttpException({
+                message: 'Payment failed'
+            }, HttpStatus.CONFLICT);
         } else {
             order.address = await this.addressService.create(order.address, false);
             return await this.orderRepository.save(order);

@@ -9,8 +9,14 @@
                         <!-- Payment -->
                         <div>
                             <h2 class="text-lg font-medium text-gray-900 mt-4 mb-6">Payment method</h2>
-                            <div id="payment-element"></div>
-                            <div class="mt-6 grid grid-cols-4 gap-y-6 gap-x-4">
+                            <form id="payment-form">
+                                <div id="payment-element"></div>
+                                <button id="submit">
+                                    <div class="spinner hidden" id="spinner"></div>
+                                </button>
+                            </form>
+
+                            <div class="mt-2 grid grid-cols-4 gap-y-6 gap-x-4">
                                 <form [formGroup]="formPromotion"
                                       (ngSubmit)="formPromotion.valid && applyPromotionCode()">
                                     <label for="promotion-code" class="block text-sm font-medium text-gray-700">Promotion
@@ -236,10 +242,14 @@
                             <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
                                 <button type="submit"
                                         [disabled]="formAddress.invalid"
-                                        [ngClass]="{ 'cursor-not-allowed opacity-50': formAddress.invalid }"
+                                        [ngClass]="{ 'cursor-not-allowed opacity-50': formAddress.invalid}"
                                         class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                                     Confirm order
                                 </button>
+                                <div *ngIf="stripeError.hasError" id="payment-message"
+                                     class="text text-red-500 mt-2 flex justify-center items-center">
+                                    {{ stripeError.getError('error') }}
+                                </div>
                             </div>
                         </div>
 

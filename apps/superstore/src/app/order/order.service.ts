@@ -32,35 +32,31 @@ export class OrderService {
     }
 
     createPaymentIntent(amount: number) {
-        return this.http.post<{ paymentIntent: {client_secret: string} }>(`${ this.orderUri }/create-payment-intent`, { amount })
+        return this.http.post<{
+            paymentIntent: { client_secret: string }
+        }>(`${ this.orderUri }/create-payment-intent`, { amount })
             .pipe(
                 map(res => ({
                     paymentIntent: {
                         clientSecret: res.paymentIntent.client_secret
                     }
                 }))
-        );
+            );
     }
 
-    create(order: OrderDto): Observable<void> {
+    create(order: OrderDto): Observable<boolean> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
-                switchMap((createdOrder) => {
-                    return this.pdfService.downloadInvoice(createdOrder, false)
+                switchMap((createdOrder) =>
+                    this.pdfService.downloadInvoice(createdOrder, false)
                         .pipe(
-                            switchMap((pdfDataUri) => {
-                                return this.sendEmailConfirmationOrder(createdOrder, pdfDataUri);
-                            })
-                        );
-                }),
+                            switchMap((pdfDataUri) => this.sendEmailConfirmationOrder(createdOrder, pdfDataUri))
+                        )),
                 tap(() => {
                     this.cartService.clearCart();
                     this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
                 }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    return of(null);
-                })
+                map(() => true)
             );
     }
 
