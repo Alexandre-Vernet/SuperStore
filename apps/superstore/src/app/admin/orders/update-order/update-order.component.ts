@@ -25,7 +25,6 @@ export class UpdateOrderComponent implements OnInit {
         address: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         state: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
-        paymentMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         price: new FormControl({ disabled: true, value: 0 }, [Validators.required]),
     });
 
@@ -45,7 +44,6 @@ export class UpdateOrderComponent implements OnInit {
                 address: `${ address.address }, ${ address.city }, ${ address.zipCode }, ${ address.country }`,
                 state: this.editOrder.state,
                 deliveryMethod: this.editOrder.deliveryMethod,
-                paymentMethod: this.editOrder.paymentMethod,
                 price: this.editOrder.totalPrice
             });
         }

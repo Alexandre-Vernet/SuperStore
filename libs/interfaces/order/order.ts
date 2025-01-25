@@ -12,7 +12,6 @@ export class OrderDto {
     promotion?: PromotionDto;
     state: OrderState;
     deliveryMethod: string;
-    paymentMethod: string;
     subTotalPrice: number;
     shippingPrice: number;
     taxesPrice: number;

@@ -31,9 +31,6 @@ export class OrderEntity {
     @Column({ name: 'delivery_method' })
     deliveryMethod: string;
 
-    @Column({ name: 'payment_method' })
-    paymentMethod: string;
-
     @Column({ name: 'sub_total_price', type: 'decimal' })
     subTotalPrice: number;
 
