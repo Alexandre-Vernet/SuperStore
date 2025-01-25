@@ -52,6 +52,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     stripe: Stripe;
     stripeElement: StripeElements;
     stripeError = new FormControl('');
+    isLoading = false;
 
     promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
@@ -110,6 +111,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         this.buttonCheckout$.pipe(
             takeUntil(this.unsubscribe$),
+            tap(() => this.isLoading = true),
             switchMap(() => this.stripe.confirmPayment({
                 elements: this.stripeElement,
                 redirect: 'if_required'
@@ -124,7 +126,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 }
                 return true;
             }),
-            filter(formSuccess => formSuccess),
+            filter(formSuccess => {
+                if (!formSuccess) {
+                    this.isLoading = false;
+                }
+                return formSuccess;
+            }),
             map(() => {
                 // Cast price to number
                 this.cart.map(c => c.price = Number(c.price));
@@ -173,7 +180,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 return order;
             }),
             switchMap((order) => this.orderService.create(order)),
-            filter(formSuccess => formSuccess),
+            filter(createdOrder => {
+                if (!createdOrder) {
+                    this.isLoading = false;
+                }
+                return createdOrder;
+            }),
             tap(() => this.router.navigateByUrl('/order/confirm-order')),
             catchError((err) => {
                 this.stripeError.setErrors({ error: err.error.message ?? 'An unexpected error occurred.' });

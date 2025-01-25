@@ -11,9 +11,6 @@
                             <h2 class="text-lg font-medium text-gray-900 mt-4 mb-6">Payment method</h2>
                             <form id="payment-form">
                                 <div id="payment-element"></div>
-                                <button id="submit">
-                                    <div class="spinner hidden" id="spinner"></div>
-                                </button>
                             </form>
 
                             <div class="mt-2 grid grid-cols-4 gap-y-6 gap-x-4">
@@ -242,15 +239,19 @@
                             <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
                                 <button type="submit"
                                         [disabled]="formAddress.invalid"
-                                        [ngClass]="{ 'cursor-not-allowed opacity-50': formAddress.invalid}"
-                                        class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
-                                    Confirm order
+                                        [ngClass]="{ 'cursor-not-allowed opacity-50': formAddress.invalid }"
+                                        class="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 flex items-center justify-center space-x-2">
+                                    <span *ngIf="!isLoading">Confirm order</span>
+                                    <svg *ngIf="isLoading" class="spinner" width="35px" height="35px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                                        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+                                    </svg>
                                 </button>
                                 <div *ngIf="stripeError.hasError" id="payment-message"
                                      class="text text-red-500 mt-2 flex justify-center items-center">
                                     {{ stripeError.getError('error') }}
                                 </div>
                             </div>
+
                         </div>
 
                         <!--Delivery method-->
