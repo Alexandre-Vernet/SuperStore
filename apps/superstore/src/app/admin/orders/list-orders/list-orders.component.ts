@@ -55,7 +55,6 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
             state: order.state,
             address: order.address,
             deliveryMethod: order.deliveryMethod,
-            paymentMethod: order.paymentMethod,
             subTotalPrice: order.subTotalPrice,
             shippingPrice: order.shippingPrice,
             taxesPrice: order.taxesPrice,

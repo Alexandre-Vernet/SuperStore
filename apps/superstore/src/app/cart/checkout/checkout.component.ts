@@ -41,7 +41,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required]),
-        paymentMethod: new FormControl('CB', [Validators.required])
     });
 
     formPromotion = new FormGroup({
@@ -130,7 +129,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     city,
                     zipCode,
                     phone,
-                    paymentMethod
                 } = this.formAddress.value;
 
                 const newAddress: AddressDto = {
@@ -155,7 +153,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     promotion: this.promotion,
                     state: OrderState.PENDING,
                     deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
-                    paymentMethod,
                     subTotalPrice: this.subTotalPrice(),
                     shippingPrice: this.shippingPrice(),
                     taxesPrice: this.taxes(),
@@ -190,7 +187,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.formAddress.reset();
             this.formAddress.patchValue({
                 deliveryMethod: this.deliveryMethods[0].name,
-                paymentMethod: 'CB'
             });
             return;
         }

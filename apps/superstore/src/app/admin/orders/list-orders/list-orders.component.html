@@ -43,10 +43,6 @@
                             </th>
                             <th scope="col"
                                 class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
-                                Payment method
-                            </th>
-                            <th scope="col"
-                                class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
                                 Price
                             </th>
                             <th scope="col"
@@ -75,9 +71,6 @@
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                                 {{ order.deliveryMethod }}
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                                {{ order.paymentMethod }}
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                                 {{ order.totalPrice | convertCurrency }}
