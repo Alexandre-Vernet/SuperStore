@@ -84,28 +84,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.promotionCode$.pipe(
             takeUntil(this.unsubscribe$),
             distinctUntilChanged(),
-            switchMap((code) =>
-                this.promotionService.checkPromotionCode(code)
-                    .pipe(
-                        catchError((err) => {
-                            this.formPromotion.setErrors({ error: err.error.message });
-                            this.promotion = null;
-                            return of(null);
-                        })
-                    )
-            ),
+            switchMap((code) => this.promotionService.checkPromotionCode(code)),
             filter(response => response !== null),
-            switchMap((promotion) =>
-                this.promotionService.usePromotionCode(promotion)
-                    .pipe(
-                        catchError((err) => {
-                            this.formPromotion.setErrors({ error: err.error.message });
-                            this.promotion = null;
-                            return of(null);
-                        }),
-                        filter(res => !!res)
-                    )
-            )
+            switchMap((promotion) => this.promotionService.usePromotionCode(promotion)),
+            catchError((err) => {
+                this.formPromotion.setErrors({ error: err.error.message });
+                this.promotion = null;
+                return of(null);
+            }),
         ).subscribe(promotion => this.promotion = promotion);
 
 

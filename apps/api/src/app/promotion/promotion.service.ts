@@ -33,10 +33,10 @@ export class PromotionService {
         return this.promotionRepository.find(options);
     }
 
-    async findBy(key: string, value: string) {
+    async checkPromotionCode(label: string) {
         const options = {
             where: {
-                [key]: value,
+                label,
                 count: MoreThan(0)
             }
         };
@@ -48,7 +48,7 @@ export class PromotionService {
     }
 
     async usePromotionCode(label: string, promotion: PromotionDto): Promise<PromotionDto> {
-        const promotionExisting = await this.findBy('label', label);
+        const promotionExisting = await this.checkPromotionCode(label);
         if (promotionExisting) {
             promotion.count--;
             await this.promotionRepository.update(promotion.id, promotion);

@@ -20,8 +20,8 @@ export class PromotionController {
     }
 
     @Get(':label')
-    findOne(@Param('label') label: string) {
-        return this.promotionService.findBy('label', label);
+    checkPromotionCode(@Param('label') label: string) {
+        return this.promotionService.checkPromotionCode(label);
     }
 
     @Put('use-promotion/:label')

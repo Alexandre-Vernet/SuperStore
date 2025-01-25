@@ -5,7 +5,7 @@ import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { PromotionDto } from '@superstore/interfaces';
 import { AuthService } from '../auth/auth.service';
-import { ErrorService } from "../error/error.service";
+import { ErrorService } from '../error/error.service';
 
 @Injectable({
     providedIn: 'root'
