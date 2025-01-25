@@ -24,6 +24,7 @@ services:
       - POSTGRES_USERNAME=
       - POSTGRES_PASSWORD=
       - POSTGRES_DATABASE=
+      - STRIPE_PRIVATE_KEY=
     networks:
       - superstore-network
     ports:

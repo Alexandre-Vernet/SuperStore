@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { OrderDto, OrderState } from '@superstore/interfaces';
 import { AddressService } from '../address/address.service';
+import Stripe from 'stripe';
 
 @Injectable()
 export class OrderService {
+
+    stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
+
     constructor(
         @InjectRepository(OrderEntity)
         private readonly orderRepository: Repository<OrderEntity>,
@@ -14,9 +18,37 @@ export class OrderService {
     ) {
     }
 
+    async createPaymentIntent(amount: number, confirmPayment: boolean) {
+        const paymentIntent = await this.stripe.paymentIntents.create({
+            amount: amount * 100,
+            currency: 'eur',
+            // eslint-disable-next-line camelcase
+            payment_method: 'pm_card_visa',
+            // eslint-disable-next-line camelcase
+            automatic_payment_methods: {
+                enabled: true,
+                // eslint-disable-next-line camelcase
+                allow_redirects: 'never'
+            },
+            confirm: confirmPayment
+        });
+
+        return { paymentIntent };
+    }
+
     async create(order: OrderDto) {
-        order.address = await this.addressService.create(order.address, false);
-        return await this.orderRepository.save(order);
+        const amount = order.products.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
+        const { paymentIntent } = await this.createPaymentIntent(amount, true);
+
+        if (paymentIntent.status !== 'succeeded') {
+            throw new HttpException({
+                message: 'Payment failed'
+            }, HttpStatus.CONFLICT);
+        } else {
+            order.address = await this.addressService.create(order.address, false);
+            return await this.orderRepository.save(order);
+        }
     }
 
     findAll(): Promise<OrderEntity[]> {

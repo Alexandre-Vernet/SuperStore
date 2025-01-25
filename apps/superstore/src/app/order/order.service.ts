@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrderDto, OrderState } from '@superstore/interfaces';
-import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from '../cart/cart.service';
@@ -31,26 +31,32 @@ export class OrderService {
         }
     }
 
+    createPaymentIntent(amount: number) {
+        return this.http.post<{
+            paymentIntent: { client_secret: string }
+        }>(`${ this.orderUri }/create-payment-intent`, { amount })
+            .pipe(
+                map(res => ({
+                    paymentIntent: {
+                        clientSecret: res.paymentIntent.client_secret
+                    }
+                }))
+            );
+    }
 
-    create(order: OrderDto): Observable<void> {
+    create(order: OrderDto): Observable<boolean> {
         return this.http.post<OrderDto>(this.orderUri, order)
             .pipe(
-                switchMap((createdOrder) => {
-                    return this.pdfService.downloadInvoice(createdOrder, false)
+                switchMap((createdOrder) =>
+                    this.pdfService.downloadInvoice(createdOrder, false)
                         .pipe(
-                            switchMap((pdfDataUri) => {
-                                return this.sendEmailConfirmationOrder(createdOrder, pdfDataUri);
-                            })
-                        );
-                }),
+                            switchMap((pdfDataUri) => this.sendEmailConfirmationOrder(createdOrder, pdfDataUri))
+                        )),
                 tap(() => {
                     this.cartService.clearCart();
                     this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
                 }),
-                catchError((err) => {
-                    this.notificationsService.showErrorNotification('Error', err.error.message);
-                    return of(null);
-                })
+                map(() => true)
             );
     }
 
@@ -66,9 +72,7 @@ export class OrderService {
     findAll(): Observable<OrderDto[]> {
         return this.http.get<OrderDto[]>(this.orderUri)
             .pipe(
-                tap((orders) => {
-                    this.ordersSubject.next(orders);
-                })
+                tap((orders) => this.ordersSubject.next(orders))
             );
     }
 
