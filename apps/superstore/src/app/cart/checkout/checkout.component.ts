@@ -69,9 +69,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
-        const cartAmount = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-        this.orderService.createPaymentIntent(cartAmount)
+        this.orderService.createPaymentIntent(this.totalPrice())
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
