@@ -64,6 +64,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     stripeError = new FormControl('');
     isLoading = false;
 
+    price = {
+        taxesPrice: 0,
+        shippingPrice: 0,
+        subTotalPrice: 0,
+        totalPrice: 0
+    };
+
     promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
     updateQuantity$ = new BehaviorSubject<void>(null);
@@ -84,7 +91,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         this.updateQuantity$.pipe(
             takeUntil(this.unsubscribe$),
-            switchMap(() => this.orderService.createPaymentIntent(this.totalPrice())),
+            tap(() => this.setPrice()),
+            switchMap(() => this.orderService.createPaymentIntent(this.price.totalPrice)),
             catchError(() => {
                 this.stripeError.setErrors({ error: 'An error has occurred in loading payment module' });
                 return of(null);
@@ -160,6 +168,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     phone
                 };
 
+                const { taxesPrice, shippingPrice, subTotalPrice, totalPrice } = this.price;
+
                 const order: OrderDto = {
                     user: this.authService.user,
                     address: newAddress,
@@ -171,10 +181,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     promotion: this.promotion,
                     state: OrderState.PENDING,
                     deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
-                    subTotalPrice: this.subTotalPrice(),
-                    shippingPrice: this.shippingPrice(),
-                    taxesPrice: this.taxes(),
-                    totalPrice: this.totalPrice(),
+                    subTotalPrice,
+                    shippingPrice,
+                    taxesPrice,
+                    totalPrice,
                     createdAt: new Date()
                 };
 
@@ -224,6 +234,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.formAddress.patchValue({
             deliveryMethod: deliveryMethod.name
         });
+        this.updateQuantity$.next();
     }
 
     updateQuantity(item: ProductDto, event: Event) {
@@ -234,28 +245,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
+        this.updateQuantity$.next();
     }
 
-    subTotalPrice(): number {
-        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    }
+    setPrice() {
+        const cartTotal = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    shippingPrice() {
-        if (this.subTotalPrice() >= 100) {
-            return 0;
-        }
-        return this.selectedDeliveryMethod.price;
-    }
+        const taxesPrice = cartTotal * 0.25;
+        const subTotalPrice = cartTotal;
+        const totalPriceBeforeShipping = taxesPrice + subTotalPrice;
+        const shippingPrice = totalPriceBeforeShipping >= 100 && this.selectedDeliveryMethod.name === 'STANDARD' ? 0 : this.selectedDeliveryMethod.price;
+        const totalPrice = this.promotion ? taxesPrice + shippingPrice + subTotalPrice - this.promotion.amount : taxesPrice + shippingPrice + subTotalPrice;
 
-    taxes(): number {
-        return this.subTotalPrice() * 0.25;
-    }
-
-    totalPrice(): number {
-        if (this.promotion) {
-            return this.shippingPrice() + this.taxes() + this.subTotalPrice() - this.promotion.amount;
-        }
-        return this.shippingPrice() + this.taxes() + this.subTotalPrice();
+        this.price = { taxesPrice, shippingPrice, subTotalPrice, totalPrice };
     }
 
     applyPromotionCode() {
