@@ -6,7 +6,18 @@ import { AuthService } from '../../auth/auth.service';
 import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { PromotionService } from '../../promotion/promotion.service';
-import { catchError, distinctUntilChanged, filter, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+    BehaviorSubject,
+    catchError,
+    distinctUntilChanged,
+    filter,
+    map,
+    of,
+    Subject,
+    switchMap,
+    takeUntil,
+    tap
+} from 'rxjs';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 
@@ -55,6 +66,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
+    updateQuantity$ = new BehaviorSubject<void>(null);
     unsubscribe$ = new Subject<void>;
 
 
@@ -70,8 +82,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.cart = this.cartService.cart;
 
-        this.orderService.createPaymentIntent(this.totalPrice())
-            .pipe(takeUntil(this.unsubscribe$))
+        this.updateQuantity$.pipe(
+            takeUntil(this.unsubscribe$),
+            switchMap(() => this.orderService.createPaymentIntent(this.totalPrice()))
+        )
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
                 this.stripeElement = this.stripe.elements({ clientSecret: paymentIntent.clientSecret });
@@ -210,6 +224,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
+        this.updateQuantity$.next();
     }
 
     removeFromCart(product: ProductDto) {
