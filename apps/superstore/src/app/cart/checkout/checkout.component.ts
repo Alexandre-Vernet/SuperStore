@@ -40,7 +40,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         city: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
-        deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required]),
+        deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required])
     });
 
     formPromotion = new FormGroup({
@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 this.formPromotion.setErrors({ error: err.error.message });
                 this.promotion = null;
                 return of(null);
-            }),
+            })
         ).subscribe(promotion => this.promotion = promotion);
 
 
@@ -101,11 +101,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 redirect: 'if_required'
             })),
             map(({ error }) => {
-                if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
-                    this.stripeError.setErrors({ error: error.message });
-                    return false;
-                } else if (error) {
-                    this.stripeError.setErrors({ error: 'An unexpected error occurred.' });
+                if (error) {
+                    const isKnownError = ['card_error', 'validation_error'].includes(error.type);
+                    if (!isKnownError) {
+                        this.stripeError.setErrors({ error: 'An unexpected error occurred.' });
+                    }
                     return false;
                 }
                 return true;
@@ -127,7 +127,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     country,
                     city,
                     zipCode,
-                    phone,
+                    phone
                 } = this.formAddress.value;
 
                 const newAddress: AddressDto = {
@@ -185,7 +185,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if (!address) {
             this.formAddress.reset();
             this.formAddress.patchValue({
-                deliveryMethod: this.deliveryMethods[0].name,
+                deliveryMethod: this.deliveryMethods[0].name
             });
             return;
         }
