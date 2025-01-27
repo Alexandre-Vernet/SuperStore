@@ -84,7 +84,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         this.updateQuantity$.pipe(
             takeUntil(this.unsubscribe$),
-            switchMap(() => this.orderService.createPaymentIntent(this.totalPrice()))
+            switchMap(() => this.orderService.createPaymentIntent(this.totalPrice())),
+            catchError(() => {
+                this.stripeError.setErrors({ error: 'An error has occurred in loading payment module' });
+                return of(null);
+            }),
+            filter(res => !!res && !!res.paymentIntent && !!res.paymentIntent.clientSecret)
         )
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
