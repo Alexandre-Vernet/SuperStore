@@ -9,8 +9,6 @@ import { CartModule } from './cart/cart.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LoaderInterceptor } from './shared/loader/loader.interceptor';
 
 @NgModule({
     declarations: [AppComponent],
@@ -26,13 +24,6 @@ import { LoaderInterceptor } from './shared/loader/loader.interceptor';
         CartModule,
         AuthModule,
         UserModule
-    ],
-    providers: [
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: LoaderInterceptor,
-            multi: true
-        }
     ],
     bootstrap: [AppComponent]
 })
