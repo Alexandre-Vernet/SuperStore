@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { AddressService } from '../address.service';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-list-addresses',
@@ -13,6 +13,11 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     @Output() selectedAddress$ = new BehaviorSubject<AddressDto>(null);
     @Output() cleanForm$ = new BehaviorSubject<void>(null);
 
+    pageSize = 2;
+    currentPage = 1;
+    totalPage = 0;
+    responsiveMode: boolean;
+
     unsubscribe$ = new Subject<void>();
 
     constructor(
@@ -22,17 +27,20 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addressService.addresses$
-            .pipe(
-                tap(addresses => (this.addresses = addresses)),
-                tap(addresses => this.emitSelectAddress(addresses[0])),
-            )
-            .subscribe();
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((addresses) => {
+                this.addresses = addresses;
+                this.emitSelectAddress(addresses[0]);
+                this.totalPage = Math.ceil(this.addresses.length / this.pageSize);
+            });
 
+        window.addEventListener('resize', this.onResize.bind(this));
     }
 
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+        window.removeEventListener('resize', this.onResize.bind(this));
     }
 
     emitSelectAddress(address: AddressDto | null) {
@@ -42,5 +50,21 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     removeAddress(address: AddressDto) {
         this.addressService.deleteAddress(address)
             .subscribe(() => this.cleanForm$.next());
+    }
+
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPage) {
+            this.currentPage++;
+        }
+    }
+
+    onResize(event) {
+        this.responsiveMode = event.target.innerWidth < 640;
     }
 }
