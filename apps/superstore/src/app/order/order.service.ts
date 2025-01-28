@@ -32,9 +32,7 @@ export class OrderService {
     }
 
     createPaymentIntent(amount: number) {
-        return this.http.post<{
-            paymentIntent: { client_secret: string }
-        }>(`${ this.orderUri }/create-payment-intent`, { amount })
+        return this.http.post<{ paymentIntent: { client_secret: string } }>(`${ this.orderUri }/create-payment-intent`, { amount })
             .pipe(
                 map(res => ({
                     paymentIntent: {

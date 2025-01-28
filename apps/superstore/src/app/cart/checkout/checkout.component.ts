@@ -1,12 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AddressDto, DeliveryMethod, OrderDto, OrderState, ProductDto, PromotionDto } from '@superstore/interfaces';
+import {
+    AddressDto,
+    DeliveryMethod,
+    deliveryMethods,
+    OrderDto,
+    OrderState,
+    ProductDto,
+    PromotionDto
+} from '@superstore/interfaces';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { OrderService } from '../../order/order.service';
 import { Router } from '@angular/router';
 import { PromotionService } from '../../promotion/promotion.service';
-import { catchError, distinctUntilChanged, filter, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+    BehaviorSubject,
+    catchError,
+    distinctUntilChanged,
+    filter,
+    map,
+    of,
+    Subject,
+    switchMap,
+    takeUntil,
+    tap
+} from 'rxjs';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 
@@ -18,18 +37,8 @@ import { environment } from '../../../environments/environment';
 export class CheckoutComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
-    deliveryMethods: DeliveryMethod[] = [
-        {
-            name: 'STANDARD',
-            expectedDelivery: '3-5 days',
-            price: 5
-        },
-        {
-            name: 'EXPRESS',
-            expectedDelivery: '1-2 days',
-            price: 16
-        }
-    ];
+
+    deliveryMethods: DeliveryMethod[] = deliveryMethods;
     selectedDeliveryMethod: DeliveryMethod = this.deliveryMethods[0];
 
     formAddress = new FormGroup({
@@ -40,7 +49,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         city: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [Validators.required]),
         phone: new FormControl('', [Validators.required]),
-        deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required]),
+        deliveryMethod: new FormControl(this.selectedDeliveryMethod.name, [Validators.required])
     });
 
     formPromotion = new FormGroup({
@@ -53,8 +62,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     stripeError = new FormControl('');
     isLoading = false;
 
+    price = {
+        taxesPrice: 0,
+        shippingPrice: 0,
+        subTotalPrice: 0,
+        totalPrice: 0
+    };
+
     promotionCode$ = new Subject<string>();
     buttonCheckout$ = new Subject<void>;
+    updateQuantity$ = new BehaviorSubject<void>(null);
     unsubscribe$ = new Subject<void>;
 
 
@@ -69,10 +86,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
-        const cartAmount = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-        this.orderService.createPaymentIntent(cartAmount)
-            .pipe(takeUntil(this.unsubscribe$))
+        this.updateQuantity$.pipe(
+            takeUntil(this.unsubscribe$),
+            map(() => this.price = this.cartService.setPrice(this.promotion, this.selectedDeliveryMethod)),
+            switchMap(() => this.orderService.createPaymentIntent(this.price.totalPrice)),
+            catchError(() => {
+                this.stripeError.setErrors({ error: 'An error has occurred in loading payment module' });
+                return of(null);
+            }),
+            filter(res => !!res?.paymentIntent?.clientSecret)
+        )
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
                 this.stripeElement = this.stripe.elements({ clientSecret: paymentIntent.clientSecret });
@@ -90,7 +114,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 this.formPromotion.setErrors({ error: err.error.message });
                 this.promotion = null;
                 return of(null);
-            }),
+            })
         ).subscribe(promotion => this.promotion = promotion);
 
 
@@ -102,11 +126,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 redirect: 'if_required'
             })),
             map(({ error }) => {
-                if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
-                    this.stripeError.setErrors({ error: error.message });
-                    return false;
-                } else if (error) {
-                    this.stripeError.setErrors({ error: 'An unexpected error occurred.' });
+                if (error) {
+                    const isKnownError = ['card_error', 'validation_error'].includes(error.type);
+                    if (!isKnownError) {
+                        this.stripeError.setErrors({ error: 'An unexpected error occurred.' });
+                    }
                     return false;
                 }
                 return true;
@@ -128,7 +152,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     country,
                     city,
                     zipCode,
-                    phone,
+                    phone
                 } = this.formAddress.value;
 
                 const newAddress: AddressDto = {
@@ -142,6 +166,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     phone
                 };
 
+                const { taxesPrice, shippingPrice, subTotalPrice, totalPrice } = this.price;
+
                 const order: OrderDto = {
                     user: this.authService.user,
                     address: newAddress,
@@ -153,10 +179,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                     promotion: this.promotion,
                     state: OrderState.PENDING,
                     deliveryMethod: this.selectedDeliveryMethod.name.toUpperCase(),
-                    subTotalPrice: this.subTotalPrice(),
-                    shippingPrice: this.shippingPrice(),
-                    taxesPrice: this.taxes(),
-                    totalPrice: this.totalPrice(),
+                    subTotalPrice,
+                    shippingPrice,
+                    taxesPrice,
+                    totalPrice,
                     createdAt: new Date()
                 };
 
@@ -182,11 +208,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+    getPricePerItem(item: ProductDto): number {
+        return item.price * item.quantity;
+    }
+
     selectAddress(address: AddressDto) {
         if (!address) {
             this.formAddress.reset();
             this.formAddress.patchValue({
-                deliveryMethod: this.deliveryMethods[0].name,
+                deliveryMethod: this.deliveryMethods[0].name
             });
             return;
         }
@@ -206,37 +236,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.formAddress.patchValue({
             deliveryMethod: deliveryMethod.name
         });
+        this.updateQuantity$.next();
     }
 
     updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
+        this.updateQuantity$.next();
     }
 
     removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
-    }
-
-    subTotalPrice(): number {
-        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    }
-
-    shippingPrice() {
-        if (this.subTotalPrice() >= 100) {
-            return 0;
-        }
-        return this.selectedDeliveryMethod.price;
-    }
-
-    taxes(): number {
-        return this.subTotalPrice() * 0.25;
-    }
-
-    totalPrice(): number {
-        if (this.promotion) {
-            return this.shippingPrice() + this.taxes() + this.subTotalPrice() - this.promotion.amount;
-        }
-        return this.shippingPrice() + this.taxes() + this.subTotalPrice();
+        this.updateQuantity$.next();
     }
 
     applyPromotionCode() {

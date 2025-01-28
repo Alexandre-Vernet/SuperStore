@@ -19,8 +19,10 @@ export class OrderService {
     }
 
     async createPaymentIntent(amount: number, confirmPayment: boolean) {
+        const amountInCents = Math.round(amount * 100);
+
         const paymentIntent = await this.stripe.paymentIntents.create({
-            amount: amount * 100,
+            amount: amountInCents,
             currency: 'eur',
             // eslint-disable-next-line camelcase
             payment_method: 'pm_card_visa',

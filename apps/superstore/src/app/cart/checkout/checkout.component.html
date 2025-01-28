@@ -158,7 +158,7 @@
                                                         {{ product?.size }}
                                                     </p>
                                                     <p class="mt-1 text-sm font-medium text-gray-900">
-                                                        {{ product?.price | convertCurrency }}
+                                                        {{ getPricePerItem(product) | convertCurrency }}
                                                     </p>
                                                 </div>
 
@@ -199,21 +199,21 @@
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm">Subtotal</dt>
                                     <dd
-                                        class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}
+                                        class="text-sm font-medium text-gray-900">{{ price.subTotalPrice | convertCurrency }}
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm">Shipping</dt>
                                     <dd class="text-sm font-medium text-gray-900">
-                                        <span [ngClass]="{'font-medium text-green-600': this.subTotalPrice() >= 100}">
-                                            {{ shippingPrice() | convertCurrency }}
+                                        <span [ngClass]="{'font-medium text-green-600': price.subTotalPrice >= 100 && selectedDeliveryMethod.name === 'STANDARD'}">
+                                            {{ price.shippingPrice | convertCurrency }}
                                         </span>
                                     </dd>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm">Taxes</dt>
                                     <dd class="text-sm font-medium text-gray-900">
-                                        {{ taxes() | convertCurrency }}
+                                        {{ price.taxesPrice | convertCurrency }}
                                     </dd>
                                 </div>
                                 <ng-container *ngIf="promotion">
@@ -231,7 +231,7 @@
                                 <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                                     <dt class="text-base font-medium">Total</dt>
                                     <dd class="text-base font-medium text-gray-900">
-                                        {{ totalPrice() | convertCurrency }}
+                                        {{ price.totalPrice | convertCurrency }}
                                     </dd>
                                 </div>
                             </dl>

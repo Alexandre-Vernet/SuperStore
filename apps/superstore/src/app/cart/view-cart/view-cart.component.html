@@ -99,23 +99,25 @@
                     <dl class="mt-6 space-y-4">
                         <div class="flex items-center justify-between">
                             <dt class="text-sm text-gray-600">Subtotal</dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ subTotalPrice() | convertCurrency }}</dd>
+                            <dd class="text-sm font-medium text-gray-900">{{ price.subTotalPrice | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="flex items-center text-sm text-gray-600">
                                 <span>Shipping estimate</span>
                             </dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ shippingPrice() | convertCurrency }}</dd>
+                            <dd
+                                [ngClass]="{'text-green-600': price.subTotalPrice >= 100}"
+                                class="text-sm font-medium text-gray-900">{{ price.shippingPrice | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="flex text-sm text-gray-600">
                                 <span>Tax estimate</span>
                             </dt>
-                            <dd class="text-sm font-medium text-gray-900">{{ taxes() | convertCurrency }}</dd>
+                            <dd class="text-sm font-medium text-gray-900">{{ price.taxesPrice | convertCurrency }}</dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="text-base font-medium text-gray-900">Total</dt>
-                            <dd class="text-base font-medium text-gray-900">{{ totalPrice() | convertCurrency }}</dd>
+                            <dd class="text-base font-medium text-gray-900">{{ price.totalPrice | convertCurrency }}</dd>
                         </div>
                     </dl>
 

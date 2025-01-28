@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProductDto } from '@superstore/interfaces';
+import { DeliveryMethod, ProductDto, PromotionDto } from '@superstore/interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -47,5 +47,17 @@ export class CartService {
         const product = this.cart.find(cartProduct => cartProduct.id === item.id && cartProduct.size === item.size);
         product.quantity = quantityUpdated;
         this.updateCartLocalStorage();
+    }
+
+    setPrice(promotion: PromotionDto, selectedDeliveryMethod: DeliveryMethod) {
+        const cartTotal = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+        const taxesPrice = cartTotal * 0.25;
+        const subTotalPrice = cartTotal;
+        const totalPriceBeforeShipping = taxesPrice + subTotalPrice;
+        const shippingPrice = totalPriceBeforeShipping >= 100 && selectedDeliveryMethod?.name === 'STANDARD' ? 0 : selectedDeliveryMethod?.price;
+        const totalPrice = promotion ? taxesPrice + shippingPrice + subTotalPrice - promotion?.amount : taxesPrice + shippingPrice + subTotalPrice;
+
+        return { taxesPrice, shippingPrice, subTotalPrice, totalPrice };
     }
 }

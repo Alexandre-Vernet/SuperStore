@@ -1,15 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
-import { ProductDto } from '@superstore/interfaces';
+import { deliveryMethods, ProductDto } from '@superstore/interfaces';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-view-cart',
     templateUrl: './view-cart.component.html',
     styleUrls: ['./view-cart.component.scss'],
 })
-export class ViewCartComponent implements OnInit {
+export class ViewCartComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
+
+    price = {
+        taxesPrice: 0,
+        shippingPrice: 0,
+        subTotalPrice: 0,
+        totalPrice: 0
+    };
+
+    updateQuantity$ = new BehaviorSubject<void>(null);
+    unsubscribe$ = new Subject<void>;
 
     constructor(
         private readonly cartService: CartService,
@@ -18,6 +29,14 @@ export class ViewCartComponent implements OnInit {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+
+        this.updateQuantity$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.price = this.cartService.setPrice(null, deliveryMethods[0]));
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     getPricePerItem(item: ProductDto): number {
@@ -26,30 +45,12 @@ export class ViewCartComponent implements OnInit {
 
     removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
-    }
-
-    subTotalPrice(): number {
-        return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    }
-
-    shippingPrice(): number {
-        if (this.subTotalPrice()) {
-            return 20;
-        } else {
-            return 0;
-        }
-    }
-
-    taxes(): number {
-        return this.subTotalPrice() * 0.25;
-    }
-
-    totalPrice(): number {
-        return this.shippingPrice() + this.taxes() + this.subTotalPrice();
+        this.updateQuantity$.next();
     }
 
     updateQuantity(item: ProductDto, event: Event) {
         const quantityUpdated = Number((event.target as HTMLInputElement).value);
         this.cartService.updateQuantity(item, quantityUpdated);
+        this.updateQuantity$.next();
     }
 }

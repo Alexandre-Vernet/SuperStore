@@ -7,7 +7,6 @@ import { FooterComponent } from './footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductPipe } from '../product/product.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
-import { LoaderComponent } from './loader/loader.component';
 import { SearchBarComponent } from './navbar/search-bar/search-bar.component';
 import { ChangeCurrencyComponent } from './currency/change-currency/change-currency.component';
 import { CustomCurrencyPipe } from './currency/currency.pipe';
@@ -21,7 +20,6 @@ import { PdfService } from "./pdf/pdf.service";
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
-        LoaderComponent,
         SearchBarComponent,
         ChangeCurrencyComponent,
         ProductPipe,
@@ -35,7 +33,6 @@ import { PdfService } from "./pdf/pdf.service";
         ResponsiveNavbarComponent,
         FooterComponent,
         NotificationsComponent,
-        LoaderComponent,
         CustomCurrencyPipe,
     ],
     providers: [PdfService, DatePipe, CustomCurrencyPipe]
