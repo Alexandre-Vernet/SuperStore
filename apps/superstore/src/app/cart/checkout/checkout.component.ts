@@ -1,5 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AddressDto, DeliveryMethod, OrderDto, OrderState, ProductDto, PromotionDto } from '@superstore/interfaces';
+import {
+    AddressDto,
+    DeliveryMethod,
+    deliveryMethods,
+    OrderDto,
+    OrderState,
+    ProductDto,
+    PromotionDto
+} from '@superstore/interfaces';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
@@ -29,18 +37,8 @@ import { environment } from '../../../environments/environment';
 export class CheckoutComponent implements OnInit, OnDestroy {
 
     cart: ProductDto[] = [];
-    deliveryMethods: DeliveryMethod[] = [
-        {
-            name: 'STANDARD',
-            expectedDelivery: '3-5 days',
-            price: 5
-        },
-        {
-            name: 'EXPRESS',
-            expectedDelivery: '1-2 days',
-            price: 16
-        }
-    ];
+
+    deliveryMethods: DeliveryMethod[] = deliveryMethods;
     selectedDeliveryMethod: DeliveryMethod = this.deliveryMethods[0];
 
     formAddress = new FormGroup({
@@ -91,7 +89,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         this.updateQuantity$.pipe(
             takeUntil(this.unsubscribe$),
-            tap(() => this.setPrice()),
+            map(() => this.price = this.cartService.setPrice(this.promotion, this.selectedDeliveryMethod)),
             switchMap(() => this.orderService.createPaymentIntent(this.price.totalPrice)),
             catchError(() => {
                 this.stripeError.setErrors({ error: 'An error has occurred in loading payment module' });
@@ -210,6 +208,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+    getPricePerItem(item: ProductDto): number {
+        return item.price * item.quantity;
+    }
+
     selectAddress(address: AddressDto) {
         if (!address) {
             this.formAddress.reset();
@@ -246,18 +248,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     removeFromCart(product: ProductDto) {
         this.cart = this.cartService.removeFromCart(product);
         this.updateQuantity$.next();
-    }
-
-    setPrice() {
-        const cartTotal = this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-        const taxesPrice = cartTotal * 0.25;
-        const subTotalPrice = cartTotal;
-        const totalPriceBeforeShipping = taxesPrice + subTotalPrice;
-        const shippingPrice = totalPriceBeforeShipping >= 100 && this.selectedDeliveryMethod.name === 'STANDARD' ? 0 : this.selectedDeliveryMethod.price;
-        const totalPrice = this.promotion ? taxesPrice + shippingPrice + subTotalPrice - this.promotion.amount : taxesPrice + shippingPrice + subTotalPrice;
-
-        this.price = { taxesPrice, shippingPrice, subTotalPrice, totalPrice };
     }
 
     applyPromotionCode() {

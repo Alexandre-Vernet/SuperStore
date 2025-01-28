@@ -158,7 +158,7 @@
                                                         {{ product?.size }}
                                                     </p>
                                                     <p class="mt-1 text-sm font-medium text-gray-900">
-                                                        {{ product?.price | convertCurrency }}
+                                                        {{ getPricePerItem(product) | convertCurrency }}
                                                     </p>
                                                 </div>
 
