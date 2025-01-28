@@ -95,7 +95,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 this.stripeError.setErrors({ error: 'An error has occurred in loading payment module' });
                 return of(null);
             }),
-            filter(res => !!res && !!res.paymentIntent && !!res.paymentIntent.clientSecret)
+            filter(res => !!res?.paymentIntent?.clientSecret)
         )
             .subscribe(async ({ paymentIntent }) => {
                 this.stripe = await loadStripe(environment.STRIPE_PUBLIC_KEY, {});
