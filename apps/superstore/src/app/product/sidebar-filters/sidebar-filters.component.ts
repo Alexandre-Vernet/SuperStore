@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductDto } from '@superstore/interfaces';
 
 @Component({
     selector: 'superstore-sidebar-filters',
@@ -9,93 +11,109 @@ import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
     styleUrls: ['./sidebar-filters.component.scss']
 })
 export class SidebarFiltersComponent implements OnInit, OnDestroy {
-    protected readonly environment = environment;
+    protected readonly appName = environment.appName;
 
-    filterPrice = [
-        {
-            label: 'under-25',
-            name: 'Under 25 €',
-            checked: false
-        },
-        {
-            label: '25-to-50',
-            name: '25 € to 50 €',
-            checked: false
-        },
-        {
-            label: '50-to-100',
-            name: '50 € to 100 €',
-            checked: false
-        },
-        {
-            label: '100-to-200',
-            name: '100 € to 200 €',
-            checked: false
-        },
-        {
-            label: '200-and-above',
-            name: '200 € and above',
-            checked: false
-        }
-    ];
     sortBy = [
         {
-            label: 'Price: Low to High',
-            name: 'price',
+            value: '-price',
+            displayName: 'Price: Low to High',
             checked: false
         },
         {
-            label: 'Price: High to Low',
-            name: '-price',
+            value: '+price',
+            displayName: 'Price: High to Low',
             checked: false
         },
         {
-            label: 'Name: A to Z',
-            name: 'name',
+            value: '+name',
+            displayName: 'Name: A to Z',
             checked: false
         },
         {
-            label: 'Name: Z to A',
-            name: '-name',
+            value: '-name',
+            displayName: 'Name: Z to A',
             checked: false
         },
         {
-            label: 'Best rating',
-            name: '-rating',
+            value: '+rating',
+            displayName: 'Best rating',
             checked: false
         }
     ];
-    sortByOpen = false;
+    filterPrice = [
+        {
+            value: 'under-25',
+            displayName: 'Under 25 €',
+            checked: false
+        },
+        {
+            value: '25-to-50',
+            displayName: '25 € to 50 €',
+            checked: false
+        },
+        {
+            value: '50-to-100',
+            displayName: '50 € to 100 €',
+            checked: false
+        },
+        {
+            value: '100-to-200',
+            displayName: '100 € to 200 €',
+            checked: false
+        },
+        {
+            value: '200-and-above',
+            displayName: '200 € and above',
+            checked: false
+        }
+    ];
+    categories: { label: string, checked: boolean }[] = [];
+
     sortCurrent = '';
     filterCurrent = '';
     responsiveFilterOpen = false;
 
-    categories$ = new BehaviorSubject<{ label: string, checked: boolean }[]>([]);
-    categoryFilter$: BehaviorSubject<string> = new BehaviorSubject('');
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly activatedRoute: ActivatedRoute,
+        private readonly router: Router
     ) {
     }
 
     ngOnInit() {
         const categorySet = new Set<string>;
-        this.productService.products$
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(products =>
-                products.map(product => {
-                    if (!categorySet.has(product.category)) {
-                        categorySet.add(product.category);
-                        this.categories$.next([
-                            ...this.categories$.getValue(),
-                            {
-                                label: product.category,
-                                checked: false
-                            }
-                        ]);
-                    }
-                }));
+
+        combineLatest([
+            this.productService.products$,
+            this.activatedRoute.queryParams
+        ])
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(([products, param]: [ProductDto[], { category: string }]) => {
+                    products.forEach(product => {
+                        if (!categorySet.has(product.category)) {
+                            categorySet.add(product.category);
+                            this.categories = [
+                                ...this.categories,
+                                {
+                                    label: product.category,
+                                    checked: false
+                                }
+                            ]
+                                .sort((a, b) => a.label.localeCompare(b.label));
+                        }
+                    });
+                    return param;
+                }),
+                map(param => param?.category?.toLowerCase())
+            )
+            .subscribe(category => {
+                this.categories.map(f => f.checked = f.label === category);
+                this.updateRouteQueryParams(category);
+                this.setFilter('category', category);
+            });
     }
 
     ngOnDestroy() {
@@ -103,107 +121,71 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    setCategory(category: string) {
-        this.categories$.subscribe(categories => categories.map(c => c.checked = c.label === category));
-    }
-
-    toggleSortBy() {
-        this.sortByOpen = !this.sortByOpen;
-    }
-
     toggleFilterResponsive() {
         this.responsiveFilterOpen = !this.responsiveFilterOpen;
     }
 
-    closeSubMenus() {
-        setTimeout(() => {
-            this.responsiveFilterOpen = false;
-            this.sortByOpen = false;
-        }, this.responsiveFilterOpen ? 300 : 0);
-    }
-
-    setSortBy(sortBy: string) {
-        this.closeSubMenus();
-
-        // Uncheck all other sort by
-        this.sortBy.map(f => {
-            f.checked = f.name === sortBy;
-        });
-
-        this.productService.sortProducts(sortBy)
-            .then(() => {
-                this.sortCurrent = this.sortBy.find(f => f.name === sortBy).label;
-            });
-    }
-
-    resetSortBy() {
-        this.closeSubMenus();
-        this.sortCurrent = '';
-
-        // Uncheck all checkboxes
-        this.sortBy.map(f => {
-            f.checked = false;
-        });
-
-        this.productService.resetFilters();
-    }
-
-    setCategoriesFilter(category: string, $event) {
-        this.categoryFilter$.next(category);
-        // If checkbox is unchecked, reset filter
-        if (!$event.target.checked) {
-            this.resetCategoriesFilter();
+    setFilter(type: 'sortBy' | 'priceRange' | 'category', $event: MouseEvent | string) {
+        if (!$event) {
             return;
         }
 
-        // Uncheck all other categories
-        this.categories$.getValue().map(f => {
-            f.checked = f.label === category;
-        });
+        this.closeResponsiveMenu();
+        const id = $event instanceof MouseEvent ? ($event.target as HTMLInputElement).id : $event;
 
-        this.closeSubMenus();
-    }
-
-    resetCategoriesFilter() {
-        this.closeSubMenus();
-
-        // Uncheck all checkboxes
-        this.categories$.pipe(
-            map(c => c.map(categories => categories.checked = false))
-        );
-
-        this.productService.resetFilters();
-    }
-
-    setPriceFilter(label: string, $event) {
-        // If checkbox is unchecked, reset filter
-        if (!$event.target.checked) {
-            this.resetPriceFilter();
+        if ($event instanceof MouseEvent && !(<HTMLInputElement>$event.target).checked) {
+            this.resetFilter(type);
             return;
         }
 
-        this.closeSubMenus();
+        const sortBy = this.sortBy.find(f => f.value === id)?.value;
+        const priceRange = this.filterPrice.find(f => f.value === id)?.value;
+        const category = this.categories.find(f => f.label === id)?.label;
 
-        // Uncheck all other price filters
-        this.filterPrice.map(f => {
-            f.checked = f.label === label;
-        });
-
-        this.productService.sortProductsByPrice(label)
-            .then(() => {
-                this.filterCurrent = this.filterPrice.find(f => f.label === label).name;
-            });
+        switch (type) {
+            case 'sortBy':
+                this.sortBy.map(f => f.checked = f.value === id);
+                this.productService.sortProducts(sortBy, priceRange, category);
+                break;
+            case 'priceRange':
+                this.filterPrice.map(f => f.checked = f.value === id);
+                this.productService.sortProducts(sortBy, priceRange, category);
+                break;
+            case 'category':
+            default:
+                this.updateRouteQueryParams(id);
+                this.categories.map(f => f.checked = f.label === id);
+                this.productService.sortProducts(sortBy, priceRange, id);
+                break;
+        }
     }
 
-    resetPriceFilter() {
-        this.closeSubMenus();
-        this.filterCurrent = '';
-
-        // Uncheck all checkboxes
-        this.filterPrice.map(f => {
-            f.checked = false;
-        });
-
+    resetFilter(type: 'sortBy' | 'priceRange' | 'category') {
         this.productService.resetFilters();
+        switch (type) {
+            case 'sortBy':
+                this.sortBy.map(f => f.checked = false);
+                break;
+            case 'priceRange':
+                this.filterPrice.map(f => f.checked = false);
+                break;
+            case 'category':
+            default:
+                this.updateRouteQueryParams(null);
+                this.categories.map(f => f.checked = false);
+                break;
+        }
+    }
+
+    updateRouteQueryParams(category: string) {
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: { category },
+            queryParamsHandling: 'merge'
+        });
+    }
+
+    closeResponsiveMenu() {
+        setTimeout(() => this.responsiveFilterOpen = false, this.responsiveFilterOpen ? 300 : 0);
     }
 }
