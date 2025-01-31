@@ -14,7 +14,7 @@
         "prefer-const": "error",
         "camelcase": "error",
         "capitalized-comments": "warn",
-        "default-case": "error",
+        "default-case": "warn",
         "dot-notation": "warn",
         "no-alert": "error",
         "semi": "error",

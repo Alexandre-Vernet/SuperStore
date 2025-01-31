@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
 import { environment } from '../../../environments/environment';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { map, Subject, takeUntil } from 'rxjs';
 import { ProductDto } from '@superstore/interfaces';
 
 @Component({
@@ -74,43 +73,31 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly productService: ProductService,
-        private readonly activatedRoute: ActivatedRoute,
-        private readonly router: Router
+        private readonly productService: ProductService
     ) {
     }
 
     ngOnInit() {
-        const categorySet = new Set<string>;
-
-        combineLatest([
-            this.productService.products$,
-            this.activatedRoute.queryParams
-        ])
+        this.productService.products$
             .pipe(
                 takeUntil(this.unsubscribe$),
-                map(([products, param]: [ProductDto[], { category: string }]) => {
+                map((products: ProductDto[]) => {
+                    const categorySet = new Set<string>;
                     products.forEach(product => {
                         if (!categorySet.has(product.category)) {
                             categorySet.add(product.category);
-                            this.categories = [
-                                ...this.categories,
-                                {
-                                    label: product.category,
-                                    checked: false
-                                }
-                            ]
-                                .sort((a, b) => a.label.localeCompare(b.label));
                         }
                     });
-                    return param;
-                }),
-                map(param => param?.category?.toLowerCase())
+                    return categorySet;
+                })
             )
-            .subscribe(category => {
-                this.categories.map(f => f.checked = f.label === category);
-                this.updateRouteQueryParams(category);
-                this.setFilter('category', category);
+            .subscribe(categories => {
+                this.categories = Array.from(categories)
+                    .map(c => ({
+                        label: c,
+                        checked: false
+                    }))
+                    .sort((a, b) => a.label.localeCompare(b.label));
             });
     }
 
@@ -150,8 +137,6 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
                 this.productService.sortProducts(sortBy, priceRange, category);
                 break;
             case 'category':
-            default:
-                this.updateRouteQueryParams(id);
                 this.categories.map(f => f.checked = f.label === id);
                 this.productService.sortProducts(sortBy, priceRange, id);
                 break;
@@ -168,19 +153,9 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
                 this.filterPrice.map(f => f.checked = false);
                 break;
             case 'category':
-            default:
-                this.updateRouteQueryParams(null);
                 this.categories.map(f => f.checked = false);
                 break;
         }
-    }
-
-    updateRouteQueryParams(category: string) {
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: { category },
-            queryParamsHandling: 'merge'
-        });
     }
 
     closeResponsiveMenu() {
