@@ -69,8 +69,6 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
     ];
     categories: { label: string, checked: boolean }[] = [];
 
-    sortCurrent = '';
-    filterCurrent = '';
     responsiveFilterOpen = false;
 
     unsubscribe$ = new Subject<void>();

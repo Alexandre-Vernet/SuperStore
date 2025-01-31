@@ -1,5 +1,4 @@
 <div class="bg-white">
-    <!--Responsive mode-->
     <div class="relative z-40 lg:hidden"
          [ngClass]="{'': responsiveFilterOpen, 'hidden': !responsiveFilterOpen}"
          role="dialog" aria-modal="true">
@@ -114,7 +113,7 @@
                                         class="flex w-full items-center justify-between p-2 text-gray-400 hover:text-gray-500"
                                         aria-controls="filter-section-2" aria-expanded="false">
                                         <span class="text-sm font-medium text-gray-900">
-                                            Category
+                                            Categories
                                         </span>
                                     <span class="ml-6 flex h-7 items-center">
                                           <svg class="rotate-0 h-5 w-5 transform" xmlns="http://www.w3.org/2000/svg"
@@ -135,6 +134,7 @@
                                         <input
                                             (click)="setFilter('category', $event)"
                                             type="checkbox"
+                                            [id]="category.label"
                                             [checked]="category.checked"
                                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                                         <label [for]="category" class="ml-3 text-sm text-gray-600">
@@ -160,29 +160,47 @@
             </p>
         </div>
 
+        <!--Responsive filter-->
         <div class="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
-                <h2 class="sr-only">Filters</h2>
+                <div class="flex items-center gap-2">
+                    <span (click)="toggleFilterResponsive()"
+                          class="text-sm font-medium text-gray-700 p-2 hover:cursor-pointer">Filters</span>
 
-                <button type="button"
-                        (click)="toggleFilterResponsive()"
-                        class="inline-flex items-center lg:hidden">
-                    <span class="text-sm font-medium text-gray-700">Filters</span>
-                    <span class="ml-2 flex flex-shrink-0 text-gray-400 gap-1">
+                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
+                        <ng-container *ngFor="let category of categories">
                             <span
-                                *ngIf="sortCurrent"
-                                (click)="resetFilter('sortBy')"
-                                class="border-2 border-gray-200 rounded-full p-1">
-                                {{ sortCurrent }}
-                                </span>
-                            <span
-                                *ngIf="filterCurrent"
-                                (click)="resetFilter('priceRange')"
-                                class="border-2 border-gray-200 rounded-full p-1">
-                            {{ filterCurrent }}
+                                [class.hidden]="!category.checked"
+                                (click)="resetFilter('category')"
+                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                                {{ category.label }}
                             </span>
-                        </span>
-                </button>
+                        </ng-container>
+                    </span>
+
+                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
+                        <ng-container *ngFor="let sort of sortBy">
+                            <span
+                                [class.hidden]="!sort.checked"
+                                (click)="resetFilter('sortBy')"
+                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                                {{ sort.displayName }}
+                            </span>
+                        </ng-container>
+                    </span>
+
+                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
+                        <ng-container *ngFor="let price of filterPrice">
+                            <span
+                                [class.hidden]="!price.checked"
+                                (click)="resetFilter('priceRange')"
+                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                                {{ price.displayName }}
+                            </span>
+                        </ng-container>
+                    </span>
+                </div>
+
 
                 <div class="hidden lg:block w-36">
                     <form class="space-y-10 divide-y divide-gray-200">
@@ -234,6 +252,7 @@
                             </fieldset>
                         </div>
 
+                        <!--Categories-->
                         <div class="pt-10">
                             <fieldset>
                                 <legend class="block text-sm font-medium text-gray-900">
