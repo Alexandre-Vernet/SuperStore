@@ -12,7 +12,8 @@ import { ChangeCurrencyComponent } from './currency/change-currency/change-curre
 import { CustomCurrencyPipe } from './currency/currency.pipe';
 import { UserMenuComponent } from './navbar/user-menu/user-menu.component';
 import { CartIconComponent } from './navbar/cart-icon/cart-icon.component';
-import { PdfService } from "./pdf/pdf.service";
+import { PdfService } from './pdf/pdf.service';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { PdfService } from "./pdf/pdf.service";
         CustomCurrencyPipe,
         UserMenuComponent,
         CartIconComponent,
+        PaginationComponent
     ],
     imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule],
     exports: [
@@ -34,6 +36,7 @@ import { PdfService } from "./pdf/pdf.service";
         FooterComponent,
         NotificationsComponent,
         CustomCurrencyPipe,
+        PaginationComponent
     ],
     providers: [PdfService, DatePipe, CustomCurrencyPipe]
 })
