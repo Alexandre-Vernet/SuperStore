@@ -11,15 +11,15 @@ import { AdminSearchBarComponent } from '../../search-bar/admin-search-bar/admin
 })
 export class ListProductsComponent implements OnInit, OnDestroy {
 
-    products: ProductDto[];
-    filteredProducts: ProductDto[];
+    products: ProductDto[] = [];
+    filteredProducts: ProductDto[] = [];
 
     editedProduct: ProductDto;
     showModalAddProduct = false;
 
     pagination = {
         currentPage: new BehaviorSubject<number>(1),
-        itemsPerPage: 12,
+        itemsPerPage: 25,
         totalPage: new BehaviorSubject<number>(0)
     };
 
@@ -49,10 +49,11 @@ export class ListProductsComponent implements OnInit, OnDestroy {
                         product.description.toLowerCase().includes(search.toLowerCase()) ||
                         product.category.toLowerCase().includes(search.toLowerCase())
                     );
-                } else {
+                }
+
+                if (this.filteredProducts.length <= 0 || !search) {
                     this.filteredProducts = [...this.products];
                 }
-                // Reset pagination to first page after filtering
                 this.pagination.currentPage.next(1);
             });
     }
