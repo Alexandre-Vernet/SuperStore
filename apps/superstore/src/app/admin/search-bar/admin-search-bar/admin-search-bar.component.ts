@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SearchBar } from "../search-bar";
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'superstore-admin-search-bar',
@@ -7,7 +7,10 @@ import { SearchBar } from "../search-bar";
     styleUrls: ['./admin-search-bar.component.scss'],
 })
 export class AdminSearchBarComponent {
+    static searchBar = new BehaviorSubject('');
+
     searchValue = '';
+
 
     search(event: Event) {
         const search = (event.target as HTMLInputElement).value;
@@ -16,6 +19,6 @@ export class AdminSearchBarComponent {
             this.searchValue = '';
             return;
         }
-        SearchBar.searchBar.next(search);
+        AdminSearchBarComponent.searchBar.next(search);
     }
 }
