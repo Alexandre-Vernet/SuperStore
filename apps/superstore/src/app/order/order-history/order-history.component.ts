@@ -1,33 +1,54 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { OrderService } from '../order.service';
 import { OrderDto, OrderState, ProductDto } from '@superstore/interfaces';
 import { CartService } from '../../cart/cart.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { ReviewService } from '../../review/review.service';
 import { PdfService } from '../../shared/pdf/pdf.service';
+import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
     selector: 'superstore-order-history',
     templateUrl: './order-history.component.html',
-    styleUrls: ['./order-history.component.scss'],
+    styleUrls: ['./order-history.component.scss']
 })
-export class OrderHistoryComponent implements OnInit {
+export class OrderHistoryComponent implements OnInit, OnDestroy {
     orders: OrderDto[];
+
     displayOrderOptions = false;
+
     productToReview: ProductDto;
+
+    pagination = {
+        currentPage: new BehaviorSubject<number>(1),
+        itemsPerPage: 3,
+        totalPage: new BehaviorSubject<number>(0)
+    };
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly orderService: OrderService,
         private readonly cartService: CartService,
         private readonly notificationsService: NotificationsService,
         readonly reviewService: ReviewService,
-        private readonly pdfService: PdfService,
+        private readonly pdfService: PdfService
     ) {
     }
 
     ngOnInit() {
         this.orderService.getUserOrders()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                tap((orders) => orders.sort((a, b) => a?.id - b?.id)),
+                tap((orders) => this.pagination.totalPage.next(Math.ceil(orders.length / this.pagination.itemsPerPage)))
+            )
             .subscribe((orders) => this.orders = orders);
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     toggleOrderOption() {
@@ -60,5 +81,9 @@ export class OrderHistoryComponent implements OnInit {
     addToCart(product: ProductDto) {
         this.cartService.addToCart(product);
         this.notificationsService.showSuccessNotification('Success', 'Product added to cart');
+    }
+
+    pageChange(page: number) {
+        this.pagination.currentPage.next(page);
     }
 }

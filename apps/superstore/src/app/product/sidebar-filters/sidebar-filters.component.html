@@ -3,7 +3,6 @@
          [ngClass]="{'': responsiveFilterOpen, 'hidden': !responsiveFilterOpen}"
          role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black bg-opacity-25"></div>
-
         <div class="fixed inset-0 z-40 flex">
             <div
                 class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl transition ease-in-out duration-300 transform">
@@ -160,10 +159,9 @@
             </p>
         </div>
 
-        <!--Responsive filter-->
         <div class="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 filter-container">
                     <span (click)="toggleFilterResponsive()"
                           class="text-sm font-medium text-gray-700 p-2 hover:cursor-pointer">Filters</span>
 

@@ -1,4 +1,4 @@
-<div class="mt-6 flex flex-col sm:flex-row">
+<div class="flex flex-col sm:flex-row">
     <div class="flex-grow flex flex-col">
         <label for="search" class="sr-only">Search</label>
         <div class="relative rounded-md shadow-sm">
@@ -7,14 +7,20 @@
                      xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
                           d="M9 2a7 7 0 100 14A7 7 0 009 2zM7 7a2 2 0 114 0 2 2 0 01-4 0z"
-                          clip-rule="evenodd"/>
+                          clip-rule="evenodd" />
                 </svg>
             </div>
             <input type="text" name="search" id="search"
                    [(ngModel)]="searchValue"
-                   (keydown)="search($event)"
+                   (ngModelChange)="search($event)"
+                   (keydown)="clearSearch($event)"
                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                    placeholder="Search">
+        </div>
+        <div *ngIf="noResultSearch">
+            <div class="p-2">
+                <p class="text-sm text-gray-500">No results found for "{{ searchValue }}"</p>
+            </div>
         </div>
     </div>
 </div>
