@@ -34,12 +34,15 @@
 
 ## Cart
 
-![image](https://github.com/user-attachments/assets/4ccbd86b-9e4f-4ed8-bac4-de1f3384192a)
+![cart](https://github.com/user-attachments/assets/bd91774b-09bb-4283-b176-df043fc21447)
+
 
 
 ## Checkout
 
-![image](https://github.com/user-attachments/assets/584313fb-6465-4405-b648-c6eecd445b66)
+![checkout](https://github.com/user-attachments/assets/62c8c00b-d006-4a26-bac2-63ca82eecbeb)
+
+
 
 ## Confirm order
 
