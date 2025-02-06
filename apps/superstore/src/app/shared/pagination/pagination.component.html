@@ -18,8 +18,8 @@ totalPages: totalPages | async,
 
             <!-- Pagination -->
             <ng-container>
-            <span *ngFor="let page of totalPagesArray; let i = index"
-                  (click)="getPage(i  + 1)"
+            <span *ngFor="let page of totalPagesArray"
+                  (click)="page !== '...' ? getPage(page) : null"
                   [ngClass]="{
                 'z-10 border-indigo-500 bg-indigo-50 text-indigo-600': page === vm.currentPage,
                 }"
