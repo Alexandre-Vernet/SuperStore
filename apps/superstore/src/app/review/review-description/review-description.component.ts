@@ -1,20 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReviewDto, UserDto } from '@superstore/interfaces';
 import { ReviewService } from '../review.service';
 import { AuthService } from '../../auth/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-review-description',
     templateUrl: './review-description.component.html',
     styleUrls: ['./review-description.component.scss']
 })
-export class ReviewDescriptionComponent implements OnInit {
+export class ReviewDescriptionComponent implements OnInit, OnDestroy {
     @Input() showTotalReviews: boolean;
     reviews: ReviewDto[] = [];
     currentUser: UserDto;
-    currentPage = 1;
-    totalPage = 1;
-    countItemPerPage = 10;
+
+    pagination = {
+        currentPage: 1,
+        totalPage: 1,
+        countItemPerPage: 10
+    };
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly reviewService: ReviewService,
@@ -25,12 +31,17 @@ export class ReviewDescriptionComponent implements OnInit {
 
     ngOnInit() {
         this.reviewService.reviews$
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe((reviews) => {
                 this.reviews = reviews;
-                this.totalPage = Math.ceil(this.reviews.length / 10);
+                this.pagination.totalPage = Math.ceil(this.reviews.length / 10);
             });
     }
 
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
 
     deleteReview(reviewId: number) {
         this.reviewService.deleteReview(reviewId)
@@ -38,14 +49,14 @@ export class ReviewDescriptionComponent implements OnInit {
     }
 
     previousPage() {
-        if (this.currentPage > 1) {
-            this.currentPage--;
+        if (this.pagination.currentPage > 1) {
+            this.pagination.currentPage--;
         }
     }
 
     nextPage() {
-        if (this.currentPage < this.totalPage) {
-            this.currentPage++;
+        if (this.pagination.currentPage < this.pagination.totalPage) {
+            this.pagination.currentPage++;
         }
     }
 }
