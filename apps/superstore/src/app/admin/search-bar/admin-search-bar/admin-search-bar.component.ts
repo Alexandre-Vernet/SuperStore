@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -7,7 +7,10 @@ import { BehaviorSubject } from 'rxjs';
     styleUrls: ['./admin-search-bar.component.scss']
 })
 export class AdminSearchBarComponent {
+
     static searchBar = new BehaviorSubject<string>('');
+
+    @Input() noResultSearch = false;
 
     searchValue = '';
 

@@ -17,6 +17,8 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     editedProduct: ProductDto;
     showModalAddProduct = false;
 
+    noResultSearch = false;
+
     pagination = {
         currentPage: new BehaviorSubject<number>(1),
         itemsPerPage: 25,
@@ -43,17 +45,21 @@ export class ListProductsComponent implements OnInit, OnDestroy {
             .subscribe(([products, search]) => {
                 this.products = products;
 
-                if (search) {
+                if (!search) {
+                    this.filteredProducts = [...this.products];
+                    this.noResultSearch = false;
+                } else {
+                    this.pagination.totalPage.next(0);
+
                     this.filteredProducts = products.filter(product =>
                         product.name.toLowerCase().includes(search.toLowerCase()) ||
                         product.description.toLowerCase().includes(search.toLowerCase()) ||
                         product.category.toLowerCase().includes(search.toLowerCase())
                     );
+
+                    this.noResultSearch = this.filteredProducts.length === 0;
                 }
 
-                if (this.filteredProducts.length <= 0 || !search) {
-                    this.filteredProducts = [...this.products];
-                }
                 this.pagination.currentPage.next(1);
             });
     }

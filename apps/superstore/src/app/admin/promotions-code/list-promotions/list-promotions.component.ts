@@ -16,6 +16,8 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
 
     showModalEditPromotion = false;
 
+    noResultSearch = false;
+
     pagination = {
         currentPage: new BehaviorSubject<number>(1),
         itemsPerPage: 25,
@@ -42,16 +44,20 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
             .subscribe(([promotions, search]) => {
                 this.promotions = promotions;
 
-                if (search) {
+                if (!search) {
+                    this.filteredPromotions = [...this.promotions];
+                    this.noResultSearch = false;
+                } else {
+                    this.pagination.totalPage.next(0);
+
                     this.filteredPromotions = promotions.filter(promotion =>
                         promotion.amount.toString().includes(search.toLowerCase()) ||
                         promotion.label.toLowerCase().includes(search.toLowerCase())
                     );
+
+                    this.noResultSearch = this.filteredPromotions.length === 0;
                 }
 
-                if (this.filteredPromotions.length <= 0 || !search) {
-                    this.filteredPromotions = [...this.promotions];
-                }
                 this.pagination.currentPage.next(1);
             });
     }

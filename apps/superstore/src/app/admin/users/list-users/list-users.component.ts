@@ -17,6 +17,8 @@ export class ListUsersComponent implements OnInit, OnDestroy {
 
     showModalAddProduct = false;
 
+    noResultSearch = false;
+
     pagination = {
         currentPage: new BehaviorSubject<number>(1),
         itemsPerPage: 25,
@@ -43,17 +45,21 @@ export class ListUsersComponent implements OnInit, OnDestroy {
             .subscribe(([users, search]) => {
                 this.users = users;
 
-                if (search) {
+                if (!search) {
+                    this.filteredUsers = [...this.users];
+                    this.noResultSearch = false;
+                } else {
+                    this.pagination.totalPage.next(0);
+
                     this.filteredUsers = users.filter(user =>
                         user.firstName.toLowerCase().includes(search.toLowerCase()) ||
                         user.lastName.toLowerCase().includes(search.toLowerCase()) ||
                         user.email.toLowerCase().includes(search.toLowerCase())
                     );
+
+                    this.noResultSearch = this.filteredUsers.length === 0;
                 }
 
-                if (this.filteredUsers.length <= 0 || !search) {
-                    this.filteredUsers = [...this.users];
-                }
                 this.pagination.currentPage.next(1);
             });
     }
