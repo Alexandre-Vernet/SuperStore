@@ -2,26 +2,28 @@
 currentPage: pagination.currentPage | async
 } as vm">
     <div class="px-4 sm:px-6 lg:px-8">
-        <div class="sm:flex sm:items-center">
-            <div class="sm:flex-auto">
-                <h1 class="text-xl font-semibold text-gray-900">
-                    Products
-                </h1>
-                <p class="mt-2 text-sm text-gray-700">
-                    A list of all the products in the store including their name,
-                    description, price and categories.
-                </p>
+        <h1 class="text-xl font-semibold text-gray-900">
+            Products
+        </h1>
+        <p class="mt-2 text-sm text-gray-700">
+            A list of all the products in the store including their name,
+            description, price and categories.
+        </p>
+
+        <div class="mt-6 sm:flex sm:items-center test">
+            <div class="flex-grow">
                 <superstore-admin-search-bar [noResultSearch]="noResultSearch"></superstore-admin-search-bar>
             </div>
-            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <div class="mt-4 sm:mt-0 sm:ml-4 sm:flex-none">
                 <button
-                    (click)="addProduct()"
+                    (click)="openModalAddProduct()"
                     type="button"
                     class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
                     Add product
                 </button>
             </div>
         </div>
+
         <div *ngIf="!noResultSearch" class="mt-8 flex flex-col">
             <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -102,6 +104,6 @@ currentPage: pagination.currentPage | async
     </div>
 
     <superstore-create-product *ngIf="showModalAddProduct"
-                               [editProduct]="editedProduct" (closeModal)="closeModal()"></superstore-create-product>
+                               [editProduct]="editedProduct" (closeModal)="closeModalAddProduct()"></superstore-create-product>
 
 </ng-container>

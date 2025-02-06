@@ -69,22 +69,18 @@ export class ListProductsComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    openModal() {
+    openModalAddProduct() {
         this.showModalAddProduct = true;
     }
 
-    closeModal() {
+    closeModalAddProduct() {
         this.showModalAddProduct = false;
-    }
-
-    addProduct() {
         this.editedProduct = null;
-        this.openModal();
     }
 
     editProduct(product: ProductDto) {
         this.editedProduct = product;
-        this.openModal();
+        this.openModalAddProduct();
     }
 
     deleteProduct(product: ProductDto) {

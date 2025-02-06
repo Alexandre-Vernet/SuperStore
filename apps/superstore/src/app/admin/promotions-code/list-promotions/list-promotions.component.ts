@@ -67,7 +67,7 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    openModalEditPromotion() {
+    openModalAddPromotion() {
         this.showModalEditPromotion = true;
     }
 
@@ -78,7 +78,7 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
 
     editPromotion(promotion: PromotionDto) {
         this.editedPromotion = promotion;
-        this.openModalEditPromotion();
+        this.openModalAddPromotion();
     }
 
     deletePromotion(promotion: PromotionDto) {
