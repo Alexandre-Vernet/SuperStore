@@ -7,7 +7,6 @@ import { ViewProductComponent } from './view-product/view-product.component';
 import { ProductComponent } from './product.component';
 import { FormsModule } from '@angular/forms';
 import { ReviewModule } from '../review/review.module';
-import { OptionalAuthGuard } from '../auth/optional-auth.guard';
 import { SharedModule } from '../shared/shared.module';
 import { SidebarFiltersComponent } from './sidebar-filters/sidebar-filters.component';
 
@@ -25,7 +24,7 @@ import { SidebarFiltersComponent } from './sidebar-filters/sidebar-filters.compo
         ReviewModule,
         SharedModule,
     ],
-    providers: [ProductService, OptionalAuthGuard],
+    providers: [ProductService],
 })
 export class ProductModule {
 }

@@ -11,6 +11,10 @@ const routes: Routes = [
     {
         path: 'order-history',
         component: OrderHistoryComponent,
+    },
+    {
+        path: '**',
+        redirectTo: 'confirm-order'
     }
 ];
 

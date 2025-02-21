@@ -1,25 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class CheckoutGuard {
-    constructor(
-        private router: Router,
-    ) {
+export const checkoutGuard = (): Observable<boolean> => {
+    const router = inject(Router);
+
+    const cartLocalStorage = JSON.parse(localStorage.getItem('cart'));
+
+    if (cartLocalStorage && cartLocalStorage.length > 0) {
+        return of(true);
     }
 
-    canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const cartLocalStorage = JSON.parse(localStorage.getItem('cart'));
-        return new Promise((resolve, reject) => {
-            if (cartLocalStorage && cartLocalStorage.length > 0) {
-                resolve(true);
-            } else {
-                reject(false);
-                this.router.navigate(['/cart']);
-            }
-        });
-    }
-}
+    router.navigate(['/cart']);
+    return of(false);
+};

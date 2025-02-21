@@ -38,7 +38,8 @@ export class SignInComponent implements AfterViewInit {
         const user: Pick<UserDto, 'email' | 'password'> = {
             email,
             password,
-        }
+        };
+
         this.authService.signIn(user)
             .subscribe({
                 next: () => this.router.navigateByUrl('/'),

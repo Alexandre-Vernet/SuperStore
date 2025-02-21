@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../product.service';
-import { combineLatest, Observable, of, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { CartService } from '../../cart/cart.service';
 import { ProductDto, productSize, ProductSizeDto, ReviewDto } from '@superstore/interfaces';
 import { ReviewService } from '../../review/review.service';
@@ -40,12 +40,21 @@ export class ViewProductComponent implements OnInit, OnDestroy {
 
         this.getProductFromSlug(slug)
             .pipe(
-                switchMap((product: ProductDto) =>
-                    combineLatest([
-                        of(product),
-                        this.reviewService.getReviewsForProduct(product),
-                        this.orderService.userCanAddReview(product.id)
-                    ])
+                map(product => {
+                    if (!product) {
+                        this.router.navigate(['/']);
+                        return null;
+                    }
+                    return product;
+                }),
+                filter((product: ProductDto) => !!product),
+                switchMap((product: ProductDto) => {
+                        return combineLatest([
+                            of(product),
+                            this.reviewService.getReviewsForProduct(product),
+                            this.orderService.userCanAddReview(product.id)
+                        ]);
+                    }
                 )
             ).subscribe(([product, reviews, userCanAddReview]: [ProductDto, ReviewDto[], boolean]) => {
             this.product = product;

@@ -31,6 +31,10 @@ const routes: Routes = [
             {
                 path: 'list-promotions-code',
                 component: ListPromotionsComponent
+            },
+            {
+                path: '**',
+                redirectTo: 'list-products'
             }
         ]
     },

@@ -8,13 +8,11 @@ import { ReturnsComponent } from "./returns/returns.component";
 import { WarrantyComponent } from "./warranty/warranty.component";
 import { SecurePaymentComponent } from "./secure-payment/secure-payment.component";
 import { FindAStoreComponent } from "./find-a-store/find-a-store.component";
-import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 
 const routes: Routes = [
     {
         path: '',
         component: CustomerServiceComponent,
-        canActivate: [OptionalAuthGuard],
         children: [
             {
                 path: 'contact',
@@ -44,6 +42,10 @@ const routes: Routes = [
                 path: 'find-a-store',
                 component: FindAStoreComponent
             },
+            {
+                path: '**',
+                redirectTo: 'contact'
+            }
         ]
     }
 ];
