@@ -43,4 +43,9 @@ export const appRoutes: Route[] = [
         path: 'customer-service',
         loadChildren: () => import('./customer-service/customer-service.module').then(m => m.CustomerServiceModule)
     },
+    {
+        path: '**',
+        redirectTo: 'product',
+        pathMatch: 'full'
+    },
 ];
