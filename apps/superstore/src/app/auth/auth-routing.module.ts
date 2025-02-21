@@ -19,6 +19,10 @@ const routes: Routes = [
             {
                 path: 'reset-password',
                 component: ResetPasswordComponent
+            },
+            {
+                path: '**',
+                redirectTo: 'sign-in'
             }
         ]
     }

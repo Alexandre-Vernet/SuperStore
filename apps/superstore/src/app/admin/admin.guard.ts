@@ -1,45 +1,30 @@
-import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from "../auth/auth.service";
+import { catchError, Observable, of, switchMap, take } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class AdminGuard {
+export const adminGuard = (): Observable<boolean> => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
 
-    constructor(
-        private authService: AuthService,
-        private router: Router,
-    ) {
-    }
+    return authService.signInWithAccessToken()
+        .pipe(
+            take(1),
+            switchMap(({ user }) => {
+                if (!user.isAdmin) {
+                    return handleError(authService, router, 'You`re not allowed to access this page');
+                }
+                return of(true);
+            }),
+            catchError(() => {
+                return handleError(authService, router, 'Your session has expired, please sign-in again');
+            })
+        );
+};
 
-    canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return new Promise((resolve, reject) => {
-            const accessToken = localStorage.getItem('accessToken');
-            if (accessToken) {
-                this.authService
-                    .signInWithAccessToken()
-                    .subscribe({
-                        next: ({ user }) => {
-                            if (user.isAdmin) {
-                                resolve(true);
-                            } else {
-                                this.authService.error = 'You must be an admin to access this page';
-                                this.router.navigate(['/auth/sign-in']);
-                                reject(false);
-                            }
-                        },
-                        error: () => {
-                            this.router.navigate(['/auth/sign-in']);
-                            reject(false);
-                        }
-                    });
-            } else {
-                this.authService.error = 'You must be signed in to access this page.';
-                this.router.navigate(['/auth/sign-in']);
-                reject(false);
-            }
-        });
-    }
-}
+const handleError = (authService: AuthService, router: Router, error: string): Observable<boolean> => {
+    authService.error = error;
+    router.navigate(['/auth/sign-in']);
+    return of(false);
+};
+

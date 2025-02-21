@@ -4,7 +4,7 @@ import { ProfileComponent } from "./profile/profile.component";
 import { UserComponent } from "./user.component";
 import { SecurityComponent } from "./security/security.component";
 import { CreateAddressComponent } from "./address/create-address/create-address.component";
-import { AuthGuard } from "../auth/auth.guard";
+import { authGuard } from "../auth/auth.guard";
 import { UnsubscribeNewsletterComponent } from './unsubscribe-newsletter/unsubscribe-newsletter.component';
 
 const routes: Routes = [
@@ -20,22 +20,26 @@ const routes: Routes = [
             {
                 path: 'profile',
                 component: ProfileComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'security',
                 component: SecurityComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'address',
                 component: CreateAddressComponent,
-                canActivate: [AuthGuard]
+                canActivate: [authGuard]
             },
             {
                 path: 'unsubscribe-newsletter',
                 component: UnsubscribeNewsletterComponent,
             },
+            {
+                path: '**',
+                redirectTo: 'profile'
+            }
         ]
     }
 ];

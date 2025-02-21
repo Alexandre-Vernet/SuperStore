@@ -8,7 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmOrderComponent } from "../order/confirm-order/confirm-order.component";
-import { OptionalAuthGuard } from "../auth/optional-auth.guard";
 import { AddressModule } from '../user/address/address.module';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { AddressModule } from '../user/address/address.module';
         SharedModule,
         AddressModule
     ],
-    providers: [OptionalAuthGuard]
 })
 export class CartModule {
 }
