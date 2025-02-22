@@ -1,13 +1,14 @@
 <main>
     <div class="bg-white">
-      <div class="mx-auto max-w-2xl px-4 pt-16 sm:px-6 sm:pt-24 sm:pb-16 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
+        <div
+            class="mx-auto max-w-2xl px-4 pt-16 sm:px-6 sm:pt-24 sm:pb-16 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
             <div class="lg:max-w-lg lg:self-end">
                 <nav aria-label="Breadcrumb">
                     <ol role="list" class="flex items-center space-x-2">
-                            <div class="flex items-center text-sm">
-                                <a (click)="filterProductsByCategory(product?.category)"
-                                   class="font-medium text-gray-500 hover:text-gray-900 hover:cursor-pointer">{{ product?.category | titlecase }}</a>
-                            </div>
+                        <div class="flex items-center text-sm">
+                            <a (click)="filterProductsByCategory(product?.category)"
+                               class="font-medium text-gray-500 hover:text-gray-900 hover:cursor-pointer">{{ product?.category | titlecase }}</a>
+                        </div>
                     </ol>
                 </nav>
 
@@ -23,7 +24,7 @@
 
                         <ng-container *ngIf="reviews">
                             <div class="ml-4 border-l border-gray-300 pl-4">
-                                <superstore-review-stars [showTotalReviews]="true"
+                                <superstore-review-stars [product]="product" [showTotalReviews]="true"
                                                          [review]="null"></superstore-review-stars>
                             </div>
                         </ng-container>
@@ -38,7 +39,7 @@
                              viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd"
                                   d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                                  clip-rule="evenodd"/>
+                                  clip-rule="evenodd" />
                         </svg>
                         <p class="ml-2 text-sm text-gray-500">In stock and ready to ship</p>
                     </div>
@@ -57,10 +58,12 @@
                         </div>
                     </div>
                     <!-- Navigation Buttons -->
-                    <button (click)="previousImage()" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    <button (click)="previousImage()"
+                            class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
                         &lt;
                     </button>
-                    <button (click)="nextImage()" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    <button (click)="nextImage()"
+                            class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
                         &gt;
                     </button>
                 </div>
@@ -79,9 +82,9 @@
                                 <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-3">
                                     <ng-container *ngFor="let size of productSize">
                                         <div
-                                                (click)="selectSize(size)"
-                                                class="relative block cursor-pointer rounded-lg border border-gray-300 p-4 focus:outline-none"
-                                                [ngClass]="{'border-transparent ring-2 ring-indigo-500': size.tag === selectedSize?.tag, 'border-gray-300': size.tag !== selectedSize?.tag}">
+                                            (click)="selectSize(size)"
+                                            class="relative block cursor-pointer rounded-lg border border-gray-300 p-4 focus:outline-none"
+                                            [ngClass]="{'border-transparent ring-2 ring-indigo-500': size.tag === selectedSize?.tag, 'border-gray-300': size.tag !== selectedSize?.tag}">
                                             <input type="radio" name="size-choice" value="18L" class="sr-only"
                                                    aria-labelledby="size-choice-0-label"
                                                    aria-describedby="size-choice-0-description">
@@ -106,27 +109,27 @@
                             </button>
                         </div>
 
-                      <div *ngIf="userCanAddReview"
-                           class="mt-10">
-                        <h3 class="text-lg font-medium text-gray-900">Share your thoughts</h3>
-                        <p class="mt-1 text-sm text-gray-600">
-                          If you’ve used this product, share your thoughts with
-                          other customers
-                        </p>
+                        <div *ngIf="userCanAddReview"
+                             class="mt-10">
+                            <h3 class="text-lg font-medium text-gray-900">Share your thoughts</h3>
+                            <p class="mt-1 text-sm text-gray-600">
+                                If you’ve used this product, share your thoughts with
+                                other customers
+                            </p>
 
-                        <a
-                          (click)="toggleAddReviewModal()"
-                          class="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full hover:cursor-pointer">
-                          Write a review
-                        </a>
-                      </div>
+                            <a
+                                (click)="openModalAddReview()"
+                                class="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full hover:cursor-pointer">
+                                Write a review
+                            </a>
+                        </div>
                         <div class="mt-6 text-center">
                             <a class="group inline-flex text-base font-medium">
                                 <svg class="mr-2 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                      stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                                          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                                 </svg>
                                 <span class="text-gray-500 hover:text-gray-700">Lifetime Guarantee</span>
                             </a>
@@ -141,5 +144,4 @@
     <superstore-review [product]="product"></superstore-review>
 </ng-container>
 
-<superstore-add-review *ngIf="reviewService.showModalAddReview.value"
-                       [productToReview]="product"></superstore-add-review>
+<superstore-add-review *ngIf="showModalAddReview" [product]="product"></superstore-add-review>

@@ -1,18 +1,21 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ProductDto } from "@superstore/interfaces";
-import { Router } from "@angular/router";
-import { ProductService } from "../../../product/product.service";
+import { ProductDto } from '@superstore/interfaces';
+import { Router } from '@angular/router';
+import { ProductService } from '../../../product/product.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-search-bar',
     templateUrl: './search-bar.component.html',
-    styleUrls: ['./search-bar.component.scss'],
+    styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent implements OnInit {
 
     products: ProductDto[] = [];
     @ViewChild('inputSearch', { static: false }) inputSearch!: ElementRef;
     searchBarResult = '';
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly productService: ProductService,
@@ -21,10 +24,9 @@ export class SearchBarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.productService.products$
-            .subscribe((products) => {
-                this.products = products;
-            });
+        this.productService.findAllProducts()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((products) => this.products = products);
     }
 
     searchProducts($event: Event): void {

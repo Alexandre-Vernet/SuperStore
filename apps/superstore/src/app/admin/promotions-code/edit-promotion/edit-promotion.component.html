@@ -9,7 +9,7 @@
                         {{ editPromotion ? 'Edit promotion' : 'Add promotion' }}
                     </h3>
                 </div>
-                <form [formGroup]="formUpdatePromotion" (ngSubmit)="submit()">
+                <form [formGroup]="formUpdatePromotion" (ngSubmit)="submitForm()">
                     <div class="mb-3">
                         <div>
                             <label for="label" class="block text-sm font-medium text-gray-700">Label</label>

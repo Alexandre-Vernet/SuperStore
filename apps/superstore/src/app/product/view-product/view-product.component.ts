@@ -22,6 +22,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
     currentImageIndex = 0;
 
     userCanAddReview: boolean;
+    showModalAddReview = false;
 
     unsubscribe$ = new Subject<void>();
 
@@ -29,7 +30,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
         private readonly route: ActivatedRoute,
         private readonly productService: ProductService,
         private readonly cartService: CartService,
-        protected readonly reviewService: ReviewService,
+        private readonly reviewService: ReviewService,
         private readonly router: Router,
         private readonly orderService: OrderService
     ) {
@@ -51,7 +52,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
                 switchMap((product: ProductDto) => {
                         return combineLatest([
                             of(product),
-                            this.reviewService.getReviewsForProduct(product),
+                            this.reviewService.findReviewsForProduct(product),
                             this.orderService.userCanAddReview(product.id)
                         ]);
                     }
@@ -106,7 +107,7 @@ export class ViewProductComponent implements OnInit, OnDestroy {
         this.cartService.addToCart(productCopy);
     }
 
-    toggleAddReviewModal() {
-        this.reviewService.openAddReviewModal();
+    openModalAddReview() {
+        this.showModalAddReview = true;
     }
 }

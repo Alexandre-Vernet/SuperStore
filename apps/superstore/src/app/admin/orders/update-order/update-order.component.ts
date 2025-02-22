@@ -3,11 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from '../../../order/order.service';
 import { AddressDto, OrderDto, OrderState, UserDto } from '@superstore/interfaces';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-create-order',
     templateUrl: './update-order.component.html',
-    styleUrls: ['./update-order.component.scss'],
+    styleUrls: ['./update-order.component.scss']
 })
 export class UpdateOrderComponent implements OnInit {
 
@@ -16,7 +17,7 @@ export class UpdateOrderComponent implements OnInit {
         OrderState.PENDING,
         OrderState.SHIPPED,
         OrderState.DELIVERED,
-        OrderState.CANCELED,
+        OrderState.CANCELED
     ];
 
     formUpdateOrder = new FormGroup({
@@ -25,7 +26,7 @@ export class UpdateOrderComponent implements OnInit {
         address: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         state: new FormControl('', [Validators.required]),
         deliveryMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
-        price: new FormControl({ disabled: true, value: 0 }, [Validators.required]),
+        price: new FormControl({ disabled: true, value: 0 }, [Validators.required])
     });
 
     @Output() updatedOrder$: Subject<OrderDto> = new Subject<OrderDto>;
@@ -33,6 +34,7 @@ export class UpdateOrderComponent implements OnInit {
 
     constructor(
         private readonly orderService: OrderService,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
@@ -61,6 +63,7 @@ export class UpdateOrderComponent implements OnInit {
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe({
                     next: (order) => {
+                        this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
                         this.formUpdateOrder.reset();
                         this.updatedOrder$.next(order);
                     }
@@ -72,8 +75,13 @@ export class UpdateOrderComponent implements OnInit {
         this.updatedOrder$.next(null);
     }
 
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownEscapeHandler() {
         this.closeModalAddProduct();
+    }
+
+    @HostListener('document:keydown.control.enter', ['$event'])
+    onKeydownControlEnterHandler() {
+        this.updateOrder();
     }
 }

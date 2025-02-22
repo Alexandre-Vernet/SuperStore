@@ -3,6 +3,7 @@ import { OrderDto } from '@superstore/interfaces';
 import { OrderService } from '../../../order/order.service';
 import { BehaviorSubject, combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { AdminSearchBarComponent } from '../../search-bar/admin-search-bar/admin-search-bar.component';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-orders',
@@ -29,7 +30,8 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly orderService: OrderService
+        private readonly orderService: OrderService,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
@@ -106,6 +108,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: () => {
+                    this.notificationsService.showSuccessNotification('Success', 'Order deleted successfully');
                     this.orders = this.orders.filter((p) => p.id !== order.id);
                     this.filteredOrders = [...this.orders];
                 }

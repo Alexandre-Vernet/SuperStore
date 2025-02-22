@@ -49,7 +49,7 @@ export class EditPromotionComponent implements OnInit, OnDestroy {
         this.updatedPromotion$.next(null);
     }
 
-    submit() {
+    submitForm() {
         if (this.formUpdatePromotion.valid) {
             if (this.editPromotion) {
                 this.updatePromotion();
@@ -108,8 +108,13 @@ export class EditPromotionComponent implements OnInit, OnDestroy {
             });
     }
 
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownEscapeHandler() {
         this.closeModalEditPromotion();
+    }
+
+    @HostListener('document:keydown.control.enter', ['$event'])
+    onKeydownControlEnterHandler() {
+        this.submitForm();
     }
 }

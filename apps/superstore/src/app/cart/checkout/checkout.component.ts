@@ -29,6 +29,7 @@ import {
 } from 'rxjs';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-checkout',
@@ -82,7 +83,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         private readonly authService: AuthService,
         private readonly orderService: OrderService,
         private readonly promotionService: PromotionService,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
@@ -201,7 +203,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 }
                 return createdOrder;
             }),
-            tap(() => this.router.navigateByUrl('/order/confirm-order')),
+            tap(() => {
+                this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
+                this.cartService.clearCart();
+                this.router.navigateByUrl('/order/confirm-order');
+            }),
             catchError((err) => {
                 this.stripeError.setErrors({ error: err.error.message ?? 'An unexpected error occurred.' });
                 return of(false);
@@ -214,7 +220,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    getPricePerItem(item: ProductDto): number {
+    getPricePerItem(item: ProductDto) {
         return item.price * item.quantity;
     }
 

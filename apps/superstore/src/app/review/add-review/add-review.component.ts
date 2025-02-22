@@ -4,6 +4,7 @@ import { ReviewService } from '../review.service';
 import { AuthService } from '../../auth/auth.service';
 import { ProductDto, UserDto } from '@superstore/interfaces';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-add-review',
@@ -11,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./add-review.component.scss'],
 })
 export class AddReviewComponent implements OnInit{
-    @Input() productToReview: ProductDto;
+    @Input() product: ProductDto;
 
     user: UserDto;
 
@@ -21,11 +22,14 @@ export class AddReviewComponent implements OnInit{
     });
     highlightedRating = 0;
 
+    showModalAddReview = false;
+
     unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly reviewService: ReviewService,
         private readonly authService: AuthService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -53,19 +57,22 @@ export class AddReviewComponent implements OnInit{
         const { rating, description } = this.formAddReview.value;
         this.reviewService
             .addReview({
-                product: this.productToReview,
+                product: this.product,
                 user: this.user,
                 rating: Number(rating),
                 description,
                 createdAt: new Date(),
             })
             .subscribe({
-                next: () => this.closeModal(),
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Review added successfully');
+                    this.closeModal();
+                },
                 error: (e) => this.formAddReview.setErrors({ error: e.error.message ?? 'An error has occurred' })
             });
     }
 
     closeModal() {
-        this.reviewService.closeAddReviewModal();
+        this.showModalAddReview = false;
     }
 }

@@ -1,8 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ReviewDto, UserDto } from '@superstore/interfaces';
+import { ProductDto, ReviewDto, UserDto } from '@superstore/interfaces';
 import { ReviewService } from '../review.service';
 import { AuthService } from '../../auth/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, combineLatest } from 'rxjs';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-review-description',
@@ -10,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./review-description.component.scss']
 })
 export class ReviewDescriptionComponent implements OnInit, OnDestroy {
+    @Input() product: ProductDto;
     @Input() showTotalReviews: boolean;
     reviews: ReviewDto[] = [];
     user: UserDto;
@@ -24,20 +26,18 @@ export class ReviewDescriptionComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly reviewService: ReviewService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
     ngOnInit() {
-        this.authService.user$
+        combineLatest([this.authService.user$, this.reviewService.findReviewsForProduct(this.product)])
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(user => this.user = user);
-
-        this.reviewService.reviews$
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((reviews) => {
+            .subscribe(([user, reviews]) => {
+                this.user = user;
                 this.reviews = reviews;
-                this.pagination.totalPage = Math.ceil(this.reviews.length / 10);
+                this.pagination.totalPage = Math.ceil(reviews.length / 10);
             });
     }
 
@@ -46,9 +46,15 @@ export class ReviewDescriptionComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    deleteReview(reviewId: number) {
-        this.reviewService.deleteReview(reviewId)
-            .subscribe();
+    deleteReview(review: ReviewDto) {
+        this.reviewService.deleteReview(review)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
+                    this.reviews = this.reviews.filter((r) => r.id !== review.id);
+                }
+            });
     }
 
     previousPage() {

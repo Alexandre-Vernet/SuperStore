@@ -3,7 +3,6 @@ import { OrderService } from '../order.service';
 import { OrderDto, OrderState, ProductDto } from '@superstore/interfaces';
 import { CartService } from '../../cart/cart.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { ReviewService } from '../../review/review.service';
 import { PdfService } from '../../shared/pdf/pdf.service';
 import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 
@@ -25,13 +24,14 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
         totalPage: new BehaviorSubject<number>(0)
     };
 
+    showModalAddReview = false;
+
     unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly orderService: OrderService,
         private readonly cartService: CartService,
         private readonly notificationsService: NotificationsService,
-        readonly reviewService: ReviewService,
         private readonly pdfService: PdfService
     ) {
     }
@@ -55,9 +55,9 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
         this.displayOrderOptions = !this.displayOrderOptions;
     }
 
-    toggleAddReviewModal(product: ProductDto) {
+    openModalAddReview(product: ProductDto) {
         this.productToReview = product;
-        this.reviewService.openAddReviewModal();
+       this.showModalAddReview = true;
     }
 
     @HostListener('document:click', ['$event'])

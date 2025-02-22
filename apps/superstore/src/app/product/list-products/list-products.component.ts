@@ -26,7 +26,7 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.productService.productsFilter$
+        this.productService.findAllProducts()
             .pipe(
                 takeUntil(this.unsubscribe$),
                 tap(products => this.pagination.totalPage.next(Math.ceil(products.length / this.pagination.itemsPerPage)))

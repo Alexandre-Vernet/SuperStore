@@ -12,8 +12,6 @@ export class ReviewService {
 
     reviewUrl = environment.reviewUrl();
     private reviewsSubject = new BehaviorSubject(<ReviewDto[]>[]);
-    reviews$: Observable<ReviewDto[]> = this.reviewsSubject.asObservable();
-    showModalAddReview: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
         private readonly http: HttpClient,
@@ -22,34 +20,23 @@ export class ReviewService {
     }
 
     addReview(review: ReviewDto): Observable<ReviewDto> {
-        return this.http.post<ReviewDto>(this.reviewUrl, review)
-            .pipe(
-                tap(review => {
-                    const reviews = this.reviewsSubject.getValue();
-                    reviews.push(review);
-                    this.reviewsSubject.next(reviews);
-                    this.notificationService.showSuccessNotification('Success', 'Review added successfully');
-                })
-            );
+        return this.http.post<ReviewDto>(this.reviewUrl, review);
     }
 
-    getReviewsForProduct(product: ProductDto): Observable<ReviewDto[]> {
-        return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product/${ product.id }`)
-            .pipe(
-                tap(reviews => this.reviewsSubject.next(reviews))
-            );
+    findReviewsForProduct(product: ProductDto): Observable<ReviewDto[]> {
+        return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product/${ product.id }`);
     }
 
-    getReviewsForAllProducts(): Observable<ReviewDto[]> {
+    findAllReviews(): Observable<ReviewDto[]> {
         return this.http.get<ReviewDto[]>(`${ this.reviewUrl }/product`);
     }
 
-    deleteReview(reviewId: number): Observable<ReviewDto> {
-        return this.http.delete<ReviewDto>(`${ this.reviewUrl }/${ reviewId }`)
+    deleteReview(review: ReviewDto): Observable<ReviewDto> {
+        return this.http.delete<ReviewDto>(`${ this.reviewUrl }/${ review.id }`)
             .pipe(
                 tap(() => {
                     const reviews = this.reviewsSubject.getValue();
-                    const index = reviews.findIndex((review) => review.id === reviewId);
+                    const index = reviews.findIndex((r) => r.id === review.id);
                     reviews.splice(index, 1);
                     this.reviewsSubject.next(reviews);
                     this.notificationService.showSuccessNotification('Success', 'Review deleted successfully');
@@ -59,13 +46,5 @@ export class ReviewService {
                     return of(null);
                 })
             );
-    }
-
-    openAddReviewModal() {
-        this.showModalAddReview.next(true);
-    }
-
-    closeAddReviewModal() {
-        this.showModalAddReview.next(false);
     }
 }

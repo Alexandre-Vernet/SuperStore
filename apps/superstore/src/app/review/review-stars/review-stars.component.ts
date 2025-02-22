@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewDto } from "@superstore/interfaces";
+import { ProductDto, ReviewDto } from '@superstore/interfaces';
 import { ReviewService } from "../review.service";
 
 @Component({
@@ -8,6 +8,7 @@ import { ReviewService } from "../review.service";
     styleUrls: ['./review-stars.component.scss'],
 })
 export class ReviewStarsComponent implements OnInit {
+    @Input() product: ProductDto;
     @Input() showTotalReviews: boolean;
     @Input() review: ReviewDto;
     reviews: ReviewDto[] = [];
@@ -37,7 +38,7 @@ export class ReviewStarsComponent implements OnInit {
     }
 
     getStarsForAllReview() {
-        this.reviewService.reviews$
+        this.reviewService.findReviewsForProduct(this.product)
             .subscribe(reviews => {
                 this.reviews = reviews;
                 const totalReview = this.reviews

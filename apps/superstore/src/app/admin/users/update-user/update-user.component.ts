@@ -81,8 +81,13 @@ export class UpdateUserComponent implements OnInit, OnDestroy {
         this.updateUser$.next(null);
     }
 
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownEscapeHandler() {
         this.closeModalAddProduct();
+    }
+
+    @HostListener('document:keydown.control.enter', ['$event'])
+    onKeydownControlEnterHandler() {
+        this.updateUser();
     }
 }

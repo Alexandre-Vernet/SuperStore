@@ -3,7 +3,8 @@ import { AddressDto, UserDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressService } from '../address.service';
 import { AuthService } from '../../../auth/auth.service';
-import { distinctUntilChanged, map, Subject, switchMap, takeUntil } from 'rxjs';
+import { distinctUntilChanged, map, Subject, switchMap, takeUntil, combineLatest } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-address',
@@ -30,16 +31,20 @@ export class CreateAddressComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly addressService: AddressService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
     ngOnInit() {
-        this.authService.user$
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(user => this.user = user);
-
-        this.addressService.addresses$.subscribe((addresses) => this.addresses = addresses);
+        combineLatest([this.authService.user$, this.addressService.findAllUserAddresses()])
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(([user, addresses]) => {
+                    this.user = user;
+                    this.addresses = addresses;
+                })
+            );
 
         this.buttonAddAddress$.pipe(
             distinctUntilChanged(),
@@ -58,20 +63,25 @@ export class CreateAddressComponent implements OnInit, OnDestroy {
                     };
 
                     if (this.formAddress.get('id')?.value) {
-                        this.clearFormAddress();
                         return this.addressService.updateAddress({
                             id: this.formAddress.get('id').value,
                             ...addressDto
                         });
                     } else {
-                        this.clearFormAddress();
                         return this.addressService.createAddress(addressDto);
                     }
-
                 }
             )
         )
             .subscribe({
+                next: () => {
+                    this.clearFormAddress();
+                    if (this.formAddress.get('id')?.value) {
+                        this.notificationService.showSuccessNotification('Success', 'Address updated successfully');
+                    } else {
+                        this.notificationService.showSuccessNotification('Success', 'Address created successfully');
+                    }
+                },
                 error: (err) => {
                     this.formAddress.setErrors({ [err.error.field ?? 'address']: err.error.message });
                 }

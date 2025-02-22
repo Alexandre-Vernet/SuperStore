@@ -142,7 +142,7 @@ currentPage: pagination.currentPage | async
                                                     <div *ngIf="order.state === 'DELIVERED'"
                                                          class="flex flex-1 justify-center pl-4">
                                                     <span
-                                                        (click)="toggleAddReviewModal(orderProduct.product)"
+                                                        (click)="openModalAddReview(orderProduct.product)"
                                                         class="whitespace-nowrap text-indigo-600 hover:text-indigo-500 hover:cursor-pointer">
                                                         Add a review
                                                     </span>
@@ -186,6 +186,6 @@ currentPage: pagination.currentPage | async
     </div>
 
 
-    <superstore-add-review *ngIf="reviewService.showModalAddReview.value"
-                           [productToReview]="productToReview"></superstore-add-review>
+    <superstore-add-review *ngIf="showModalAddReview"
+                           [product]="productToReview"></superstore-add-review>
 </ng-container>

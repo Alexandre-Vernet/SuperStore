@@ -4,6 +4,7 @@ import { ProductService } from '../../../product/product.service';
 import { ProductDto } from '@superstore/interfaces';
 import { categoriesAllowed } from '@superstore/interfaces';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-create-product',
@@ -27,7 +28,8 @@ export class CreateProductComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -92,7 +94,11 @@ export class CreateProductComponent implements OnInit, OnDestroy {
         this.productService.addProduct(product)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-            next: () => this.resetForm(),
+            next: () => {
+                this.notificationService.showSuccessNotification('Success', 'Product added successfully');
+                this.resetForm();
+                this.updateProduct$.next(product);
+            },
             error: (err) => this.formAddProduct.setErrors({
                 [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
@@ -104,7 +110,11 @@ export class CreateProductComponent implements OnInit, OnDestroy {
         this.productService.updateProduct(product)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-            next: () => this.resetForm(),
+            next: () => {
+                this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
+                this.resetForm();
+                this.updateProduct$.next(product);
+            },
             error: (err) => this.formAddProduct.setErrors({
                 [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
@@ -114,12 +124,15 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
     private resetForm() {
         this.formAddProduct.reset();
+    }
+
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownEscapeHandler() {
         this.closeModalAddProduct();
     }
 
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event'])
-    onKeydownHandler() {
-        this.closeModalAddProduct();
+    @HostListener('document:keydown.control.enter', ['$event'])
+    onKeydownControlEnterHandler() {
+       this.submitForm();
     }
 }
