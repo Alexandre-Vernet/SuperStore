@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
@@ -22,6 +22,7 @@ export class AddressService {
         private readonly notificationService: NotificationsService,
         private readonly errorService: ErrorService
     ) {
+        // TODO REFACTO THIS SHIT
         this.getUserAddresses().subscribe();
     }
 
@@ -33,10 +34,13 @@ export class AddressService {
     }
 
     getUserAddresses(): Observable<AddressDto[]> {
-        const userId = this.authService.user.id;
-        return this.http.post<AddressDto[]>(`${ this.addressUrl }/find-all`, { userId })
+        return this.authService.user$
             .pipe(
-                tap((address) => this.addressesSubject.next(address))
+                switchMap(user => this.http.post<AddressDto[]>(`${ this.addressUrl }/find-all`, { userId: user.id })
+                    .pipe(
+                        tap((address) => this.addressesSubject.next(address))
+                    )
+                )
             );
     }
 

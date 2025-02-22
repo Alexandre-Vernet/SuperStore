@@ -35,7 +35,7 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         combineLatest([
-            this.orderService.orders$,
+            this.orderService.findAll(),
             AdminSearchBarComponent.searchBar
         ])
             .pipe(
@@ -73,12 +73,14 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    openModal() {
-        this.showModalAddProduct = true;
-    }
-
-    closeModal() {
+    updateOrder(updatedOrder: OrderDto) {
         this.showModalAddProduct = false;
+
+        if (updatedOrder) {
+            const index = this.orders.findIndex(o => o.id === updatedOrder.id);
+            this.orders[index] = updatedOrder;
+            this.filteredOrders = [...this.orders];
+        }
     }
 
     editOrder(order: OrderDto) {
@@ -96,11 +98,18 @@ export class ListOrdersComponent implements OnInit, OnDestroy {
             createdAt: order.createdAt
         };
 
-        this.openModal();
+        this.showModalAddProduct = true;
     }
 
     deleteOrder(order: OrderDto) {
-        this.orderService.deleteOrder(order.id).subscribe();
+        this.orderService.deleteOrder(order.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.orders = this.orders.filter((p) => p.id !== order.id);
+                    this.filteredOrders = [...this.orders];
+                }
+            });
     }
 
     pageChange(page: number) {

@@ -34,7 +34,8 @@
                             <div class="relative flex" routerLink="/">
                                 <button type="button"
                                         class="border-transparent text-gray-700 hover:text-gray-800 relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
-                                        aria-expanded="false">SuperStore
+                                        aria-expanded="false">
+                                    SuperStore
                                 </button>
                             </div>
                         </div>
@@ -46,7 +47,7 @@
                 </div>
 
                 <div class="ml-auto flex items-center z-40">
-                    <ng-container *ngIf="getScreenWidth() > 1024">
+                    <ng-container *ngIf="window.innerWidth > 1024">
                         <superstore-user-menu></superstore-user-menu>
                         <superstore-change-currency></superstore-change-currency>
                     </ng-container>

@@ -1,7 +1,8 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from '../../../order/order.service';
 import { AddressDto, OrderDto, OrderState, UserDto } from '@superstore/interfaces';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-create-order',
@@ -11,7 +12,6 @@ import { AddressDto, OrderDto, OrderState, UserDto } from '@superstore/interface
 export class UpdateOrderComponent implements OnInit {
 
     @Input() editOrder: OrderDto;
-    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     orderStates = [
         OrderState.PENDING,
         OrderState.SHIPPED,
@@ -27,6 +27,9 @@ export class UpdateOrderComponent implements OnInit {
         deliveryMethod: new FormControl({ disabled: true, value: '' }, [Validators.required]),
         price: new FormControl({ disabled: true, value: 0 }, [Validators.required]),
     });
+
+    @Output() updatedOrder$: Subject<OrderDto> = new Subject<OrderDto>;
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly orderService: OrderService,
@@ -55,17 +58,18 @@ export class UpdateOrderComponent implements OnInit {
         if (Object.values(OrderState).includes(state as OrderState)) {
             const s = state as OrderState;
             this.orderService.updateOrderState(orderId, s)
+                .pipe(takeUntil(this.unsubscribe$))
                 .subscribe({
-                    next: () => {
+                    next: (order) => {
                         this.formUpdateOrder.reset();
-                        this.closeModalAddProduct();
+                        this.updatedOrder$.next(order);
                     }
                 });
         }
     }
 
     closeModalAddProduct() {
-        this.closeModal.emit();
+        this.updatedOrder$.next(null);
     }
 
     // Escape key to close modal

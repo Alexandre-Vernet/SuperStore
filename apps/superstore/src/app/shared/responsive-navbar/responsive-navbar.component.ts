@@ -19,7 +19,7 @@ export class ResponsiveNavbarComponent {
     }
 
     redirectTo(url: string): void {
-        this.router.navigateByUrl(url)
-            .then(() => AppComponent.displayResponsiveMenu = false)
+        this.router.navigateByUrl(url);
+        AppComponent.displayResponsiveMenu = false;
     }
 }

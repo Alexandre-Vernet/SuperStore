@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
-import { UserDto } from "@superstore/interfaces";
-import { AuthService } from "../../../auth/auth.service";
-import { Router } from "@angular/router";
-import { AppComponent } from "../../../app.component";
+import { Component, OnInit } from '@angular/core';
+import { UserDto } from '@superstore/interfaces';
+import { AuthService } from '../../../auth/auth.service';
+import { Router } from '@angular/router';
+import { AppComponent } from '../../../app.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-user-menu',
     templateUrl: './user-menu.component.html',
-    styleUrls: ['./user-menu.component.scss'],
+    styleUrls: ['./user-menu.component.scss']
 })
-export class UserMenuComponent {
+export class UserMenuComponent implements OnInit {
+
+    user: UserDto;
+
+    protected readonly window = window;
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly authService: AuthService,
@@ -17,20 +24,10 @@ export class UserMenuComponent {
     ) {
     }
 
-    getScreenWidth(): number {
-        return window.innerWidth;
-    }
-
-    getUserConnected(): UserDto {
-        return this.authService.user;
-    }
-
-    getFirstNameAndLastName(): string {
-        return `${ this.getUserConnected().firstName } ${ this.getUserConnected().lastName }`;
-    }
-
-    userIsAdmin(): boolean {
-        return this.authService.user.isAdmin;
+    ngOnInit() {
+        this.authService.user$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => this.user = user);
     }
 
     redirectTo(path: string) {
@@ -42,4 +39,5 @@ export class UserMenuComponent {
         this.authService.signOut();
         this.router.navigateByUrl('/');
     }
+
 }

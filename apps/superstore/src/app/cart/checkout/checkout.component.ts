@@ -6,7 +6,8 @@ import {
     OrderDto,
     OrderState,
     ProductDto,
-    PromotionDto
+    PromotionDto,
+    UserDto
 } from '@superstore/interfaces';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -36,6 +37,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
 
+    user: UserDto;
     cart: ProductDto[] = [];
 
     deliveryMethods: DeliveryMethod[] = deliveryMethods;
@@ -86,6 +88,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+
+        this.authService.user$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => this.user = user);
 
         this.updateQuantity$.pipe(
             takeUntil(this.unsubscribe$),
@@ -156,7 +162,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 } = this.formAddress.value;
 
                 const newAddress: AddressDto = {
-                    user: this.authService.user,
+                    user: this.user,
                     company,
                     address,
                     apartment,
@@ -169,7 +175,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 const { taxesPrice, shippingPrice, subTotalPrice, totalPrice } = this.price;
 
                 const order: OrderDto = {
-                    user: this.authService.user,
+                    user: this.user,
                     address: newAddress,
                     products: this.cart.map(product => ({
                         product,

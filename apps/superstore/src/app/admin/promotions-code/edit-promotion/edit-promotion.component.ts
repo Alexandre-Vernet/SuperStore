@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PromotionDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PromotionService } from '../../../promotion/promotion.service';
+import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-edit-promotion',
     templateUrl: './edit-promotion.component.html',
     styleUrls: ['./edit-promotion.component.scss']
 })
-export class EditPromotionComponent implements OnInit {
+export class EditPromotionComponent implements OnInit, OnDestroy {
 
     @Input() editPromotion: PromotionDto;
-    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formUpdatePromotion = new FormGroup({
         label: new FormControl('', [Validators.required]),
@@ -19,8 +20,13 @@ export class EditPromotionComponent implements OnInit {
         count: new FormControl(0, [Validators.required, Validators.min(0)])
     });
 
+
+    @Output() updatedPromotion$: Subject<PromotionDto> = new Subject<PromotionDto>;
+    unsubscribe$ = new Subject<void>();
+
     constructor(
-        private readonly promotionService: PromotionService
+        private readonly promotionService: PromotionService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -34,8 +40,13 @@ export class EditPromotionComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
     closeModalEditPromotion() {
-        this.closeModal.emit();
+        this.updatedPromotion$.next(null);
     }
 
     submit() {
@@ -56,9 +67,13 @@ export class EditPromotionComponent implements OnInit {
         };
 
         this.promotionService.addPromotion(promotion)
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
                 {
-                    next: () => this.closeModalEditPromotion(),
+                    next: () => {
+                        this.notificationService.showSuccessNotification('Success', 'Promotion code added successfully');
+                        this.updatedPromotion$.next(promotion);
+                    },
                     error: (err) => {
                         this.formUpdatePromotion.setErrors({
                             [err.error.field ? err.error.field : 'label']: err.error.field,
@@ -77,14 +92,24 @@ export class EditPromotionComponent implements OnInit {
         };
 
         this.promotionService.updatePromotion(promotion)
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-                next: () => this.closeModalEditPromotion(),
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code updated successfully');
+                    this.formUpdatePromotion.reset();
+                    this.updatedPromotion$.next(promotion);
+                },
                 error: (err) => {
                     this.formUpdatePromotion.setErrors({
                         [err.error.field ? err.error.field : 'label']: err.error.field,
                         error: err.error.message
-                    })
+                    });
                 }
             });
+    }
+
+    // Escape key to close modal
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler() {
+        this.closeModalEditPromotion();
     }
 }

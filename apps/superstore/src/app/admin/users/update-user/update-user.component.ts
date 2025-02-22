@@ -1,17 +1,18 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UserDto } from '@superstore/interfaces';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../user/user.service';
+import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-update-user',
     templateUrl: './update-user.component.html',
     styleUrls: ['./update-user.component.scss']
 })
-export class UpdateUserComponent implements OnInit {
+export class UpdateUserComponent implements OnInit, OnDestroy {
 
     @Input() editUser: UserDto;
-    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
     formUpdateUser = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
@@ -20,9 +21,12 @@ export class UpdateUserComponent implements OnInit {
         isAdmin: new FormControl(false, [Validators.required])
     });
 
+    @Output() updateUser$ = new Subject<UserDto>();
+    unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
@@ -35,6 +39,11 @@ export class UpdateUserComponent implements OnInit {
                 isAdmin: this.editUser.isAdmin
             });
         }
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     updateUser() {
@@ -53,8 +62,13 @@ export class UpdateUserComponent implements OnInit {
             isAdmin: Boolean(isAdmin),
             addresses: this.editUser.addresses
         })
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-                next: () => this.closeModalAddProduct(),
+                next: (user) => {
+                    this.notificationsService.showSuccessNotification('Success', 'Order updated successfully');
+                    this.formUpdateUser.reset();
+                    this.updateUser$.next(user);
+                },
                 error: (err) => this.formUpdateUser.setErrors({
                     [err.error.field ? err.error.field : 'firstName']: err.error.field,
                     error: err.error.message
@@ -64,7 +78,7 @@ export class UpdateUserComponent implements OnInit {
 
     closeModalAddProduct() {
         this.formUpdateUser.reset();
-        this.closeModal.emit();
+        this.updateUser$.next(null);
     }
 
     // Escape key to close modal

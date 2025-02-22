@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ReviewDescriptionComponent implements OnInit, OnDestroy {
     @Input() showTotalReviews: boolean;
     reviews: ReviewDto[] = [];
-    currentUser: UserDto;
+    user: UserDto;
 
     pagination = {
         currentPage: 1,
@@ -26,10 +26,13 @@ export class ReviewDescriptionComponent implements OnInit, OnDestroy {
         private readonly reviewService: ReviewService,
         private readonly authService: AuthService
     ) {
-        this.currentUser = this.authService.user;
     }
 
     ngOnInit() {
+        this.authService.user$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => this.user = user);
+
         this.reviewService.reviews$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((reviews) => {

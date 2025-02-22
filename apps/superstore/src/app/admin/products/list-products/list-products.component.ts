@@ -73,9 +73,14 @@ export class ListProductsComponent implements OnInit, OnDestroy {
         this.showModalAddProduct = true;
     }
 
-    closeModalAddProduct() {
+    updateProduct(updatedProduct: ProductDto) {
         this.showModalAddProduct = false;
-        this.editedProduct = null;
+
+        if (updatedProduct) {
+            const index = this.products.findIndex(o => o.id === updatedProduct.id);
+            this.products[index] = updatedProduct;
+            this.filteredProducts = [...this.products];
+        }
     }
 
     editProduct(product: ProductDto) {

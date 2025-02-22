@@ -108,6 +108,6 @@ currentPage: pagination.currentPage | async
     </div>
 
     <superstore-create-order *ngIf="showModalAddProduct" [editOrder]="editedOrder"
-                             (closeModal)="closeModal()"></superstore-create-order>
+                             (updatedOrder$)="updateOrder($event)"></superstore-create-order>
 
 </ng-container>
