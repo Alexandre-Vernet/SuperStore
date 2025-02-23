@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProductService } from '../product.service';
-import { environment } from '../../../environments/environment';
-import { map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProductDto } from '@superstore/interfaces';
-import { ReviewService } from '../../review/review.service';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ProductService } from '../product.service';
 
 @Component({
     selector: 'superstore-sidebar-filters',
@@ -11,9 +9,8 @@ import { ReviewService } from '../../review/review.service';
     styleUrls: ['./sidebar-filters.component.scss']
 })
 export class SidebarFiltersComponent implements OnInit, OnDestroy {
-    protected readonly appName = environment.appName;
 
-    sortBy = [
+    label = [
         {
             value: '-price',
             displayName: 'Price: Low to High',
@@ -71,11 +68,11 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
 
     responsiveFilterOpen = false;
 
+    @Output() filter$ = new Subject<{ type: string, value: string }>();
     unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly productService: ProductService,
-        private readonly reviewService: ReviewService,
     ) {
     }
 
@@ -112,7 +109,7 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
         this.responsiveFilterOpen = !this.responsiveFilterOpen;
     }
 
-    setFilter(type: 'sortBy' | 'priceRange' | 'category', $event: MouseEvent | string) {
+    setFilter(type: 'label' | 'priceRange' | 'category', $event: MouseEvent | string) {
         if (!$event) {
             return;
         }
@@ -125,32 +122,32 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const sortBy = this.sortBy.find(f => f.value === id)?.value;
+        const label = this.label.find(f => f.value === id)?.value;
         const priceRange = this.filterPrice.find(f => f.value === id)?.value;
         const category = this.categories.find(f => f.label === id)?.label;
 
         switch (type) {
-            case 'sortBy':
-                this.sortBy.map(f => f.checked = f.value === id);
-                this.sortProducts(sortBy, priceRange, category);
+            case 'label':
+                this.label.map(f => f.checked = f.value === id);
+                this.sortProducts(label, priceRange, category);
                 break;
             case 'priceRange':
                 this.filterPrice.map(f => f.checked = f.value === id);
-                this.sortProducts(sortBy, priceRange, category);
+                this.sortProducts(label, priceRange, category);
                 break;
             case 'category':
                 this.categories.map(f => f.checked = f.label === id);
-                this.sortProducts(sortBy, priceRange, id);
+                this.sortProducts(label, priceRange, id);
                 break;
             default:
                 break;
         }
     }
 
-    resetFilter(type: 'sortBy' | 'priceRange' | 'category') {
+    resetFilter(type: 'label' | 'priceRange' | 'category') {
         switch (type) {
-            case 'sortBy':
-                this.sortBy.map(f => f.checked = false);
+            case 'label':
+                this.label.map(f => f.checked = false);
                 break;
             case 'priceRange':
                 this.filterPrice.map(f => f.checked = false);
@@ -167,90 +164,24 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
         setTimeout(() => this.responsiveFilterOpen = false, this.responsiveFilterOpen ? 300 : 0);
     }
 
-    sortProducts(sortBy: string, priceRange: string, category: string) {
-        // let filteredProducts = [...this.productsSubject.value];
-        //
-        // if (sortBy) {
-        //     this.filterProductsByLabel(sortBy, filteredProducts)
-        //         .pipe(
-        //             map(sortedProducts => {
-        //                 filteredProducts = sortedProducts;
-        //                 return filteredProducts;
-        //             }),
-        //             switchMap(() => {
-        //                 if (category) {
-        //                     filteredProducts = this.filterProductsByCategory(category, filteredProducts);
-        //                 }
-        //                 if (priceRange) {
-        //                     filteredProducts = this.filterByPriceRange(priceRange, filteredProducts);
-        //                 }
-        //                 return of(filteredProducts);
-        //             })
-        //         )
-        //         .subscribe(finalFilteredProducts => this.productsSubjectFiltered.next(finalFilteredProducts));
-        // } else {
-        //     if (category) {
-        //         filteredProducts = this.filterProductsByCategory(category, filteredProducts);
-        //     }
-        //
-        //     if (priceRange) {
-        //         filteredProducts = this.filterByPriceRange(priceRange, filteredProducts);
-        //     }
-        //
-        //     this.productsSubjectFiltered.next(filteredProducts);
-        // }
-    }
-
-
-
-
-    private filterProductsByCategory(category: string, filteredProducts: ProductDto[]) {
-        return filteredProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
-    }
-
-    private filterByPriceRange(priceRange: string, filteredProducts: ProductDto[]) {
-        switch (priceRange) {
-            case '25-to-50':
-                return filteredProducts.filter((p) => p.price >= 25 && p.price < 50);
-            case '50-to-100':
-                return filteredProducts.filter((p) => p.price >= 50 && p.price < 100);
-            case '100-to-200':
-                return filteredProducts.filter((p) => p.price >= 100 && p.price < 200);
-            case '200-and-above':
-                return filteredProducts.filter((p) => p.price >= 200);
-            case 'under-25':
-            default:
-                return filteredProducts.filter((p) => p.price < 25);
+    sortProducts(label: string, priceRange: string, category: string) {
+        if (label) {
+            this.filter$.next({
+                type: 'label',
+                value: label
+            });
+        }
+        if (category) {
+            this.filter$.next({
+                type: 'category',
+                value: category
+            });
+        }
+        if (priceRange) {
+            this.filter$.next({
+                type: 'priceRange',
+                value: priceRange
+            });
         }
     }
-
-    private filterProductsByLabel(label: string, filteredProducts: ProductDto[]): Observable<ProductDto[]> {
-        switch (label) {
-            case '+price':
-                return of(filteredProducts.sort((a, b) => b.price - a.price));
-            case '+name':
-                return of(filteredProducts.sort((a, b) => a.name.localeCompare(b.name)));
-            case '-name':
-                return of(filteredProducts.sort((a, b) => b.name.localeCompare(a.name)));
-            case '+rating': {
-                return this.reviewService.findAllReviews()
-                    .pipe(
-                    map(reviews => {
-                        const productsWithRating = filteredProducts.map(product => {
-                            const productReviews = reviews.filter(review => review.product.id === product.id);
-                            const rating = productReviews.length > 0 ?
-                                productReviews.map(review => review.rating).reduce((a, b) => a + b) / productReviews.length :
-                                0;
-                            return { ...product, rating };
-                        });
-                        return productsWithRating.sort((a, b) => b.rating - a.rating);
-                    })
-                );
-            }
-            case '-price':
-            default:
-                return of(filteredProducts.sort((a, b) => a.price - b.price));
-        }
-    }
-
 }

@@ -9,22 +9,25 @@ import { FormsModule } from '@angular/forms';
 import { ReviewModule } from '../review/review.module';
 import { SharedModule } from '../shared/shared.module';
 import { SidebarFiltersComponent } from './sidebar-filters/sidebar-filters.component';
+import { ProductsHomeComponent } from './products-home/products-home.component';
+import { ResponsiveSidebarComponent } from './responsive-sidebar/responsive-sidebar.component';
 
 @NgModule({
-    declarations: [
-        ListProductsComponent,
-        ViewProductComponent,
-        ProductComponent,
-        SidebarFiltersComponent,
-    ],
-    imports: [
-        CommonModule,
-        ProductRoutingModule,
-        FormsModule,
-        ReviewModule,
-        SharedModule,
-    ],
-    providers: [ProductService],
+  declarations: [
+    ListProductsComponent,
+    ViewProductComponent,
+    ProductComponent,
+    SidebarFiltersComponent,
+    ProductsHomeComponent,
+    ResponsiveSidebarComponent,
+  ],
+  imports: [
+    CommonModule,
+    ProductRoutingModule,
+    FormsModule,
+    ReviewModule,
+    SharedModule,
+  ],
+  providers: [ProductService],
 })
-export class ProductModule {
-}
+export class ProductModule {}
