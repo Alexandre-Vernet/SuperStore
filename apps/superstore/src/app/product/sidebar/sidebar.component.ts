@@ -1,14 +1,20 @@
-import { Component, OnDestroy, OnInit, Output } from '@angular/core';
-import { ProductDto } from '@superstore/interfaces';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../product.service';
+import { ProductDto } from '@superstore/interfaces';
 
 @Component({
-    selector: 'superstore-sidebar-filters',
-    templateUrl: './sidebar-filters.component.html',
-    styleUrls: ['./sidebar-filters.component.scss']
+  selector: 'superstore-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarFiltersComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit, OnDestroy {
+
+    @Input() responsive: boolean;
+
+    @ViewChild('responsiveMenu') responsiveMenu: ElementRef;
+    @ViewChild('filterButton') filterButton: ElementRef;
+    responsiveFilterMenuOpen = false;
 
     label = [
         {
@@ -66,7 +72,6 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
     ];
     categories: { label: string, checked: boolean }[] = [];
 
-    responsiveFilterOpen = false;
 
     @Output() filter$ = new Subject<{ type: string, value: string }>();
     unsubscribe$ = new Subject<void>();
@@ -105,8 +110,9 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+
     toggleFilterResponsive() {
-        this.responsiveFilterOpen = !this.responsiveFilterOpen;
+        this.responsiveFilterMenuOpen = !this.responsiveFilterMenuOpen;
     }
 
     setFilter(type: 'label' | 'priceRange' | 'category', $event: MouseEvent | string) {
@@ -161,7 +167,7 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
     }
 
     closeResponsiveMenu() {
-        setTimeout(() => this.responsiveFilterOpen = false, this.responsiveFilterOpen ? 300 : 0);
+        this.responsiveFilterMenuOpen = false;
     }
 
     sortProducts(label: string, priceRange: string, category: string) {
@@ -182,6 +188,16 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
                 type: 'priceRange',
                 value: priceRange
             });
+        }
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        const clickedInsideMenu = this.responsiveMenu?.nativeElement.contains(event.target);
+        const clickedFilterButton = this.filterButton?.nativeElement.contains(event.target);
+
+        if (!clickedInsideMenu && !clickedFilterButton && this.responsiveFilterMenuOpen) {
+            this.closeResponsiveMenu();
         }
     }
 }

@@ -1,6 +1,4 @@
 <div class="bg-white">
-    <superstore-responsive-sidebar></superstore-responsive-sidebar>
-
     <main class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="border-b border-gray-200 pb-10">
             <h1 class="text-4xl font-bold tracking-tight text-gray-900">
@@ -12,11 +10,11 @@
         </div>
 
         <div class="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
-            <superstore-sidebar-filters (filter$)="filter($event)"></superstore-sidebar-filters>
+            <superstore-sidebar [responsive]="isResponsive" (filter$)="filter($event)"></superstore-sidebar>
 
             <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
                 <div class="lg:h-full">
-                    <superstore-list-products [filter$]="applyFilter"></superstore-list-products>
+                    <superstore-list-products [filter$]="applyFilter$"></superstore-list-products>
                 </div>
             </div>
         </div>

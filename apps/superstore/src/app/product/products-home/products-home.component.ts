@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
 
@@ -10,9 +10,16 @@ import { Subject } from 'rxjs';
 export class ProductsHomeComponent {
     protected readonly appName = environment.appName;
 
-    applyFilter = new Subject<{ type: string; value: string }>();
+    isResponsive = window.innerWidth < 1023;
+
+    applyFilter$ = new Subject<{ type: string; value: string }>();
 
     filter(value: { type: string; value: string }) {
-        this.applyFilter.next(value);
+        this.applyFilter$.next(value);
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize() {
+        this.isResponsive = window.innerWidth < 1023;
     }
 }
