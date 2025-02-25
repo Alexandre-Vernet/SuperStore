@@ -9,14 +9,8 @@ import { take } from 'rxjs';
 })
 export class AppComponent implements OnInit {
 
-    static displayResponsiveMenu = false;
-
-    get displayResponsiveMenu(): boolean {
-        return AppComponent.displayResponsiveMenu;
-    }
-
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
     ) {
     }
 

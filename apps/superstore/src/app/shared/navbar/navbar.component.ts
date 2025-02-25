@@ -1,25 +1,37 @@
-import { Component, HostListener } from '@angular/core';
-import { AppComponent } from '../../app.component';
-import { OrderProductDto } from '@superstore/interfaces';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ScreenService } from '../../screen.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'superstore-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
-    cart: OrderProductDto[] = [];
+    displayResponsiveMenu = false;
+    isResponsive = false;
 
-    isResponsive = window.innerWidth < 1023;
+    @ViewChild('btnOpenResponsiveMenu') buttonOpenResponsiveMenu: ElementRef;
 
+    unsubscribe$ = new Subject<void>;
 
-    toggleResponsiveMenu(): void {
-        AppComponent.displayResponsiveMenu = !AppComponent.displayResponsiveMenu;
+    constructor(
+        private readonly screenService: ScreenService
+    ) {
     }
 
-    @HostListener('window:resize', ['$event'])
-    onResize() {
-        this.isResponsive = window.innerWidth < 1023;
+    ngOnInit() {
+        this.screenService.isResponsive$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(isResponsive => this.isResponsive = isResponsive);
+    }
+
+    openResponsiveMenu() {
+        this.displayResponsiveMenu = true;
+    }
+
+    hideResponsiveMenu(): void {
+        this.displayResponsiveMenu = false;
     }
 }

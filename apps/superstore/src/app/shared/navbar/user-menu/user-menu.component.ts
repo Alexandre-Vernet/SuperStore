@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { UserDto } from '@superstore/interfaces';
 import { AuthService } from '../../../auth/auth.service';
-import { Router } from '@angular/router';
-import { AppComponent } from '../../../app.component';
 import { Subject, takeUntil } from 'rxjs';
+import { ScreenService } from '../../../screen.service';
 
 @Component({
     selector: 'superstore-user-menu',
@@ -12,6 +11,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class UserMenuComponent implements OnInit {
 
+    isResponsive: boolean;
+    @Output() redirectToRoute$ = new Subject<string>;
     user: UserDto;
 
     protected readonly window = window;
@@ -20,24 +21,26 @@ export class UserMenuComponent implements OnInit {
 
     constructor(
         private readonly authService: AuthService,
-        private readonly router: Router
+        private readonly screenService: ScreenService
     ) {
     }
 
     ngOnInit() {
+        this.screenService.isResponsive$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(isResponsive => this.isResponsive = isResponsive);
+
         this.authService.user$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(user => this.user = user);
     }
 
     redirectTo(path: string) {
-        this.router.navigateByUrl(path);
-        AppComponent.displayResponsiveMenu = false;
+        this.redirectToRoute$.next(path);
     }
 
     signOut() {
         this.authService.signOut();
-        this.router.navigateByUrl('/');
+        this.redirectTo('/');
     }
-
 }
