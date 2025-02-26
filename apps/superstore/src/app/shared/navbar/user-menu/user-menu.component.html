@@ -78,7 +78,7 @@
 </ng-container>
 
 <ng-template #noUser>
-    <ng-container *ngIf="window.innerWidth < 1024; else desktop">
+    <ng-container *ngIf="isResponsive; else desktop">
         <div class="flex flex-col gap-4">
             <a (click)="redirectTo('/auth/sign-in')"
                class="text-sm font-medium text-gray-700 hover:text-gray-800 hover:cursor-pointer">

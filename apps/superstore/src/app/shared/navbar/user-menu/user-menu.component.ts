@@ -15,8 +15,6 @@ export class UserMenuComponent implements OnInit {
     @Output() redirectToRoute$ = new Subject<string>;
     user: UserDto;
 
-    protected readonly window = window;
-
     unsubscribe$ = new Subject<void>();
 
     constructor(
