@@ -25,9 +25,9 @@ export class AuthService {
     signIn(user: Pick<UserDto, 'email' | 'password'>): Observable<{ user: UserDto, accessToken: string }> {
         return this.http.post<{ user: UserDto, accessToken: string }>(`${ this.authUrl }/sign-in`, user)
             .pipe(
-                tap(res => {
-                    this.userSubject.next(res.user);
-                    localStorage.setItem('accessToken', res.accessToken);
+                tap(({ user, accessToken }) => {
+                    this.userSubject.next(user);
+                    localStorage.setItem('accessToken', accessToken);
                 })
             );
     }
@@ -35,7 +35,7 @@ export class AuthService {
     signUp(user: UserDto): Observable<{ accessToken: string, user: UserDto }> {
         return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
-                tap((res) => localStorage.setItem('accessToken', res.accessToken))
+                tap(({accessToken}) => localStorage.setItem('accessToken', accessToken))
             );
     }
 
@@ -46,9 +46,9 @@ export class AuthService {
             accessToken: string
         }>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
             .pipe(
-                tap(res => {
-                    this.userSubject.next(res.user);
-                    localStorage.setItem('accessToken', res.accessToken);
+                tap(({ user, accessToken }) => {
+                    this.userSubject.next(user);
+                    localStorage.setItem('accessToken', accessToken);
                 })
             );
     }
