@@ -3,7 +3,8 @@
         <div class="fixed inset-0 bg-black bg-opacity-25"></div>
         <div class="fixed inset-0 z-40 flex">
             <div #responsiveNavbarPanel
-                 class="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
+                 class="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl"
+                 [@slideInOut]>
                 <div class="flex px-4 pt-5 pb-2">
                     <button (click)="closeResponsiveMenu()" type="button"
                             class="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400">
