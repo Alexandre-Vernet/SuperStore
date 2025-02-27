@@ -12,7 +12,7 @@ export class ResponsiveNavbarComponent {
     @Input() buttonOpenResponsiveMenu: ElementRef;
     @ViewChild('responsiveNavbarPanel') responsiveNavbar: ElementRef;
 
-    @Output() displayResponsiveMenu$ = new Subject<void>;
+    @Output() hideResponsiveMenu$ = new Subject<void>;
 
     unsubscribe$ = new Subject<void>();
 
@@ -22,12 +22,12 @@ export class ResponsiveNavbarComponent {
     }
 
     closeResponsiveMenu(): void {
-        this.displayResponsiveMenu$.next();
+        this.hideResponsiveMenu$.next();
     }
 
     redirectTo(url: string): void {
         this.router.navigateByUrl(url);
-        this.displayResponsiveMenu$.next();
+        this.hideResponsiveMenu$.next();
     }
 
 

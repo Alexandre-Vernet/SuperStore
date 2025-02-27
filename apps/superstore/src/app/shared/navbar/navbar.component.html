@@ -60,5 +60,5 @@
 </header>
 
 <ng-container *ngIf="displayResponsiveMenu">
-    <superstore-responsive-navbar [buttonOpenResponsiveMenu]="buttonOpenResponsiveMenu" (displayResponsiveMenu$)="hideResponsiveMenu()"></superstore-responsive-navbar>
+    <superstore-responsive-navbar [buttonOpenResponsiveMenu]="buttonOpenResponsiveMenu" (hideResponsiveMenu$)="hideResponsiveMenu()"></superstore-responsive-navbar>
 </ng-container>
