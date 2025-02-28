@@ -6,7 +6,7 @@
     <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="border-b border-gray-200">
             <div class="flex h-16 items-center">
-                <button (click)="toggleResponsiveMenu()" type="button"
+                <button #btnOpenResponsiveMenu (click)="openResponsiveMenu()" type="button"
                         class="rounded-md bg-white p-2 text-gray-400 lg:hidden">
                     <span class="sr-only">Open menu</span>
                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -34,7 +34,8 @@
                             <div class="relative flex" routerLink="/">
                                 <button type="button"
                                         class="border-transparent text-gray-700 hover:text-gray-800 relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
-                                        aria-expanded="false">SuperStore
+                                        aria-expanded="false">
+                                    SuperStore
                                 </button>
                             </div>
                         </div>
@@ -46,7 +47,7 @@
                 </div>
 
                 <div class="ml-auto flex items-center z-40">
-                    <ng-container *ngIf="getScreenWidth() > 1024">
+                    <ng-container *ngIf="!isResponsive">
                         <superstore-user-menu></superstore-user-menu>
                         <superstore-change-currency></superstore-change-currency>
                     </ng-container>
@@ -57,3 +58,7 @@
         </div>
     </nav>
 </header>
+
+<ng-container *ngIf="displayResponsiveMenu">
+    <superstore-responsive-navbar [buttonOpenResponsiveMenu]="buttonOpenResponsiveMenu" (hideResponsiveMenu$)="hideResponsiveMenu()"></superstore-responsive-navbar>
+</ng-container>

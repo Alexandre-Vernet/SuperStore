@@ -104,6 +104,6 @@ currentPage: pagination.currentPage | async
     </div>
 
     <superstore-create-product *ngIf="showModalAddProduct"
-                               [editProduct]="editedProduct" (closeModal)="closeModalAddProduct()"></superstore-create-product>
+                               [editProduct]="editedProduct" (updateProduct$)="updateProduct($event)"></superstore-create-product>
 
 </ng-container>

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { AddressDto } from '@superstore/interfaces';
 import { AddressService } from '../address.service';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-list-addresses',
@@ -21,12 +22,13 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly addressService: AddressService
+        private readonly addressService: AddressService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
     ngOnInit() {
-        this.addressService.addresses$
+        this.addressService.findAllUserAddresses()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((addresses) => {
                 this.addresses = addresses;
@@ -49,7 +51,13 @@ export class ListAddressesComponent implements OnInit, OnDestroy {
 
     removeAddress(address: AddressDto) {
         this.addressService.deleteAddress(address)
-            .subscribe(() => this.cleanForm$.next());
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Address deleted successfully');
+                    this.addresses = this.addresses.filter((p) => p.id !== address.id);
+                }
+            });
     }
 
     previousPage() {

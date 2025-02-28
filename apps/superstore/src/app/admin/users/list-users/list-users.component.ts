@@ -3,6 +3,7 @@ import { UserService } from '../../../user/user.service';
 import { UserDto } from '@superstore/interfaces';
 import { BehaviorSubject, combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { AdminSearchBarComponent } from '../../search-bar/admin-search-bar/admin-search-bar.component';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-users',
@@ -28,13 +29,14 @@ export class ListUsersComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
     ngOnInit() {
         combineLatest([
-            this.userService.users$,
+            this.userService.getUsers(),
             AdminSearchBarComponent.searchBar
         ])
             .pipe(
@@ -77,15 +79,28 @@ export class ListUsersComponent implements OnInit, OnDestroy {
 
     deleteUser(user: UserDto) {
         this.userService.deleteUser(user.id)
-            .subscribe();
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.notificationsService.showSuccessNotification('Success', 'User deleted successfully');
+                    this.users = this.users.filter((p) => p.id !== user.id);
+                    this.filteredUsers = [...this.users];
+                }
+            });
     }
 
     openModalUpdateUser() {
         this.showModalAddProduct = true;
     }
 
-    closeModal() {
+    updateUser(updatedUser: UserDto) {
         this.showModalAddProduct = false;
+
+        if (updatedUser) {
+            const index = this.users.findIndex(o => o.id === updatedUser.id);
+            this.users[index] = updatedUser;
+            this.filteredUsers = [...this.users];
+        }
     }
 
     pageChange(page: number) {

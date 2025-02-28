@@ -1,19 +1,21 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../product/product.service';
 import { ProductDto } from '@superstore/interfaces';
 import { categoriesAllowed } from '@superstore/interfaces';
+import { Subject, takeUntil } from 'rxjs';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-create-product',
     templateUrl: './create-product.component.html',
     styleUrls: ['./create-product.component.scss']
 })
-export class CreateProductComponent implements OnInit {
+export class CreateProductComponent implements OnInit, OnDestroy {
 
     protected readonly categoriesAllowed = categoriesAllowed;
     @Input() editProduct: ProductDto | null;
-    @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
+    @Output() updateProduct$: Subject<ProductDto> = new EventEmitter<ProductDto>();
 
     formAddProduct = new FormGroup({
         name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
@@ -23,8 +25,11 @@ export class CreateProductComponent implements OnInit {
         images: new FormControl('', [Validators.required, Validators.maxLength(2000)])
     });
 
+    unsubscribe$ = new Subject<void>();
+
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
@@ -40,8 +45,13 @@ export class CreateProductComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
     closeModalAddProduct() {
-        this.closeModal.emit();
+        this.updateProduct$.next(null);
     }
 
     submitForm() {
@@ -81,8 +91,14 @@ export class CreateProductComponent implements OnInit {
     }
 
     addProduct(product: ProductDto) {
-        this.productService.addProduct(product).subscribe({
-            next: () => this.resetForm(),
+        this.productService.addProduct(product)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+            next: () => {
+                this.notificationService.showSuccessNotification('Success', 'Product added successfully');
+                this.resetForm();
+                this.updateProduct$.next(product);
+            },
             error: (err) => this.formAddProduct.setErrors({
                 [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
@@ -91,8 +107,14 @@ export class CreateProductComponent implements OnInit {
     }
 
     updateProduct(product: ProductDto) {
-        this.productService.updateProduct(product).subscribe({
-            next: () => this.resetForm(),
+        this.productService.updateProduct(product)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+            next: () => {
+                this.notificationService.showSuccessNotification('Success', 'Product updated successfully');
+                this.resetForm();
+                this.updateProduct$.next(product);
+            },
             error: (err) => this.formAddProduct.setErrors({
                 [err.error.field ? err.error.field : 'name']: err.error.field,
                 error: err.error.message
@@ -102,12 +124,15 @@ export class CreateProductComponent implements OnInit {
 
     private resetForm() {
         this.formAddProduct.reset();
+    }
+
+    @HostListener('document:keydown.escape', ['$event'])
+    onKeydownEscapeHandler() {
         this.closeModalAddProduct();
     }
 
-    // Escape key to close modal
-    @HostListener('document:keydown.escape', ['$event'])
-    onKeydownHandler() {
-        this.closeModalAddProduct();
+    @HostListener('document:keydown.control.enter', ['$event'])
+    onKeydownControlEnterHandler() {
+       this.submitForm();
     }
 }

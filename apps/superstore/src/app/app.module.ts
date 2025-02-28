@@ -9,11 +9,13 @@ import { CartModule } from './cart/cart.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes, {
             initialNavigation: 'enabledBlocking',
             scrollPositionRestoration: 'enabled'

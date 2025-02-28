@@ -1,11 +1,13 @@
-<div class="bg-white">
+<ng-container *ngIf="responsive">
     <div class="relative z-40 lg:hidden"
-         [ngClass]="{'': responsiveFilterOpen, 'hidden': !responsiveFilterOpen}"
+         [ngClass]="{
+            'hidden': !responsiveFilterMenuOpen
+         }"
          role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black bg-opacity-25"></div>
         <div class="fixed inset-0 z-40 flex">
-            <div
-                class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl transition ease-in-out duration-300 transform">
+            <div #responsiveMenu
+                 class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-6 shadow-xl transition ease-in-out duration-300 transform">
                 <div class="flex items-center justify-between px-4">
                     <h2 class="text-lg font-medium text-gray-900">Filters</h2>
                     <button type="button"
@@ -44,10 +46,10 @@
                             <div class="px-4 pt-4 pb-2" id="sort">
                                 <div class="space-y-6">
                                     <div
-                                        *ngFor="let sort of sortBy"
+                                        *ngFor="let sort of label"
                                         class="flex items-center">
                                         <input
-                                            (click)="setFilter('sortBy', $event)"
+                                            (click)="setFilter('label', $event)"
                                             [id]="sort.value"
                                             [checked]="sort.checked"
                                             type="checkbox"
@@ -148,141 +150,121 @@
             </div>
         </div>
     </div>
+</ng-container>
 
-    <main class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <div class="border-b border-gray-200 pb-10">
-            <h1 class="text-4xl font-bold tracking-tight text-gray-900">
-                Welcome to {{ appName }}
-            </h1>
-            <p class="mt-4 text-base text-gray-500">
-                Discover our wide selection of products
-            </p>
-        </div>
+<aside>
+    <div class="flex items-center gap-2 filter-container">
+        <span #filterButton (click)="toggleFilterResponsive()"
+              class="text-sm font-medium text-gray-700 p-2 hover:cursor-pointer">Filters</span>
 
-        <div class="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
-            <aside>
-                <div class="flex items-center gap-2 filter-container">
-                    <span (click)="toggleFilterResponsive()"
-                          class="text-sm font-medium text-gray-700 p-2 hover:cursor-pointer">Filters</span>
+        <span class="ml-2 flex flex-shrink-0 text-gray-400">
+            <ng-container *ngFor="let category of categories">
+                <span
+                    [class.hidden]="!category.checked"
+                    (click)="resetFilter('category')"
+                    class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                    {{ category.label }}
+                </span>
+            </ng-container>
+        </span>
 
-                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
-                        <ng-container *ngFor="let category of categories">
-                            <span
-                                [class.hidden]="!category.checked"
-                                (click)="resetFilter('category')"
-                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
-                                {{ category.label }}
-                            </span>
-                        </ng-container>
-                    </span>
+        <span class="ml-2 flex flex-shrink-0 text-gray-400">
+            <ng-container *ngFor="let sort of label">
+                <span
+                    [class.hidden]="!sort.checked"
+                    (click)="resetFilter('label')"
+                    class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                    {{ sort.displayName }}
+                </span>
+            </ng-container>
+        </span>
 
-                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
-                        <ng-container *ngFor="let sort of sortBy">
-                            <span
-                                [class.hidden]="!sort.checked"
-                                (click)="resetFilter('sortBy')"
-                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+        <span class="ml-2 flex flex-shrink-0 text-gray-400">
+            <ng-container *ngFor="let price of filterPrice">
+                <span
+                    [class.hidden]="!price.checked"
+                    (click)="resetFilter('priceRange')"
+                    class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
+                    {{ price.displayName }}
+                </span>
+            </ng-container>
+        </span>
+    </div>
+
+
+    <div class="hidden lg:block w-36">
+        <form class="space-y-10 divide-y divide-gray-200">
+            <!--Sort by-->
+            <div class="pt-10">
+                <fieldset>
+                    <legend class="block text-sm font-medium text-gray-900">
+                        Sort by
+                    </legend>
+                    <div class="space-y-3 pt-6">
+                        <div
+                            *ngFor="let sort of label"
+                            class="flex items-center">
+                            <input
+                                (click)="setFilter('label', $event)"
+                                [id]="sort.value"
+                                [checked]="sort.checked"
+                                type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label [for]="sort.displayName" class="ml-3 text-sm text-gray-600">
                                 {{ sort.displayName }}
-                            </span>
-                        </ng-container>
-                    </span>
-
-                    <span class="ml-2 flex flex-shrink-0 text-gray-400">
-                        <ng-container *ngFor="let price of filterPrice">
-                            <span
-                                [class.hidden]="!price.checked"
-                                (click)="resetFilter('priceRange')"
-                                class="border-2 border-gray-200 rounded-full p-1 hover:cursor-pointer">
-                                {{ price.displayName }}
-                            </span>
-                        </ng-container>
-                    </span>
-                </div>
-
-
-                <div class="hidden lg:block w-36">
-                    <form class="space-y-10 divide-y divide-gray-200">
-                        <!--Sort by-->
-                        <div class="pt-10">
-                            <fieldset>
-                                <legend class="block text-sm font-medium text-gray-900">
-                                    Sort by
-                                </legend>
-                                <div class="space-y-3 pt-6">
-                                    <div
-                                        *ngFor="let sort of sortBy"
-                                        class="flex items-center">
-                                        <input
-                                            (click)="setFilter('sortBy', $event)"
-                                            [id]="sort.value"
-                                            [checked]="sort.checked"
-                                            type="checkbox"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label [for]="sort.displayName" class="ml-3 text-sm text-gray-600">
-                                            {{ sort.displayName }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
+                            </label>
                         </div>
-
-                        <!--Filter price-->
-                        <div class="pt-10">
-                            <fieldset>
-                                <legend class="block text-sm font-medium text-gray-900">
-                                    Price
-                                </legend>
-                                <div class="space-y-3 pt-6">
-                                    <div
-                                        *ngFor="let filter of filterPrice"
-                                        class="flex items-center">
-                                        <input
-                                            (click)="setFilter('priceRange', $event)"
-                                            [id]="filter.value"
-                                            [checked]="filter.checked"
-                                            type="checkbox"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label [for]="filter.displayName" class="ml-3 text-sm text-gray-600">
-                                            {{ filter.displayName }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </div>
-
-                        <!--Categories-->
-                        <div class="pt-10">
-                            <fieldset>
-                                <legend class="block text-sm font-medium text-gray-900">
-                                    Categories
-                                </legend>
-                                <div class="space-y-3 pt-6">
-                                    <div
-                                        *ngFor="let category of categories"
-                                        class="flex items-center">
-                                        <input
-                                            (click)="setFilter('category', $event)"
-                                            [id]="category.label"
-                                            [checked]="category.checked"
-                                            type="checkbox"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                        <label [for]="category.label" class="ml-3 text-sm text-gray-600">
-                                            {{ category.label | titlecase }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </form>
-                </div>
-            </aside>
-
-            <!-- Product grid -->
-            <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
-                <div class="lg:h-full">
-                    <superstore-list-products></superstore-list-products>
-                </div>
+                    </div>
+                </fieldset>
             </div>
-        </div>
-    </main>
-</div>
+
+            <!--Filter price-->
+            <div class="pt-10">
+                <fieldset>
+                    <legend class="block text-sm font-medium text-gray-900">
+                        Price
+                    </legend>
+                    <div class="space-y-3 pt-6">
+                        <div
+                            *ngFor="let filter of filterPrice"
+                            class="flex items-center">
+                            <input
+                                (click)="setFilter('priceRange', $event)"
+                                [id]="filter.value"
+                                [checked]="filter.checked"
+                                type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label [for]="filter.displayName" class="ml-3 text-sm text-gray-600">
+                                {{ filter.displayName }}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!--Categories-->
+            <div class="pt-10">
+                <fieldset>
+                    <legend class="block text-sm font-medium text-gray-900">
+                        Categories
+                    </legend>
+                    <div class="space-y-3 pt-6">
+                        <div
+                            *ngFor="let category of categories"
+                            class="flex items-center">
+                            <input
+                                (click)="setFilter('category', $event)"
+                                [id]="category.label"
+                                [checked]="category.checked"
+                                type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label [for]="category.label" class="ml-3 text-sm text-gray-600">
+                                {{ category.label | titlecase }}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</aside>

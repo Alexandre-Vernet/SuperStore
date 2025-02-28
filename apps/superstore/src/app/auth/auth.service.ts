@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserDto } from '@superstore/interfaces';
 import { NotificationsService } from '../shared/notifications/notifications.service';
@@ -10,7 +10,9 @@ import { NotificationsService } from '../shared/notifications/notifications.serv
 })
 export class AuthService {
 
-    user: UserDto;
+    private userSubject = new BehaviorSubject<UserDto>(null);
+    user$ = this.userSubject.asObservable();
+    
     authUrl = environment.authUrl();
     error = '';
 
@@ -23,9 +25,9 @@ export class AuthService {
     signIn(user: Pick<UserDto, 'email' | 'password'>): Observable<{ user: UserDto, accessToken: string }> {
         return this.http.post<{ user: UserDto, accessToken: string }>(`${ this.authUrl }/sign-in`, user)
             .pipe(
-                tap(res => {
-                    this.user = res.user;
-                    localStorage.setItem('accessToken', res.accessToken);
+                tap(({ user, accessToken }) => {
+                    this.userSubject.next(user);
+                    localStorage.setItem('accessToken', accessToken);
                 })
             );
     }
@@ -33,7 +35,7 @@ export class AuthService {
     signUp(user: UserDto): Observable<{ accessToken: string, user: UserDto }> {
         return this.http.post<{ accessToken: string, user: UserDto }>(`${ this.authUrl }/sign-up`, user)
             .pipe(
-                tap((res) => localStorage.setItem('accessToken', res.accessToken))
+                tap(({accessToken}) => localStorage.setItem('accessToken', accessToken))
             );
     }
 
@@ -44,15 +46,15 @@ export class AuthService {
             accessToken: string
         }>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
             .pipe(
-                tap(res => {
-                    this.user = res.user;
-                    localStorage.setItem('accessToken', res.accessToken);
+                tap(({ user, accessToken }) => {
+                    this.userSubject.next(user);
+                    localStorage.setItem('accessToken', accessToken);
                 })
             );
     }
 
     updatePassword(password: string, confirmPassword: string): Observable<void> {
-        const userId = this.user.id;
+        const userId = this.userSubject.value.id;
         return this.http.put<void>(`${ this.authUrl }/update-password`, { userId, password, confirmPassword })
             .pipe(
                 tap(() => {
@@ -75,7 +77,7 @@ export class AuthService {
     }
 
     signOut(): void {
-        this.user = null;
+        this.userSubject.next(null);
         localStorage.removeItem('accessToken');
     }
 }

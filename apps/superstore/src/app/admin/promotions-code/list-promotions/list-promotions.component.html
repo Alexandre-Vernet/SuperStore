@@ -93,6 +93,6 @@ currentPage: pagination.currentPage | async
     </div>
 
     <superstore-edit-promotion *ngIf="showModalEditPromotion" [editPromotion]="editedPromotion"
-                               (closeModal)="closeModalEditPromotion()"></superstore-edit-promotion>
+                               (updatedPromotion$)="updatePromotion($event)"></superstore-edit-promotion>
 
 </ng-container>

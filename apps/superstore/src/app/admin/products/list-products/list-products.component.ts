@@ -3,6 +3,7 @@ import { ProductDto } from '@superstore/interfaces';
 import { ProductService } from '../../../product/product.service';
 import { BehaviorSubject, combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { AdminSearchBarComponent } from '../../search-bar/admin-search-bar/admin-search-bar.component';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-list-products',
@@ -28,13 +29,14 @@ export class ListProductsComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
     ngOnInit() {
         combineLatest([
-            this.productService.products$,
+            this.productService.findAllProducts(),
             AdminSearchBarComponent.searchBar
         ])
             .pipe(
@@ -73,9 +75,14 @@ export class ListProductsComponent implements OnInit, OnDestroy {
         this.showModalAddProduct = true;
     }
 
-    closeModalAddProduct() {
+    updateProduct(updatedProduct: ProductDto) {
         this.showModalAddProduct = false;
-        this.editedProduct = null;
+
+        if (updatedProduct) {
+            const index = this.products.findIndex(o => o.id === updatedProduct.id);
+            this.products[index] = updatedProduct;
+            this.filteredProducts = [...this.products];
+        }
     }
 
     editProduct(product: ProductDto) {
@@ -85,7 +92,14 @@ export class ListProductsComponent implements OnInit, OnDestroy {
 
     deleteProduct(product: ProductDto) {
         this.productService.deleteProduct(product.id)
-            .subscribe();
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Product deleted successfully');
+                    this.products = this.products.filter((p) => p.id !== product.id);
+                    this.filteredProducts = [...this.products];
+                }
+            });
     }
 
     pageChange(page: number) {

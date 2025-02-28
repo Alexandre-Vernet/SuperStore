@@ -3,6 +3,7 @@ import { PromotionDto } from '@superstore/interfaces';
 import { PromotionService } from '../../../promotion/promotion.service';
 import { BehaviorSubject, combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { AdminSearchBarComponent } from '../../search-bar/admin-search-bar/admin-search-bar.component';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-list-promotions',
@@ -27,13 +28,14 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly promotionService: PromotionService
+        private readonly promotionService: PromotionService,
+        private readonly notificationService: NotificationsService
     ) {
     }
 
     ngOnInit() {
         combineLatest([
-            this.promotionService.promotions$,
+            this.promotionService.getAllPromotions(),
             AdminSearchBarComponent.searchBar
         ])
             .pipe(
@@ -71,9 +73,14 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
         this.showModalEditPromotion = true;
     }
 
-    closeModalEditPromotion() {
+    updatePromotion(updatePromotion: PromotionDto) {
         this.showModalEditPromotion = false;
-        this.editedPromotion = null;
+
+        if (updatePromotion) {
+            const index = this.promotions.findIndex(o => o.id === updatePromotion.id);
+            this.promotions[index] = updatePromotion;
+            this.filteredPromotions = [...this.promotions];
+        }
     }
 
     editPromotion(promotion: PromotionDto) {
@@ -83,7 +90,14 @@ export class ListPromotionsComponent implements OnInit, OnDestroy {
 
     deletePromotion(promotion: PromotionDto) {
         this.promotionService.deletePromotion(promotion)
-            .subscribe();
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: () => {
+                    this.notificationService.showSuccessNotification('Success', 'Promotion code deleted successfully');
+                    this.promotions = this.promotions.filter((p) => p.id !== promotion.id);
+                    this.filteredPromotions = [...this.promotions];
+                }
+            });
     }
 
     pageChange(page: number) {

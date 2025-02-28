@@ -2,20 +2,21 @@
     <div class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black bg-opacity-25"></div>
         <div class="fixed inset-0 z-40 flex">
-            <div class="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
+            <div #responsiveNavbarPanel
+                 class="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl"
+                 [@slideInOut]>
                 <div class="flex px-4 pt-5 pb-2">
-                    <button (click)="toggleResponsiveMenu()" type="button"
+                    <button (click)="closeResponsiveMenu()" type="button"
                             class="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400">
                         <span class="sr-only">Close menu</span>
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                              stroke-width="1.5"
                              stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
-                <!-- Links -->
                 <div class="mt-2">
                     <div class="border-b border-gray-100">
                         <a (click)="redirectTo('/')">
@@ -31,7 +32,7 @@
                 </div>
 
                 <div class="space-y-6 border-t border-gray-200 py-6 px-4">
-                    <superstore-user-menu></superstore-user-menu>
+                    <superstore-user-menu (redirectToRoute$)="redirectTo($event)"></superstore-user-menu>
                 </div>
 
                 <div class="space-y-6 border-t border-gray-200 py-6 px-4">

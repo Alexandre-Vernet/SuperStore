@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ViewProductComponent } from "./view-product/view-product.component";
-import { SidebarFiltersComponent } from "./sidebar-filters/sidebar-filters.component";
-import { ProductComponent } from "./product.component";
+import { ViewProductComponent } from './view-product/view-product.component';
+import { ProductComponent } from './product.component';
+import { ProductsHomeComponent } from './products-home/products-home.component';
 
 const routes: Routes = [
     {
@@ -11,7 +11,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: SidebarFiltersComponent,
+                component: ProductsHomeComponent,
             },
             {
                 path: ':slug',

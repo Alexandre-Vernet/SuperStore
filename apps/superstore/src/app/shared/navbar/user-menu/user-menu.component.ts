@@ -1,45 +1,44 @@
-import { Component } from '@angular/core';
-import { UserDto } from "@superstore/interfaces";
-import { AuthService } from "../../../auth/auth.service";
-import { Router } from "@angular/router";
-import { AppComponent } from "../../../app.component";
+import { Component, OnInit, Output } from '@angular/core';
+import { UserDto } from '@superstore/interfaces';
+import { AuthService } from '../../../auth/auth.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ScreenService } from '../../../screen.service';
 
 @Component({
     selector: 'superstore-user-menu',
     templateUrl: './user-menu.component.html',
-    styleUrls: ['./user-menu.component.scss'],
+    styleUrls: ['./user-menu.component.scss']
 })
-export class UserMenuComponent {
+export class UserMenuComponent implements OnInit {
+
+    isResponsive: boolean;
+    @Output() redirectToRoute$ = new Subject<string>;
+    user: UserDto;
+
+    unsubscribe$ = new Subject<void>();
 
     constructor(
         private readonly authService: AuthService,
-        private readonly router: Router
+        private readonly screenService: ScreenService
     ) {
     }
 
-    getScreenWidth(): number {
-        return window.innerWidth;
-    }
+    ngOnInit() {
+        this.screenService.isResponsive$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(isResponsive => this.isResponsive = isResponsive);
 
-    getUserConnected(): UserDto {
-        return this.authService.user;
-    }
-
-    getFirstNameAndLastName(): string {
-        return `${ this.getUserConnected().firstName } ${ this.getUserConnected().lastName }`;
-    }
-
-    userIsAdmin(): boolean {
-        return this.authService.user.isAdmin;
+        this.authService.user$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => this.user = user);
     }
 
     redirectTo(path: string) {
-        this.router.navigateByUrl(path);
-        AppComponent.displayResponsiveMenu = false;
+        this.redirectToRoute$.next(path);
     }
 
     signOut() {
         this.authService.signOut();
-        this.router.navigateByUrl('/');
+        this.redirectTo('/');
     }
 }

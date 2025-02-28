@@ -19,7 +19,7 @@ export class ReviewStatsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.reviewService.reviews$
+        this.reviewService.findAllReviews()
             .subscribe(reviews => {
                 this.totalReviews = reviews.length;
                 this.rating.forEach(rating => rating.count = 0);

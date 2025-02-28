@@ -6,7 +6,8 @@ import {
     OrderDto,
     OrderState,
     ProductDto,
-    PromotionDto
+    PromotionDto,
+    UserDto
 } from '@superstore/interfaces';
 import { CartService } from '../cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -28,6 +29,7 @@ import {
 } from 'rxjs';
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 @Component({
     selector: 'superstore-checkout',
@@ -36,6 +38,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
 
+    user: UserDto;
     cart: ProductDto[] = [];
 
     deliveryMethods: DeliveryMethod[] = deliveryMethods;
@@ -80,12 +83,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         private readonly authService: AuthService,
         private readonly orderService: OrderService,
         private readonly promotionService: PromotionService,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly notificationsService: NotificationsService
     ) {
     }
 
     ngOnInit() {
         this.cart = this.cartService.cart;
+
+        this.authService.user$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => this.user = user);
 
         this.updateQuantity$.pipe(
             takeUntil(this.unsubscribe$),
@@ -156,7 +164,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 } = this.formAddress.value;
 
                 const newAddress: AddressDto = {
-                    user: this.authService.user,
+                    user: this.user,
                     company,
                     address,
                     apartment,
@@ -169,7 +177,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 const { taxesPrice, shippingPrice, subTotalPrice, totalPrice } = this.price;
 
                 const order: OrderDto = {
-                    user: this.authService.user,
+                    user: this.user,
                     address: newAddress,
                     products: this.cart.map(product => ({
                         product,
@@ -195,7 +203,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 }
                 return createdOrder;
             }),
-            tap(() => this.router.navigateByUrl('/order/confirm-order')),
+            tap(() => {
+                this.notificationsService.showSuccessNotification('Email sent', 'An email has been sent to confirm your order.');
+                this.cartService.clearCart();
+                this.router.navigateByUrl('/order/confirm-order');
+            }),
             catchError((err) => {
                 this.stripeError.setErrors({ error: err.error.message ?? 'An unexpected error occurred.' });
                 return of(false);
@@ -208,7 +220,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    getPricePerItem(item: ProductDto): number {
+    getPricePerItem(item: ProductDto) {
         return item.price * item.quantity;
     }
 

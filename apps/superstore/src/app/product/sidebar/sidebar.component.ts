@@ -1,18 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProductService } from '../product.service';
-import { environment } from '../../../environments/environment';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
+import { ProductService } from '../product.service';
 import { ProductDto } from '@superstore/interfaces';
 
 @Component({
-    selector: 'superstore-sidebar-filters',
-    templateUrl: './sidebar-filters.component.html',
-    styleUrls: ['./sidebar-filters.component.scss']
+  selector: 'superstore-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarFiltersComponent implements OnInit, OnDestroy {
-    protected readonly appName = environment.appName;
+export class SidebarComponent implements OnInit, OnDestroy {
 
-    sortBy = [
+    @Input() responsive: boolean;
+
+    @ViewChild('responsiveMenu') responsiveMenu: ElementRef;
+    @ViewChild('filterButton') filterButton: ElementRef;
+    responsiveFilterMenuOpen = false;
+
+    label = [
         {
             value: '-price',
             displayName: 'Price: Low to High',
@@ -68,17 +72,17 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
     ];
     categories: { label: string, checked: boolean }[] = [];
 
-    responsiveFilterOpen = false;
 
+    @Output() filter$ = new Subject<{ type: string, value: string }>();
     unsubscribe$ = new Subject<void>();
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
     ) {
     }
 
     ngOnInit() {
-        this.productService.products$
+        this.productService.findAllProducts()
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map((products: ProductDto[]) => {
@@ -106,11 +110,12 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
+
     toggleFilterResponsive() {
-        this.responsiveFilterOpen = !this.responsiveFilterOpen;
+        this.responsiveFilterMenuOpen = !this.responsiveFilterMenuOpen;
     }
 
-    setFilter(type: 'sortBy' | 'priceRange' | 'category', $event: MouseEvent | string) {
+    setFilter(type: 'label' | 'priceRange' | 'category', $event: MouseEvent | string) {
         if (!$event) {
             return;
         }
@@ -123,31 +128,32 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const sortBy = this.sortBy.find(f => f.value === id)?.value;
+        const label = this.label.find(f => f.value === id)?.value;
         const priceRange = this.filterPrice.find(f => f.value === id)?.value;
         const category = this.categories.find(f => f.label === id)?.label;
 
         switch (type) {
-            case 'sortBy':
-                this.sortBy.map(f => f.checked = f.value === id);
-                this.productService.sortProducts(sortBy, priceRange, category);
+            case 'label':
+                this.label.map(f => f.checked = f.value === id);
+                this.sortProducts(label, priceRange, category);
                 break;
             case 'priceRange':
                 this.filterPrice.map(f => f.checked = f.value === id);
-                this.productService.sortProducts(sortBy, priceRange, category);
+                this.sortProducts(label, priceRange, category);
                 break;
             case 'category':
                 this.categories.map(f => f.checked = f.label === id);
-                this.productService.sortProducts(sortBy, priceRange, id);
+                this.sortProducts(label, priceRange, id);
+                break;
+            default:
                 break;
         }
     }
 
-    resetFilter(type: 'sortBy' | 'priceRange' | 'category') {
-        this.productService.resetFilters();
+    resetFilter(type: 'label' | 'priceRange' | 'category') {
         switch (type) {
-            case 'sortBy':
-                this.sortBy.map(f => f.checked = false);
+            case 'label':
+                this.label.map(f => f.checked = false);
                 break;
             case 'priceRange':
                 this.filterPrice.map(f => f.checked = false);
@@ -155,10 +161,43 @@ export class SidebarFiltersComponent implements OnInit, OnDestroy {
             case 'category':
                 this.categories.map(f => f.checked = false);
                 break;
+            default:
+                break;
         }
     }
 
     closeResponsiveMenu() {
-        setTimeout(() => this.responsiveFilterOpen = false, this.responsiveFilterOpen ? 300 : 0);
+        this.responsiveFilterMenuOpen = false;
+    }
+
+    sortProducts(label: string, priceRange: string, category: string) {
+        if (label) {
+            this.filter$.next({
+                type: 'label',
+                value: label
+            });
+        }
+        if (category) {
+            this.filter$.next({
+                type: 'category',
+                value: category
+            });
+        }
+        if (priceRange) {
+            this.filter$.next({
+                type: 'priceRange',
+                value: priceRange
+            });
+        }
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        const clickedInsideMenu = this.responsiveMenu?.nativeElement.contains(event.target);
+        const clickedFilterButton = this.filterButton?.nativeElement.contains(event.target);
+
+        if (!clickedInsideMenu && !clickedFilterButton && this.responsiveFilterMenuOpen) {
+            this.closeResponsiveMenu();
+        }
     }
 }
