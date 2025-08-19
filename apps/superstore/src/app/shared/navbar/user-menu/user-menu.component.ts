@@ -3,6 +3,7 @@ import { UserDto } from '@superstore/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ScreenService } from '../../../screen.service';
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'superstore-user-menu',
@@ -19,7 +20,8 @@ export class UserMenuComponent implements OnInit {
 
     constructor(
         private readonly authService: AuthService,
-        private readonly screenService: ScreenService
+        private readonly screenService: ScreenService,
+        private readonly router: Router
     ) {
     }
 
@@ -35,6 +37,7 @@ export class UserMenuComponent implements OnInit {
 
     redirectTo(path: string) {
         this.redirectToRoute$.next(path);
+        this.router.navigateByUrl(path);
     }
 
     signOut() {
