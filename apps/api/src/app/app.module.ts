@@ -22,6 +22,7 @@ import { ProductMiddleware } from './product/product.middleware';
 import { UserMiddleware } from './user/user.middleware';
 import { AddressMiddleware } from './address/address.middleware';
 import { ImageEntity } from './image/image.entity';
+import { RootModule } from "./root/root.module";
 
 const {
     POSTGRES_HOST,
@@ -54,6 +55,7 @@ const {
             ],
             ssl: false
         }),
+        RootModule,
         ProductModule,
         OrderModule,
         UserModule,
